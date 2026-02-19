@@ -17,17 +17,17 @@ from typing import Any
 
 import torch
 import torch.nn as nn
-import pytorch_lightning as pl
+import lightning as L
 from torchmetrics.detection import MeanAveragePrecision
 
 
-class ObjectDetectionModule(pl.LightningModule):
+class ObjectDetectionModule(L.LightningModule):
     """
     Unified Lightning module for object detection (and optionally tracking).
 
     Args:
         model:            One of FasterRCNNDetector, YOLODetector, SAM2Tracker,
-                          or DINOv2Detector (or any nn.Module with the same interface).
+                          or DINOv3Detector (or any nn.Module with the same interface).
         has_tracking:     If True, the model returns 'track_ids' and tracking metrics
                           (MOTA, IDF1) are computed in addition to detection metrics.
         lr:               Base learning rate.
