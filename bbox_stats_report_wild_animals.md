@@ -17,15 +17,13 @@
 | BIRDSAI | train | human | 12531 | 10002 | 79.8% | 2529 | 20.2% | 15.7 | 25.5 | 478 | 25 | 2080 |
 | BIRDSAI | train | lion | 1024 | 1024 | 100.0% | 0 | 0.0% | 12.5 | 13.2 | 171 | 63 | 357 |
 | BIRDSAI | train | unknown | 20692 | 20681 | 99.9% | 11 | 0.1% | 12.5 | 12.2 | 161 | 25 | 4160 |
-| WUR_MOTS | test | cattle | 2470 | 8 | 0.3% | 2462 | 99.7% | 94.2 | 71.1 | 7002 | 572 | 18172 |
-| WUR_MOTS | train | cattle | 18177 | 2006 | 11.0% | 16171 | 89.0% | 62.3 | 63.6 | 4385 | 48 | 23320 |
+
 
 ## 2. Per-Dataset Totals
 
 | dataset | total_boxes | small (<32²) | small_% | large (≥32²) | large_% | avg_area |
 | --- | --- | --- | --- | --- | --- | --- |
 | BIRDSAI | 166221 | 82944 | 49.9% | 83277 | 50.1% | 1932 |
-| WUR_MOTS | 20647 | 2014 | 9.8% | 18633 | 90.2% | 4698 |
 
 ## Notes
 
@@ -33,7 +31,3 @@
   Category derived from `species` column: -1=unknown, 0=human, 1=elephant, 2=lion,
   3=giraffe, 4=dog, 5=crocodile, 6=hippo, 7=zebra, 8=rhino.
   Splits: TrainReal → train, TestReal → test.
-- **WUR_MOTS**: Instance segmentation masks (uint16 PNG, MOTS format).
-  Pixel value = class_id × 1000 + instance_id; background = 0.
-  Only class_id=1 (cattle) present. Bbox computed as tight bounding box of each instance mask.
-  Image size: 1360×1000 px. Splits: train / testing → test.

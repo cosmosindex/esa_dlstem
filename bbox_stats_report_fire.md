@@ -12,23 +12,14 @@
 | RGBT-3M | train | fire | 7914 | 5615 | 71.0% | 2299 | 29.0% | 24.7 | 29.9 | 961 | 0 | 41013 |
 | RGBT-3M | train | person | 4148 | 2499 | 60.2% | 1649 | 39.8% | 25.3 | 33.4 | 1086 | 15 | 12879 |
 | RGBT-3M | train | smoke | 9488 | 1381 | 14.6% | 8107 | 85.4% | 186.6 | 147.3 | 42892 | 56 | 306081 |
-| WIT-UAV | test | human | 275 | 270 | 98.2% | 5 | 1.8% | 7.9 | 9.4 | 111 | 9 | 2088 |
-| WIT-UAV | test | vehicle | 838 | 567 | 67.7% | 271 | 32.3% | 31.8 | 29.7 | 1133 | 12 | 21440 |
-| WIT-UAV | train | human | 1062 | 1038 | 97.7% | 24 | 2.3% | 8.8 | 10.8 | 152 | 6 | 5312 |
-| WIT-UAV | train | vehicle | 3390 | 2348 | 69.3% | 1042 | 30.7% | 32.7 | 29.6 | 1277 | 12 | 66700 |
-| WIT-UAV | val | human | 205 | 202 | 98.5% | 3 | 1.5% | 7.5 | 9.3 | 113 | 8 | 5270 |
-| WIT-UAV | val | vehicle | 798 | 553 | 69.3% | 245 | 30.7% | 31.2 | 29.8 | 1178 | 25 | 55096 |
 
 ## 2. Per-Dataset Totals
 
 | dataset | total_boxes | small (<32²) | small_% | large (≥32²) | large_% | avg_area |
 | --- | --- | --- | --- | --- | --- | --- |
 | RGBT-3M | 30777 | 13569 | 44.1% | 17208 | 55.9% | 19486 |
-| WIT-UAV | 6568 | 4978 | 75.8% | 1590 | 24.2% | 980 |
 
 ## Notes
 
 - **RGBT-3M**: YOLO format — normalized w/h converted to pixels using fixed image size 640×480.
   Classes: smoke (0), fire (1), person (2). Train/test split via subfolder.
-- **WIT-UAV**: Absolute pixel bbox (x1 y1 x2 y2 category). Image size 640×512.
-  Categories: h → human, v → vehicle. Train/val/test split via subfolder.

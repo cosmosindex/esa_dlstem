@@ -46,4 +46,3 @@
 - **SatSOT**: Axis-aligned x,y,w,h; no official train/val/test split.
 - **SAT-MTB**: MOT format; `car` category has no split assignment in the xlsx → marked as `no_split`.
 - **VISO**: COCO format used (same data as VOC/MOT/SOT formats); has train/val/test splits.
-- **Cross-Videos**: Only video metadata, no per-frame bbox annotations → excluded.
