@@ -17,6 +17,10 @@ Dataset bounding box statistics: [bbox_stats_report_trafic.md](bbox_stats_report
 
 Dataset bounding box statistics: [bbox_stats_report_fire.md](bbox_stats_report_fire.md)
 
+### Wild Animals
+
+Dataset bounding box statistics: [bbox_stats_report_wild_animals.md](bbox_stats_report_wild_animals.md)
+
 # algorithms
 
 
