@@ -7,13 +7,17 @@ Project documents in https://drive.google.com/drive/folders/1t2A1LZRL0Su6f_dgsJN
 
 # Datasets
 
-# algorithms
+## Use cases
 
-# use cases
-
-## Traffic
+### Traffic
 
 Dataset bounding box statistics: [bbox_stats_report_trafic.md](bbox_stats_report_trafic.md)
+
+### Fire
+
+Dataset bounding box statistics: [bbox_stats_report_fire.md](bbox_stats_report_fire.md)
+
+# algorithms
 
 
 
