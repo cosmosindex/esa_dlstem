@@ -11,5 +11,9 @@ Project documents in https://drive.google.com/drive/folders/1t2A1LZRL0Su6f_dgsJN
 
 # use cases
 
+## Traffic
+
+Dataset bounding box statistics: [bbox_stats_report_trafic.md](bbox_stats_report_trafic.md)
+
 
 
