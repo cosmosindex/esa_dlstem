@@ -13,6 +13,7 @@ Metrics accumulated across val/test steps:
 
 from __future__ import annotations
 
+import time
 from typing import Any
 
 import torch
@@ -63,12 +64,72 @@ class ObjectDetectionModule(L.LightningModule):
         self._val_map  = MeanAveragePrecision(iou_thresholds=[0.5])
         self._test_map = MeanAveragePrecision(iou_thresholds=[0.5])
 
+        # Detection precision/recall accumulators (IoU >= 0.5)
+        self._reset_det_accumulators("val")
+        self._reset_det_accumulators("test")
+
         # Tracking accumulators (reset at epoch start)
         self._reset_tracking_accumulators()
+
+        # Test-time timing accumulators
+        self._test_time_total = 0.0
+        self._test_num_images = 0
 
     # ------------------------------------------------------------------
     # Tracking state helpers
     # ------------------------------------------------------------------
+
+    def _reset_det_accumulators(self, prefix: str):
+        setattr(self, f"_{prefix}_det_tp", 0)
+        setattr(self, f"_{prefix}_det_fp", 0)
+        setattr(self, f"_{prefix}_det_fn", 0)
+
+    def _update_det_accumulators(self, prefix: str, preds: list[dict], targets: list[dict]):
+        """Count TP / FP / FN at IoU >= 0.5 using greedy matching."""
+        for pred, tgt in zip(preds, targets):
+            gt_boxes   = tgt["boxes"]
+            pred_boxes = pred["boxes"]
+            M, N = len(gt_boxes), len(pred_boxes)
+
+            if M == 0:
+                setattr(self, f"_{prefix}_det_fp",
+                        getattr(self, f"_{prefix}_det_fp") + N)
+                continue
+            if N == 0:
+                setattr(self, f"_{prefix}_det_fn",
+                        getattr(self, f"_{prefix}_det_fn") + M)
+                continue
+
+            iou = self._iou_matrix(gt_boxes, pred_boxes)
+            matched_gt: set[int] = set()
+            matched_pred: set[int] = set()
+            rows, cols = (iou >= 0.5).nonzero(as_tuple=False).T
+            if rows.numel() > 0:
+                order = iou[rows, cols].argsort(descending=True)
+                rows, cols = rows[order], cols[order]
+                for r, c in zip(rows.tolist(), cols.tolist()):
+                    if r in matched_gt or c in matched_pred:
+                        continue
+                    matched_gt.add(r)
+                    matched_pred.add(c)
+
+            tp = len(matched_gt)
+            setattr(self, f"_{prefix}_det_tp",
+                    getattr(self, f"_{prefix}_det_tp") + tp)
+            setattr(self, f"_{prefix}_det_fp",
+                    getattr(self, f"_{prefix}_det_fp") + (N - tp))
+            setattr(self, f"_{prefix}_det_fn",
+                    getattr(self, f"_{prefix}_det_fn") + (M - tp))
+
+    def _log_precision_recall(self, prefix: str):
+        tp = getattr(self, f"_{prefix}_det_tp")
+        fp = getattr(self, f"_{prefix}_det_fp")
+        fn = getattr(self, f"_{prefix}_det_fn")
+        prec = tp / max(tp + fp, 1)
+        rec  = tp / max(tp + fn, 1)
+        self.log(f"{prefix}/Precision", torch.tensor(prec), prog_bar=False)
+        self.log(f"{prefix}/Recall",    torch.tensor(rec),  prog_bar=False)
+        self._reset_det_accumulators(prefix)
 
     def _reset_tracking_accumulators(self):
         self._num_gt        = 0
@@ -107,16 +168,16 @@ class ObjectDetectionModule(L.LightningModule):
     def validation_step(self, batch: Any, batch_idx: int):
         preds, targets = self._inference_step(batch)
 
-        # Update MAP metric
         self._val_map.update(preds, targets)
+        self._update_det_accumulators("val", preds, targets)
 
-        # Tracking metrics (per-frame or per-sequence)
         if self.has_tracking:
             self._update_tracking_accumulators(preds, targets)
 
     def on_validation_epoch_end(self):
         self._log_map(self._val_map, prefix="val")
         self._val_map.reset()
+        self._log_precision_recall("val")
 
         if self.has_tracking:
             self._log_tracking("val")
@@ -127,8 +188,27 @@ class ObjectDetectionModule(L.LightningModule):
     # ------------------------------------------------------------------
 
     def test_step(self, batch: Any, batch_idx: int):
-        preds, targets = self._inference_step(batch)
+        images, targets = batch
+        n_images = len(images)
+
+        # Time the inference only (exclude metric bookkeeping)
+        if self.device.type == "cuda":
+            torch.cuda.synchronize()
+        t0 = time.perf_counter()
+
+        with torch.no_grad():
+            raw_preds = self.model(images)
+
+        if self.device.type == "cuda":
+            torch.cuda.synchronize()
+        elapsed = time.perf_counter() - t0
+
+        self._test_time_total += elapsed
+        self._test_num_images += n_images
+
+        preds = self._normalise_preds(raw_preds)
         self._test_map.update(preds, targets)
+        self._update_det_accumulators("test", preds, targets)
 
         if self.has_tracking:
             self._update_tracking_accumulators(preds, targets)
@@ -136,6 +216,19 @@ class ObjectDetectionModule(L.LightningModule):
     def on_test_epoch_end(self):
         self._log_map(self._test_map, prefix="test")
         self._test_map.reset()
+        self._log_precision_recall("test")
+
+        # Test-time speed
+        fps = self._test_num_images / max(self._test_time_total, 1e-9)
+        self.log("test/total_time_s", torch.tensor(self._test_time_total))
+        self.log("test/fps", torch.tensor(fps), prog_bar=True)
+        self._test_time_total = 0.0
+        self._test_num_images = 0
+
+        # Model size (parameters + buffers)
+        param_mb = sum(p.numel() * p.element_size() for p in self.model.parameters()) / (1024 ** 2)
+        buffer_mb = sum(b.numel() * b.element_size() for b in self.model.buffers()) / (1024 ** 2)
+        self.log("test/model_size_MB", torch.tensor(param_mb + buffer_mb))
 
         if self.has_tracking:
             self._log_tracking("test")
@@ -260,9 +353,9 @@ class ObjectDetectionModule(L.LightningModule):
 
     def _log_map(self, metric: MeanAveragePrecision, prefix: str):
         result = metric.compute()
-        self.log(f"{prefix}/AP50",    result["map_50"],   prog_bar=True)
-        self.log(f"{prefix}/AP",      result["map"],      prog_bar=False)
-        self.log(f"{prefix}/AR_100",  result.get("mar_100", torch.tensor(0.0)))
+        self.log(f"{prefix}/AP50",   result["map_50"],  prog_bar=True)
+        self.log(f"{prefix}/AP",     result["map"],     prog_bar=False)
+        self.log(f"{prefix}/AR_100", result.get("mar_100", torch.tensor(0.0)))
 
     def _log_tracking(self, prefix: str):
         denom = max(self._num_gt, 1)
