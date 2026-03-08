@@ -21,7 +21,7 @@ Dataset bounding box statistics: [bbox_stats_report_fire.md](bbox_stats_report_f
 
 Dataset bounding box statistics: [bbox_stats_report_wild_animals.md](bbox_stats_report_wild_animals.md)
 
-# Video Length Summary
+## Video length summary
 
 Video length statistics (frames per video) across all use cases and datasets: [video_length_summary.md](video_length_summary.md)
 
