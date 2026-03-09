@@ -146,19 +146,24 @@ class ObjectDetectionModule(L.LightningModule):
 
     def training_step(self, batch: Any, batch_idx: int) -> torch.Tensor:
         images, targets = batch  # images: list[Tensor], targets: list[dict]
+        bs = len(images)
 
         loss_dict = self.model(images, targets)
 
         # Normalise: models return either a raw tensor or a dict
         if isinstance(loss_dict, dict):
-            loss = sum(v for v in loss_dict.values() if isinstance(v, torch.Tensor))
+            loss = loss_dict["loss"] if "loss" in loss_dict else sum(
+                v for v in loss_dict.values() if isinstance(v, torch.Tensor)
+            )
             for k, v in loss_dict.items():
-                if isinstance(v, torch.Tensor):
-                    self.log(f"train/{k}", v, prog_bar=False, on_step=True, on_epoch=False)
+                if k != "loss" and isinstance(v, torch.Tensor):
+                    self.log(f"train/{k}", v, prog_bar=False, on_step=True,
+                             on_epoch=False, batch_size=bs)
         else:
             loss = loss_dict
 
-        self.log("train/loss", loss, prog_bar=True, on_step=True, on_epoch=True)
+        self.log("train/loss", loss, prog_bar=True, on_step=True, on_epoch=True,
+                 batch_size=bs)
         return loss
 
     # ------------------------------------------------------------------

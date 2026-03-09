@@ -6,3 +6,6 @@ __pycache__/
 
 .claude/skills/add-dataset/SKILL.md
 .vscode/settings.json
+wandb
+yolo11n.pt
+runs

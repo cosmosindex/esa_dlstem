@@ -41,6 +41,4 @@ dependencies:
     - wandb>=0.16
 
     # SAM2 (install from Facebook Research GitHub)
-    # Uncomment one of the two lines below:
-    # - sam2                             # if published to PyPI
-    # - git+https://github.com/facebookresearch/sam2.git  # from source
+    - git+https://github.com/facebookresearch/sam2.git  # from source

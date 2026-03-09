@@ -1,8 +1,8 @@
 """
-Training script: Faster R-CNN on OOTB dataset.
+Training script: YOLO v11 on OOTB dataset.
 
 Usage:
-    python train_fasterrcnn_ootb.py
+    python train_yolo_ootb.py
 """
 
 from datetime import datetime
@@ -12,7 +12,7 @@ import lightning as L
 from lightning.pytorch.loggers import WandbLogger
 from lightning.pytorch.callbacks import ModelCheckpoint, EarlyStopping
 
-from models import FasterRCNNDetector
+from models import YOLODetector
 from lightning_modules import (
     ObjectDetectionModule,
     DetectionDataModule,
@@ -25,22 +25,22 @@ from transforms import build_train_transform, build_eval_transform
 # Config
 # ---------------------------------------------------------------------------
 
-# FasterRCNN expects labels 1..C (0 = background), so num_classes = C + 1
-CLASS_MAP = {"car": 1, "plane": 2, "ship": 3, "train": 4}
-NUM_CLASSES = len(CLASS_MAP) + 1  # 5 (including background)
-CLASS_NAMES = {v: k for k, v in CLASS_MAP.items()}  # {1: "car", 2: "plane", ...}
+# YOLO uses 0-indexed class labels (no background class)
+CLASS_MAP = {"car": 0, "plane": 1, "ship": 2, "train": 3}
+NUM_CLASSES = len(CLASS_MAP)  # 4
+CLASS_NAMES = {v: k for k, v in CLASS_MAP.items()}
 
 OOTB_ROOT = "/data/ESA_DLSTEM_2025/data/trafic/OOTB"
 IMG_SIZE = (640, 640)
 
-RUN_NAME = "fasterrcnn-v2_ootb"
+RUN_NAME = "yolo11n_ootb"
 
 # Training hyperparameters
 BATCH_SIZE = 8
-NUM_WORKERS = 0  # TODO: set back to 4 after debugging
+NUM_WORKERS = 0  # set to 4 with mp.set_start_method("spawn") if needed
 MAX_EPOCHS = 50
-LR = 5e-4
-WEIGHT_DECAY = 1e-4
+LR = 1e-3
+WEIGHT_DECAY = 5e-4
 WARMUP_EPOCHS = 5
 
 
@@ -69,18 +69,18 @@ def main():
     # ------------------------------------------------------------------
     # Model
     # ------------------------------------------------------------------
-    model = FasterRCNNDetector(
+    model = YOLODetector(
+        model_name="yolo11n.pt",
         num_classes=NUM_CLASSES,
-        pretrained=True,
-        use_v2=True,
-        trainable_backbone_layers=0,
-        score_thresh=0.05,
-        nms_thresh=0.5,
+        enable_tracking=True,
+        conf_thresh=0.05,
+        iou_thresh=0.5,
+        img_size=IMG_SIZE[0],
     )
 
     module = ObjectDetectionModule(
         model=model,
-        has_tracking=False,
+        has_tracking=True,
         lr=LR,
         weight_decay=WEIGHT_DECAY,
         lr_scheduler="cosine",
@@ -128,6 +128,7 @@ def main():
         accelerator="auto",
         devices=1,
         precision="16-mixed",
+        gradient_clip_val=10.0,
         logger=logger,
         callbacks=callbacks,
         log_every_n_steps=10,

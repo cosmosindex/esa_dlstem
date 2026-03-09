@@ -1,7 +1,10 @@
 """
-DetectionVisualizationCallback
-==============================
-Lightning Callback that visualises object detection results during testing.
+Visualization Callbacks
+=======================
+Lightning Callbacks that visualise object detection results during testing.
+
+DetectionVisualizationCallback — for FasterRCNN / YOLO (per-frame batches)
+SAM2VisualizationCallback      — for SAM2 (video clip batches)
 
 For each test image, draws bounding boxes with colour-coded TP / FP / FN
 annotations. Images are:
@@ -290,3 +293,106 @@ class DetectionVisualizationCallback(L.Callback):
             logger.experiment.log({
                 "test/detections": wandb.Image(img, caption=caption),
             })
+
+
+class SAM2VisualizationCallback(DetectionVisualizationCallback):
+    """
+    Visualise SAM2 test-set detections.
+
+    Reads per-frame results returned by SAM2EvaluationModule.test_step()
+    (list of dicts with 'image_np', 'pred', 'target', 'video_id', 'frame_id').
+
+    Inherits all drawing / matching / W&B logic from DetectionVisualizationCallback.
+    """
+
+    def on_test_batch_end(
+        self,
+        trainer: L.Trainer,
+        pl_module: L.LightningModule,
+        outputs,
+        batch,
+        batch_idx: int,
+        dataloader_idx: int = 0,
+    ):
+        # outputs is the list of per-frame dicts from test_step
+        if outputs is None:
+            return
+
+        for frame_result in outputs:
+            img = frame_result["image_np"].copy()
+            pred = frame_result["pred"]
+            tgt = frame_result["target"]
+            video_id = frame_result["video_id"]
+            frame_id = frame_result["frame_id"]
+
+            vis, per_image_metrics = self._draw_from_numpy(img, pred, tgt)
+
+            # Always save locally
+            filename = f"{video_id}_frame{frame_id:04d}.jpg"
+            cv2.imwrite(
+                str(self._vis_dir / filename),
+                cv2.cvtColor(vis, cv2.COLOR_RGB2BGR),
+            )
+
+            # Collect per-image metrics
+            per_image_metrics["video_id"] = video_id
+            per_image_metrics["frame_id"] = frame_id
+            self._all_metrics.append(per_image_metrics)
+
+            # Log to W&B (capped)
+            if self._wandb_logged < self.max_wandb_images:
+                self._log_wandb(trainer, vis, video_id, frame_id)
+                self._wandb_logged += 1
+
+    def _draw_from_numpy(
+        self,
+        img: np.ndarray,
+        pred: dict,
+        tgt: dict,
+    ) -> tuple[np.ndarray, dict]:
+        """Draw TP / FP / FN boxes. Input image is already numpy uint8 RGB."""
+        gt_boxes = tgt["boxes"].cpu().numpy() if isinstance(tgt["boxes"], torch.Tensor) else tgt["boxes"]
+        gt_labels = tgt["labels"].cpu().numpy() if isinstance(tgt["labels"], torch.Tensor) else tgt["labels"]
+
+        pred_boxes = pred["boxes"].cpu().numpy() if isinstance(pred["boxes"], torch.Tensor) else pred["boxes"]
+        pred_scores = pred["scores"].cpu().numpy() if isinstance(pred["scores"], torch.Tensor) else pred["scores"]
+        pred_labels = pred["labels"].cpu().numpy() if isinstance(pred["labels"], torch.Tensor) else pred["labels"]
+
+        # Filter low-confidence predictions
+        keep = pred_scores >= self.score_thresh
+        pred_boxes = pred_boxes[keep]
+        pred_scores = pred_scores[keep]
+        pred_labels = pred_labels[keep]
+
+        # Match predictions to GT
+        tp_mask, fp_mask, fn_mask = self._match(gt_boxes, pred_boxes)
+
+        # Draw FN — blue
+        for i, is_fn in enumerate(fn_mask):
+            if is_fn:
+                b = gt_boxes[i].astype(int)
+                name = self.class_names.get(int(gt_labels[i]), f"cls{gt_labels[i]}")
+                self._draw_box(img, b, _BLUE, f"FN {name}")
+
+        # Draw FP — red
+        for i, is_fp in enumerate(fp_mask):
+            if is_fp:
+                b = pred_boxes[i].astype(int)
+                name = self.class_names.get(int(pred_labels[i]), f"cls{pred_labels[i]}")
+                self._draw_box(img, b, _RED, f"FP {name} {pred_scores[i]:.2f}")
+
+        # Draw TP — green
+        for i, is_tp in enumerate(tp_mask):
+            if is_tp:
+                b = pred_boxes[i].astype(int)
+                name = self.class_names.get(int(pred_labels[i]), f"cls{pred_labels[i]}")
+                self._draw_box(img, b, _GREEN, f"TP {name} {pred_scores[i]:.2f}")
+
+        metrics = {
+            "tp": int(tp_mask.sum()),
+            "fp": int(fp_mask.sum()),
+            "fn": int(fn_mask.sum()),
+            "num_preds": int(len(pred_boxes)),
+            "num_gt": int(len(gt_boxes)),
+        }
+        return img, metrics
