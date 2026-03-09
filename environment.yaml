@@ -34,6 +34,12 @@ dependencies:
     - transformers>=4.56.0
     - huggingface-hub>=0.23
 
+    # Data augmentation
+    - albumentations>=1.4
+
+    # Experiment tracking
+    - wandb>=0.16
+
     # SAM2 (install from Facebook Research GitHub)
     # Uncomment one of the two lines below:
     # - sam2                             # if published to PyPI
