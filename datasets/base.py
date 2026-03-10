@@ -278,6 +278,12 @@ class BaseVideoDataset(ABC, Dataset):
         ann = self._load_annotations(video, fid)   # dict of ndarray
         orig_size = img.shape[:2]                  # (H, W)
 
+        # Clip boxes to image bounds (OBB→AABB can slightly exceed)
+        h, w = orig_size
+        if "boxes" in ann and len(ann["boxes"]) > 0:
+            ann["boxes"][:, [0, 2]] = np.clip(ann["boxes"][:, [0, 2]], 0, w)
+            ann["boxes"][:, [1, 3]] = np.clip(ann["boxes"][:, [1, 3]], 0, h)
+
         if self.transform is not None:
             img, ann = self.transform(img, ann)
 
@@ -313,6 +319,12 @@ class BaseVideoDataset(ABC, Dataset):
 
             if orig_size is None:
                 orig_size = img.shape[:2]
+
+            # Clip boxes to image bounds (OBB→AABB can slightly exceed)
+            h, w = img.shape[:2]
+            if "boxes" in ann and len(ann["boxes"]) > 0:
+                ann["boxes"][:, [0, 2]] = np.clip(ann["boxes"][:, [0, 2]], 0, w)
+                ann["boxes"][:, [1, 3]] = np.clip(ann["boxes"][:, [1, 3]], 0, h)
 
             if self.transform is not None:
                 img, ann = self.transform(img, ann)

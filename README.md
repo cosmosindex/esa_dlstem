@@ -25,6 +25,11 @@ Dataset bounding box statistics: [bbox_stats_report_wild_animals.md](bbox_stats_
 
 Video length statistics (frames per video) across all use cases and datasets: [video_length_summary.md](video_length_summary.md)
 
+## Split statistics
+
+Train / val / test split breakdown by dataset and category: [split_statistics.md](split_statistics.md)
+
+
 # algorithms
 
 

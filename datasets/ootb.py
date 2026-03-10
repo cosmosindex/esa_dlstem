@@ -145,7 +145,7 @@ class OOTBDataset(BaseVideoDataset):
         return {
             "boxes":     np.array([box_xyxy], dtype=np.float32),
             "labels":    np.array([self._map_label(video.category)], dtype=np.int64),
-            "track_ids": np.array([-1], dtype=np.int64),  # SOT — no track id
+            "track_ids": np.array([1], dtype=np.int64),  # SOT — single object, ID=1
         }
 
     # ------------------------------------------------------------------

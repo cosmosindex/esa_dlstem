@@ -144,7 +144,9 @@ class DetectionVisualizationCallback(L.Callback):
         tgt: dict,
     ) -> tuple[np.ndarray, dict]:
         """
-        Draw TP / FP / FN boxes on the image.
+        Draw TP / FP / FN boxes on the image.  When track_ids are present
+        in predictions or targets, they are shown on the labels so that
+        tracking consistency across frames can be visually inspected.
 
         Returns:
             vis:     np.ndarray (H, W, 3) uint8 RGB image with annotations.
@@ -154,16 +156,20 @@ class DetectionVisualizationCallback(L.Callback):
 
         gt_boxes  = tgt["boxes"].cpu().numpy()
         gt_labels = tgt["labels"].cpu().numpy()
+        gt_track_ids = self._extract_track_ids(tgt)
 
         pred_boxes  = pred["boxes"].cpu().numpy()
         pred_scores = pred["scores"].cpu().numpy()
         pred_labels = pred["labels"].cpu().numpy()
+        pred_track_ids = self._extract_track_ids(pred)
 
         # Filter low-confidence predictions
         keep = pred_scores >= self.score_thresh
         pred_boxes  = pred_boxes[keep]
         pred_scores = pred_scores[keep]
         pred_labels = pred_labels[keep]
+        if pred_track_ids is not None:
+            pred_track_ids = pred_track_ids[keep]
 
         # Match predictions to GT
         tp_mask, fp_mask, fn_mask = self._match(gt_boxes, pred_boxes)
@@ -173,21 +179,24 @@ class DetectionVisualizationCallback(L.Callback):
             if is_fn:
                 b = gt_boxes[i].astype(int)
                 name = self.class_names.get(int(gt_labels[i]), f"cls{gt_labels[i]}")
-                self._draw_box(img, b, _BLUE, f"FN {name}")
+                tid = f" GT#{int(gt_track_ids[i])}" if gt_track_ids is not None else ""
+                self._draw_box(img, b, _BLUE, f"FN {name}{tid}")
 
         # Draw FP — red
         for i, is_fp in enumerate(fp_mask):
             if is_fp:
                 b = pred_boxes[i].astype(int)
                 name = self.class_names.get(int(pred_labels[i]), f"cls{pred_labels[i]}")
-                self._draw_box(img, b, _RED, f"FP {name} {pred_scores[i]:.2f}")
+                tid = f" T#{int(pred_track_ids[i])}" if pred_track_ids is not None else ""
+                self._draw_box(img, b, _RED, f"FP {name}{tid} {pred_scores[i]:.2f}")
 
         # Draw TP — green (on top)
         for i, is_tp in enumerate(tp_mask):
             if is_tp:
                 b = pred_boxes[i].astype(int)
                 name = self.class_names.get(int(pred_labels[i]), f"cls{pred_labels[i]}")
-                self._draw_box(img, b, _GREEN, f"TP {name} {pred_scores[i]:.2f}")
+                tid = f" T#{int(pred_track_ids[i])}" if pred_track_ids is not None else ""
+                self._draw_box(img, b, _GREEN, f"TP {name}{tid} {pred_scores[i]:.2f}")
 
         metrics = {
             "tp": int(tp_mask.sum()),
@@ -197,6 +206,16 @@ class DetectionVisualizationCallback(L.Callback):
             "num_gt": int(len(gt_boxes)),
         }
         return img, metrics
+
+    @staticmethod
+    def _extract_track_ids(d: dict) -> np.ndarray | None:
+        """Return track_ids as numpy array, or None if absent."""
+        ids = d.get("track_ids")
+        if ids is None:
+            return None
+        if isinstance(ids, torch.Tensor):
+            return ids.cpu().numpy()
+        return np.asarray(ids)
 
     # ------------------------------------------------------------------
     # IoU matching
@@ -353,16 +372,20 @@ class SAM2VisualizationCallback(DetectionVisualizationCallback):
         """Draw TP / FP / FN boxes. Input image is already numpy uint8 RGB."""
         gt_boxes = tgt["boxes"].cpu().numpy() if isinstance(tgt["boxes"], torch.Tensor) else tgt["boxes"]
         gt_labels = tgt["labels"].cpu().numpy() if isinstance(tgt["labels"], torch.Tensor) else tgt["labels"]
+        gt_track_ids = self._extract_track_ids(tgt)
 
         pred_boxes = pred["boxes"].cpu().numpy() if isinstance(pred["boxes"], torch.Tensor) else pred["boxes"]
         pred_scores = pred["scores"].cpu().numpy() if isinstance(pred["scores"], torch.Tensor) else pred["scores"]
         pred_labels = pred["labels"].cpu().numpy() if isinstance(pred["labels"], torch.Tensor) else pred["labels"]
+        pred_track_ids = self._extract_track_ids(pred)
 
         # Filter low-confidence predictions
         keep = pred_scores >= self.score_thresh
         pred_boxes = pred_boxes[keep]
         pred_scores = pred_scores[keep]
         pred_labels = pred_labels[keep]
+        if pred_track_ids is not None:
+            pred_track_ids = pred_track_ids[keep]
 
         # Match predictions to GT
         tp_mask, fp_mask, fn_mask = self._match(gt_boxes, pred_boxes)
@@ -372,21 +395,24 @@ class SAM2VisualizationCallback(DetectionVisualizationCallback):
             if is_fn:
                 b = gt_boxes[i].astype(int)
                 name = self.class_names.get(int(gt_labels[i]), f"cls{gt_labels[i]}")
-                self._draw_box(img, b, _BLUE, f"FN {name}")
+                tid = f" GT#{int(gt_track_ids[i])}" if gt_track_ids is not None else ""
+                self._draw_box(img, b, _BLUE, f"FN {name}{tid}")
 
         # Draw FP — red
         for i, is_fp in enumerate(fp_mask):
             if is_fp:
                 b = pred_boxes[i].astype(int)
                 name = self.class_names.get(int(pred_labels[i]), f"cls{pred_labels[i]}")
-                self._draw_box(img, b, _RED, f"FP {name} {pred_scores[i]:.2f}")
+                tid = f" T#{int(pred_track_ids[i])}" if pred_track_ids is not None else ""
+                self._draw_box(img, b, _RED, f"FP {name}{tid} {pred_scores[i]:.2f}")
 
         # Draw TP — green
         for i, is_tp in enumerate(tp_mask):
             if is_tp:
                 b = pred_boxes[i].astype(int)
                 name = self.class_names.get(int(pred_labels[i]), f"cls{pred_labels[i]}")
-                self._draw_box(img, b, _GREEN, f"TP {name} {pred_scores[i]:.2f}")
+                tid = f" T#{int(pred_track_ids[i])}" if pred_track_ids is not None else ""
+                self._draw_box(img, b, _GREEN, f"TP {name}{tid} {pred_scores[i]:.2f}")
 
         metrics = {
             "tp": int(tp_mask.sum()),

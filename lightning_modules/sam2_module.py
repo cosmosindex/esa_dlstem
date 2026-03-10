@@ -124,6 +124,12 @@ class SAM2EvaluationModule(L.LightningModule):
             gt_labels = clip.labels[t]
             gt_track_ids = clip.track_ids[t]
 
+            # Ensure pred tensors are on the same device as GT
+            device = gt_boxes.device
+            for k in ("boxes", "scores", "labels", "track_ids"):
+                if k in pred and isinstance(pred[k], torch.Tensor):
+                    pred[k] = pred[k].to(device)
+
             tgt = {"boxes": gt_boxes, "labels": gt_labels}
 
             # MAP expects lists of dicts
@@ -162,9 +168,9 @@ class SAM2EvaluationModule(L.LightningModule):
             indices = list(range(0, T, self.prompt_interval))
 
         for t in indices:
-            boxes_np = clip.boxes[t].numpy()
-            labels_np = clip.labels[t].numpy()
-            obj_ids = clip.track_ids[t].tolist()
+            boxes_np = clip.boxes[t].cpu().numpy()
+            labels_np = clip.labels[t].cpu().numpy()
+            obj_ids = clip.track_ids[t].cpu().tolist()
             # Replace -1 track IDs with unique positive IDs
             for i, oid in enumerate(obj_ids):
                 if oid < 0:
