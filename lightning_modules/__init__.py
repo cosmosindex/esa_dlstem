@@ -3,6 +3,7 @@ from .datamodule import DetectionDataModule, DataModuleConfig
 from .sam2_datamodule import SAM2DataModule, SAM2DataModuleConfig
 from .sam2_module import SAM2EvaluationModule
 from .visualization import DetectionVisualizationCallback, SAM2VisualizationCallback
+from .sot_callback import SOTEvalCallback, SAM2SOTEvalCallback
 
 __all__ = [
     "ObjectDetectionModule",
@@ -13,4 +14,6 @@ __all__ = [
     "SAM2EvaluationModule",
     "DetectionVisualizationCallback",
     "SAM2VisualizationCallback",
+    "SOTEvalCallback",
+    "SAM2SOTEvalCallback",
 ]

@@ -21,6 +21,7 @@ from lightning_modules import (
     SAM2DataModuleConfig,
     SAM2EvaluationModule,
     SAM2VisualizationCallback,
+    SAM2SOTEvalCallback,
 )
 from transforms import build_eval_transform
 
@@ -103,8 +104,14 @@ def run_evaluation(
         SAM2VisualizationCallback(
             class_names=CLASS_NAMES,
             output_dir=experiment_dir,
-            iou_thresh=0.5,
+            iou_thresh=0.3,
             max_wandb_images=50,
+            score_thresh=0.5,
+            sot_mode=True,
+        ),
+        SAM2SOTEvalCallback(
+            class_names=CLASS_NAMES,
+            output_dir=experiment_dir,
             score_thresh=0.5,
         ),
     ]
@@ -131,10 +138,10 @@ def main():
     run_evaluation(prompt_strategy="first_frame")
 
     # Experiment 2: re-prompt every N frames
-    print("=" * 60)
-    print(f"SAM2 Evaluation: every_{PROMPT_INTERVAL} prompt strategy")
-    print("=" * 60)
-    run_evaluation(prompt_strategy="every_n", prompt_interval=PROMPT_INTERVAL)
+    # print("=" * 60)
+    # print(f"SAM2 Evaluation: every_{PROMPT_INTERVAL} prompt strategy")
+    # print("=" * 60)
+    # run_evaluation(prompt_strategy="every_n", prompt_interval=PROMPT_INTERVAL)
 
 
 if __name__ == "__main__":
