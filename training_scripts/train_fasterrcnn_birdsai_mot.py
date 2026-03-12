@@ -1,8 +1,12 @@
 """
-Training script: YOLO v11 on OOTB dataset.
+Training script: Faster R-CNN on BIRDSAI MOT dataset.
+
+Trains a detection model on BIRDSAI MOT (multi-object) annotations.
+After training, the best checkpoint can be used for MOT evaluation
+with a simple IoU tracker.
 
 Usage:
-    python train_yolo_ootb.py
+    python train_fasterrcnn_birdsai_mot.py
 """
 
 import sys
@@ -16,7 +20,7 @@ import lightning as L
 from lightning.pytorch.loggers import WandbLogger
 from lightning.pytorch.callbacks import ModelCheckpoint, EarlyStopping
 
-from models import YOLODetector
+from models import FasterRCNNDetector
 from lightning_modules import (
     ObjectDetectionModule,
     DetectionDataModule,
@@ -29,22 +33,22 @@ from transforms import build_train_transform, build_eval_transform
 # Config
 # ---------------------------------------------------------------------------
 
-# YOLO uses 0-indexed class labels (no background class)
-CLASS_MAP = {"car": 0, "plane": 1, "ship": 2, "train": 3}
-NUM_CLASSES = len(CLASS_MAP)  # 4
+# FasterRCNN expects labels 1..C (0 = background), so num_classes = C + 1
+CLASS_MAP = {"animal": 1, "human": 2}
+NUM_CLASSES = len(CLASS_MAP) + 1  # 3 (background + animal + human)
 CLASS_NAMES = {v: k for k, v in CLASS_MAP.items()}
 
-OOTB_ROOT = "/data/ESA_DLSTEM_2025/data/trafic/OOTB"
+BIRDSAI_ROOT = "/data/ESA_DLSTEM_2025/data/wild_animal/BIRDSAI"
 IMG_SIZE = (640, 640)
 
-RUN_NAME = "yolo11n_ootb"
+RUN_NAME = "fasterrcnn-v2_birdsai_mot"
 
 # Training hyperparameters
 BATCH_SIZE = 8
-NUM_WORKERS = 0  # set to 4 with mp.set_start_method("spawn") if needed
+NUM_WORKERS = 0
 MAX_EPOCHS = 50
-LR = 1e-3
-WEIGHT_DECAY = 5e-4
+LR = 5e-4
+WEIGHT_DECAY = 1e-4
 WARMUP_EPOCHS = 5
 
 
@@ -57,7 +61,7 @@ def main():
     # Data
     # ------------------------------------------------------------------
     dm_cfg = DataModuleConfig(
-        datasets={"OOTB": OOTB_ROOT},
+        datasets={"BIRDSAI_MOT": BIRDSAI_ROOT},
         class_map=CLASS_MAP,
         batch_size=BATCH_SIZE,
         num_workers=NUM_WORKERS,
@@ -73,13 +77,14 @@ def main():
     # ------------------------------------------------------------------
     # Model
     # ------------------------------------------------------------------
-    model = YOLODetector(
-        model_name="yolo11n.pt",
+    model = FasterRCNNDetector(
         num_classes=NUM_CLASSES,
+        pretrained=True,
+        use_v2=True,
+        trainable_backbone_layers=2,
+        score_thresh=0.05,
+        nms_thresh=0.5,
         enable_tracking=True,
-        conf_thresh=0.05,
-        iou_thresh=0.5,
-        img_size=IMG_SIZE[0],
     )
 
     module = ObjectDetectionModule(
@@ -132,7 +137,6 @@ def main():
         accelerator="auto",
         devices=1,
         precision="16-mixed",
-        gradient_clip_val=10.0,
         logger=logger,
         callbacks=callbacks,
         log_every_n_steps=10,

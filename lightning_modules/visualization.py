@@ -501,7 +501,7 @@ class DetectionVisualizationCallback(L.Callback):
             self._draw_box(img, gt_box.astype(int), _BLUE, f"GT {gt_name}")
 
             # Draw best prediction
-            color = _GREEN if best_iou >= 0.5 else _RED
+            color = _GREEN if best_iou >= self.iou_thresh else _RED
             score = pred_scores[best_pi]
             tid = ""
             if pred_track_ids is not None:

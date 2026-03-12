@@ -28,6 +28,7 @@ from torch.utils.data import ConcatDataset, DataLoader
 from datasets import detection_collate_fn
 from datasets.ootb import OOTBDataset
 from datasets.birdsai import BIRDSAIDataset
+from datasets.birdsai_mot import BIRDSAIMOTDataset
 
 # ---------------------------------------------------------------------------
 # Dataset registry — add new dataset classes here
@@ -36,6 +37,7 @@ from datasets.birdsai import BIRDSAIDataset
 _DATASET_REGISTRY: dict[str, type] = {
     "OOTB": OOTBDataset,
     "BIRDSAI": BIRDSAIDataset,
+    "BIRDSAI_MOT": BIRDSAIMOTDataset,
 }
 
 # ---------------------------------------------------------------------------

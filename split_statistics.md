@@ -42,3 +42,18 @@ Single category: `animal`.
 | val       |        23 |        6,109 |             5 |
 | test      |        73 |       64,171 |            11 |
 | **Total** |   **364** | **152,284**  |        **48** |
+
+---
+
+## BIRDSAI_MOT
+
+Split strategy: TrainReal → **train**. TestReal → **val (30%) + test (70%)** by video, `seed=42`.
+Uses raw MOT CSV annotations (multiple objects per frame).
+Two categories: `animal` (class=0) and `human` (class=1).
+
+| Split     | Videos | Frames  | Boxes   |
+|-----------|-------:|--------:|--------:|
+| train     |     32 |  21,209 |  87,199 |
+| val       |      5 |   3,258 |   6,856 |
+| test      |     11 |  12,236 |  71,905 |
+| **Total** | **48** |**36,703**|**165,960**|

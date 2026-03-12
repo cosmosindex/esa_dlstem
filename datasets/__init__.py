@@ -7,6 +7,7 @@ from .base import (
     video_collate_fn,
 )
 from .birdsai import BIRDSAIDataset
+from .birdsai_mot import BIRDSAIMOTDataset
 
 __all__ = [
     "BaseVideoDataset",
@@ -16,4 +17,5 @@ __all__ = [
     "detection_collate_fn",
     "video_collate_fn",
     "BIRDSAIDataset",
+    "BIRDSAIMOTDataset",
 ]

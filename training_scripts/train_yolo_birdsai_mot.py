@@ -1,8 +1,11 @@
 """
-Training script: YOLO v11 on OOTB dataset.
+Training script: YOLO v11 on BIRDSAI MOT dataset.
+
+Trains a YOLO detector with ByteTrack on BIRDSAI MOT annotations.
+After training, the best checkpoint can be used for MOT evaluation.
 
 Usage:
-    python train_yolo_ootb.py
+    python train_yolo_birdsai_mot.py
 """
 
 import sys
@@ -30,18 +33,18 @@ from transforms import build_train_transform, build_eval_transform
 # ---------------------------------------------------------------------------
 
 # YOLO uses 0-indexed class labels (no background class)
-CLASS_MAP = {"car": 0, "plane": 1, "ship": 2, "train": 3}
-NUM_CLASSES = len(CLASS_MAP)  # 4
+CLASS_MAP = {"animal": 0, "human": 1}
+NUM_CLASSES = len(CLASS_MAP)  # 2
 CLASS_NAMES = {v: k for k, v in CLASS_MAP.items()}
 
-OOTB_ROOT = "/data/ESA_DLSTEM_2025/data/trafic/OOTB"
+BIRDSAI_ROOT = "/data/ESA_DLSTEM_2025/data/wild_animal/BIRDSAI"
 IMG_SIZE = (640, 640)
 
-RUN_NAME = "yolo11n_ootb"
+RUN_NAME = "yolo11n_birdsai_mot"
 
 # Training hyperparameters
 BATCH_SIZE = 8
-NUM_WORKERS = 0  # set to 4 with mp.set_start_method("spawn") if needed
+NUM_WORKERS = 0
 MAX_EPOCHS = 50
 LR = 1e-3
 WEIGHT_DECAY = 5e-4
@@ -57,7 +60,7 @@ def main():
     # Data
     # ------------------------------------------------------------------
     dm_cfg = DataModuleConfig(
-        datasets={"OOTB": OOTB_ROOT},
+        datasets={"BIRDSAI_MOT": BIRDSAI_ROOT},
         class_map=CLASS_MAP,
         batch_size=BATCH_SIZE,
         num_workers=NUM_WORKERS,
