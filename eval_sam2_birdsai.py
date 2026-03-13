@@ -1,12 +1,13 @@
 """
-Evaluation script: SAM2 on BIRDSAI MOT dataset.
+Evaluation script: SAM2 on BIRDSAI dataset.
 
-SAM2 receives GT bounding boxes as prompts and propagates all tracks
-across the clip.  Multiple objects are tracked simultaneously.
+Supports two evaluation modes:
+  - MOT: uses BIRDSAI_MOT dataset (multi-object CSV annotations)
+         Metrics: MOTA, IDF1, TP/FP/FN
+  - SOT: uses BIRDSAI dataset (single-object tracking splits)
+         Metrics: Success AUC, Precision@20
 
-Runs two evaluations:
-  1. first_frame — prompt with GT boxes from frame 0 only
-  2. every_n    — re-prompt with GT boxes every N frames
+Each mode runs with the first_frame prompt strategy by default.
 
 Usage:
     python eval_sam2_birdsai.py
@@ -24,6 +25,7 @@ from lightning_modules import (
     SAM2DataModuleConfig,
     SAM2EvaluationModule,
     SAM2VisualizationCallback,
+    SAM2SOTEvalCallback,
 )
 from transforms import build_eval_transform
 
@@ -50,11 +52,11 @@ NUM_WORKERS = 0
 PROMPT_INTERVAL = 10
 
 
-def run_evaluation(
-    prompt_strategy: str,
+def run_mot_evaluation(
+    prompt_strategy: str = "first_frame",
     prompt_interval: int = 10,
 ):
-    """Run SAM2 evaluation with the given prompt strategy."""
+    """Run SAM2 MOT evaluation on BIRDSAI_MOT dataset."""
     torch.set_float32_matmul_precision("high")
 
     run_name = f"sam2_{prompt_strategy}_birdsai_mot"
@@ -63,9 +65,6 @@ def run_evaluation(
 
     experiment_dir = f"/work/ziwen/experiments/{run_name}_{datetime.now():%Y%m%d_%H%M%S}"
 
-    # ------------------------------------------------------------------
-    # Data — use BIRDSAI_MOT (multi-object CSV annotations)
-    # ------------------------------------------------------------------
     dm = SAM2DataModule(
         cfg=SAM2DataModuleConfig(
             datasets={"BIRDSAI_MOT": BIRDSAI_ROOT},
@@ -78,20 +77,13 @@ def run_evaluation(
         eval_transform=build_eval_transform(IMG_SIZE),
     )
 
-    # ------------------------------------------------------------------
-    # Model
-    # ------------------------------------------------------------------
     tracker = SAM2Tracker(model_id=SAM2_MODEL_ID)
-
     module = SAM2EvaluationModule(
         model=tracker,
         prompt_strategy=prompt_strategy,
         prompt_interval=prompt_interval,
     )
 
-    # ------------------------------------------------------------------
-    # Logger
-    # ------------------------------------------------------------------
     logger = WandbLogger(
         project="esa-dlstem",
         entity="chengziwen693",
@@ -99,9 +91,6 @@ def run_evaluation(
         log_model=False,
     )
 
-    # ------------------------------------------------------------------
-    # Callbacks — MOT mode (detection TP/FP/FN + tracking metrics)
-    # ------------------------------------------------------------------
     callbacks = [
         SAM2VisualizationCallback(
             class_names=CLASS_NAMES,
@@ -113,9 +102,72 @@ def run_evaluation(
         ),
     ]
 
-    # ------------------------------------------------------------------
-    # Trainer (test only)
-    # ------------------------------------------------------------------
+    trainer = L.Trainer(
+        accelerator="auto",
+        devices=1,
+        logger=logger,
+        callbacks=callbacks,
+        default_root_dir=experiment_dir,
+    )
+
+    trainer.test(module, datamodule=dm)
+
+
+def run_sot_evaluation(
+    prompt_strategy: str = "first_frame",
+    prompt_interval: int = 10,
+):
+    """Run SAM2 SOT evaluation on BIRDSAI (tracking splits) dataset."""
+    torch.set_float32_matmul_precision("high")
+
+    run_name = f"sam2_{prompt_strategy}_birdsai_sot"
+    if prompt_strategy == "every_n":
+        run_name = f"sam2_every{prompt_interval}_birdsai_sot"
+
+    experiment_dir = f"/work/ziwen/experiments/{run_name}_{datetime.now():%Y%m%d_%H%M%S}"
+
+    dm = SAM2DataModule(
+        cfg=SAM2DataModuleConfig(
+            datasets={"BIRDSAI": BIRDSAI_ROOT},
+            class_map=CLASS_MAP,
+            clip_len=CLIP_LEN,
+            clip_stride=CLIP_STRIDE,
+            batch_size=BATCH_SIZE,
+            num_workers=NUM_WORKERS,
+        ),
+        eval_transform=build_eval_transform(IMG_SIZE),
+    )
+
+    tracker = SAM2Tracker(model_id=SAM2_MODEL_ID)
+    module = SAM2EvaluationModule(
+        model=tracker,
+        prompt_strategy=prompt_strategy,
+        prompt_interval=prompt_interval,
+    )
+
+    logger = WandbLogger(
+        project="esa-dlstem",
+        entity="chengziwen693",
+        name=run_name,
+        log_model=False,
+    )
+
+    callbacks = [
+        SAM2VisualizationCallback(
+            class_names=CLASS_NAMES,
+            output_dir=experiment_dir,
+            iou_thresh=0.5,
+            max_wandb_images=50,
+            score_thresh=0.5,
+            sot_mode=True,  # SOT mode: Success/Precision per sequence
+        ),
+        SAM2SOTEvalCallback(
+            class_names=CLASS_NAMES,
+            output_dir=experiment_dir,
+            score_thresh=0.5,
+        ),
+    ]
+
     trainer = L.Trainer(
         accelerator="auto",
         devices=1,
@@ -128,17 +180,17 @@ def run_evaluation(
 
 
 def main():
-    # Experiment 1: first-frame prompt only
+    # --- SOT evaluation ---
     print("=" * 60)
-    print("SAM2 MOT Evaluation on BIRDSAI: first_frame prompt strategy")
+    print("SAM2 SOT Evaluation on BIRDSAI: first_frame prompt strategy")
     print("=" * 60)
-    run_evaluation(prompt_strategy="first_frame")
+    run_sot_evaluation(prompt_strategy="first_frame")
 
-    # Experiment 2: re-prompt every N frames
+    # --- MOT evaluation ---
     # print("=" * 60)
-    # print(f"SAM2 MOT Evaluation on BIRDSAI: every_{PROMPT_INTERVAL} prompt strategy")
+    # print("SAM2 MOT Evaluation on BIRDSAI: first_frame prompt strategy")
     # print("=" * 60)
-    # run_evaluation(prompt_strategy="every_n", prompt_interval=PROMPT_INTERVAL)
+    # run_mot_evaluation(prompt_strategy="first_frame")
 
 
 if __name__ == "__main__":

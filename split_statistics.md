@@ -23,9 +23,15 @@ Split strategy: **80 / 10 / 10** stratified by category, `seed=42`.
 
 Split strategy: **Official** TrainReal/TestReal from dataset.
 TrainReal → train. Val split from TestReal sequences (30/70 stratified by source video, `seed=42`).
-Single category: `animal`.
+Two categories: `animal` (class=0) and `human` (class=1). Category determined by looking up track_id in MOT CSV.
 
 ### tracking_split="perfect" (no occluded frames)
+
+| Category   | Train | Val | Test | Total |
+|------------|------:|----:|-----:|------:|
+| animal     |   322 |  13 |   83 |   418 |
+| human      |    61 |  12 |   55 |   128 |
+| **Total**  |**383**|**25**|**138**|**546**|
 
 | Split     | Sequences | Frames | Source Videos |
 |-----------|----------:|-------:|--------------:|

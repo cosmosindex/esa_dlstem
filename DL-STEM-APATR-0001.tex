@@ -367,4 +367,122 @@ Unlike SOT, MOT does not require a first-frame prompt to initialise a specific t
 Faster R-CNN and YOLO, when coupled with ByteTracker, are well-suited for this paradigm, as they provide per-frame detections that ByteTracker then links into consistent trajectories. 
 SAM2 is likewise applicable, leveraging its segmentation and tracking capabilities in a multi-object setting.
 
+% ===== MOT Results on BIRDSAI =====
+
+\begin{table}[htbp]
+\centering
+\caption{Overall MOT results on the BIRDSAI test set.}
+\label{tab:mot-overall}
+\begin{tabular}{lccc}
+\toprule
+Metric & SAM2 & Faster R-CNN v2 & YOLO11n \\
+\midrule
+AP50            & 0.0802   & \textbf{0.3087} & 0.2152  \\
+AR@100          & 0.1858   & \textbf{0.3788} & 0.2809  \\
+Precision       & 0.4116   & 0.2938          & \textbf{0.4635} \\
+Recall          & 0.2211   & \textbf{0.7187} & 0.4595  \\
+MOTA            & $-0.1021$  & $-1.1576$         & \textbf{$-0.1985$} \\
+IDF1            & 0.2877   & 0.4171          & \textbf{0.4615} \\
+ID Switches     & \textbf{506} & 10\,686      & 9\,064  \\
+FPS             & 2.60     & 66.81           & \textbf{92.61}  \\
+Model Size (MB) & 856.2    & 165.3           & \textbf{9.9}    \\
+Total Time (s)  & 4610.1   & 183.1           & \textbf{132.1}  \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+% ----- Per-category tables (side by side) -----
+\begin{table}[htbp]
+\centering
+\caption{Per-category MOT results on the BIRDSAI test set.}
+\label{tab:mot-per-category}
+
+\begin{minipage}[t]{0.48\textwidth}
+\centering
+{\textbf{Animal}}\par\medskip
+\begin{tabular}{lccc}
+\toprule
+Metric & SAM2 & FRCNN & YOLO \\
+\midrule
+TP          & 13\,181          & \textbf{38\,748} & 21\,728 \\
+FP          & \textbf{10\,880} & 84\,732          & 9\,929  \\
+FN          & 41\,079          & \textbf{16\,353} & 33\,373 \\
+Num GT      & 54\,260          & 55\,101          & 55\,101 \\
+Precision   & 0.5478           & 0.3138           & \textbf{0.6864} \\
+Recall      & 0.2429           & \textbf{0.7032}  & 0.3943  \\
+MOTA        & 0.0424           & $-0.8837$        & \textbf{0.1832} \\
+IDF1        & 0.3366           & 0.4340           & \textbf{0.5009} \\
+ID Sw.      & \textbf{0}       & 2\,708           & 1\,705  \\
+\bottomrule
+\end{tabular}
+\end{minipage}
+\hfill
+\begin{minipage}[t]{0.48\textwidth}
+\centering
+{\textbf{Human}}\par\medskip
+\begin{tabular}{lccc}
+\toprule
+Metric & SAM2 & FRCNN & YOLO \\
+\midrule
+TP          & 1\,977           & \textbf{9\,448}  & 869     \\
+FP          & 10\,154          & 11\,805          & \textbf{15} \\
+FN          & 14\,774          & \textbf{7\,356}  & 15\,935 \\
+Num GT      & 16\,751          & 16\,804          & 16\,804 \\
+Precision   & 0.1630           & 0.4445           & \textbf{0.9830} \\
+Recall      & 0.1180           & \textbf{0.5622}  & 0.0517  \\
+MOTA        & $-0.4881$        & $-0.1907$        & \textbf{0.0314} \\
+IDF1        & 0.1369           & \textbf{0.4965}  & 0.0983  \\
+ID Sw.      & \textbf{0}       & 847              & 327     \\
+\bottomrule
+\end{tabular}
+\end{minipage}
+\end{table}
+
+% ----- Per-size tables (side by side) -----
+\begin{table}[htbp]
+\centering
+\caption{Per-size MOT results on the BIRDSAI test set.}
+\label{tab:mot-per-size}
+
+\begin{minipage}[t]{0.48\textwidth}
+\centering
+{\textbf{Small}}\par\medskip
+\begin{tabular}{lccc}
+\toprule
+Metric & SAM2 & FRCNN & YOLO \\
+\midrule
+TP          & 5\,789           & \textbf{13\,130} & 2\,236  \\
+FP          & 16\,089          & 89\,138          & \textbf{6\,136} \\
+FN          & 21\,230          & \textbf{14\,405} & 25\,299 \\
+Num GT      & 27\,019          & 27\,535          & 27\,535 \\
+Precision   & 0.2646           & 0.1284           & \textbf{0.2671} \\
+Recall      & 0.2143           & \textbf{0.4768}  & 0.0812  \\
+MOTA        & $-0.3812$        & $-2.8235$        & \textbf{$-0.1641$} \\
+IDF1        & \textbf{0.2368}  & 0.2023           & 0.1245  \\
+ID Sw.      & \textbf{0}       & 1\,737           & 618     \\
+\bottomrule
+\end{tabular}
+\end{minipage}
+\hfill
+\begin{minipage}[t]{0.48\textwidth}
+\centering
+{\textbf{Large}}\par\medskip
+\begin{tabular}{lccc}
+\toprule
+Metric & SAM2 & FRCNN & YOLO \\
+\midrule
+TP          & 9\,369           & \textbf{35\,066} & 20\,361 \\
+FP          & \textbf{4\,945}  & 7\,399           & 3\,808  \\
+FN          & 34\,623          & \textbf{9\,304}  & 24\,009 \\
+Num GT      & 43\,992          & 44\,370          & 44\,370 \\
+Precision   & 0.6545           & 0.8258           & \textbf{0.8424} \\
+Recall      & 0.2130           & \textbf{0.7903}  & 0.4589  \\
+MOTA        & 0.1006           & \textbf{0.5826}  & 0.3412  \\
+IDF1        & 0.3214           & \textbf{0.8076}  & 0.5941  \\
+ID Sw.      & \textbf{0}       & 1\,818           & 1\,414  \\
+\bottomrule
+\end{tabular}
+\end{minipage}
+\end{table}
+
 \end{document}

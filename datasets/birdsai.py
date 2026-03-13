@@ -54,8 +54,8 @@ from .base import BaseVideoDataset, VideoInfo
 
 _SPLIT_SEED = 42
 
-# Category is always "animal" for BIRDSAI SOT sequences
-_CATEGORY = "animal"
+# MOT CSV class field: 0 = animal, 1 = human
+_CLASS_NAMES = {0: "animal", 1: "human"}
 
 
 class BIRDSAIDataset(BaseVideoDataset):
@@ -82,6 +82,7 @@ class BIRDSAIDataset(BaseVideoDataset):
         self._gt_cache: dict[str, np.ndarray] = {}       # seq_id → (T, 4) xywh
         self._img_list_cache: dict[str, list[str]] = {}   # seq_id → list of actual filenames
         self._video_dir_cache: dict[str, Path] = {}       # seq_id → path to image dir
+        self._seq_category: dict[str, str] = {}            # seq_id → "animal" or "human"
 
         super().__init__(root=root, split=split, **kwargs)
 
@@ -143,10 +144,17 @@ class BIRDSAIDataset(BaseVideoDataset):
                 self._img_list_cache[seq_id] = img_list[:n]
                 self._video_dir_cache[seq_id] = img_dir
 
+                # Determine category from MOT CSV
+                track_id = self._extract_track_id(seq_id)
+                category = self._lookup_track_class(
+                    split_dir / "annotations", video_id, track_id
+                )
+                self._seq_category[seq_id] = category
+
                 all_videos.append(VideoInfo(
                     video_id=seq_id,
                     dataset="BIRDSAI",
-                    category=_CATEGORY,
+                    category=category,
                     split="",  # assigned below
                     num_frames=len(valid_frames),
                     frame_ids=valid_frames,
@@ -176,6 +184,7 @@ class BIRDSAIDataset(BaseVideoDataset):
                 self._gt_cache.pop(v.video_id, None)
                 self._img_list_cache.pop(v.video_id, None)
                 self._video_dir_cache.pop(v.video_id, None)
+                self._seq_category.pop(v.video_id, None)
 
     def _load_frame(self, video: VideoInfo, frame_id: int) -> np.ndarray:
         seq_id = video.video_id
@@ -204,9 +213,10 @@ class BIRDSAIDataset(BaseVideoDataset):
         # Convert xywh → xyxy
         box_xyxy = [float(x), float(y), float(x + w), float(y + h)]
 
+        category = self._seq_category[seq_id]
         return {
             "boxes": np.array([box_xyxy], dtype=np.float32),
-            "labels": np.array([self._map_label(_CATEGORY)], dtype=np.int64),
+            "labels": np.array([self._map_label(category)], dtype=np.int64),
             "track_ids": np.array([1], dtype=np.int64),  # SOT — single object
         }
 
@@ -238,6 +248,37 @@ class BIRDSAIDataset(BaseVideoDataset):
         parts = seq_id.split("_")
         # Video ID is the first two parts (both are 10-digit zero-padded numbers)
         return f"{parts[0]}_{parts[1]}"
+
+    @staticmethod
+    def _extract_track_id(seq_id: str) -> int:
+        """Extract the track ID from a sequence directory name.
+
+        Sequence naming: ``<vid_part1>_<vid_part2>_<track_id>_<start>-<end>``
+        """
+        parts = seq_id.split("_")
+        return int(parts[2])
+
+    @staticmethod
+    def _lookup_track_class(
+        annotations_dir: Path, video_id: str, track_id: int
+    ) -> str:
+        """Look up the class of a track from the MOT CSV annotation.
+
+        Returns "animal" or "human".  Falls back to "animal" if the CSV
+        is missing or the track_id is not found.
+        """
+        csv_path = annotations_dir / f"{video_id}.csv"
+        if not csv_path.exists():
+            return "animal"
+        with open(csv_path) as f:
+            for line in f:
+                parts = line.strip().split(",")
+                if len(parts) < 7:
+                    continue
+                if int(parts[1]) == track_id:
+                    cls = int(parts[6])
+                    return _CLASS_NAMES.get(cls, "animal")
+        return "animal"
 
     @staticmethod
     def _parse_gt(path: Path) -> np.ndarray:
