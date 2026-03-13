@@ -359,6 +359,47 @@ In contrast, traditional object detection algorithms such as Faster R-CNN and YO
 Critically, they are not designed to accept a first-frame bounding box as input, which means they lack the ability to associate a specific target instance across frames — a fundamental requirement of SOT. 
 They are therefore clearly unsuitable for the SOT task and have been excluded from our SOT evaluation accordingly.
 
+hypertarget{Quantitative Results}{%
+\subsubsection{Quantitative Results}\label{SOT_Quantitative}}
+
+% ===== SOT Results on BIRDSAI =====
+\begin{table}[htbp]
+\centering
+\begin{tabular}{l ccc cc}
+\toprule
+\textbf{Metric} & \multicolumn{3}{c}{\textbf{Per Category}} & \multicolumn{2}{c}{\textbf{Per Size}} \\
+\cmidrule(lr){2-4} \cmidrule(lr){5-6}
+ & Overall & Animal & Human & Small & Large \\
+\midrule
+N Frames      & 25\,536 & 8\,448  & 17\,088 & 18\,084 & 7\,452  \\
+Success AUC   & 0.3661  & \textbf{0.4295} & 0.3347  & 0.3399  & \textbf{0.4295} \\
+Precision@20  & 0.8881  & 0.8710  & \textbf{0.8966} & \textbf{0.9136} & 0.8264 \\
+Mean IoU      & 0.3567  & \textbf{0.4238} & 0.3235  & 0.3290  & \textbf{0.4238} \\
+\bottomrule
+\end{tabular}
+\caption{SAM2 SOT results on the BIRDSAI test set (first-frame prompt).}
+\label{tab:sot-birdsai}
+\end{table}
+
+% ===== SOT Results on OOTB =====
+\begin{table}[htbp]
+\centering
+\begin{tabular}{l ccccc cc}
+\toprule
+\textbf{Metric} & \multicolumn{5}{c}{\textbf{Per Category}} & \multicolumn{2}{c}{\textbf{Per Size}} \\
+\cmidrule(lr){2-6} \cmidrule(lr){7-8}
+ & Overall & Car & Plane & Ship & Train & Small & Large \\
+\midrule
+N Frames      & 3\,200 & 1\,728 & 480    & 800    & 192   & 2\,720 & 480    \\
+Success AUC   & 0.3099 & 0.2431 & 0.2047 & \textbf{0.5801} & 0.0476 & \textbf{0.3308} & 0.1909 \\
+Precision@20  & 0.5038 & 0.4074 & 0.4688 & \textbf{0.8538} & 0.0000 & \textbf{0.5184} & 0.4208 \\
+Mean IoU      & 0.2880 & 0.2157 & 0.1761 & \textbf{0.5805} & 0.0000 & \textbf{0.3106} & 0.1603 \\
+\bottomrule
+\end{tabular}
+\caption{SAM2 SOT results on the OOTB test set (first-frame prompt).}
+\label{tab:sot-ootb}
+\end{table}
+
 \hypertarget{Multi-Object Tracking (MOT)}{%
 \subsection{Multi-Object Tracking (MOT)}\label{MOT}}
 
