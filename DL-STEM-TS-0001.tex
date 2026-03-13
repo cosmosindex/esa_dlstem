@@ -1,0 +1,462 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+%
+\documentclass[
+]{article}
+\usepackage{amsmath,amssymb}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\usepackage{colortbl}
+\usepackage{titlesec}
+\usepackage{enumitem}
+\definecolor{esablue}{RGB}{0,70,127}
+\titleformat{\section}{\large\bfseries\color{esablue}}{\thesection}{0.6em}{}[\vspace{2pt}\titlerule\vspace{4pt}]
+\titleformat{\subsection}{\normalsize\bfseries\color{esablue!80}}{\thesubsection}{0.6em}{}
+\titleformat{\subsubsection}{\normalsize\bfseries}{\thesubsubsection}{0.6em}{}
+\titlespacing*{\section}{0pt}{1.8ex}{0.6ex}
+\titlespacing*{\subsection}{0pt}{1.2ex}{0.3ex}
+\titlespacing*{\subsubsection}{0pt}{1ex}{0.2ex}
+\usepackage{longtable,booktabs,array}
+\usepackage{multirow}
+\usepackage{calc} % for calculating minipage widths
+% Correct order of tables after \paragraph or \subparagraph
+\usepackage{etoolbox}
+\makeatletter
+\patchcmd\longtable{\par}{\if@noskipsec\mbox{}\fi\par}{}{}
+\makeatother
+% Allow footnotes in longtable head/foot
+\IfFileExists{footnotehyper.sty}{\usepackage{footnotehyper}}{\usepackage{footnote}}
+\makesavenoteenv{longtable}
+\usepackage{graphicx}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+% Set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{3} % number sections, subsections, subsubsections
+\ifLuaTeX
+  \usepackage{selnolig}  % disable illegal ligatures
+\fi
+\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+\hypersetup{
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\author{}
+\date{}
+
+\begin{document}
+
+% ===== COVER PAGE =====
+\begin{titlepage}
+  \raggedright
+  \vspace*{3cm}
+
+  {\fontsize{32}{40}\selectfont\bfseries Test Specification\par}
+
+  \vspace{0.6cm}
+
+  {\fontsize{22}{26}\selectfont\bfseries DL-STEM -- ESA\enspace 4000147806/25/I-EB\par}
+
+  \vspace{1.2cm}
+
+  {\fontsize{14}{20}\selectfont ESA \textbar{} CEOSpaceTech \textbar{} CosmosIndex\par}
+
+  \vspace{0.4cm}
+
+  {\fontsize{14}{20}\selectfont 2026-03-12\par}
+
+  \vfill
+  \begin{flushright}
+    \includegraphics[width=2in,height=1in]{/Users/ziwencheng/Documents/CosmosIndex_code/esa_dlstem/logo.png}
+  \end{flushright}
+\end{titlepage}
+% ===== END COVER PAGE =====
+
+\newpage
+
+\renewcommand{\arraystretch}{2.8}
+\noindent\begin{tabular}{@{} p{2.8cm} p{7.2cm} p{1.2cm} p{3.5cm} @{}}
+  \textbf{Prepared By} &
+    \underline{Iulia Calota (UNSTPB)\hfill} &
+    \textbf{Date:} &
+    \underline{19.12.2025\hfill} \\
+  \textbf{Reviewed By} &
+    \underline{Sirui Wang (CosmosIndex)\hfill} &
+    \textbf{Date:} &
+    \underline{19.12.2025\hfill} \\
+  \textbf{Approved By} &
+    \underline{Mihai Datcu (UNSTPB)\hfill} &
+    \textbf{Date:} &
+    \underline{\hspace{3.5cm}} \\
+\end{tabular}
+\renewcommand{\arraystretch}{1}
+
+Authors
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.0739}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.2530}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.6731}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+\textbf{No.}
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+\textbf{Name}
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+\textbf{Role in the project}
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+1. & Iulia Calota & DL and Dimensionality Reduction expert \\
+2. & Sirui Wang & AI expert \\
+3. & Ioana Voica & Hyperspectral data analysis expert \\
+4. & Corina Vaduva & EO data analysis \& applications expert \\
+5. & Yuanyuan Wang & Lead Research and Data Scientist \\
+6. & Andrei Anghel & Data science expert \\
+7. & Mihai Datcu & Project Manager \\
+\end{longtable}
+
+Document Change Record
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 6\tabcolsep) * \real{0.0739}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 6\tabcolsep) * \real{0.1265}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 6\tabcolsep) * \real{0.1265}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 6\tabcolsep) * \real{0.6731}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+\textbf{Issue}
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+\textbf{Date}
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+\textbf{Chapter}
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+\textbf{Change}
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+1.1 & 19.12.2025 & All & First draft \\
+1.2 & & & \\
+\end{longtable}
+
+\newpage
+
+% ===== TABLE OF CONTENTS PAGE =====
+{\centering\Large\bfseries Table of Contents\par}
+\vspace{0.8cm}
+\noindent\rule{\linewidth}{0.6pt}
+
+\newcommand{\tocentry}[3]{%
+  \noindent\hyperlink{#1}{%
+    {\normalsize #2}%
+  }\hfill{\normalsize #3}\par\vspace{0.25cm}%
+}
+\newcommand{\tocsub}[3]{%
+  \noindent\hspace{1.2em}\hyperlink{#1}{%
+    {\normalsize\color{gray} #2}%
+  }\hfill{\normalsize\color{gray} #3}\par\vspace{0.2cm}%
+}
+
+\tocentry{_Toc1974584720}{Reference Documents}{3}
+\tocentry{introduction}{1.\enspace Introduction}{4}
+\tocsub{document-structure}{1.1.\enspace Document Structure}{5}
+\tocentry{data-processing}{2.\enspace Data processing}{5}
+\tocsub{dataset-collection}{2.1.\enspace Dataset collection}{6}
+\tocsub{dataset-preprocessing}{2.2.\enspace Dataset preprocessing}{8}
+\tocentry{algorithms-assessment}{3.\enspace Algorithms assessment}{9}
+\tocsub{classification}{3.1.\enspace Classification}{10}
+\tocsub{regression}{3.2.\enspace Regression}{10}
+\tocsub{unmixing}{3.3.\enspace Unmixing}{11}
+\tocsub{clustering}{3.4.\enspace Clustering}{14}
+
+\vspace{0.1cm}
+\noindent\rule{\linewidth}{0.6pt}
+% ===== END TABLE OF CONTENTS PAGE =====
+
+\newpage
+
+\protect\hypertarget{_Toc1974584720}{}{}%
+% ===== REFERENCE DOCUMENTS PAGE =====
+{\centering\Large\bfseries Reference Documents\par}
+\vspace{0.6cm}
+\noindent\rule{\linewidth}{0.6pt}
+
+\renewcommand{\arraystretch}{1.5}
+\begin{longtable}[]{@{}
+  >{\centering\bfseries\arraybackslash}p{0.08\linewidth}
+  >{\raggedright\arraybackslash}p{0.47\linewidth}
+  >{\raggedright\arraybackslash}p{0.38\linewidth}@{}}
+\rowcolor{gray!20}
+\textbf{ID} & \textbf{Document Title} & \textbf{Document Reference} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+D3 & Reference Data Selection & HYPERFUSE-RDS-0001 \\
+D2 & Algorithm Theoretical Basis Description & HYPERFUSE-ATBD-0001 \\
+D4 & Use Cases Specification & HYPERFUSE-UCS-0001 \\
+\end{longtable}
+\renewcommand{\arraystretch}{1}
+% ===== END REFERENCE DOCUMENTS PAGE =====
+
+\newpage
+
+\hypertarget{introduction}{%
+\section{Introduction}\label{introduction}}
+
+This is the Advanced EO Processing Algorithm Test Report (D6) document
+of the activity \emph{WP3200} of the work package (WP) \emph{WP3000} in
+the DL-STEM project. The objective is to assess the processing methods
+and the chosen algorithms first on a small dataset and then on the
+benchmark dataset.
+
+\hypertarget{document-structure}{%
+\subsection{Document Structure}\label{document-structure}}
+
+Section 2 presents \ldots{}
+
+\hypertarget{data-processing}{%
+\section{Data processing}\label{data-processing}}
+
+Data processing algorithms \ldots{}
+
+\hypertarget{dataset-preprocessing}{%
+\subsection{Dataset preprocessing}\label{dataset-preprocessing}}
+
+The preprocessing pipeline consists of two main steps: splitting each dataset into training, validation, and test subsets, and applying data augmentation during training to improve model generalisation.
+
+\subsubsection*{Dataset Split}
+
+Each dataset is partitioned into three non-overlapping subsets: train, validation, and test. The splitting strategy is adapted to the structure and official annotations available for each dataset.
+
+\textbf{OOTB.} The OOTB dataset contains 110 videos across four object categories: car (45), plane (25), ship (30), and train (10). Since no official split is provided, a stratified random split with ratio \textbf{80\,/\,10\,/\,10} is applied, using \texttt{seed=42} to ensure reproducibility. Stratification is performed by category to preserve class balance across all three subsets. The resulting split is summarised in Table~\ref{tab:ootb-split}.
+
+\renewcommand{\arraystretch}{1.3}
+\begin{longtable}[c]{@{}lrrrr@{}}
+\caption{OOTB dataset split by category.\label{tab:ootb-split}}\\
+\rowcolor{gray!20}
+\textbf{Category} & \textbf{Train} & \textbf{Val} & \textbf{Test} & \textbf{Total} \\
+\midrule
+\endhead
+car   & 36 & 4 &  5 &  45 \\
+plane & 20 & 2 &  3 &  25 \\
+ship  & 24 & 3 &  3 &  30 \\
+train &  8 & 1 &  1 &  10 \\
+\midrule
+\textbf{Total} & \textbf{88} & \textbf{10} & \textbf{12} & \textbf{110} \\
+\end{longtable}
+\renewcommand{\arraystretch}{1}
+
+\textbf{BIRDSAI.} The BIRDSAI dataset provides an official train/test partition (\texttt{TrainReal} / \texttt{TestReal}). The training set is taken directly from \texttt{TrainReal}. A validation subset is derived from \texttt{TestReal} using a stratified split by source video (\textbf{30\,/\,70}, \texttt{seed=42}), yielding a dedicated validation set while preserving the remaining test sequences. Two tracking configurations are used:
+
+\begin{itemize}[noitemsep,topsep=2pt]
+  \item \texttt{tracking\_split="perfect"}: only non-occluded frames are retained. The split yields 383 train sequences (70,261 frames), 25 val sequences (5,575 frames), and 138 test sequences (28,170 frames) across 34 source videos.
+  \item \texttt{tracking\_split="full"}: occluded frames are included in the annotations but skipped during data loading. This results in 268 train sequences (82,004 valid frames), 23 val sequences (6,109 frames), and 73 test sequences (64,171 frames) across 48 source videos.
+\end{itemize}
+
+\textbf{BIRDSAI\_MOT.} The BIRDSAI\_MOT variant uses raw MOT-format CSV annotations with two object categories: \texttt{animal} (class 0) and \texttt{human} (class 1). The \texttt{TrainReal} partition is used for training, while \texttt{TestReal} is divided into val (30\%) and test (70\%) by video (\texttt{seed=42}). This produces 32 train videos (21,209 frames, 87,199 boxes), 5 val videos (3,258 frames, 6,856 boxes), and 11 test videos (12,236 frames, 71,905 boxes), for a total of 165,960 annotated bounding boxes.
+
+\subsubsection*{Data Augmentation}
+
+All image and bounding-box transforms are implemented using the \texttt{albumentations} library~\cite{albumentations}, with bounding boxes represented in Pascal VOC format (\texttt{xyxy} absolute pixel coordinates). A minimum visibility threshold of 0.3 is applied: any bounding box that retains less than 30\% of its original area after a spatial transform is automatically discarded from the annotation.
+
+Two separate transform pipelines are defined:
+
+\textbf{Training transform.} During training, each frame is resized to $640 \times 640$ pixels and then subjected to a random horizontal flip with probability $p = 0.5$. The horizontal flip simulates the natural left--right symmetry of aerial and satellite observations, increasing the diversity of object orientations seen by the model without introducing unrealistic artefacts.
+
+\textbf{Evaluation transform.} During validation and testing, only a deterministic resize to $640 \times 640$ pixels is applied, with no stochastic operations, ensuring reproducible evaluation metrics across runs.
+
+The choice of a minimal augmentation strategy is intentional: the datasets contain infrared and thermal imagery with specific spectral properties, and aggressive photometric augmentations (e.g.\ colour jitter or channel dropout) could distort the radiometric information that detectors rely on for small target discrimination.
+
+\hypertarget{Evaluation Metrics and Performance Assessment}{%
+\section{Evaluation Metrics and Performance Assessment}\label{Evaluation Metrics and Performance Assessment}}
+
+To ensure a comprehensive and objective evaluation of the proposed methods, different quantitative metrics are defined according to the nature of each task. The selected metrics are widely adopted in the remote sensing and machine learning communities and allow fair comparison across models and experimental settings. 
+
+\hypertarget{Evaluation Metrics - SOT}{%
+\subsection{Evaluation Metrics -- SOT}\label{Evaluation Metrics - SOT}}
+
+Single Object Tracking (SOT) is the task of continuously localising a single target object across all frames of a video sequence, given only its bounding box in the first frame as a reference. Unlike detection, 
+the model receives no class label at test time and must propagate spatial information over time in the presence of motion, occlusion, and appearance change. Three standard OTB-style metrics are adopted to assess tracking performance.
+
+\subsubsection*{Success Plot and AUC}
+
+The \textbf{success plot} measures the fraction of frames in which the Intersection over Union (IoU) between the predicted and ground-truth bounding boxes exceeds a given threshold $\tau \in [0, 1]$. The \textbf{Success AUC} is the area under this curve, summarising overlap accuracy into a single scalar. A higher AUC indicates that the tracker maintains tighter bounding-box alignment throughout the sequence.
+
+\subsubsection*{Precision Plot and P@20}
+
+The \textbf{precision plot} measures the fraction of frames in which the Euclidean distance between the centre of the predicted box and the centre of the ground-truth box is below a pixel threshold $d \in [0, 50]$. The standard scalar summary \textbf{P@20} is the precision value at $d = 20$ pixels, which represents a commonly used tolerance for small target localisation. A higher P@20 indicates more accurate centre localisation across the sequence.
+
+\subsubsection*{Mean IoU}
+
+\textbf{Mean IoU} is the average overlap between predicted and ground-truth bounding boxes across all frames, providing a direct measure of spatial alignment quality independent of a threshold. A higher mean IoU reflects tighter and more consistent bounding-box predictions throughout the sequence.
+
+\hypertarget{Evaluation Metrics - MOT}{%
+\subsection{Evaluation Metrics -- MOT}\label{Evaluation Metrics - MOT}}
+
+Multi-Object Tracking (MOT) is the task of simultaneously detecting and maintaining consistent identities for multiple targets across all frames of a video, without any initialisation provided by the user. At test time, the model receives each frame as input and must jointly perform detection and association: it detects all relevant objects in the current frame and links each detection to an existing track or opens a new one. The final output is a set of trajectories, each assigned a unique and persistent identity throughout the sequence.
+
+%In this work, MOT is evaluated on the BIRDSAI\_MOT dataset, which contains two object categories: \texttt{animal} (class~0) and \texttt{human} (class~1). 
+%The model is applied to each test video independently and produces per-frame bounding boxes with associated track IDs, which are matched against ground-truth annotations using the standard MOT evaluation protocol.
+
+The following metrics are used to assess both detection and tracking performance.
+
+\subsubsection*{Precision and Recall}
+
+\textbf{Precision} is the fraction of predicted bounding boxes that correctly match a ground-truth object (IoU\,$\geq$\,0.5), and \textbf{Recall} is the fraction of ground-truth objects that are successfully detected:
+\[
+  \text{Precision} = \frac{\text{TP}}{\text{TP} + \text{FP}}, \qquad
+  \text{Recall} = \frac{\text{TP}}{\text{TP} + \text{FN}}
+\]
+where TP, FP, and FN denote true positives, false positives, and false negatives respectively. Both metrics are higher-is-better; low recall indicates missed targets while low precision indicates excessive false alarms.
+
+\subsubsection*{AP50 and AR\textsubscript{100}}
+
+\textbf{AP50} is the COCO-style Average Precision at IoU threshold 0.5, averaged over confidence thresholds. \textbf{AR\textsubscript{100}} is the Average Recall when at most 100 detections per image are allowed. Both are higher-is-better and characterise detector quality independently of the tracking association step.
+
+\subsubsection*{MOTA}
+
+The \textbf{Multi-Object Tracking Accuracy} (MOTA) jointly penalises false positives, false negatives, and identity switches relative to the total number of ground-truth objects:
+\[
+  \text{MOTA} = 1 - \frac{\text{FP} + \text{FN} + \text{IDSW}}{\text{GT}}
+\]
+MOTA ranges from $-\infty$ to 1; higher is better, and a negative value means the total number of errors exceeds the number of ground-truth objects.
+
+\subsubsection*{IDF1}
+
+\textbf{IDF1} is the F1 score computed over identity-matched detections. For each ground-truth identity, the tracker prediction with the greatest overlap is selected as its match. IDF1 is then defined as:
+\[
+  \text{IDF1} = \frac{2\,\text{IDTP}}{2\,\text{IDTP} + \text{IDFP} + \text{IDFN}}
+\]
+where IDTP is the number of correctly identity-matched detections, IDFP is the number of detections assigned to a wrong identity, and IDFN is the number of ground-truth objects that were not correctly identified. IDF1 rewards trackers that maintain the correct identity of each target over long periods rather than merely detecting objects accurately per frame. Higher IDF1 is better.
+
+\subsubsection*{ID Switches}
+
+The \textbf{ID switch} count records how many times a tracked target is assigned a new identity compared to the previous correct assignment. Fewer ID switches indicate more temporally stable tracks.
+
+
+\hypertarget{Performance assessment - SOT}{%
+\subsection{Performance assessment - SOT}\label{Performance assessment - SOT}}
+
+\subsubsection*{Results}
+
+The model was evaluated on 25,536 frames of the \texttt{animal} category. Table~\ref{tab:sot-results} summarises the overall results and the breakdown by target size (large vs.\ small), where size is determined by the area of the ground-truth bounding box relative to the image.
+
+\renewcommand{\arraystretch}{1.4}
+\begin{longtable}[c]{@{}lrrr@{}}
+\caption{SOT evaluation results on BIRDSAI (\texttt{perfect} split).\label{tab:sot-results}}\\
+\rowcolor{gray!20}
+\textbf{Subset} & \textbf{Success AUC} & \textbf{P@20} & \textbf{Mean IoU} \\
+\midrule
+\endhead
+Overall (animal) & 0.3661 & 0.8881 & 0.3567 \\
+\quad Large targets & 0.4295 & 0.8264 & 0.4238 \\
+\quad Small targets & 0.3399 & 0.9136 & 0.3290 \\
+\end{longtable}
+\renewcommand{\arraystretch}{1}
+
+The overall Success AUC of 0.3661 and mean IoU of 0.3567 reflect the inherent difficulty of tracking small aerial targets across long sequences. The precision metric P@20 reaches 0.8881, indicating that the predicted box centre falls within 20 pixels of the ground truth in nearly 89\% of frames.
+
+The per-size breakdown reveals a consistent pattern: \textbf{large targets} achieve higher overlap scores (AUC\,=\,0.4295, mean IoU\,=\,0.4238) because their larger spatial extent makes bounding-box alignment more robust. \textbf{Small targets}, by contrast, obtain higher precision (P@20\,=\,0.9136) since even a slightly shifted small box can still place its centre close to the ground truth, but their low spatial resolution makes achieving high IoU structurally more difficult (AUC\,=\,0.3399, mean IoU\,=\,0.3290). This trade-off between centre-based precision and overlap-based success is a well-known characteristic of small object tracking benchmarks.
+
+
+
+\hypertarget{Performance assessment - MOT}{%
+\subsection{Performance assessment - MOT}\label{Performance assessment - MOT}}
+
+\subsubsection*{Results}
+
+Table~\ref{tab:mot-overall} reports the overall results, and Tables~\ref{tab:mot-cat} and~\ref{tab:mot-size} break them down by category and target size.
+
+\renewcommand{\arraystretch}{1.4}
+\begin{longtable}[c]{@{}lr@{}}
+\caption{Overall MOT results on BIRDSAI\_MOT.\label{tab:mot-overall}}\\
+\rowcolor{gray!20}
+\textbf{Metric} & \textbf{Value} \\
+\midrule
+\endhead
+AP50                   & 0.0802 \\
+AR\textsubscript{100}  & 0.1858 \\
+Precision              & 0.4116 \\
+Recall                 & 0.2211 \\
+MOTA                   & $-$0.1021 \\
+IDF1                   & 0.2877 \\
+ID Switches            & 506 \\
+\end{longtable}
+
+\begin{longtable}[c]{@{}lrrrr@{}}
+\caption{MOT results per category.\label{tab:mot-cat}}\\
+\rowcolor{gray!20}
+\textbf{Category} & \textbf{Precision} & \textbf{Recall} & \textbf{MOTA} & \textbf{IDF1} \\
+\midrule
+\endhead
+Animal & 0.5478 & 0.2429 & $+$0.0424  & 0.3366 \\
+Human  & 0.1630 & 0.1180 & $-$0.4881  & 0.1369 \\
+\end{longtable}
+
+\begin{longtable}[c]{@{}lrrrr@{}}
+\caption{MOT results per target size.\label{tab:mot-size}}\\
+\rowcolor{gray!20}
+\textbf{Size} & \textbf{Precision} & \textbf{Recall} & \textbf{MOTA} & \textbf{IDF1} \\
+\midrule
+\endhead
+Large & 0.6545 & 0.2130 & $+$0.1006 & 0.3214 \\
+Small & 0.2646 & 0.2143 & $-$0.3812 & 0.2368 \\
+\end{longtable}
+\renewcommand{\arraystretch}{1}
+
+The overall MOTA of $-$0.1021 is primarily driven by a very high false-negative rate: with a recall of only 0.2211, the majority of ground-truth objects are missed across frames. The IDF1 of 0.2877 and 506 total ID switches reflect moderate identity consistency, with the tracker struggling to maintain stable associations over longer sequences.
+
+The per-category breakdown reveals a large performance gap between the two classes. \textbf{Animal} targets achieve a positive MOTA of $+$0.0424 and IDF1 of 0.3366, benefiting from a larger number of training examples. \textbf{Human} targets are significantly harder to track, with MOTA of $-$0.4881 and IDF1 of only 0.1369, which is consistent with the lower sample count and the fact that humans appear less frequently and in more variable poses.
+
+For target size, \textbf{large} objects outperform \textbf{small} ones across all metrics. Large targets achieve a precision of 0.6545 and a positive MOTA of $+$0.1006, while small targets suffer from a much higher false-positive rate (precision 0.2646), driving their MOTA to $-$0.3812. Notably, recall is nearly identical between the two size groups (0.213 vs.\ 0.214), suggesting that missed detections affect both sizes equally, and that the primary bottleneck for small targets is precision rather than sensitivity.
+
+
+\end{document}
