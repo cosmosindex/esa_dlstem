@@ -367,6 +367,8 @@ Unlike SOT, MOT does not require a first-frame prompt to initialise a specific t
 Faster R-CNN and YOLO, when coupled with ByteTracker, are well-suited for this paradigm, as they provide per-frame detections that ByteTracker then links into consistent trajectories. 
 SAM2 is likewise applicable, leveraging its segmentation and tracking capabilities in a multi-object setting.
 
+\hypertarget{Quantitative Results}{%
+\subsubsection{Quantitative Results}\label{MOT_Quantitative}}
 % ===== MOT Results on BIRDSAI =====
 
 \begin{table}[htbp]
@@ -438,5 +440,25 @@ ID Sw.    & \textbf{0}       & 1\,737           & 618              & \textbf{0} 
 \caption{Per-size MOT results on the BIRDSAI test set.}
 \label{tab:mot-per-size}
 \end{table}
+
+Tables~\ref{tab:mot-overall}--\ref{tab:mot-per-size} present the MOT evaluation results on the BIRDSAI test set. Several observations can be drawn from these results.
+
+\paragraph{Overall performance.}
+Faster R-CNN v2 achieves the highest detection quality among the three algorithms, leading in both AP50 (0.3087) and Recall (0.7187), which indicates that its region-proposal-based architecture is effective at locating objects in thermal infrared imagery. However, this high recall comes at the cost of a large number of false positives, which severely degrades its tracking performance: its overall MOTA of $-1.16$ is the worst among all three methods. In contrast, YOLO11n strikes a better balance between precision (0.4635) and recall (0.4595), yielding the best overall MOTA ($-0.20$) and IDF1 (0.4615). SAM2, operating in a zero-shot setting with ground-truth bounding-box prompts on the first frame only, achieves moderate precision (0.4116) but low recall (0.2211), as it can only propagate objects that are visible in the prompted frame and tends to lose tracks as objects undergo appearance changes or temporary occlusions.
+
+\paragraph{Identity consistency.}
+A striking finding is that SAM2 produces only 506 ID switches across the entire test set, compared to 10\,686 for Faster R-CNN and 9\,064 for YOLO. This is a direct consequence of SAM2's prompt-based propagation mechanism: each object is initialised once and tracked through a learned correspondence model, avoiding the repeated detection-to-track association that ByteTracker must perform for the other two methods. While this yields superior identity consistency, it also means that SAM2 cannot recover objects that were missed in the initial prompt frame or that disappear and reappear later.
+
+\paragraph{Per-category analysis.}
+The per-category breakdown (Table~\ref{tab:mot-per-category}) reveals a significant disparity in human detection across methods. YOLO11n achieves near-perfect precision on humans (0.9830) but an extremely low recall of only 5.17\%, effectively missing almost all human targets. This suggests that the model has learned to be highly conservative on the under-represented human class, producing very few but highly confident predictions. Faster R-CNN, by contrast, detects humans much more reliably (recall = 0.5622) but with lower precision (0.4445), resulting in the best human IDF1 (0.4965) among the three methods. SAM2 performs poorly on humans across the board (precision = 0.1630, recall = 0.1180), likely because its mask propagation struggles with the small, low-contrast appearance of humans in thermal imagery. For the animal category, YOLO achieves the best MOTA (0.1832) and IDF1 (0.5009), while Faster R-CNN again leads in recall (0.7032) but is penalised by excessive false positives (84\,732), driving its animal MOTA to $-0.88$.
+
+\paragraph{Object size analysis.}
+The per-size results (Table~\ref{tab:mot-per-size}) highlight a consistent trend: all three methods perform substantially better on large objects than on small ones. Faster R-CNN benefits the most from larger targets, achieving a MOTA of 0.5826 and IDF1 of 0.8076 on the large subset — the highest scores in any category or size group. This indicates that once objects are large enough to produce reliable region proposals, the two-stage detection pipeline excels. On small objects, all methods struggle: Faster R-CNN generates 89\,138 false positives (compared to 13\,130 true positives), resulting in a MOTA of $-2.82$. SAM2 and YOLO fare relatively better on small targets (MOTA of $-0.38$ and $-0.16$ respectively), with SAM2 achieving the highest small-object IDF1 (0.2368), suggesting that its propagation-based approach is more robust to the ambiguity of small thermal signatures.
+
+\paragraph{Efficiency.}
+From a practical standpoint, YOLO11n is the most efficient model, running at 92.61 FPS with a model size of only 9.9~MB — roughly 86$\times$ smaller than SAM2 (856.2~MB) and 17$\times$ smaller than Faster R-CNN (165.3~MB). SAM2 is by far the slowest at 2.60 FPS, making it impractical for real-time deployment in drone-based surveillance scenarios despite its zero-shot capability. Faster R-CNN occupies a middle ground at 66.81 FPS, which is sufficient for near-real-time applications.
+
+\hypertarget{Qualitative Results}{%
+\subsubsection{Qualitative Results}\label{MOT_Qualitative}}
 
 \end{document}
