@@ -284,11 +284,6 @@ the DL-STEM project. The objective is to assess the processing methods
 and the chosen algorithms first on a small dataset and then on the
 benchmark dataset.
 
-\hypertarget{document-structure}{%
-\subsection{Document Structure}\label{document-structure}}
-
-Section 2 presents \ldots{}
-
 \hypertarget{data-processing}{%
 \section{Data processing}\label{data-processing}}
 
@@ -299,36 +294,6 @@ Data processing algorithms \ldots{}
 
 The preprocessing pipeline consists of two main steps: splitting each dataset into training, validation, and test subsets, and applying data augmentation during training to improve model generalisation.
 
-\subsubsection*{Dataset Split}
-
-Each dataset is partitioned into three non-overlapping subsets: train, validation, and test. The splitting strategy is adapted to the structure and official annotations available for each dataset.
-
-\textbf{OOTB.} The OOTB dataset contains 110 videos across four object categories: car (45), plane (25), ship (30), and train (10). Since no official split is provided, a stratified random split with ratio \textbf{80\,/\,10\,/\,10} is applied, using \texttt{seed=42} to ensure reproducibility. Stratification is performed by category to preserve class balance across all three subsets. The resulting split is summarised in Table~\ref{tab:ootb-split}.
-
-\renewcommand{\arraystretch}{1.3}
-\begin{longtable}[c]{@{}lrrrr@{}}
-\caption{OOTB dataset split by category.\label{tab:ootb-split}}\\
-\rowcolor{gray!20}
-\textbf{Category} & \textbf{Train} & \textbf{Val} & \textbf{Test} & \textbf{Total} \\
-\midrule
-\endhead
-car   & 36 & 4 &  5 &  45 \\
-plane & 20 & 2 &  3 &  25 \\
-ship  & 24 & 3 &  3 &  30 \\
-train &  8 & 1 &  1 &  10 \\
-\midrule
-\textbf{Total} & \textbf{88} & \textbf{10} & \textbf{12} & \textbf{110} \\
-\end{longtable}
-\renewcommand{\arraystretch}{1}
-
-\textbf{BIRDSAI.} The BIRDSAI dataset provides an official train/test partition (\texttt{TrainReal} / \texttt{TestReal}). The training set is taken directly from \texttt{TrainReal}. A validation subset is derived from \texttt{TestReal} using a stratified split by source video (\textbf{30\,/\,70}, \texttt{seed=42}), yielding a dedicated validation set while preserving the remaining test sequences. Two tracking configurations are used:
-
-\begin{itemize}[noitemsep,topsep=2pt]
-  \item \texttt{tracking\_split="perfect"}: only non-occluded frames are retained. The split yields 383 train sequences (70,261 frames), 25 val sequences (5,575 frames), and 138 test sequences (28,170 frames) across 34 source videos.
-  \item \texttt{tracking\_split="full"}: occluded frames are included in the annotations but skipped during data loading. This results in 268 train sequences (82,004 valid frames), 23 val sequences (6,109 frames), and 73 test sequences (64,171 frames) across 48 source videos.
-\end{itemize}
-
-\textbf{BIRDSAI\_MOT.} The BIRDSAI\_MOT variant uses raw MOT-format CSV annotations with two object categories: \texttt{animal} (class 0) and \texttt{human} (class 1). The \texttt{TrainReal} partition is used for training, while \texttt{TestReal} is divided into val (30\%) and test (70\%) by video (\texttt{seed=42}). This produces 32 train videos (21,209 frames, 87,199 boxes), 5 val videos (3,258 frames, 6,856 boxes), and 11 test videos (12,236 frames, 71,905 boxes), for a total of 165,960 annotated bounding boxes.
 
 \subsubsection*{Data Augmentation}
 

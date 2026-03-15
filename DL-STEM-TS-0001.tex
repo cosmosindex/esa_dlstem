@@ -251,26 +251,17 @@ D4 & Use Cases Specification & HYPERFUSE-UCS-0001 \\
 \hypertarget{introduction}{%
 \section{Introduction}\label{introduction}}
 
-This is the Advanced EO Processing Algorithm Test Report (D6) document
-of the activity \emph{WP3200} of the work package (WP) \emph{WP3000} in
-the DL-STEM project. The objective is to assess the processing methods
-and the chosen algorithms first on a small dataset and then on the
-benchmark dataset.
+This is the Test Specification (D5) document of the activity WP2300 of the work package (WP) WP2000 in the DL-STEM project. 
+The objective is to define the appropriate metrics and evaluation methods for the specific algorithms and data defined in D2 and D3 for the three use cases described in D4.
 
-\hypertarget{document-structure}{%
-\subsection{Document Structure}\label{document-structure}}
 
-Section 2 presents \ldots{}
+\hypertarget{Test dataset}{%
+\section{Test dataset}\label{Test dataset}}
 
-\hypertarget{data-processing}{%
-\section{Data processing}\label{data-processing}}
+% \hypertarget{dataset-preprocessing}{%
+% \subsection{Dataset preprocessing}\label{dataset-preprocessing}}
 
-Data processing algorithms \ldots{}
-
-\hypertarget{dataset-preprocessing}{%
-\subsection{Dataset preprocessing}\label{dataset-preprocessing}}
-
-The preprocessing pipeline consists of two main steps: splitting each dataset into training, validation, and test subsets, and applying data augmentation during training to improve model generalisation.
+% The preprocessing pipeline consists of two main steps: splitting each dataset into training, validation, and test subsets, and applying data augmentation during training to improve model generalisation.
 
 \subsubsection*{Dataset Split}
 
@@ -280,7 +271,6 @@ Each dataset is partitioned into three non-overlapping subsets: train, validatio
 
 \renewcommand{\arraystretch}{1.3}
 \begin{longtable}[c]{@{}lrrrr@{}}
-\caption{OOTB dataset split by category.\label{tab:ootb-split}}\\
 \rowcolor{gray!20}
 \textbf{Category} & \textbf{Train} & \textbf{Val} & \textbf{Test} & \textbf{Total} \\
 \midrule
@@ -291,29 +281,50 @@ ship  & 24 & 3 &  3 &  30 \\
 train &  8 & 1 &  1 &  10 \\
 \midrule
 \textbf{Total} & \textbf{88} & \textbf{10} & \textbf{12} & \textbf{110} \\
+\caption{OOTB dataset split by category.\label{tab:ootb-split}}\\
 \end{longtable}
 \renewcommand{\arraystretch}{1}
 
-\textbf{BIRDSAI.} The BIRDSAI dataset provides an official train/test partition (\texttt{TrainReal} / \texttt{TestReal}). The training set is taken directly from \texttt{TrainReal}. A validation subset is derived from \texttt{TestReal} using a stratified split by source video (\textbf{30\,/\,70}, \texttt{seed=42}), yielding a dedicated validation set while preserving the remaining test sequences. Two tracking configurations are used:
+\textbf{BIRDSAI.} On the BIRDSAI dataset, we will conduct two tasks: SOT and MOT. For both tasks, we will follow the original dataset's train/test split. Building on this split, we further divide the original test set into a validation set and a test set using a 30/70 ratio.
 
-\begin{itemize}[noitemsep,topsep=2pt]
-  \item \texttt{tracking\_split="perfect"}: only non-occluded frames are retained. The split yields 383 train sequences (70,261 frames), 25 val sequences (5,575 frames), and 138 test sequences (28,170 frames) across 34 source videos.
-  \item \texttt{tracking\_split="full"}: occluded frames are included in the annotations but skipped during data loading. This results in 268 train sequences (82,004 valid frames), 23 val sequences (6,109 frames), and 73 test sequences (64,171 frames) across 48 source videos.
-\end{itemize}
+In the table below, you can find the number of videos, the number of frames, and the total number of bounding boxes for the MOT task under the TRAIN, VAL, and TEST splits respectively.
 
-\textbf{BIRDSAI\_MOT.} The BIRDSAI\_MOT variant uses raw MOT-format CSV annotations with two object categories: \texttt{animal} (class 0) and \texttt{human} (class 1). The \texttt{TrainReal} partition is used for training, while \texttt{TestReal} is divided into val (30\%) and test (70\%) by video (\texttt{seed=42}). This produces 32 train videos (21,209 frames, 87,199 boxes), 5 val videos (3,258 frames, 6,856 boxes), and 11 test videos (12,236 frames, 71,905 boxes), for a total of 165,960 annotated bounding boxes.
+In the MOT task, the tracked objects are divided into two categories: animal and human. In the figure below, you can find the per-category statistics of the dataset split.
 
-\subsubsection*{Data Augmentation}
+\renewcommand{\arraystretch}{1.3}
+\begin{longtable}[c]{@{}lrrr@{}}
+\rowcolor{gray!20}
+\textbf{Split} & \textbf{Videos} & \textbf{Frames} & \textbf{Boxes} \\
+\midrule
+\endhead
+train          & 32     & 21{,}209 & 87{,}199  \\
+val            & 5      &  3{,}258 &  6{,}856  \\
+test           & 11     & 12{,}236 & 71{,}905  \\
+\midrule
+\textbf{Total} & \textbf{48} & \textbf{36{,}703} & \textbf{165{,}960} \\
+\caption{BIRDSAI\_MOT dataset split.\label{tab:birdsai-mot-split}}\\
+\end{longtable}
+\renewcommand{\arraystretch}{1}
 
-All image and bounding-box transforms are implemented using the \texttt{albumentations} library~\cite{albumentations}, with bounding boxes represented in Pascal VOC format (\texttt{xyxy} absolute pixel coordinates). A minimum visibility threshold of 0.3 is applied: any bounding box that retains less than 30\% of its original area after a spatial transform is automatically discarded from the annotation.
+For the SOT task, the original dataset additionally provides different tracking split options, namely perfect and full. Under the perfect split, only non-occluded frames are retained, whereas under the full split, occluded frames are also included. In this report, we evaluate only the perfect tracking split. Table~\ref{tab:birdsai-sot-split} reports the number of sequences, frames, and source videos under each split.
 
-Two separate transform pipelines are defined:
-
-\textbf{Training transform.} During training, each frame is resized to $640 \times 640$ pixels and then subjected to a random horizontal flip with probability $p = 0.5$. The horizontal flip simulates the natural left--right symmetry of aerial and satellite observations, increasing the diversity of object orientations seen by the model without introducing unrealistic artefacts.
+\renewcommand{\arraystretch}{1.3}
+\begin{longtable}[c]{@{}lrrr@{}}
+\rowcolor{gray!20}
+\textbf{Split} & \textbf{Sequences} & \textbf{Frames} & \textbf{Source Videos} \\
+\midrule
+\endhead
+train          & 383     & 70{,}261  & 24 \\
+val            &  25     &  5{,}575  &  3 \\
+test           & 138     & 28{,}170  &  7 \\
+\midrule
+\textbf{Total} & \textbf{546} & \textbf{104{,}006} & \textbf{34} \\
+\caption{BIRDSAI SOT split (\texttt{tracking\_split="perfect"}).\label{tab:birdsai-sot-split}}\\
+\end{longtable}
+\renewcommand{\arraystretch}{1}
 
 \textbf{Evaluation transform.} During validation and testing, only a deterministic resize to $640 \times 640$ pixels is applied, with no stochastic operations, ensuring reproducible evaluation metrics across runs.
 
-The choice of a minimal augmentation strategy is intentional: the datasets contain infrared and thermal imagery with specific spectral properties, and aggressive photometric augmentations (e.g.\ colour jitter or channel dropout) could distort the radiometric information that detectors rely on for small target discrimination.
 
 \hypertarget{Evaluation Metrics and Performance Assessment}{%
 \section{Evaluation Metrics and Performance Assessment}\label{Evaluation Metrics and Performance Assessment}}
@@ -346,117 +357,55 @@ Multi-Object Tracking (MOT) is the task of simultaneously detecting and maintain
 %In this work, MOT is evaluated on the BIRDSAI\_MOT dataset, which contains two object categories: \texttt{animal} (class~0) and \texttt{human} (class~1). 
 %The model is applied to each test video independently and produces per-frame bounding boxes with associated track IDs, which are matched against ground-truth annotations using the standard MOT evaluation protocol.
 
-The following metrics are used to assess both detection and tracking performance.
+The evaluation metrics are grouped into two categories: those that measure \emph{detection quality} per frame, and those that measure \emph{tracking quality} over time.
 
-\subsubsection*{Precision and Recall}
+\subsubsection*{Detection Metrics}
 
-\textbf{Precision} is the fraction of predicted bounding boxes that correctly match a ground-truth object (IoU\,$\geq$\,0.5), and \textbf{Recall} is the fraction of ground-truth objects that are successfully detected:
+Detection metrics evaluate how accurately the model localises objects in each frame, independently of identity consistency across frames.
+
+\textbf{Precision and Recall.} Precision is the fraction of predicted bounding boxes that correctly match a ground-truth object (IoU\,$\geq$\,0.5), and Recall is the fraction of ground-truth objects that are successfully detected:
 \[
   \text{Precision} = \frac{\text{TP}}{\text{TP} + \text{FP}}, \qquad
   \text{Recall} = \frac{\text{TP}}{\text{TP} + \text{FN}}
 \]
-where TP, FP, and FN denote true positives, false positives, and false negatives respectively. Both metrics are higher-is-better; low recall indicates missed targets while low precision indicates excessive false alarms.
+where TP, FP, and FN denote true positives, false positives, and false negatives respectively. Both are higher-is-better; low recall indicates missed targets while low precision indicates excessive false alarms.
 
-\subsubsection*{AP50 and AR\textsubscript{100}}
+\textbf{AP50.} The COCO-style Average Precision at IoU threshold 0.5, averaged over confidence thresholds. It summarises the precision--recall trade-off of the detector into a single scalar. Higher is better.
 
-\textbf{AP50} is the COCO-style Average Precision at IoU threshold 0.5, averaged over confidence thresholds. \textbf{AR\textsubscript{100}} is the Average Recall when at most 100 detections per image are allowed. Both are higher-is-better and characterise detector quality independently of the tracking association step.
+\textbf{AR\textsubscript{100}.} The Average Recall when at most 100 detections per image are considered. It measures the upper bound of recall achievable by the detector under a fixed detection budget. Higher is better.
 
-\subsubsection*{MOTA}
+\subsubsection*{Tracking Metrics}
 
-The \textbf{Multi-Object Tracking Accuracy} (MOTA) jointly penalises false positives, false negatives, and identity switches relative to the total number of ground-truth objects:
+Tracking metrics evaluate the consistency of target identities across frames, going beyond per-frame detection accuracy.
+
+\textbf{MOTA.} The Multi-Object Tracking Accuracy jointly penalises false positives, false negatives, and identity switches relative to the total number of ground-truth objects:
 \[
   \text{MOTA} = 1 - \frac{\text{FP} + \text{FN} + \text{IDSW}}{\text{GT}}
 \]
-MOTA ranges from $-\infty$ to 1; higher is better, and a negative value means the total number of errors exceeds the number of ground-truth objects.
+MOTA ranges from $-\infty$ to 1; higher is better. A negative value indicates that the total number of errors exceeds the number of ground-truth objects. Because MOTA incorporates both detection and association errors, it serves as a holistic indicator of overall tracking system quality.
 
-\subsubsection*{IDF1}
-
-\textbf{IDF1} is the F1 score computed over identity-matched detections. For each ground-truth identity, the tracker prediction with the greatest overlap is selected as its match. IDF1 is then defined as:
+\textbf{IDF1.} The Identity F1 score is computed over identity-matched detections. For each ground-truth identity, the tracker prediction with the greatest temporal overlap is selected as its match:
 \[
   \text{IDF1} = \frac{2\,\text{IDTP}}{2\,\text{IDTP} + \text{IDFP} + \text{IDFN}}
 \]
-where IDTP is the number of correctly identity-matched detections, IDFP is the number of detections assigned to a wrong identity, and IDFN is the number of ground-truth objects that were not correctly identified. IDF1 rewards trackers that maintain the correct identity of each target over long periods rather than merely detecting objects accurately per frame. Higher IDF1 is better.
+where IDTP, IDFP, and IDFN are the counts of correctly identity-matched detections, detections assigned to a wrong identity, and missed identity-matched detections respectively. IDF1 specifically rewards long, unbroken tracks with consistent identities. Higher is better.
 
-\subsubsection*{ID Switches}
-
-The \textbf{ID switch} count records how many times a tracked target is assigned a new identity compared to the previous correct assignment. Fewer ID switches indicate more temporally stable tracks.
+\textbf{ID Switches.} The total number of times a tracked target is assigned a new identity compared to its previous correct assignment. Unlike MOTA and IDF1, this is a raw count where \emph{fewer is better}, and it directly reflects the stability of the association step.
 
 
-\hypertarget{Performance assessment - SOT}{%
-\subsection{Performance assessment - SOT}\label{Performance assessment - SOT}}
-
-\subsubsection*{Results}
-
-The model was evaluated on 25,536 frames of the \texttt{animal} category. Table~\ref{tab:sot-results} summarises the overall results and the breakdown by target size (large vs.\ small), where size is determined by the area of the ground-truth bounding box relative to the image.
-
-\renewcommand{\arraystretch}{1.4}
-\begin{longtable}[c]{@{}lrrr@{}}
-\caption{SOT evaluation results on BIRDSAI (\texttt{perfect} split).\label{tab:sot-results}}\\
-\rowcolor{gray!20}
-\textbf{Subset} & \textbf{Success AUC} & \textbf{P@20} & \textbf{Mean IoU} \\
-\midrule
-\endhead
-Overall (animal) & 0.3661 & 0.8881 & 0.3567 \\
-\quad Large targets & 0.4295 & 0.8264 & 0.4238 \\
-\quad Small targets & 0.3399 & 0.9136 & 0.3290 \\
-\end{longtable}
-\renewcommand{\arraystretch}{1}
-
-The overall Success AUC of 0.3661 and mean IoU of 0.3567 reflect the inherent difficulty of tracking small aerial targets across long sequences. The precision metric P@20 reaches 0.8881, indicating that the predicted box centre falls within 20 pixels of the ground truth in nearly 89\% of frames.
-
-The per-size breakdown reveals a consistent pattern: \textbf{large targets} achieve higher overlap scores (AUC\,=\,0.4295, mean IoU\,=\,0.4238) because their larger spatial extent makes bounding-box alignment more robust. \textbf{Small targets}, by contrast, obtain higher precision (P@20\,=\,0.9136) since even a slightly shifted small box can still place its centre close to the ground truth, but their low spatial resolution makes achieving high IoU structurally more difficult (AUC\,=\,0.3399, mean IoU\,=\,0.3290). This trade-off between centre-based precision and overlap-based success is a well-known characteristic of small object tracking benchmarks.
+\hypertarget{Performance assessment}{%
+\subsection{Performance assessment}\label{Performance assessment}}
 
 
 
-\hypertarget{Performance assessment - MOT}{%
-\subsection{Performance assessment - MOT}\label{Performance assessment - MOT}}
 
-\subsubsection*{Results}
 
-Table~\ref{tab:mot-overall} reports the overall results, and Tables~\ref{tab:mot-cat} and~\ref{tab:mot-size} break them down by category and target size.
 
-\renewcommand{\arraystretch}{1.4}
-\begin{longtable}[c]{@{}lr@{}}
-\caption{Overall MOT results on BIRDSAI\_MOT.\label{tab:mot-overall}}\\
-\rowcolor{gray!20}
-\textbf{Metric} & \textbf{Value} \\
-\midrule
-\endhead
-AP50                   & 0.0802 \\
-AR\textsubscript{100}  & 0.1858 \\
-Precision              & 0.4116 \\
-Recall                 & 0.2211 \\
-MOTA                   & $-$0.1021 \\
-IDF1                   & 0.2877 \\
-ID Switches            & 506 \\
-\end{longtable}
-
-\begin{longtable}[c]{@{}lrrrr@{}}
-\caption{MOT results per category.\label{tab:mot-cat}}\\
-\rowcolor{gray!20}
-\textbf{Category} & \textbf{Precision} & \textbf{Recall} & \textbf{MOTA} & \textbf{IDF1} \\
-\midrule
-\endhead
-Animal & 0.5478 & 0.2429 & $+$0.0424  & 0.3366 \\
-Human  & 0.1630 & 0.1180 & $-$0.4881  & 0.1369 \\
-\end{longtable}
-
-\begin{longtable}[c]{@{}lrrrr@{}}
-\caption{MOT results per target size.\label{tab:mot-size}}\\
-\rowcolor{gray!20}
-\textbf{Size} & \textbf{Precision} & \textbf{Recall} & \textbf{MOTA} & \textbf{IDF1} \\
-\midrule
-\endhead
-Large & 0.6545 & 0.2130 & $+$0.1006 & 0.3214 \\
-Small & 0.2646 & 0.2143 & $-$0.3812 & 0.2368 \\
-\end{longtable}
-\renewcommand{\arraystretch}{1}
-
-The overall MOTA of $-$0.1021 is primarily driven by a very high false-negative rate: with a recall of only 0.2211, the majority of ground-truth objects are missed across frames. The IDF1 of 0.2877 and 506 total ID switches reflect moderate identity consistency, with the tracker struggling to maintain stable associations over longer sequences.
-
-The per-category breakdown reveals a large performance gap between the two classes. \textbf{Animal} targets achieve a positive MOTA of $+$0.0424 and IDF1 of 0.3366, benefiting from a larger number of training examples. \textbf{Human} targets are significantly harder to track, with MOTA of $-$0.4881 and IDF1 of only 0.1369, which is consistent with the lower sample count and the fact that humans appear less frequently and in more variable poses.
-
-For target size, \textbf{large} objects outperform \textbf{small} ones across all metrics. Large targets achieve a precision of 0.6545 and a positive MOTA of $+$0.1006, while small targets suffer from a much higher false-positive rate (precision 0.2646), driving their MOTA to $-$0.3812. Notably, recall is nearly identical between the two size groups (0.213 vs.\ 0.214), suggesting that missed detections affect both sizes equally, and that the primary bottleneck for small targets is precision rather than sensitivity.
+% The overall MOTA of $-$0.1021 is primarily driven by a very high false-negative rate: with a recall of only 0.2211, the majority of ground-truth objects are missed across frames. 
+% The IDF1 of 0.2877 and 506 total ID switches reflect moderate identity consistency, with the tracker struggling to maintain stable associations over longer sequences.
+% The per-category breakdown reveals a large performance gap between the two classes. \textbf{Animal} targets achieve a positive MOTA of $+$0.0424 and IDF1 of 0.3366, benefiting from a larger number of training examples. 
+% \textbf{Human} targets are significantly harder to track, with MOTA of $-$0.4881 and IDF1 of only 0.1369, which is consistent with the lower sample count and the fact that humans appear less frequently and in more variable poses.
+% For target size, \textbf{large} objects outperform \textbf{small} ones across all metrics. Large targets achieve a precision of 0.6545 and a positive MOTA of $+$0.1006, while small targets suffer from a much higher false-positive rate (precision 0.2646), driving their MOTA to $-$0.3812. Notably, recall is nearly identical between the two size groups (0.213 vs.\ 0.214), suggesting that missed detections affect both sizes equally, and that the primary bottleneck for small targets is precision rather than sensitivity.
 
 
 \end{document}
