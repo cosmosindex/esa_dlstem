@@ -2,8 +2,7 @@
 \PassOptionsToPackage{unicode}{hyperref}
 \PassOptionsToPackage{hyphens}{url}
 %
-\documentclass[
-]{article}
+\documentclass[11pt]{article}
 \usepackage{amsmath,amssymb}
 \usepackage{iftex}
 \ifPDFTeX
@@ -54,6 +53,9 @@
 \usepackage{etoolbox}
 \usepackage{multirow}
 \usepackage{amsmath}
+\usepackage[left=25mm,right=25mm,top=25mm,bottom=25mm,paper=a4paper]{geometry}
+
+
 \makeatletter
 \patchcmd\longtable{\par}{\if@noskipsec\mbox{}\fi\par}{}{}
 \makeatother
@@ -101,11 +103,14 @@
 
   \vspace{0.6cm}
 
-  {\fontsize{22}{26}\selectfont\bfseries DL-STEM -- ESA\enspace 4000147806/25/I-EB\par}
+  {\fontsize{22}{26}\selectfont\bfseries DL-STEM -- ESA \textbar{} CosmosIndex}
+  
+  {\fontsize{18}{20}\selectfont Document ID: CI/ESA/DLSTEM/2025/D5}
+  
 
   \vspace{1.2cm}
 
-  {\fontsize{14}{20}\selectfont ESA \textbar{} CEOSpaceTech \textbar{} CosmosIndex\par}
+  %{\fontsize{14}{20}\selectfont ESA \textbar{} CosmosIndex\par}
 
   \vspace{0.4cm}
 
@@ -113,7 +118,8 @@
 
   \vfill
   \begin{flushright}
-    \includegraphics[width=2in,height=1in]{/Users/ziwencheng/Documents/CosmosIndex_code/esa_dlstem/logo.png}
+    \includegraphics[width=1in,height=0.5in]{ESA_logo_2020_Deep.pdf}
+    \includegraphics[width=1in,height=0.5in]{logo_1_black.png}
   \end{flushright}
 \end{titlepage}
 % ===== END COVER PAGE =====
@@ -123,17 +129,17 @@
 \renewcommand{\arraystretch}{2.8}
 \noindent\begin{tabular}{@{} p{2.8cm} p{7.2cm} p{1.2cm} p{3.5cm} @{}}
   \textbf{Prepared By} &
-    \underline{Ziwen Cheng (CosmosIndex)\hfill} &
+    \underline{Ziwen Cheng\hfill} &
     \textbf{Date:} &
     \underline{13.03.2026\hfill} \\
   \textbf{Reviewed By} &
-    \underline{X\hfill} &
+    \underline{Yuanyuan Wang\hfill} &
     \textbf{Date:} &
-    \underline{19.12.2025\hfill} \\
+    \underline{16.03.2026\hfill} \\
   \textbf{Approved By} &
-    \underline{Y\hfill} &
+    \underline{Yuanyuan Wang\hfill} &
     \textbf{Date:} &
-    \underline{\hspace{3.5cm}} \\
+    \underline{16.03.2026\hfill} \\
 \end{tabular}
 \renewcommand{\arraystretch}{1}
 
@@ -155,8 +161,8 @@ Authors
 \endhead
 \bottomrule\noalign{}
 \endlastfoot
-1. & Ziwen Cheng & Junior AI expert \\
-2. & Yuanyuan Wang & Lead Research and Data Scientist \\
+1. & Ziwen Cheng & AI expert \\
+2. & Yuanyuan Wang & Project Lead and Data Scientist \\
 \end{longtable}
 
 Document Change Record
@@ -181,7 +187,7 @@ Document Change Record
 \bottomrule\noalign{}
 \endlastfoot
 1.1 & 13.03.2026 & All & First draft \\
-1.2 & & & \\
+1.2 & 16.03.2026 & All & Revision on \\
 \end{longtable}
 
 \newpage
@@ -257,19 +263,26 @@ Section~2 identifies the test datasets used across all evaluation activities, co
 Section~3 specifies the functionality to be tested and the evaluation methodology: Section~3.1 addresses Single Object Tracking (SOT) metrics, while Section~3.2 covers Multi-Object Tracking (MOT) detection and tracking metrics.
 Section~3.3 summarises the reference performance levels to be attained for each metric dimension.
 
+\section{Scope of the test}
+
+
 \hypertarget{Test dataset}{%
 \section{Test dataset}\label{Test dataset}}
 
 \setlength{\LTpre}{4pt}
 \setlength{\LTpost}{4pt}
 
+% \hypertarget{dataset-preprocessing}{%
+% \subsection{Dataset preprocessing}\label{dataset-preprocessing}}
+
+% The preprocessing pipeline consists of two main steps: splitting each dataset into training, validation, and test subsets, and applying data augmentation during training to improve model generalisation.
 
 \subsubsection*{Dataset Split}
 
 Each dataset is partitioned into three non-overlapping subsets: train, validation, and test. 
 The splitting strategy is adapted to the structure and official annotations available for each dataset.
 
-\textbf{OOTB.} The OOTB dataset\cite{chen2022single} contains 110 videos across four object categories: car (45), plane (25), ship (30), and train (10). 
+\textbf{OOTB.} The OOTB dataset \cite{chen2022single} contains 110 videos across four object categories: car (45), plane (25), ship (30), and train (10). 
 Since no official split is provided, a stratified random split with ratio \textbf{80\,/\,10\,/\,10} is applied. 
 Stratification is performed by category to preserve class balance across all three subsets. The resulting split of the number of videos is summarised in Table~\ref{tab:ootb-split}.
 
@@ -417,9 +430,9 @@ where IDTP, IDFP, and IDFN are the counts of correctly identity-matched detectio
 \textbf{ID Switches.} The total number of times a tracked target is assigned a new identity compared to its previous correct assignment. Unlike MOTA and IDF1, this is a raw count where \emph{fewer is better}, and it directly reflects the stability of the association step.
 
 
-\hypertarget{Performance assessment}{%
+\hypertarget{Target Performance}{%
 \subsection{Performance assessment}\label{Performance assessment}}
-The project does not actually have a mandatory target performance level that must be achieved. 
+Since spaceborne videoThe project does not actually have a mandatory target performance level that must be achieved. 
 Of course, the better the metric values mentioned above, the better our corresponding tested models and methods. 
 However, in order to have a general reference range for the metrics, the table below lists the metric ranges obtained from the original dataset tests mentioned in the papers.
 
