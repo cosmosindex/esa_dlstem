@@ -57,6 +57,14 @@ Split strategy: TrainReal → **train**. TestReal → **val (30%) + test (70%)**
 Uses raw MOT CSV annotations (multiple objects per frame).
 Two categories: `animal` (class=0) and `human` (class=1).
 
+| Category | Train | Val | Test | Total |
+|----------|------:|----:|-----:|------:|
+| animal   |    27 |   2 |   10 |    39 |
+| human    |     6 |   3 |    2 |    11 |
+| **Total**|**32** |**5**|**11**|**48** |
+
+> Note: 1 train video and 1 test video contain both animal and human annotations (mixed).
+
 | Split     | Videos | Frames  | Boxes   |
 |-----------|-------:|--------:|--------:|
 | train     |     32 |  21,209 |  87,199 |
