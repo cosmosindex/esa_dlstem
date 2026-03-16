@@ -120,9 +120,9 @@
 \renewcommand{\arraystretch}{2.8}
 \noindent\begin{tabular}{@{} p{2.8cm} p{7.2cm} p{1.2cm} p{3.5cm} @{}}
   \textbf{Prepared By} &
-    \underline{Iulia Calota (UNSTPB)\hfill} &
+    \underline{Ziwen Cheng (CosmosIndex)\hfill} &
     \textbf{Date:} &
-    \underline{19.12.2025\hfill} \\
+    \underline{13.03.2026\hfill} \\
   \textbf{Reviewed By} &
     \underline{Sirui Wang (CosmosIndex)\hfill} &
     \textbf{Date:} &
@@ -135,31 +135,6 @@
 \renewcommand{\arraystretch}{1}
 
 \newpage
-
-\begin{longtable}[]{@{}
-  >{\raggedright\arraybackslash}p{(\columnwidth - 6\tabcolsep) * \real{0.2319}}
-  >{\raggedright\arraybackslash}p{(\columnwidth - 6\tabcolsep) * \real{0.4638}}
-  >{\raggedright\arraybackslash}p{(\columnwidth - 6\tabcolsep) * \real{0.0435}}
-  >{\raggedright\arraybackslash}p{(\columnwidth - 6\tabcolsep) * \real{0.2609}}@{}}
-\toprule\noalign{}
-\begin{minipage}[b]{\linewidth}\raggedright
-Prepared By
-\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
-Iulia Calota (UNSTPB)
-\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
-\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
-19.12.2025
-\end{minipage} \\
-\midrule\noalign{}
-\endhead
-\bottomrule\noalign{}
-\endlastfoot
-& Name (Organization) & & Date: \\
-Reviewed By & Sirui Wang (CosmosIndex) & & 19.12.2025 \\
-& Name (Organization) & & Date: \\
-Approved By & Mihai Datcu (UNSTPB) & & \\
-& Name (Organization) & & Date: \\
-\end{longtable}
 
 Authors
 
@@ -269,6 +244,7 @@ Document Change Record
 D3 & Reference Data Selection & HYPERFUSE-RDS-0001 \\
 D2 & Algorithm Theoretical Basis Description & HYPERFUSE-ATBD-0001 \\
 D4 & Use Cases Specification & HYPERFUSE-UCS-0001 \\
+D5 & Test Specification & X \\
 \end{longtable}
 \renewcommand{\arraystretch}{1}
 % ===== END REFERENCE DOCUMENTS PAGE =====
@@ -278,34 +254,33 @@ D4 & Use Cases Specification & HYPERFUSE-UCS-0001 \\
 \hypertarget{introduction}{%
 \section{Introduction}\label{introduction}}
 
-This is the Advanced EO Processing Algorithm Test Report (D6) document
-of the activity \emph{WP3200} of the work package (WP) \emph{WP3000} in
-the DL-STEM project. The objective is to assess the processing methods
-and the chosen algorithms first on a small dataset and then on the
-benchmark dataset.
+This is the Advanced EO Processing Algorithm Test Report (D6) document of the activity \emph{WP3200} of the work package (WP) \emph{WP3000} in the DL-STEM project. 
+The objective is to assess the processing methods and the chosen algorithms first on a small dataset and then on the benchmark dataset.
 
 \hypertarget{data-processing}{%
 \section{Data processing}\label{data-processing}}
 
-Data processing algorithms \ldots{}
+In this report, we present results on two datasets collected in the Reference Data Selection D3 document, OOTB and BIRDSAI, 
+one from Use case 2: vehicle detection and tracking and one from Use case 1: wild animal detection and tracking, as mentioned in D3. 
+In the final report, we will provide test results on all datasets.
 
 \hypertarget{dataset-preprocessing}{%
 \subsection{Dataset preprocessing}\label{dataset-preprocessing}}
 
 The preprocessing pipeline consists of two main steps: splitting each dataset into training, validation, and test subsets, and applying data augmentation during training to improve model generalisation.
-
+Regarding the data split, we have mentioned in detail in the test specification D5 document how the dataset tested in this report is split.
 
 \subsubsection*{Data Augmentation}
 
-All image and bounding-box transforms are implemented using the \texttt{albumentations} library~\cite{albumentations}, with bounding boxes represented in Pascal VOC format (\texttt{xyxy} absolute pixel coordinates). A minimum visibility threshold of 0.3 is applied: any bounding box that retains less than 30\% of its original area after a spatial transform is automatically discarded from the annotation.
-
 Two separate transform pipelines are defined:
 
-\textbf{Training transform.} During training, each frame is resized to $640 \times 640$ pixels and then subjected to a random horizontal flip with probability $p = 0.5$. The horizontal flip simulates the natural left--right symmetry of aerial and satellite observations, increasing the diversity of object orientations seen by the model without introducing unrealistic artefacts.
+\textbf{Training transform.} During training, each frame is resized to $640 \times 640$ pixels and then subjected to a random horizontal flip with probability $p = 0.5$. 
+The horizontal flip simulates the natural left--right symmetry of aerial and satellite observations, increasing the diversity of object orientations seen by the model without introducing unrealistic artefacts.
 
 \textbf{Evaluation transform.} During validation and testing, only a deterministic resize to $640 \times 640$ pixels is applied, with no stochastic operations, ensuring reproducible evaluation metrics across runs.
 
-The choice of a minimal augmentation strategy is intentional: the datasets contain infrared and thermal imagery with specific spectral properties, and aggressive photometric augmentations (e.g.\ colour jitter or channel dropout) could distort the radiometric information that detectors rely on for small target discrimination.
+The choice of a minimal augmentation strategy is intentional: especially for datasets containing infrared and thermal imagery with specific spectral properties, 
+aggressive photometric augmentations (e.g.\ colour jitter or channel dropout) could distort the radiometric information that detectors rely on for small target discrimination.
 
 \hypertarget{algorithms-assessment}{%
 \section{Algorithms assessment}\label{algorithms-assessment}}
@@ -314,6 +289,32 @@ In the Algorithms Theoretical Basis Description D2, we introduced the advanced a
 In the Test Specification, we also introduced the SOT and MOT tasks respectively. 
 The reason for discussing them as two separate tasks is that the datasets mentioned in the Reference Data Selection section vary in applicability — some are only suitable for the SOT task, while others are applicable to both SOT and MOT tasks. 
 This is related to the type of annotations provided by each dataset.
+
+Table~\ref{tab:compliance-overview} provides a high-level compliance overview for each tested algorithm across all test dimensions defined in D5. 
+Each cell indicates whether the algorithm's performance on that dimension is \textbf{C} (Compliant), \textbf{Mi} (Minor non-compliance), or \textbf{Ma} (Major non-compliance). 
+Detailed results and non-compliance analyses are presented in the subsections that follow.
+
+\begin{table}[h]
+\centering
+\begin{tabular}{|l|c|c|c|c|c|c|}
+\hline
+\multirow{2}{*}{\textbf{Algorithm}} & \multicolumn{2}{c|}{\textbf{Task}} & \multicolumn{2}{c|}{\textbf{Object Size}} & \multirow{2}{*}{\textbf{FPS}} & \multirow{2}{*}{\textbf{SNR}} \\
+\cline{2-5}
+ & SOT & MOT & Small & Large & & \\
+\hline
+SAM2 & C & Ma & C & C & -- & -- \\
+\hline
+YOLO & Ma & C & Mi & C & -- & -- \\
+\hline
+FasterRCNN & Ma & C & Mi & C & -- & -- \\
+\hline
+Grounding DINO & -- & -- & -- & -- & -- & -- \\
+\hline
+$\cdots$ & -- & -- & -- & -- & -- & -- \\
+\hline
+\end{tabular}
+\caption{Compliance overview per algorithm and test dimension. C\,=\,Compliant; Mi\,=\,Minor non-compliance; Ma\,=\,Major non-compliance; --\,=\,Under development (to be reported in the final report).\label{tab:compliance-overview}}
+\end{table}
 
 \hypertarget{Single Object Tracking (SOT)}{%
 \subsection{Single Object Tracking (SOT)}\label{SOT}}
