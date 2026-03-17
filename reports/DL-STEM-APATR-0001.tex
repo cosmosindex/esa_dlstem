@@ -59,6 +59,7 @@
 \IfFileExists{footnotehyper.sty}{\usepackage{footnotehyper}}{\usepackage{footnote}}
 \makesavenoteenv{longtable}
 \usepackage{graphicx}
+\usepackage{soul}
 \makeatletter
 \def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
 \def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
@@ -99,11 +100,10 @@
 
   \vspace{0.6cm}
 
-  {\fontsize{22}{26}\selectfont\bfseries DL-STEM -- ESA\enspace 4000147806/25/I-EB\par}
+  {\fontsize{22}{26}\selectfont\bfseries DL-STEM -- ESA \textbar{} CosmosIndex}
 
-  \vspace{1.2cm}
+  {\fontsize{18}{20}\selectfont Document ID: CI/ESA/DLSTEM/2025/D6}
 
-  {\fontsize{14}{20}\selectfont ESA \textbar{} CEOSpaceTech \textbar{} CosmosIndex\par}
 
   \vspace{0.4cm}
 
@@ -122,17 +122,17 @@
 \renewcommand{\arraystretch}{2.8}
 \noindent\begin{tabular}{@{} p{2.8cm} p{7.2cm} p{1.2cm} p{3.5cm} @{}}
   \textbf{Prepared By} &
-    \underline{Ziwen Cheng (CosmosIndex)\hfill} &
+    \underline{Ziwen Cheng\hfill} &
     \textbf{Date:} &
     \underline{13.03.2026\hfill} \\
   \textbf{Reviewed By} &
-    \underline{Sirui Wang (CosmosIndex)\hfill} &
+    \underline{Yuanyuan Wang\hfill} &
     \textbf{Date:} &
-    \underline{19.12.2025\hfill} \\
+    \underline{17.03.2026\hfill} \\
   \textbf{Approved By} &
-    \underline{Mihai Datcu (UNSTPB)\hfill} &
+    \underline{Yuanyuan Wang\hfill} &
     \textbf{Date:} &
-    \underline{\hspace{3.5cm}} \\
+    \underline{17.03.2026\hfill} \\
 \end{tabular}
 \renewcommand{\arraystretch}{1}
 
@@ -156,13 +156,8 @@ Authors
 \endhead
 \bottomrule\noalign{}
 \endlastfoot
-1. & Iulia Calota & DL and Dimensionality Reduction expert \\
-2. & Sirui Wang & AI expert \\
-3. & Ioana Voica & Hyperspectral data analysis expert \\
-4. & Corina Vaduva & EO data analysis \& applications expert \\
-5. & Yuanyuan Wang & Lead Research and Data Scientist \\
-6. & Andrei Anghel & Data science expert \\
-7. & Mihai Datcu & Project Manager \\
+1. & Ziwen Cheng & AI expert \\
+3. & Yuanyuan Wang & Project Lead and Data Scientist \\
 \end{longtable}
 
 Document Change Record
@@ -186,7 +181,7 @@ Document Change Record
 \endhead
 \bottomrule\noalign{}
 \endlastfoot
-1.1 & 19.12.2025 & All & First draft \\
+1.1 & 13.03.2026 & All & First draft \\
 1.2 & & & \\
 \end{longtable}
 
@@ -292,8 +287,12 @@ In the Test Specification, we also introduced the SOT and MOT tasks respectively
 The reason for discussing them as two separate tasks is that the datasets mentioned in the Reference Data Selection D3 vary in applicability — some are only suitable for the SOT task, while others are applicable to both SOT and MOT tasks. 
 This is related to the type of annotations provided by each dataset.
 
-Table~\ref{tab:compliance-overview} provides a high-level compliance overview for each tested algorithm across all test dimensions defined in D5. 
-Each cell indicates whether the algorithm's performance on that dimension is \textbf{C} (Compliant), \textbf{Mi} (Minor non-compliance), or \textbf{Ma} (Major non-compliance). 
+\subsection{Overall performance}
+\hl{Overall performance}
+table 7.
+
+Table~\ref{tab:compliance-overview} provides a high-level compliance overview for each tested algorithm across all test dimensions defined in D5.
+Each cell indicates whether the algorithm's performance on that dimension is \textbf{C} (Compliant), \textbf{Mi} (Minor non-compliance), or \textbf{Ma} (Major non-compliance).
 Detailed results and non-compliance analyses are presented in the subsections that follow.
 
 \begin{table}[h]
