@@ -445,6 +445,10 @@ leading it to drift onto a neighbouring vehicle or lose the target entirely, res
     \label{fig:sam2_car22}
 \end{figure}
 
+As illustrated in Figure~\ref{fig:sam2_plane12}, SAM2 derives its predicted bounding boxes directly from the underlying segmentation mask, 
+which causes them to conform tightly to the object boundary. In several frames, the predicted box is in fact a closer fit to the actual aircraft than the ground-truth annotation itself, 
+which is annotated more loosely. This further corroborates the annotation misalignment effect noted earlier: 
+IoU-based metrics penalise SAM2 precisely because its predictions are more precise than the reference labels, leading to an underestimation of its true tracking quality. 
 \begin{figure}[htbp]
     \centering
     \begin{minipage}[b]{0.333\textwidth}%
@@ -462,6 +466,28 @@ leading it to drift onto a neighbouring vehicle or lose the target entirely, res
              \textcolor{blue}{blue} = predicted box with IoU $< 0.5$ (false positive);
              \textcolor{gray}{grey} = unmatched prediction (ignored in SOT evaluation).}
     \label{fig:sam2_plane12}
+\end{figure}
+
+\begin{figure}[htbp]
+    \centering
+    \begin{minipage}[b]{0.25\textwidth}%
+        \includegraphics[width=\textwidth]{/work/ziwen/experiments/sam2_first_frame_ootb_20260311_final/visualizations/plane_21_frame0000.jpg}%
+    \end{minipage}%
+    \begin{minipage}[b]{0.25\textwidth}%
+        \includegraphics[width=\textwidth]{/work/ziwen/experiments/sam2_first_frame_ootb_20260311_final/visualizations/plane_25_frame0024.jpg}%
+    \end{minipage}%
+    \begin{minipage}[b]{0.25\textwidth}%
+        \includegraphics[width=\textwidth]{/work/ziwen/experiments/sam2_first_frame_ootb_20260311_final/visualizations/ship_2_frame0000.jpg}%
+    \end{minipage}%
+    \begin{minipage}[b]{0.25\textwidth}%
+        \includegraphics[width=\textwidth]{/work/ziwen/experiments/sam2_first_frame_ootb_20260311_final/visualizations/train_2_frame0000.jpg}%
+    \end{minipage}
+    \caption{SAM2 SOT results on sequences \texttt{plane\_21} (frame 0), \texttt{plane\_25} (frame 24), \texttt{ship\_2} (frame 0), and \texttt{train\_2} (frame 0).
+             Bounding box colours: \textcolor{orange}{orange} = ground-truth box (shown as miss when no prediction is matched);
+             \textcolor{green!70!black}{green} = predicted box with IoU $\geq 0.5$ (true positive);
+             \textcolor{blue}{blue} = predicted box with IoU $< 0.5$ (false positive);
+             \textcolor{gray}{grey} = unmatched prediction (ignored in SOT evaluation).}
+    \label{fig:sam2_misc}
 \end{figure}
 
 \hypertarget{Multi-Object Tracking (MOT)}{%
