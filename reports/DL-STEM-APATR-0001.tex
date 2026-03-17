@@ -408,10 +408,18 @@ Notably, if a manual prompt were provided at the moment of re-appearance, SAM2 w
     \begin{minipage}[b]{0.2\textwidth}%
         \includegraphics[width=\textwidth]{figures/car_16_frame0218.jpg}%
     \end{minipage}
-    \caption{SAM2 tracking results on sequence \texttt{car\_16}: frame 0, 163, 168, 172, and 218.}
+    \caption{SAM2 SOT results on sequence \texttt{car\_16}: frame 0, 163, 168, 172, and 218.
+             Bounding box colours: \textcolor{orange}{orange} = ground-truth box (shown as miss when no prediction is matched);
+             \textcolor{green!70!black}{green} = predicted box with IoU $\geq 0.5$ (true positive);
+             \textcolor{blue}{blue} = predicted box with IoU $< 0.5$ (false positive);
+             \textcolor{gray}{grey} = unmatched prediction (ignored in SOT evaluation).}
     \label{fig:sam2_car16}
 \end{figure}
 
+As shown in Figure~\ref{fig:sam2_car22}, tracking failures also arise when the target is extremely small and visually indistinguishable from surrounding objects of the same class. 
+In spaceborne imagery, individual cars are reduced to near-featureless bright spots, making them virtually identical in appearance to neighbouring vehicles. 
+Under these conditions, SAM2's mask propagation loses discriminative power: the model cannot reliably distinguish the target instance from other cars in the scene, 
+leading it to drift onto a neighbouring vehicle or lose the target entirely, resulting in missed detections. 
 \begin{figure}[htbp]
     \centering
     \begin{minipage}[b]{0.2\textwidth}%
@@ -429,8 +437,31 @@ Notably, if a manual prompt were provided at the moment of re-appearance, SAM2 w
     \begin{minipage}[b]{0.2\textwidth}%
         \includegraphics[width=\textwidth]{figures/car_22_frame0149.jpg}%
     \end{minipage}
-    \caption{SAM2 tracking results on sequence \texttt{car\_22}: frame 0, 21, 72, 91, and 149.}
+    \caption{SAM2 SOT results on sequence \texttt{car\_22}: frame 0, 21, 72, 91, and 149.
+             Bounding box colours: \textcolor{orange}{orange} = ground-truth box (shown as miss when no prediction is matched);
+             \textcolor{green!70!black}{green} = predicted box with IoU $\geq 0.5$ (true positive);
+             \textcolor{blue}{blue} = predicted box with IoU $< 0.5$ (false positive);
+             \textcolor{gray}{grey} = unmatched prediction (ignored in SOT evaluation).}
     \label{fig:sam2_car22}
+\end{figure}
+
+\begin{figure}[htbp]
+    \centering
+    \begin{minipage}[b]{0.333\textwidth}%
+        \includegraphics[width=\textwidth]{/work/ziwen/experiments/sam2_first_frame_ootb_20260311_final/visualizations/plane_12_frame0000.jpg}%
+    \end{minipage}%
+    \begin{minipage}[b]{0.333\textwidth}%
+        \includegraphics[width=\textwidth]{/work/ziwen/experiments/sam2_first_frame_ootb_20260311_final/visualizations/plane_12_frame0035.jpg}%
+    \end{minipage}%
+    \begin{minipage}[b]{0.333\textwidth}%
+        \includegraphics[width=\textwidth]{/work/ziwen/experiments/sam2_first_frame_ootb_20260311_final/visualizations/plane_12_frame0083.jpg}%
+    \end{minipage}
+    \caption{SAM2 SOT results on sequence \texttt{plane\_12}: frame 0, 35, and 83.
+             Bounding box colours: \textcolor{orange}{orange} = ground-truth box (shown as miss when no prediction is matched);
+             \textcolor{green!70!black}{green} = predicted box with IoU $\geq 0.5$ (true positive);
+             \textcolor{blue}{blue} = predicted box with IoU $< 0.5$ (false positive);
+             \textcolor{gray}{grey} = unmatched prediction (ignored in SOT evaluation).}
+    \label{fig:sam2_plane12}
 \end{figure}
 
 \hypertarget{Multi-Object Tracking (MOT)}{%
@@ -440,6 +471,10 @@ As can be inferred from the definition of the MOT task, the algorithms previousl
 Unlike SOT, MOT does not require a first-frame prompt to initialise a specific target; instead, it relies on detecting and associating all objects of interest across frames. 
 Faster R-CNN and YOLO, when coupled with ByteTracker, are well-suited for this paradigm, as they provide per-frame detections that ByteTracker then links into consistent trajectories. 
 SAM2 is likewise applicable, leveraging its segmentation and tracking capabilities in a multi-object setting.
+
+It should also be noted that this comparison is inherently asymmetric: Faster R-CNN and YOLO are fully supervised models trained on labelled datasets that encompass all object categories present in the test set, whereas SAM2 relies solely on first-frame prompts and has no prior knowledge of object categories.
+As a consequence, only the objects explicitly prompted in the first frame will be tracked; any new instance entering the scene mid-sequence will go entirely undetected by SAM2 — a fundamental limitation that does not apply to category-level detectors such as Faster R-CNN and YOLO.
+
 
 \hypertarget{Quantitative Results}{%
 \subsubsection{Quantitative Results}\label{MOT_Quantitative}}

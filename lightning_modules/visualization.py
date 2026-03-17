@@ -602,10 +602,9 @@ class DetectionVisualizationCallback(L.Callback):
     @staticmethod
     def _draw_box(img: np.ndarray, box: np.ndarray, color: tuple, label: str):
         x1, y1, x2, y2 = box
-        bgr = color[::-1]
-        cv2.rectangle(img, (x1, y1), (x2, y2), bgr, 2)
+        cv2.rectangle(img, (x1, y1), (x2, y2), color, 2)
         (tw, th), _ = cv2.getTextSize(label, _FONT, _FONT_SCALE, _THICKNESS)
-        cv2.rectangle(img, (x1, y1 - th - 4), (x1 + tw, y1), bgr, -1)
+        cv2.rectangle(img, (x1, y1 - th - 4), (x1 + tw, y1), color, -1)
         cv2.putText(img, label, (x1, y1 - 2), _FONT, _FONT_SCALE,
                     (255, 255, 255), _THICKNESS)
 
