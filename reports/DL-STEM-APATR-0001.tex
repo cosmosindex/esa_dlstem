@@ -289,7 +289,7 @@ aggressive photometric augmentations (e.g.\ colour jitter or channel dropout) co
 
 In the Algorithms Theoretical Basis Description D2, we introduced the advanced algorithms we intended to investigate and compare, including SAM2, Faster R-CNN, YOLO, and DINOv3. 
 In the Test Specification, we also introduced the SOT and MOT tasks respectively. 
-The reason for discussing them as two separate tasks is that the datasets mentioned in the Reference Data Selection section vary in applicability — some are only suitable for the SOT task, while others are applicable to both SOT and MOT tasks. 
+The reason for discussing them as two separate tasks is that the datasets mentioned in the Reference Data Selection D3 vary in applicability — some are only suitable for the SOT task, while others are applicable to both SOT and MOT tasks. 
 This is related to the type of annotations provided by each dataset.
 
 Table~\ref{tab:compliance-overview} provides a high-level compliance overview for each tested algorithm across all test dimensions defined in D5. 
@@ -378,6 +378,30 @@ On the OOTB traffic dataset (Table~\ref{tab:sot-ootb}), SAM2 exhibits pronounced
 
 \paragraph{Per-size effects on OOTB.}
 A counterintuitive finding on OOTB is that small objects outperform large ones across all metrics (Success AUC: 0.3308 vs.\ 0.1909; Precision@20: 0.5184 vs.\ 0.4208). This reversal — opposite to the BIRDSAI trend — is driven by the \textit{train} category: trains are the largest objects in the dataset, yet SAM2 completely fails to track them. Because the large-size subset is dominated by these failed train sequences, the aggregate large-object metrics are severely depressed. Excluding trains, larger objects would likely follow the expected pattern of higher overlap scores.
+
+\hypertarget{Qualitative Results}{%
+\subsubsection{Qualitative Results}\label{SOT_Qualitative}}
+
+\begin{figure}[htbp]
+    \centering
+    \begin{minipage}[b]{0.18\textwidth}
+        \includegraphics[width=\textwidth]{/work/ziwen/experiments/sam2_first_frame_ootb_20260311_final/visualizations/car_16_frame0000.jpg}
+    \end{minipage}\hfill
+    \begin{minipage}[b]{0.18\textwidth}
+        \includegraphics[width=\textwidth]{/work/ziwen/experiments/sam2_first_frame_ootb_20260311_final/visualizations/car_16_frame0163.jpg}
+    \end{minipage}\hfill
+    \begin{minipage}[b]{0.18\textwidth}
+        \includegraphics[width=\textwidth]{/work/ziwen/experiments/sam2_first_frame_ootb_20260311_final/visualizations/car_16_frame0168.jpg}
+    \end{minipage}\hfill
+    \begin{minipage}[b]{0.18\textwidth}
+        \includegraphics[width=\textwidth]{/work/ziwen/experiments/sam2_first_frame_ootb_20260311_final/visualizations/car_16_frame0172.jpg}
+    \end{minipage}\hfill
+    \begin{minipage}[b]{0.18\textwidth}
+        \includegraphics[width=\textwidth]{/work/ziwen/experiments/sam2_first_frame_ootb_20260311_final/visualizations/car_16_frame0218.jpg}
+    \end{minipage}
+    \caption{SAM2 tracking results on sequence \texttt{car\_16}: frame 0, 163, 168, 172, and 218.}
+    \label{fig:sam2_car16}
+\end{figure}
 
 \hypertarget{Multi-Object Tracking (MOT)}{%
 \subsection{Multi-Object Tracking (MOT)}\label{MOT}}
