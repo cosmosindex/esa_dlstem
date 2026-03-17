@@ -382,22 +382,31 @@ A counterintuitive finding on OOTB is that small objects outperform large ones a
 \hypertarget{Qualitative Results}{%
 \subsubsection{Qualitative Results}\label{SOT_Qualitative}}
 
+As illustrated in Figure~\ref{fig:sam2_car16}, SAM2 successfully tracks the target car from frame 0 through frame 163. 
+However, as the car begins to pass under a bridge, the visible portion of the vehicle progressively decreases. 
+Consequently, SAM2's predicted bounding boxes shrink accordingly, causing the IoU with the ground-truth annotations to fall below 
+the detection threshold and the corresponding frames to be classified as false negatives. 
+The car becomes entirely occluded beneath the bridge in subsequent frames, during which SAM2 loses the target completely, 
+resulting in missed detections. Even after the car re-emerges on the other side of the bridge (frame 218), SAM2 fails to recover tracking. 
+This is a direct consequence of SAM2's clip-based propagation mechanism: predictions from each clip are used as prompts for the next, 
+meaning that once the target is lost under occlusion, no valid prompt is available to re-initialise tracking. 
+Notably, if a manual prompt were provided at the moment of re-appearance, SAM2 would be capable of resuming accurate tracking for all subsequent frames.
 \begin{figure}[htbp]
     \centering
-    \begin{minipage}[b]{0.18\textwidth}
-        \includegraphics[width=\textwidth]{figures/car_16_frame0000.jpg}
-    \end{minipage}\hfill
-    \begin{minipage}[b]{0.18\textwidth}
-        \includegraphics[width=\textwidth]{figures/car_16_frame0163.jpg}
-    \end{minipage}\hfill
-    \begin{minipage}[b]{0.18\textwidth}
-        \includegraphics[width=\textwidth]{figures/car_16_frame0168.jpg}
-    \end{minipage}\hfill
-    \begin{minipage}[b]{0.18\textwidth}
-        \includegraphics[width=\textwidth]{figures/car_16_frame0172.jpg}
-    \end{minipage}\hfill
-    \begin{minipage}[b]{0.18\textwidth}
-        \includegraphics[width=\textwidth]{figures/car_16_frame0218.jpg}
+    \begin{minipage}[b]{0.2\textwidth}%
+        \includegraphics[width=\textwidth]{figures/car_16_frame0000.jpg}%
+    \end{minipage}%
+    \begin{minipage}[b]{0.2\textwidth}%
+        \includegraphics[width=\textwidth]{figures/car_16_frame0163.jpg}%
+    \end{minipage}%
+    \begin{minipage}[b]{0.2\textwidth}%
+        \includegraphics[width=\textwidth]{figures/car_16_frame0168.jpg}%
+    \end{minipage}%
+    \begin{minipage}[b]{0.2\textwidth}%
+        \includegraphics[width=\textwidth]{figures/car_16_frame0172.jpg}%
+    \end{minipage}%
+    \begin{minipage}[b]{0.2\textwidth}%
+        \includegraphics[width=\textwidth]{figures/car_16_frame0218.jpg}%
     \end{minipage}
     \caption{SAM2 tracking results on sequence \texttt{car\_16}: frame 0, 163, 168, 172, and 218.}
     \label{fig:sam2_car16}
