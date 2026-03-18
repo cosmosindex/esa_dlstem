@@ -414,12 +414,13 @@ as the category of an object largely determines its typical size within the vide
 The following analysis is structured into two parts: quantitative results, where we examine per-category and per-size metrics, 
 followed by qualitative results, where representative tracking examples are discussed.
 
+\paragraph{BIRDSAI.}
+
 \paragraph{Quantitative Results}\label{SOT_Quantitative}
 Tables~\ref{tab:sot-birdsai} and~\ref{tab:sot-ootb} present the per-category and per-size SOT evaluation results for SAM2 on 
 the BIRDSAI and OOTB test sets, respectively, where objects are classified as small if their bounding box area is smaller 
 than $32\times32$ pixels and as large otherwise.
 
-\paragraph{BIRDSAI.}
 As shown in Table~\ref{tab:sot-birdsai}, SAM2 tracks animals more accurately (Success AUC = 0.4295, Mean IoU = 0.4238) than humans (Success AUC = 0.3347, Mean IoU = 0.3235).
 This performance gap is largely explained by object size: humans in BIRDSAI are predominantly small objects, appearing as compact, low-contrast blobs in thermal infrared imagery, which makes precise mask fitting difficult.
 Among the animal category, the majority of instances are also small — with the exception of larger species such as elephants — yet the animal subset still benefits from occasional large targets that are inherently easier for SAM2 to segment and propagate.
@@ -447,24 +448,57 @@ Mean IoU      & \textbf{0.4238} & 0.3235  & 0.3290  & \textbf{0.4238} \\
 
 \paragraph{Qualitative Results}
 
+As illustrated in Figure~\ref{fig:sam2_birdsai_animal}, the human target in this sequence is so small that it is virtually imperceptible to 
+the naked eye, yet SAM2 is still able to detect and track it across frames. However, tracking is not consistently maintained throughout the sequence: 
+as shown in the rightmost frame, SAM2 occasionally loses the target, and in some frames the predicted bounding box fails to achieve an IoU of 0.5 with 
+the ground truth, causing it to be classified as a false positive.
+
 \begin{figure}[htbp]
     \centering
-    \begin{minipage}[b]{0.3\textwidth}%
+    \begin{minipage}[b]{0.333\textwidth}%
         \includegraphics[width=\textwidth]{figures/birdsai_0000000361_frame0000.jpg}%
     \end{minipage}%
-    \hfill%
-    \begin{minipage}[b]{0.3\textwidth}%
+    \begin{minipage}[b]{0.333\textwidth}%
         \includegraphics[width=\textwidth]{figures/birdsai_0000000361_frame0005.jpg}%
     \end{minipage}%
-    \hfill%
-    \begin{minipage}[b]{0.3\textwidth}%
+    \begin{minipage}[b]{0.333\textwidth}%
         \includegraphics[width=\textwidth]{figures/birdsai_0000000361_frame0015.jpg}%
     \end{minipage}
-    \caption{SAM2 SOT results on BIRDSAI sequence \texttt{0000000361} (animal category): frame 0, 5, and 15.
+    \caption{SAM2 SOT results on BIRDSAI sequence \texttt{0000000361} (human category): frame 0, 5, and 15.
              Bounding box colours: \textcolor{orange}{orange} = ground-truth box;
              \textcolor{green!70!black}{green} = predicted box with IoU $\geq 0.5$ (true positive);
              \textcolor{blue}{blue} = predicted box with IoU $< 0.5$ (false positive).}
     \label{fig:sam2_birdsai_animal}
+\end{figure}
+
+\begin{figure}[htbp]
+    \centering
+    \begin{minipage}[b]{0.333\textwidth}%
+        \includegraphics[width=\textwidth]{figures/birdsai_0000000371_s1_frame0000.jpg}%
+    \end{minipage}%
+    \begin{minipage}[b]{0.333\textwidth}%
+        \includegraphics[width=\textwidth]{figures/birdsai_0000000371_s1_frame0010.jpg}%
+    \end{minipage}%
+    \begin{minipage}[b]{0.333\textwidth}%
+        \includegraphics[width=\textwidth]{figures/birdsai_0000000371_s1_frame0040.jpg}%
+    \end{minipage}%
+    \\[\smallskipamount]%
+    \begin{minipage}[b]{0.333\textwidth}%
+        \includegraphics[width=\textwidth]{figures/birdsai_0000000371_s1_frame0151.jpg}%
+    \end{minipage}%
+    \begin{minipage}[b]{0.333\textwidth}%
+        \includegraphics[width=\textwidth]{figures/birdsai_0000000371_s2_frame0050.jpg}%
+    \end{minipage}%
+    \begin{minipage}[b]{0.333\textwidth}%
+        \includegraphics[width=\textwidth]{figures/birdsai_0000000371_s9_frame0232.jpg}%
+    \end{minipage}
+    \caption{SAM2 SOT results on BIRDSAI sequence \texttt{0000000371} (animal category).
+             Top row: sequence 1, frames 0, 10, and 40.
+             Bottom row: sequence 1 frame 151, sequence 2 frame 50, and sequence 9 frame 232.
+             Bounding box colours: \textcolor{orange}{orange} = ground-truth box;
+             \textcolor{green!70!black}{green} = predicted box with IoU $\geq 0.5$ (true positive);
+             \textcolor{blue}{blue} = predicted box with IoU $< 0.5$ (false positive).}
+    \label{fig:sam2_birdsai_animal2}
 \end{figure}
 
 \paragraph{OOTB.}
