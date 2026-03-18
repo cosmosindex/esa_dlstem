@@ -294,32 +294,6 @@ In the Test Specification, we also introduced the SOT and MOT tasks respectively
 The reason for discussing them as two separate tasks is that the datasets mentioned in the Reference Data Selection D3 vary in applicability — some are only suitable for the SOT task, while others are applicable to both SOT and MOT tasks. 
 This is related to the type of annotations provided by each dataset.
 
-Table~\ref{tab:compliance-overview} provides a high-level compliance overview for each tested algorithm across all test dimensions defined in D5.
-Each cell indicates whether the algorithm's performance on that dimension is \textbf{C} (Compliant), \textbf{Mi} (Minor non-compliance), or \textbf{Ma} (Major non-compliance).
-Detailed results and non-compliance analyses are presented in the subsections that follow.
-
-\begin{table}[h]
-\centering
-\begin{tabular}{|l|c|c|c|c|c|c|}
-\hline
-\multirow{2}{*}{\textbf{Algorithm}} & \multicolumn{2}{c|}{\textbf{Task}} & \multicolumn{2}{c|}{\textbf{Object Size}} & \multirow{2}{*}{\textbf{FPS}} & \multirow{2}{*}{\textbf{SNR}} \\
-\cline{2-5}
- & SOT & MOT & Small & Large & & \\
-\hline
-SAM2 & C & Ma & C & C & -- & -- \\
-\hline
-YOLO & Ma & C & Mi & C & -- & -- \\
-\hline
-FasterRCNN & Ma & C & Mi & C & -- & -- \\
-\hline
-Grounding DINO & -- & -- & -- & -- & -- & -- \\
-\hline
-$\cdots$ & -- & -- & -- & -- & -- & -- \\
-\hline
-\end{tabular}
-\caption{Compliance overview per algorithm and test dimension. C\,=\,Compliant; Mi\,=\,Minor non-compliance; Ma\,=\,Major non-compliance; --\,=\,Under development (to be reported in the final report).\label{tab:compliance-overview}}
-\end{table}
-
 \hypertarget{Overall performance}{%
 \subsection{Overall performance}\label{Overall performance}}
 We briefly cross-referenced the performance figures reported in the original papers against the performance assessment benchmarks documented in Test Specification D5 Section~4.3, 
@@ -805,6 +779,35 @@ To be updated.
 \subsection{Performance by Signal to Noise Ratio (SNR)}
 
 To be updated.
+
+\subsection{Conclusion}
+
+Table~\ref{tab:compliance-overview} provides a high-level compliance overview for each tested algorithm across all test dimensions defined in D5.
+Each cell indicates whether the algorithm's performance on that dimension is \textbf{C} (Compliant), \textbf{Mi} (Minor non-compliance), or \textbf{Ma} (Major non-compliance).
+Detailed results and non-compliance analyses are presented in the subsections that follow.
+
+\begin{table}[h]
+\centering
+\begin{tabular}{|l|c|c|c|c|c|c|}
+\hline
+\multirow{2}{*}{\textbf{Algorithm}} & \multicolumn{2}{c|}{\textbf{Task}} & \multicolumn{2}{c|}{\textbf{Object Size}} & \multirow{2}{*}{\textbf{FPS}} & \multirow{2}{*}{\textbf{SNR}} \\
+\cline{2-5}
+ & SOT & MOT & Small & Large & & \\
+\hline
+SAM2 & C & Ma & C & C & -- & -- \\
+\hline
+YOLO & Ma & C & Mi & C & -- & -- \\
+\hline
+FasterRCNN & Ma & C & Mi & C & -- & -- \\
+\hline
+Grounding DINO & -- & -- & -- & -- & -- & -- \\
+\hline
+$\cdots$ & -- & -- & -- & -- & -- & -- \\
+\hline
+\end{tabular}
+\caption{Compliance overview per algorithm and test dimension. C\,=\,Compliant; Mi\,=\,Minor non-compliance; Ma\,=\,Major non-compliance; --\,=\,Under development (to be reported in the final report).\label{tab:compliance-overview}}
+\end{table}
+
 
 \bibliographystyle{plain}
 \bibliography{references}
