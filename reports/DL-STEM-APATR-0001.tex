@@ -258,8 +258,8 @@ D5 & Test Specification &  CI/ESA/DLSTEM/2025/D5 \\
 This is the Advanced EO Processing Algorithm Test Report (D6) document of the activity \emph{WP3200} of the work package (WP) \emph{WP3000} in the DL-STEM project. 
 The objective is to assess the processing methods and the chosen algorithms first on a small dataset and then on the benchmark dataset.
 
-\hypertarget{data-processing}{%
-\section{Data processing}\label{data-processing}}
+\hypertarget{Experimental Setup}{%
+\section{Experimental Setup}\label{Experimental Setup}}
 
 In this report, we present results on two datasets collected in the Reference Data Selection D3 document, OOTB and BIRDSAI, 
 one from Use case 2: vehicle detection and tracking and one from Use case 1: wild animal detection and tracking, as mentioned in D3. 
@@ -278,10 +278,29 @@ Two separate transform pipelines are defined:
 \textbf{Training transform.} During training, each frame is resized to $640 \times 640$ pixels and then subjected to a random horizontal flip with probability $p = 0.5$. 
 The horizontal flip simulates the natural left--right symmetry of aerial and satellite observations, increasing the diversity of object orientations seen by the model without introducing unrealistic artefacts.
 
-\textbf{Evaluation transform.} During validation and testing, only a deterministic resize to $640 \times 640$ pixels is applied, with no stochastic operations, ensuring reproducible evaluation metrics across runs.
+\textbf{Evaluation transform.} We have mentioned in detail in the test specification D5.
 
 The choice of a minimal augmentation strategy is intentional: especially for datasets containing infrared and thermal imagery with specific spectral properties, 
 aggressive photometric augmentations (e.g.\ colour jitter or channel dropout) could distort the radiometric information that detectors rely on for small target discrimination.
+
+\subsection{Experimental Setup}
+
+All experiments use AdamW as the optimiser with a weight decay of $10^{-4}$. The learning rate follows a cosine schedule with a linear warmup over 5 epochs, 
+and training runs for a maximum of 50 epochs with early stopping (patience = 10, monitored on \texttt{val/AP50}). 
+Mixed precision (16-bit) is used throughout, and all runs are logged to Weights \& Biases.
+
+\textbf{Faster R-CNN v2} uses a ResNet-50 FPN v2 backbone pretrained on COCO. 
+The backbone is fully frozen and only the RPN head and ROI box predictor are fine-tuned, 
+with a learning rate of $5 \times 10^{-4}$ and a batch size of 8. 
+Score and NMS thresholds are set to 0.05 and 0.5, respectively.
+
+\textbf{YOLO11n} is initialised from COCO weights and fully fine-tuned (approx.\ 2.6M parameters), 
+with a learning rate of $10^{-3}$, weight decay of $5 \times 10^{-4}$, and a batch size of 8. 
+Confidence and IoU thresholds for NMS are set to 0.05 and 0.5.
+
+\textbf{SAM2} (SAM2.1 Hiera-Large, pretrained on SA-V) is evaluated in a zero-shot setting without any fine-tuning. 
+Ground-truth bounding boxes from the first frame only are used as prompts, 
+and the model propagates tracks across subsequent frames in clips of 32 frames with a stride of 1.
 
 \hypertarget{algorithms-assessment}{%
 \section{Algorithms assessment}\label{algorithms-assessment}}
@@ -686,24 +705,35 @@ IoU-based metrics penalise SAM2 precisely because its predictions are more preci
 \subsubsection{Multi-Object Tracking (MOT)}\label{MOT}}
 
 \paragraph{Quantitative Results}\label{MOT_Quantitative}
-Tables~\ref{tab:mot-per-category} and~\ref{tab:mot-per-size} present the MOT evaluation results on the BIRDSAI test set. 
-Several observations can be drawn from these results.
+Tables~\ref{tab:mot-per-category} and~\ref{tab:mot-per-size} break down performance by object category and size, revealing consistent trends across all three models.
 
-\textbf{Identity consistency.}A striking finding is that SAM2 produces only 506 ID switches across the entire test set, 
-compared to 10\,686 for Faster R-CNN and 9\,064 for YOLO. This is a direct consequence of SAM2's prompt-based propagation mechanism: 
-each object is initialised once and tracked through a learned correspondence model, avoiding the repeated detection-to-track association that 
-ByteTracker must perform for the other two methods. While this yields superior identity consistency, it also means that SAM2 cannot recover objects 
-that were missed in the initial prompt frame or that disappear and reappear later.
+All models perform substantially better on large objects than small ones. 
+Faster R-CNN achieves the highest recall for large objects (0.7903) and a strong MOTA of 0.5826 and IDF1 of 0.8076, 
+demonstrating that its region-proposal mechanism is well-suited to localising larger targets. 
+YOLO11n also performs competitively on large objects, with the highest precision (0.8424) and a solid MOTA of 0.3412, 
+while SAM2 lags behind in recall (0.2130) despite reasonable precision (0.6545). 
+For small objects, all models struggle considerably: Faster R-CNN achieves the best recall (0.4769) but at the cost of an extremely high false-positive rate, 
+yielding a MOTA of $-2.8237$. YOLO11n and SAM2 are more conservative, with recalls of only 0.0812 and 0.2143 respectively, 
+though SAM2 achieves the best IDF1 among the three for small objects (0.2368), suggesting more consistent track identity despite low detection coverage.
 
-\textbf{Per-category analysis.}
-The per-category breakdown (Table~\ref{tab:mot-per-category}) reveals a significant disparity in human detection across methods. YOLO11n achieves near-perfect precision on humans (0.9830) but an extremely low recall of only 5.17\%, effectively missing almost all human targets. This suggests that the model has learned to be highly conservative on the under-represented human class, producing very few but highly confident predictions. Faster R-CNN, by contrast, detects humans much more reliably (recall = 0.5622) but with lower precision (0.4445), resulting in the best human IDF1 (0.4965) among the three methods. SAM2 performs poorly on humans across the board (precision = 0.1630, recall = 0.1180), likely because its mask propagation struggles with the small, low-contrast appearance of humans in thermal imagery. For the animal category, YOLO achieves the best MOTA (0.1832) and IDF1 (0.5009), while Faster R-CNN again leads in recall (0.7032) but is penalised by excessive false positives (84\,732), driving its animal MOTA to $-0.88$.
+These size-based trends directly explain the per-category results. 
+Since humans in the BIRDSAI dataset are generally small targets, all models exhibit substantially weaker performance on the human category. 
+YOLO11n is the most extreme case: it achieves near-perfect precision on humans (0.9830) but an extremely low recall of 0.0517, 
+indicating that it rarely detects humans at all, and those it does detect are highly confident true positives. 
+Faster R-CNN recovers the most human detections (recall 0.5622, IDF1 0.4965), though still with a negative MOTA ($-0.1907$) due to identity switches. 
+SAM2 performs poorly on both metrics for humans (recall 0.1180, IDF1 0.1369), 
+as its prompt-and-propagate approach is particularly sensitive to the small apparent size and low contrast of human targets in thermal imagery.
+For the animal category, where targets are more varied in size but generally larger than humans, 
+all models improve noticeably. YOLO11n achieves the best animal precision (0.6864) and IDF1 (0.5009), 
+while Faster R-CNN leads in recall (0.7032). SAM2 shows moderate animal performance (MOTA 0.0424, IDF1 0.3366), 
+benefiting from the larger and more stable appearance of animal targets compared to humans.
 
-\textbf{Object size analysis.}
-The per-size results (Table~\ref{tab:mot-per-size}) highlight a consistent trend: all three methods perform substantially better on large objects than on small ones. Faster R-CNN benefits the most from larger targets, achieving a MOTA of 0.5826 and IDF1 of 0.8076 on the large subset — the highest scores in any category or size group. This indicates that once objects are large enough to produce reliable region proposals, the two-stage detection pipeline excels. On small objects, all methods struggle: Faster R-CNN generates 89\,138 false positives (compared to 13\,130 true positives), resulting in a MOTA of $-2.82$. SAM2 and YOLO fare relatively better on small targets (MOTA of $-0.38$ and $-0.16$ respectively), with SAM2 achieving the highest small-object IDF1 (0.2368), suggesting that its propagation-based approach is more robust to the ambiguity of small thermal signatures.
-
-\textbf{Efficiency.}
-From a practical standpoint, YOLO11n is the most efficient model, running at 92.61 FPS with a model size of only 9.9~MB — roughly 86$\times$ smaller than SAM2 (856.2~MB) and 17$\times$ smaller than Faster R-CNN (165.3~MB). SAM2 is by far the slowest at 2.60 FPS, making it impractical for real-time deployment in drone-based surveillance scenarios despite its zero-shot capability. Faster R-CNN occupies a middle ground at 66.81 FPS, which is sufficient for near-real-time applications.
-% ===== MOT Results on BIRDSAI =====
+It is also worth noting that the BIRDSAI dataset exhibits a significant class imbalance between categories: 
+animal instances substantially outnumber human instances (num\_gt: 55\,101 vs.\ 16\,804), 
+which may bias detection models such as Faster R-CNN and YOLO11n towards predicting the animal class, 
+further contributing to the low recall observed for humans. 
+To address this imbalance, future work will explore training with a weighted cross-entropy loss 
+or other class-balancing strategies to improve human detection performance.
 % ----- Per-category table (merged) -----
 \begin{table}[htbp]
 \centering
@@ -755,6 +785,18 @@ ID Sw.    & \textbf{0}       & 1\,737           & 618              & \textbf{0} 
 
 \paragraph{Qualitative Results}\label{MOT_Qualitative}
 
+Figure~\ref{fig:mot_birdsai_comparison} presents a qualitative comparison of all three models on the same frame, 
+providing visual confirmation of the trends observed in the quantitative analysis. 
+SAM2 exhibits a large number of false negatives: since it can only track objects visible in the first frame, 
+any target that enters the scene later cannot be detected, which is particularly problematic in the BIRDSAI dataset 
+where new animals and humans frequently appear throughout the video sequence. 
+Faster R-CNN, consistent with its high recall but low precision, produces numerous false positive detections, 
+annotating regions that contain no actual targets. YOLO11n takes a more conservative approach, 
+generating fewer but more confident predictions; however, it also misses a considerable number of targets, 
+and one identity switch is visible in the frame, where a tracked object has been assigned a new ID mid-sequence. 
+Overall, the qualitative results align well with the quantitative findings reported in 
+Tables~\ref{tab:birdsai_mot-overall} and~\ref{tab:mot-per-size}.
+
 \begin{figure}[htbp]
     \centering
     \begin{minipage}[b]{0.333\textwidth}%
@@ -767,7 +809,9 @@ ID Sw.    & \textbf{0}       & 1\,737           & 618              & \textbf{0} 
         \includegraphics[width=\textwidth]{figures/mot_sam2_0000000371_frame0623.jpg}%
     \end{minipage}
     \caption{MOT results on BIRDSAI sequence \texttt{0000000371}, frame 623.
-             Left: YOLO11n; centre: Faster R-CNN v2; right: SAM2.}
+             Left: YOLO11n; centre: Faster R-CNN v2; right: SAM2.
+             Bounding box colours indicate detection outcome:
+             \textcolor{green}{green} = TP, \textcolor{blue}{blue} = FP, \textcolor{red}{red} = FN, \textcolor{orange}{orange} = ID switch.}
     \label{fig:mot_birdsai_comparison}
 \end{figure}
 
@@ -779,11 +823,11 @@ To be updated.
 
 To be updated.
 
-\subsection{Conclusion}
+\subsection{Compliance Overview}
 
 Table~\ref{tab:compliance-overview} provides a high-level compliance overview for each tested algorithm across all test dimensions defined in D5.
 Each cell indicates whether the algorithm's performance on that dimension is \textbf{C} (Compliant), \textbf{Mi} (Minor non-compliance), or \textbf{Ma} (Major non-compliance).
-Detailed results and non-compliance analyses are presented in the subsections that follow.
+Detailed results and non-compliance analyses are presented in the subsections that follow. We will complete the Table~\ref{tab:compliance-overview} in report version 2.
 
 \begin{table}[h]
 \centering
