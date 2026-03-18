@@ -507,6 +507,10 @@ This highlights a fundamental limitation of prompt-based tracking in scenes with
     \label{fig:sam2_birdsai_animal2}
 \end{figure}
 
+Figure~\ref{fig:sam2_birdsai_animal3} shows representative frames from the animal category, where targets are visibly larger than the human instances examined earlier.
+Notably, SAM2's predicted bounding boxes often fit the target more tightly than the ground-truth annotations: because SAM2 produces segmentation masks that closely conform to the object boundary, the derived boxes tend to be more precise, whereas the ground-truth boxes in BIRDSAI are sometimes loosely drawn around the animal.
+This annotation misalignment can paradoxically penalise SAM2 in IoU-based evaluation, as a tighter prediction around the true object extent may still fall below the 0.5 threshold when matched against an imprecise ground-truth box.
+
 \begin{figure}[htbp]
     \centering
     \begin{minipage}[b]{0.2\textwidth}%
@@ -524,13 +528,25 @@ This highlights a fundamental limitation of prompt-based tracking in scenes with
     \begin{minipage}[b]{0.2\textwidth}%
         \includegraphics[width=\textwidth]{figures/birdsai_0000000352_s2b_frame0034.jpg}%
     \end{minipage}
-    \caption{SAM2 SOT results on BIRDSAI sequence \texttt{0000000352} (animal category).
-             Top row: sequence 1 segments 143--205 frame 0, 2198--2265 frame 10, and 3147--3208 frame 1.
-             Bottom row: sequence 2 segment 482--599 frame 37, and segment 2540--2810 frame 34.
-             Bounding box colours: \textcolor{orange}{orange} = ground-truth box;
-             \textcolor{green!70!black}{green} = predicted box with IoU $\geq 0.5$ (true positive);
-             \textcolor{blue}{blue} = predicted box with IoU $< 0.5$ (false positive).}
+    \caption{SAM2 SOT results on BIRDSAI sequence \texttt{0000000352} (animal category), five representative frames.
+             \textcolor{orange}{Orange} = ground-truth; \textcolor{green!70!black}{green} = true positive (IoU $\geq 0.5$); \textcolor{blue}{blue} = false positive (IoU $< 0.5$).}
     \label{fig:sam2_birdsai_animal3}
+\end{figure}
+
+\begin{figure}[htbp]
+    \centering
+    \begin{minipage}[b]{0.333\textwidth}%
+        \includegraphics[width=\textwidth]{figures/birdsai_0000000058_s1_frame0000.jpg}%
+    \end{minipage}%
+    \begin{minipage}[b]{0.333\textwidth}%
+        \includegraphics[width=\textwidth]{figures/birdsai_0000000058_s1_frame0009.jpg}%
+    \end{minipage}%
+    \begin{minipage}[b]{0.333\textwidth}%
+        \includegraphics[width=\textwidth]{figures/birdsai_0000000058_s2_frame0004.jpg}%
+    \end{minipage}
+    \caption{SAM2 SOT results on BIRDSAI sequence \texttt{0000000058} (animal category), three representative frames.
+             \textcolor{orange}{Orange} = ground-truth; \textcolor{green!70!black}{green} = true positive (IoU $\geq 0.5$); \textcolor{blue}{blue} = false positive (IoU $< 0.5$).}
+    \label{fig:sam2_birdsai_animal4}
 \end{figure}
 
 \paragraph{OOTB.}
