@@ -321,6 +321,8 @@ $\cdots$ & -- & -- & -- & -- & -- & -- \\
 
 \hypertarget{Overall performance}{%
 \subsection{Overall performance}\label{Overall performance}}
+We briefly cross-referenced the performance figures reported in the original papers against the performance assessment benchmarks documented in Test Specification D5 Section~4.3, 
+and consider the numerical results obtained on our test datasets to be consistent and reasonable.
 
 \hypertarget{Single Object Tracking (SOT)}{%
 \subsubsection{Single Object Tracking (SOT)}\label{OP_SOT}}
@@ -336,8 +338,11 @@ The high Precision@20 indicates that the predicted bounding box centre is within
 but the moderate Success AUC reveals that the overlap between predicted and ground-truth boxes is often insufficient.
 
 \paragraph{OOTB.}
-On the OOTB traffic dataset (Tables~\ref{tab:sot-overall} and~\ref{tab:sot-ootb}), SAM2 exhibits pronounced variation across categories,
-with an overall Success AUC of 0.3099 and Precision@20 of 0.5038.
+On the OOTB traffic dataset (Table~\ref{tab:sot-overall}), SAM2 achieves an overall Success AUC of 0.3099, a Precision@20 of 0.5038, and a Mean IoU of 0.2880 over 3\,200 frames.
+The Success AUC of approximately 0.31 indicates that, on average, the predicted bounding boxes overlap insufficiently with the ground-truth targets across the range of IoU thresholds.
+The Precision@20 of 0.5038 reveals that the predicted box centre falls within 20 pixels of the ground truth in only about half of the frames, suggesting that SAM2's mask propagation frequently drifts or loses precise localisation of the target.
+The Mean IoU of 0.2880 further confirms that the spatial alignment between predicted and ground-truth boxes is generally poor throughout the sequences.
+Overall, these results indicate that SAM2 struggles to maintain consistent and accurate tracking on the OOTB traffic scenarios, likely due to the heterogeneous appearance of vehicle categories, complex and cluttered backgrounds, and abrupt changes in target scale or appearance across frames.
 
 \begin{table}[htbp]
 \centering
@@ -355,59 +360,112 @@ Mean IoU     & 0.3567  & 0.2880 \\
 \label{tab:sot-overall}
 \end{table}
 
+\hypertarget{Multi-Object Tracking (MOT)}{%
+\subsubsection{Multi-Object Tracking (MOT)}\label{OP_MOT}}
+
+As can be inferred from the definition of the MOT task, the algorithms previously introduced in the Algorithms Theoretical Basis Description — namely Faster R-CNN and YOLO (each coupled with ByteTracker), are all applicable to this task. 
+Unlike SOT, MOT does not require a first-frame prompt to initialise a specific target; instead, it relies on detecting and associating all objects of interest across frames. 
+Faster R-CNN and YOLO, when coupled with ByteTracker, are well-suited for this paradigm, as they provide per-frame detections that ByteTracker then links into consistent trajectories. 
+SAM2 is likewise applicable, leveraging its segmentation and tracking capabilities in a multi-object setting.
+
+It should also be noted that this comparison is inherently asymmetric: Faster R-CNN and YOLO are fully supervised models trained on labelled datasets that encompass all object categories present in the test set, whereas SAM2 relies solely on first-frame prompts and has no prior knowledge of object categories.
+As a consequence, only the objects explicitly prompted in the first frame will be tracked; any new instance entering the scene mid-sequence will go entirely undetected by SAM2 — a fundamental limitation that does not apply to category-level detectors such as Faster R-CNN and YOLO.
+
+\paragraph{BIRDSAI.}
+Table~\ref{tab:birdsai_mot-overall} summarises the overall MOT performance of all models on the BIRDSAI dataset.
+Faster R-CNN v2 achieves the highest detection quality among the three algorithms, leading in both AP50 (0.3087) and Recall (0.7187), 
+which indicates that its region-proposal-based architecture is effective at locating objects in thermal infrared imagery. However, 
+this high recall comes at the cost of a large number of false positives, which severely degrades its tracking performance: 
+its overall MOTA of $-1.16$ is the worst among all three methods. In contrast, YOLO11n strikes a better balance between precision (0.4635) and recall (0.4595), 
+yielding the best overall MOTA ($-0.20$) and IDF1 (0.4615). SAM2, operating in a zero-shot setting with ground-truth bounding-box prompts on the first frame only, 
+achieves moderate precision (0.4116) but low recall (0.2211), as it can only propagate objects that are visible in the prompted frame and tends to lose tracks as objects undergo appearance changes or temporary occlusions.
+
+\begin{table}[htbp]
+\centering
+\begin{tabular}{lccc}
+\toprule
+Metric & SAM2 & Faster R-CNN v2 & YOLO11n \\
+\midrule
+AP50            & 0.0802   & \textbf{0.3087} & 0.2152  \\
+AR@100          & 0.1858   & \textbf{0.3788} & 0.2809  \\
+Precision       & 0.4116   & 0.2938          & \textbf{0.4635} \\
+Recall          & 0.2211   & \textbf{0.7187} & 0.4595  \\
+MOTA            & $-0.1021$  & $-1.1576$         & \textbf{$-0.1985$} \\
+IDF1            & 0.2877   & 0.4171          & \textbf{0.4615} \\
+ID Switches     & \textbf{506} & 10\,686      & 9\,064  \\
+FPS             & 2.60     & 66.81           & \textbf{92.61}  \\
+Model Size (MB) & 856.2    & 165.3           & \textbf{9.9}    \\
+Total Time (s)  & 4610.1   & 183.1           & \textbf{132.1}  \\
+\bottomrule
+\end{tabular}
+\caption{Overall MOT results on the BIRDSAI test set.}
+\label{tab:birdsai_mot-overall}
+\end{table}
 
 \hypertarget{Performance by Object Size}{%
 \subsection{Performance by Object Size}\label{Performance by Object Size}}
 
+In this subsection, we analyse algorithm performance broken down by both object size and object category, 
+as the category of an object largely determines its typical size within the video scene.
+
 \hypertarget{Single Object Tracking (SOT)}{%
 \subsubsection{Single Object Tracking (SOT)}\label{SOT}}
 
-
+The following analysis is structured into two parts: quantitative results, where we examine per-category and per-size metrics, 
+followed by qualitative results, where representative tracking examples are discussed.
 
 \paragraph{Quantitative Results}\label{SOT_Quantitative}
+Tables~\ref{tab:sot-birdsai} and~\ref{tab:sot-ootb} present the per-category and per-size SOT evaluation results for SAM2 on 
+the BIRDSAI and OOTB test sets, respectively, where objects are classified as small if their bounding box area is smaller 
+than $32\times32$ pixels and as large otherwise.
+
+\paragraph{BIRDSAI.}
+As shown in Table~\ref{tab:sot-birdsai}, SAM2 tracks animals more accurately (Success AUC = 0.4295, Mean IoU = 0.4238) than humans (Success AUC = 0.3347, Mean IoU = 0.3235).
+This performance gap is largely explained by object size: humans in BIRDSAI are predominantly small objects, appearing as compact, low-contrast blobs in thermal infrared imagery, which makes precise mask fitting difficult.
+Among the animal category, the majority of instances are also small — with the exception of larger species such as elephants — yet the animal subset still benefits from occasional large targets that are inherently easier for SAM2 to segment and propagate.
+This is confirmed by the per-size breakdown: large objects achieve a substantially higher Success AUC (0.4295 vs.\ 0.3399) and Mean IoU (0.4238 vs.\ 0.3290), as SAM2's mask propagation is more reliable when the target occupies a larger portion of the frame.
+Conversely, small objects achieve a higher Precision@20 (0.9136 vs.\ 0.8264), suggesting that centre localisation remains accurate even for compact targets, but the predicted bounding box often fails to tightly enclose them, depressing overlap-based scores.
 
 % ===== SOT Results on BIRDSAI =====
 \begin{table}[htbp]
 \centering
-\begin{tabular}{l ccc cc}
+\begin{tabular}{l cc cc}
 \toprule
-\textbf{Metric} & \multicolumn{3}{c}{\textbf{Per Category}} & \multicolumn{2}{c}{\textbf{Per Size}} \\
-\cmidrule(lr){2-4} \cmidrule(lr){5-6}
- & Overall & Animal & Human & Small & Large \\
+\textbf{Metric} & \multicolumn{2}{c}{\textbf{Per Category}} & \multicolumn{2}{c}{\textbf{Per Size}} \\
+\cmidrule(lr){2-3} \cmidrule(lr){4-5}
+ & Animal & Human & Small & Large \\
 \midrule
-N Frames      & 25\,536 & 8\,448  & 17\,088 & 18\,084 & 7\,452  \\
-Success AUC   & 0.3661  & \textbf{0.4295} & 0.3347  & 0.3399  & \textbf{0.4295} \\
-Precision@20  & 0.8881  & 0.8710  & \textbf{0.8966} & \textbf{0.9136} & 0.8264 \\
-Mean IoU      & 0.3567  & \textbf{0.4238} & 0.3235  & 0.3290  & \textbf{0.4238} \\
+N Frames      & 8\,448  & 17\,088 & 18\,084 & 7\,452  \\
+Success AUC   & \textbf{0.4295} & 0.3347  & 0.3399  & \textbf{0.4295} \\
+Precision@20  & 0.8710  & \textbf{0.8966} & \textbf{0.9136} & 0.8264 \\
+Mean IoU      & \textbf{0.4238} & 0.3235  & 0.3290  & \textbf{0.4238} \\
 \bottomrule
 \end{tabular}
-\caption{SAM2 SOT results on the BIRDSAI test set (first-frame prompt).}
+\caption{SAM2 SOT results on the BIRDSAI test set (first-frame prompt). The dataset contains two object categories: \textit{Animal} and \textit{Human}. Objects are classified as small if their bounding box area is smaller than $32\times32$ pixels, and as large otherwise.}
 \label{tab:sot-birdsai}
 \end{table}
 
-% ===== SOT Results on OOTB =====
-\begin{table}[htbp]
-\centering
-\begin{tabular}{l ccccc cc}
-\toprule
-\textbf{Metric} & \multicolumn{5}{c}{\textbf{Per Category}} & \multicolumn{2}{c}{\textbf{Per Size}} \\
-\cmidrule(lr){2-6} \cmidrule(lr){7-8}
- & Overall & Car & Plane & Ship & Train & Small & Large \\
-\midrule
-N Frames      & 3\,200 & 1\,728 & 480    & 800    & 192   & 2\,720 & 480    \\
-Success AUC   & 0.3099 & 0.2431 & 0.2047 & \textbf{0.5801} & 0.0476 & \textbf{0.3308} & 0.1909 \\
-Precision@20  & 0.5038 & 0.4074 & 0.4688 & \textbf{0.8538} & 0.0000 & \textbf{0.5184} & 0.4208 \\
-Mean IoU      & 0.2880 & 0.2157 & 0.1761 & \textbf{0.5805} & 0.0000 & \textbf{0.3106} & 0.1603 \\
-\bottomrule
-\end{tabular}
-\caption{SAM2 SOT results on the OOTB test set (first-frame prompt).}
-\label{tab:sot-ootb}
-\end{table}
+\paragraph{Qualitative Results}
 
-Tables~\ref{tab:sot-birdsai} and~\ref{tab:sot-ootb} present the SOT evaluation results for SAM2 on the BIRDSAI and OOTB test sets, respectively.
-
-\paragraph{BIRDSAI.} 
-Per-category results show that SAM2 tracks animals more accurately (Success AUC = 0.4295, Mean IoU = 0.4238) than humans (Success AUC = 0.3347, Mean IoU = 0.3235). This is likely because animals in BIRDSAI's thermal infrared imagery tend to have larger, more distinctive thermal signatures compared to humans, who appear as smaller and less contrasted targets. Interestingly, the per-size breakdown shows that small objects achieve a higher Precision@20 (0.9136 vs.\ 0.8264), suggesting that centre localisation is easier for compact targets. However, large objects yield a substantially higher Success AUC (0.4295 vs.\ 0.3399), indicating that bounding box overlap is more achievable when the target occupies a larger portion of the frame.
+\begin{figure}[htbp]
+    \centering
+    \begin{minipage}[b]{0.3\textwidth}%
+        \includegraphics[width=\textwidth]{figures/birdsai_0000000361_frame0000.jpg}%
+    \end{minipage}%
+    \hfill%
+    \begin{minipage}[b]{0.3\textwidth}%
+        \includegraphics[width=\textwidth]{figures/birdsai_0000000361_frame0005.jpg}%
+    \end{minipage}%
+    \hfill%
+    \begin{minipage}[b]{0.3\textwidth}%
+        \includegraphics[width=\textwidth]{figures/birdsai_0000000361_frame0015.jpg}%
+    \end{minipage}
+    \caption{SAM2 SOT results on BIRDSAI sequence \texttt{0000000361} (animal category): frame 0, 5, and 15.
+             Bounding box colours: \textcolor{orange}{orange} = ground-truth box;
+             \textcolor{green!70!black}{green} = predicted box with IoU $\geq 0.5$ (true positive);
+             \textcolor{blue}{blue} = predicted box with IoU $< 0.5$ (false positive).}
+    \label{fig:sam2_birdsai_animal}
+\end{figure}
 
 \paragraph{OOTB.}
 
@@ -428,6 +486,25 @@ contributing to lower reported scores than the visual tracking quality would sug
 
 \paragraph{Per-size effects on OOTB.}
 A counterintuitive finding on OOTB is that small objects outperform large ones across all metrics (Success AUC: 0.3308 vs.\ 0.1909; Precision@20: 0.5184 vs.\ 0.4208). This reversal — opposite to the BIRDSAI trend — is driven by the \textit{train} category: trains are the largest objects in the dataset, yet SAM2 completely fails to track them. Because the large-size subset is dominated by these failed train sequences, the aggregate large-object metrics are severely depressed. Excluding trains, larger objects would likely follow the expected pattern of higher overlap scores.
+
+% ===== SOT Results on OOTB =====
+\begin{table}[htbp]
+\centering
+\begin{tabular}{l cccc cc}
+\toprule
+\textbf{Metric} & \multicolumn{4}{c}{\textbf{Per Category}} & \multicolumn{2}{c}{\textbf{Per Size}} \\
+\cmidrule(lr){2-5} \cmidrule(lr){6-7}
+ & Car & Plane & Ship & Train & Small & Large \\
+\midrule
+N Frames      & 1\,728 & 480    & 800    & 192   & 2\,720 & 480    \\
+Success AUC   & 0.2431 & 0.2047 & \textbf{0.5801} & 0.0476 & \textbf{0.3308} & 0.1909 \\
+Precision@20  & 0.4074 & 0.4688 & \textbf{0.8538} & 0.0000 & \textbf{0.5184} & 0.4208 \\
+Mean IoU      & 0.2157 & 0.1761 & \textbf{0.5805} & 0.0000 & \textbf{0.3106} & 0.1603 \\
+\bottomrule
+\end{tabular}
+\caption{SAM2 SOT results on the OOTB test set (first-frame prompt). The dataset contains four object categories: \textit{Car}, \textit{Plane}, \textit{Ship}, and \textit{Train}. Objects are classified as small if their bounding box area is smaller than $32\times32$ pixels, and as large otherwise.}
+\label{tab:sot-ootb}
+\end{table}
 
 \paragraph{Qualitative Results}\label{SOT_Qualitative}
 
@@ -542,40 +619,11 @@ IoU-based metrics penalise SAM2 precisely because its predictions are more preci
 \hypertarget{Multi-Object Tracking (MOT)}{%
 \subsubsection{Multi-Object Tracking (MOT)}\label{MOT}}
 
-As can be inferred from the definition of the MOT task, the algorithms previously introduced in the Algorithms Theoretical Basis Description — namely Faster R-CNN and YOLO (each coupled with ByteTracker), as well as SAM2 — are all applicable to this task. 
-Unlike SOT, MOT does not require a first-frame prompt to initialise a specific target; instead, it relies on detecting and associating all objects of interest across frames. 
-Faster R-CNN and YOLO, when coupled with ByteTracker, are well-suited for this paradigm, as they provide per-frame detections that ByteTracker then links into consistent trajectories. 
-SAM2 is likewise applicable, leveraging its segmentation and tracking capabilities in a multi-object setting.
 
-It should also be noted that this comparison is inherently asymmetric: Faster R-CNN and YOLO are fully supervised models trained on labelled datasets that encompass all object categories present in the test set, whereas SAM2 relies solely on first-frame prompts and has no prior knowledge of object categories.
-As a consequence, only the objects explicitly prompted in the first frame will be tracked; any new instance entering the scene mid-sequence will go entirely undetected by SAM2 — a fundamental limitation that does not apply to category-level detectors such as Faster R-CNN and YOLO.
 
 
 \paragraph{Quantitative Results}\label{MOT_Quantitative}
 % ===== MOT Results on BIRDSAI =====
-
-\begin{table}[htbp]
-\centering
-\begin{tabular}{lccc}
-\toprule
-Metric & SAM2 & Faster R-CNN v2 & YOLO11n \\
-\midrule
-AP50            & 0.0802   & \textbf{0.3087} & 0.2152  \\
-AR@100          & 0.1858   & \textbf{0.3788} & 0.2809  \\
-Precision       & 0.4116   & 0.2938          & \textbf{0.4635} \\
-Recall          & 0.2211   & \textbf{0.7187} & 0.4595  \\
-MOTA            & $-0.1021$  & $-1.1576$         & \textbf{$-0.1985$} \\
-IDF1            & 0.2877   & 0.4171          & \textbf{0.4615} \\
-ID Switches     & \textbf{506} & 10\,686      & 9\,064  \\
-FPS             & 2.60     & 66.81           & \textbf{92.61}  \\
-Model Size (MB) & 856.2    & 165.3           & \textbf{9.9}    \\
-Total Time (s)  & 4610.1   & 183.1           & \textbf{132.1}  \\
-\bottomrule
-\end{tabular}
-\caption{Overall MOT results on the BIRDSAI test set.}
-\label{tab:mot-overall}
-\end{table}
-
 % ----- Per-category table (merged) -----
 \begin{table}[htbp]
 \centering
@@ -626,8 +674,6 @@ ID Sw.    & \textbf{0}       & 1\,737           & 618              & \textbf{0} 
 
 Tables~\ref{tab:mot-overall}--\ref{tab:mot-per-size} present the MOT evaluation results on the BIRDSAI test set. Several observations can be drawn from these results.
 
-\paragraph{Overall performance.}
-Faster R-CNN v2 achieves the highest detection quality among the three algorithms, leading in both AP50 (0.3087) and Recall (0.7187), which indicates that its region-proposal-based architecture is effective at locating objects in thermal infrared imagery. However, this high recall comes at the cost of a large number of false positives, which severely degrades its tracking performance: its overall MOTA of $-1.16$ is the worst among all three methods. In contrast, YOLO11n strikes a better balance between precision (0.4635) and recall (0.4595), yielding the best overall MOTA ($-0.20$) and IDF1 (0.4615). SAM2, operating in a zero-shot setting with ground-truth bounding-box prompts on the first frame only, achieves moderate precision (0.4116) but low recall (0.2211), as it can only propagate objects that are visible in the prompted frame and tends to lose tracks as objects undergo appearance changes or temporary occlusions.
 
 \paragraph{Identity consistency.}
 A striking finding is that SAM2 produces only 506 ID switches across the entire test set, compared to 10\,686 for Faster R-CNN and 9\,064 for YOLO. This is a direct consequence of SAM2's prompt-based propagation mechanism: each object is initialised once and tracked through a learned correspondence model, avoiding the repeated detection-to-track association that ByteTracker must perform for the other two methods. While this yields superior identity consistency, it also means that SAM2 cannot recover objects that were missed in the initial prompt frame or that disappear and reappear later.
