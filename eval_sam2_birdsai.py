@@ -180,17 +180,17 @@ def run_sot_evaluation(
 
 
 def main():
-    # --- SOT evaluation ---
-    print("=" * 60)
-    print("SAM2 SOT Evaluation on BIRDSAI: first_frame prompt strategy")
-    print("=" * 60)
-    run_sot_evaluation(prompt_strategy="first_frame")
-
     # --- MOT evaluation ---
+    print("=" * 60)
+    print("SAM2 MOT Evaluation on BIRDSAI: first_frame prompt strategy")
+    print("=" * 60)
+    run_mot_evaluation(prompt_strategy="first_frame")
+
+    # --- SOT evaluation ---
     # print("=" * 60)
-    # print("SAM2 MOT Evaluation on BIRDSAI: first_frame prompt strategy")
+    # print("SAM2 SOT Evaluation on BIRDSAI: first_frame prompt strategy")
     # print("=" * 60)
-    # run_mot_evaluation(prompt_strategy="first_frame")
+    # run_sot_evaluation(prompt_strategy="first_frame")
 
 
 if __name__ == "__main__":

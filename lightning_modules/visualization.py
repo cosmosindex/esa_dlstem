@@ -14,8 +14,8 @@ Two evaluation modes:
 
 Colours:
     Green  — TP / good SOT match (IoU >= 0.5)
-    Red    — FP / poor SOT match (IoU < 0.5)
-    Blue   — FN / GT (SOT mode)
+    Blue   — FP / poor SOT match (IoU < 0.5)
+    Red    — FN / GT (SOT mode)
     Orange — TP with ID switch
     Gray   — ignored predictions (SOT mode, not matched to any GT)
 """
@@ -388,14 +388,14 @@ class DetectionVisualizationCallback(L.Callback):
                 b = gt_boxes[i].astype(int)
                 name = self.class_names.get(int(gt_labels[i]), f"cls{gt_labels[i]}")
                 tid = f" GT#{int(gt_track_ids[i])}" if gt_track_ids is not None else ""
-                self._draw_box(img, b, _BLUE, f"FN {name}{tid}")
+                self._draw_box(img, b, _RED, f"FN {name}{tid}")
 
         for i, is_fp in enumerate(fp_mask):
             if is_fp:
                 b = pred_boxes[i].astype(int)
                 name = self.class_names.get(int(pred_labels[i]), f"cls{pred_labels[i]}")
                 tid = f" T#{int(pred_track_ids[i])}" if pred_track_ids is not None else ""
-                self._draw_box(img, b, _RED, f"FP {name}{tid} {pred_scores[i]:.2f}")
+                self._draw_box(img, b, _BLUE, f"FP {name}{tid} {pred_scores[i]:.2f}")
 
         for i, is_tp in enumerate(tp_mask):
             if is_tp:
