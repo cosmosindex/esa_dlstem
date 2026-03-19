@@ -110,12 +110,12 @@
 
   \vspace{0.4cm}
 
-  {\fontsize{14}{20}\selectfont 2026-03-12\par}
+  {\fontsize{14}{20}\selectfont 2026-03-13\par}
 
   \vfill
   \begin{flushright}
-    \includegraphics[width=1in,height=0.5in]{/Users/ziwencheng/Documents/CosmosIndex_code/esa_dlstem/reports/ESA_logo_2020_Deep.pdf}
-    \includegraphics[width=1in,height=0.5in]{/Users/ziwencheng/Documents/CosmosIndex_code/esa_dlstem/reports/logo_1_black.png}
+    \includegraphics[width=1in,height=0.5in]{ESA_logo_2020_Deep.pdf}
+    \includegraphics[width=1in,height=0.5in]{logo_1_black.png}
   \end{flushright}
 \end{titlepage}
 % ===== END COVER PAGE =====
@@ -208,19 +208,22 @@ Document Change Record
 
 \tocentry{_Toc1974584720}{Reference Documents}{3}
 \tocentry{introduction}{1.\enspace Introduction}{4}
-\tocentry{Experimental Setup}{2.\enspace Experimental Setup}{4}
+\tocsub{introduction}{1.1.\enspace Document Structure}{4}
+\tocentry{Datasets and Experimental Setup}{2.\enspace Datasets and Experimental Setup}{4}
 \tocsub{dataset-preprocessing}{2.1.\enspace Dataset Preprocessing}{4}
-\tocsub{Experimental Setup}{2.2.\enspace Experimental Setup}{5}
-\tocentry{algorithms-assessment}{3.\enspace Algorithms Assessment}{5}
-\tocsub{Overall performance}{3.1.\enspace Overall Performance}{5}
-\tocsub{OP_SOT}{\hspace{1.2em}3.1.1.\enspace Single Object Tracking (SOT)}{5}
-\tocsub{OP_MOT}{\hspace{1.2em}3.1.2.\enspace Multi-Object Tracking (MOT)}{6}
-\tocsub{Performance by Object Size}{3.2.\enspace Performance by Object Size}{7}
-\tocsub{SOT}{\hspace{1.2em}3.2.1.\enspace Single Object Tracking (SOT)}{7}
-\tocsub{MOT}{\hspace{1.2em}3.2.2.\enspace Multi-Object Tracking (MOT)}{11}
-\tocsub{Performance by Frame per Second (FPS)}{3.3.\enspace Performance by Frame per Second (FPS)}{14}
-\tocsub{Performance by Signal to Noise Ratio (SNR)}{3.4.\enspace Performance by Signal to Noise Ratio (SNR)}{14}
-\tocsub{Compliance Overview}{3.5.\enspace Compliance Overview}{14}
+\tocsub{dataset-preprocessing}{\hspace{1.2em}2.1.1.\enspace Data Augmentation}{5}
+\tocsub{Datasets and Experimental Setup}{2.2.\enspace Experimental Setup}{5}
+\tocentry{algorithms-assessment}{3.\enspace Algorithms Assessment}{6}
+\tocsub{Overall performance}{3.1.\enspace Overall Performance}{6}
+\tocsub{OP_SOT}{\hspace{1.2em}3.1.1.\enspace Single Object Tracking (SOT)}{6}
+\tocsub{OP_MOT}{\hspace{1.2em}3.1.2.\enspace Multi-Object Tracking (MOT)}{7}
+\tocsub{algorithms-assessment}{3.2.\enspace Performance at different Testing Dimensions}{9}
+\tocsub{Performance by Object Size}{3.3.\enspace Performance by Object Size}{10}
+\tocsub{SOT}{\hspace{1.2em}3.3.1.\enspace Single Object Tracking (SOT)}{10}
+\tocsub{MOT}{\hspace{1.2em}3.3.2.\enspace Multi-Object Tracking (MOT)}{15}
+\tocsub{algorithms-assessment}{3.4.\enspace Performance by Frame per Second (FPS)}{20}
+\tocsub{algorithms-assessment}{3.5.\enspace Performance by Signal to Noise Ratio (SNR)}{20}
+\tocsub{algorithms-assessment}{3.6.\enspace Performance by Motion Blur and Occlusion}{20}
 
 \vspace{0.1cm}
 \noindent\rule{\linewidth}{0.6pt}
@@ -249,7 +252,7 @@ D2 & Algorithm Theoretical Basis Description & CI/ESA/DLSTEM/2025/D2 \\
 D3 & Reference Data Selection & CI/ESA/DLSTEM/2025/D3 \\
 D4 & Use Cases Specification & CI/ESA/DLSTEM/2025/D4 \\
 D5 & Test Specification &  CI/ESA/DLSTEM/2025/D5 \\
- -- & Advanced Processing Methods for EO Satellite Data --- EXPRO+ ESA EXPRESS PROCUREMENT [PLUS] -- EXPRO [+] & ESA-EOP-SG-SOW-0563 \\
+ -- & Statement of the Work & ESA-EOP-SG-SOW-0563 \\
 \end{longtable}
 \renewcommand{\arraystretch}{1}
 % ===== END REFERENCE DOCUMENTS PAGE =====
@@ -259,42 +262,59 @@ D5 & Test Specification &  CI/ESA/DLSTEM/2025/D5 \\
 \hypertarget{introduction}{%
 \section{Introduction}\label{introduction}}
 
-This is the Advanced EO Processing Algorithm Test Report (D6) document of the activity \emph{WP3200} of the work package (WP) \emph{WP3000} in the DL-STEM project. 
-The objective is to assess the processing methods and the chosen algorithms first on a small dataset and then on the benchmark dataset.
+This is the Advanced EO Processing Algorithm Test Report (D6) document of the activity \emph{WP3200} of the work package (WP) \emph{WP3000} in the DL-STEM project.
+The objective is to assess and compare selected algorithms for object detection and tracking in EO videos, examining their performance on the datasets specified in 
+Test Specification D5 (Section 2.2), across both Single Object Tracking (SOT) and Multi-Object Tracking (MOT) tasks under varying data conditions.
 
-\hypertarget{Experimental Setup}{%
-\section{Experimental Setup}\label{Experimental Setup}}
+\subsection{Document Structure}
+The report is structured as follows. Section 2 describes the datasets and experimental setup, covering the data preprocessing pipeline, augmentation strategies, 
+and the hyperparameter configurations used for each algorithm. Section 3 presents the algorithm assessment results. It begins with an overall performance summary 
+for both SOT and MOT tasks on the BIRDSAI and OOTB datasets, followed by a compliance overview across all test dimensions. Section 3 then provides a detailed 
+breakdown of performance by object size and category, combining quantitative metrics with qualitative visualisations to illustrate key failure modes and model behaviours. 
+Results for Grounding DINO and evaluation across remaining test dimensions are pending and will be reported in version 2 of this document.
 
-In this report, we present results on two datasets collected in the Reference Data Selection D3 document, OOTB and BIRDSAI, 
-one from Use case 2: vehicle detection and tracking and one from Use case 1: wild animal detection and tracking, as mentioned in D3. 
+\hypertarget{Datasets and Experimental Setup}{%
+\section{Datasets and Experimental Setup}\label{Experimental Setup}}
+
+In this report, we present results on two datasets specified in Test Specification D5 
+(Section 2.2), OOTB and BIRDSAI, one from Use Case 2: vehicle detection and tracking 
+and one from Use Case 1: wild animal detection and tracking. 
 In the final report, we will provide test results on all datasets.
 
 \hypertarget{dataset-preprocessing}{%
 \subsection{Dataset preprocessing}\label{dataset-preprocessing}}
 
-The preprocessing pipeline consists of two main steps: splitting each dataset into training, validation, and test subsets, and applying data augmentation during training to improve model generalisation.
-Regarding the data split, we have mentioned in detail in the test specification D5 document how the dataset tested in this report is split.
+The preprocessing pipeline consists of two main steps: splitting each dataset into training, validation, and test subsets, and applying data 
+augmentation during training to improve model generalisation. Regarding the data split, we have mentioned in detail in the test specification 
+D5 document how the dataset tested in this report is split.
 
-\subsubsection*{Data Augmentation}
+\subsubsection{Data Augmentation}
 
 Two separate transform pipelines are defined:
 
 \textbf{Training transform.} During training, each frame is resized to $640 \times 640$ pixels and then subjected to a random horizontal flip with probability $p = 0.5$. 
-The horizontal flip simulates the natural left--right symmetry of aerial and satellite observations, increasing the diversity of object orientations seen by the model without introducing unrealistic artefacts.
+The horizontal flip simulates the natural left--right symmetry of aerial and satellite observations, increasing the diversity of object orientations seen by the model 
+without introducing unrealistic artefacts.
 
-\textbf{Evaluation transform.} We have mentioned in detail in the test specification D5.
+\textbf{Evaluation transform.} During validation and testing, only a deterministic resize to $640 \times 640$ pixels is applied, with no stochastic operations, ensuring 
+reproducible evaluation metrics across runs.
 
 The choice of a minimal augmentation strategy is intentional: especially for datasets containing infrared and thermal imagery with specific spectral properties, 
 aggressive photometric augmentations (e.g.\ colour jitter or channel dropout) could distort the radiometric information that detectors rely on for small target discrimination.
 
 \subsection{Experimental Setup}
 
-All experiments use AdamW as the optimiser with a weight decay of $10^{-4}$. The learning rate follows a cosine schedule with a linear warmup over 5 epochs, 
-and training runs for a maximum of 50 epochs with early stopping (patience = 10, monitored on \texttt{val/AP50}). 
-Mixed precision (16-bit) is used throughout, and all runs are logged to Weights \& Biases.
+All experiments use AdamW as the optimiser with a weight decay of $10^{-4}$. 
+The learning rate follows a cosine schedule with a linear warmup over 5 epochs, 
+and training runs for a maximum of 50 epochs with early stopping (patience = 10, 
+monitored on \texttt{val/AP50}, the definition of which can be found in Test 
+Specification D5 Section 4.2). Mixed precision (16-bit) is used throughout to reduce 
+memory usage and accelerate training, and all runs are logged to Weights \& Biases, 
+an experiment tracking platform.
 
-\textbf{Faster R-CNN v2} uses a ResNet-50 FPN v2 backbone pretrained on COCO. 
-The backbone is fully frozen and only the RPN head and ROI box predictor are fine-tuned, 
+\textbf{Faster R-CNN v2} uses a ResNet-50 FPN v2 backbone pretrained on COCO~\cite{lin2014microsoft}. 
+The last 2 layers of the backbone are set as trainable, while the remaining layers are frozen, 
+and the RPN head and ROI box predictor are fine-tuned, 
 with a learning rate of $5 \times 10^{-4}$ and a batch size of 8. 
 Score and NMS thresholds are set to 0.05 and 0.5, respectively.
 
@@ -305,6 +325,10 @@ Confidence and IoU thresholds for NMS are set to 0.05 and 0.5.
 \textbf{SAM2} (SAM2.1 Hiera-Large, pretrained on SA-V) is evaluated in a zero-shot setting without any fine-tuning. 
 Ground-truth bounding boxes from the first frame only are used as prompts, 
 and the model propagates tracks across subsequent frames in clips of 32 frames with a stride of 1.
+The predicted boxes from the last frame of each clip are automatically used as prompts for the first frame of the 
+next clip, allowing tracking to continue across the full sequence without any additional manual input.
+
+\textbf{DINOv3} (grounding DINO) will be updated in version 2.
 
 \hypertarget{algorithms-assessment}{%
 \section{Algorithms assessment}\label{algorithms-assessment}}
@@ -312,15 +336,17 @@ and the model propagates tracks across subsequent frames in clips of 32 frames w
 In the Algorithms Theoretical Basis Description D2, we introduced the advanced algorithms we intended to investigate and compare, including SAM2, Faster R-CNN, YOLO, and DINOv3.
 Regarding DINOv3, we originally intended to evaluate it augmented with a detection head. 
 However, following a review of recent literature, we identified Grounding DINO~\cite{liu2024grounding, ren2024grounding} as a more state-of-the-art alternative for open-vocabulary object detection. 
-Its implementation is currently ongoing, and results will be reported in the future report.
-In the Test Specification, we also introduced the SOT and MOT tasks respectively. 
-The reason for discussing them as two separate tasks is that the datasets mentioned in the Reference Data Selection D3 vary in applicability — some are only suitable for the SOT task, while others are applicable to both SOT and MOT tasks. 
+Its implementation is currently ongoing, and results will be reported in the report version 2.
+
+In the Test Specification D5, we also introduced the Single Object Tracking (SOT) and Multi Object Tracking (MOT) tasks respectively. 
+The reason for discussing them as two separate tasks is that the datasets mentioned in the Test Specification D5 (Section 2.2) vary in 
+applicability — some are only suitable for the SOT task, while others are applicable to both SOT and MOT tasks. 
 This is related to the type of annotations provided by each dataset.
 
 \hypertarget{Overall performance}{%
 \subsection{Overall performance}\label{Overall performance}}
-We briefly cross-referenced the performance figures reported in the original papers against the performance assessment benchmarks documented in Test Specification D5 Section~4.3, 
-and consider the numerical results obtained on our test datasets to be consistent and reasonable.
+We briefly cross-referenced the performance figures reported in the original papers against the performance assessment benchmarks documented 
+in Test Specification D5 4.3, and consider the numerical results obtained on our test datasets to be consistent and reasonable.
 
 \hypertarget{Single Object Tracking (SOT)}{%
 \subsubsection{Single Object Tracking (SOT)}\label{OP_SOT}}
@@ -330,13 +356,18 @@ In contrast, traditional object detection algorithms such as Faster R-CNN and YO
 Critically, they are not designed to accept a first-frame bounding box as input, which means they lack the ability to associate a specific target instance across frames — a fundamental requirement of SOT. 
 They are therefore clearly unsuitable for the SOT task and have been excluded from our SOT evaluation accordingly.
 
+Table~\ref{tab:sot-overall} summarises the overall SOT performance of SAM2 on the 
+BIRDSAI dataset and OOTB dataset.
+
 \paragraph{BIRDSAI.}
-On the BIRDSAI dataset (Table~\ref{tab:sot-overall}), SAM2 achieves an overall Success AUC of 0.3661 and Precision@20 of 0.8881. 
-The high Precision@20 indicates that the predicted bounding box centre is within 20 pixels of the ground truth for the majority of frames, 
-but the moderate Success AUC reveals that the overlap between predicted and ground-truth boxes is often insufficient.
+
+On the BIRDSAI dataset, SAM2 achieves a Success AUC of 0.3661 and Precision@20 of 0.8881. 
+The high Precision@20 indicates that the predicted bounding box centre is within 20 
+pixels of the ground truth for the majority of frames, but the moderate Success AUC 
+reveals that the overlap between predicted and ground-truth boxes is often insufficient.
 
 \paragraph{OOTB.}
-On the OOTB traffic dataset (Table~\ref{tab:sot-overall}), SAM2 achieves an overall Success AUC of 0.3099, a Precision@20 of 0.5038, and a Mean IoU of 0.2880 over 3\,200 frames.
+On the OOTB traffic dataset, SAM2 achieves an overall Success AUC of 0.3099, a Precision@20 of 0.5038, and a Mean IoU of 0.2880 over 3\,200 frames.
 The Success AUC of approximately 0.31 indicates that, on average, the predicted bounding boxes overlap insufficiently with the ground-truth targets across the range of IoU thresholds.
 The Precision@20 of 0.5038 reveals that the predicted box centre falls within 20 pixels of the ground truth in only about half of the frames, suggesting that SAM2's mask propagation frequently drifts or loses precise localisation of the target.
 The Mean IoU of 0.2880 further confirms that the spatial alignment between predicted and ground-truth boxes is generally poor throughout the sequences.
@@ -371,12 +402,17 @@ As a consequence, only the objects explicitly prompted in the first frame will b
 
 \paragraph{BIRDSAI.}
 Table~\ref{tab:birdsai_mot-overall} summarises the overall MOT performance of all models on the BIRDSAI dataset.
+
 Faster R-CNN v2 achieves the highest detection quality among the three algorithms, leading in both AP50 (0.3087) and Recall (0.7187), 
 which indicates that its region-proposal-based architecture is effective at locating objects in thermal infrared imagery. However, 
 this high recall comes at the cost of a large number of false positives, which severely degrades its tracking performance: 
-its overall MOTA of $-1.16$ is the worst among all three methods. In contrast, YOLO11n strikes a better balance between precision (0.4635) and recall (0.4595), 
-yielding the best overall MOTA ($-0.20$) and IDF1 (0.4615). SAM2, operating in a zero-shot setting with ground-truth bounding-box prompts on the first frame only, 
-achieves moderate precision (0.4116) but low recall (0.2211), as it can only propagate objects that are visible in the prompted frame and tends to lose tracks as objects undergo appearance changes or temporary occlusions.
+its overall MOTA of $-1.16$ is the worst among all three methods. 
+
+In contrast, YOLO11n strikes a better balance between precision (0.4635) and recall (0.4595), 
+yielding the best overall MOTA ($-0.20$) and IDF1 (0.4615). 
+
+SAM2, operating in a zero-shot setting with ground-truth bounding-box prompts on the first frame only, achieves moderate precision (0.4116) 
+but low recall (0.2211), as it can only propagate objects that are visible in the prompted frame and tends to lose tracks as objects undergo appearance changes or temporary occlusions.
 
 \begin{table}[htbp]
 \centering
@@ -400,6 +436,43 @@ Total Time (s)  & 2660.3   & 184.6           & \textbf{184.6}  \\
 \label{tab:birdsai_mot-overall}
 \end{table}
 
+\subsection{Performance at different Testing Dimensions}
+
+Apart from the general performance, the selected algorithms are evaluated across 
+multiple testing dimensions as defined in Test Specification D5 (Section 2.1), including 
+object size (with a particular focus on small objects), frame rate and video duration, 
+signal-to-noise ratio (SNR), and general image quality (motion blur and occlusion).
+
+A preliminary overview of the method compliance w.r.t. different test dimensions 
+is summarised in Table~\ref{tab:compliance-overview}, and will be completed in 
+version 2 of this document. It provides a high-level compliance overview for each tested algorithm across all test dimensions defined in D5.
+Each cell indicates whether the algorithm's performance on that dimension is \textbf{C} (Compliant), \textbf{Mi} (Minor non-compliance), or \textbf{Ma} (Major non-compliance).
+Detailed results and non-compliance analyses are presented in the subsections that follow.
+Detailed performance results across each test dimension are presented in the 
+following subsections.
+
+\begin{table}[h]
+\centering
+\begin{tabular}{|l|c|c|c|c|c|c|}
+\hline
+\multirow{2}{*}{\textbf{Algorithm}} & \multicolumn{2}{c|}{\textbf{Task}} & \multicolumn{2}{c|}{\textbf{Object Size}} & \multirow{2}{*}{\textbf{FPS}} & \multirow{2}{*}{\textbf{SNR}} \\
+\cline{2-5}
+ & SOT & MOT & Small & Large & & \\
+\hline
+SAM2 & C & Ma & C & C & -- & -- \\
+\hline
+YOLO & Ma & C & Mi & C & -- & -- \\
+\hline
+FasterRCNN & Ma & C & Mi & C & -- & -- \\
+\hline
+Grounding DINO & -- & -- & -- & -- & -- & -- \\
+\hline
+% $\cdots$ & -- & -- & -- & -- & -- & -- \\
+% 
+\end{tabular}
+\caption{Compliance overview per algorithm and test dimension. C\,=\,Compliant; Mi\,=\,Minor non-compliance; Ma\,=\,Major non-compliance; --\,=\,Under development (to be reported in the final report).\label{tab:compliance-overview}}
+\end{table}
+
 \hypertarget{Performance by Object Size}{%
 \subsection{Performance by Object Size}\label{Performance by Object Size}}
 
@@ -416,9 +489,8 @@ followed by qualitative results, where representative tracking examples are disc
 \paragraph{BIRDSAI.}
 
 \paragraph{Quantitative Results}\label{SOT_Quantitative}
-Tables~\ref{tab:sot-birdsai} and~\ref{tab:sot-ootb} present the per-category and per-size SOT evaluation results for SAM2 on the BIRDSAI and OOTB test sets, respectively.
 
-As shown in Table~\ref{tab:sot-birdsai}, SAM2 tracks animals more accurately (Success AUC = 0.4295, Mean IoU = 0.4238) than humans (Success AUC = 0.3347, Mean IoU = 0.3235).
+Tables~\ref{tab:sot-birdsai} present the per-category and per-size SOT evaluation results for SAM2 on the BIRDSAI test sets. As shown in Table~\ref{tab:sot-birdsai}, SAM2 tracks animals more accurately (Success AUC = 0.4295, Mean IoU = 0.4238) than humans (Success AUC = 0.3347, Mean IoU = 0.3235).
 This performance gap is largely explained by object size: humans in BIRDSAI are predominantly small objects, appearing as compact, low-contrast blobs in thermal infrared imagery, which makes precise mask fitting difficult.
 Among the animal category, the majority of instances are also small — with the exception of larger species such as elephants — yet the animal subset still benefits from occasional large targets that are inherently easier for SAM2 to segment and propagate.
 This is confirmed by the per-size breakdown: large objects achieve a substantially higher Success AUC (0.4295 vs.\ 0.3399) and Mean IoU (0.4238 vs.\ 0.3290), as SAM2's mask propagation is more reliable when the target occupies a larger portion of the frame.
@@ -626,8 +698,8 @@ Notably, if a manual prompt were provided at the moment of re-appearance, SAM2 w
     \caption{SAM2 SOT results on sequence \texttt{car\_16}: frame 0, 163, 168, 172, and 218.
              Bounding box colours: \textcolor{orange}{orange} = ground-truth box (shown as miss when no prediction is matched);
              \textcolor{green!70!black}{green} = predicted box with IoU $\geq 0.5$ (true positive);
-             \textcolor{blue}{blue} = predicted box with IoU $< 0.5$ (false positive);
-             \textcolor{gray}{grey} = unmatched prediction (ignored in SOT evaluation).}
+             \textcolor{blue}{blue} = predicted box with IoU $< 0.5$ (false positive).
+            }
     \label{fig:sam2_car16}
 \end{figure}
 
@@ -655,8 +727,8 @@ leading it to drift onto a neighbouring vehicle or lose the target entirely, res
     \caption{SAM2 SOT results on sequence \texttt{car\_22}: frame 0, 21, 72, 91, and 149.
              Bounding box colours: \textcolor{orange}{orange} = ground-truth box (shown as miss when no prediction is matched);
              \textcolor{green!70!black}{green} = predicted box with IoU $\geq 0.5$ (true positive);
-             \textcolor{blue}{blue} = predicted box with IoU $< 0.5$ (false positive);
-             \textcolor{gray}{grey} = unmatched prediction (ignored in SOT evaluation).}
+             \textcolor{blue}{blue} = predicted box with IoU $< 0.5$ (false positive).
+             }
     \label{fig:sam2_car22}
 \end{figure}
 
@@ -821,39 +893,17 @@ Tables~\ref{tab:birdsai_mot-overall} and~\ref{tab:mot-per-size}.
 
 \subsection{Performance by Frame per Second (FPS)}
 
-To be updated.
+To be updated in version 2.
 
 \subsection{Performance by Signal to Noise Ratio (SNR)}
 
-To be updated.
+To be updated in version 2.
 
-\subsection{Compliance Overview}
+\subsection{Performance by Motion Blur and Occlusion}
 
-Table~\ref{tab:compliance-overview} provides a high-level compliance overview for each tested algorithm across all test dimensions defined in D5.
-Each cell indicates whether the algorithm's performance on that dimension is \textbf{C} (Compliant), \textbf{Mi} (Minor non-compliance), or \textbf{Ma} (Major non-compliance).
-Detailed results and non-compliance analyses are presented in the subsections that follow. We will complete the Table~\ref{tab:compliance-overview} in report version 2.
+To be updated in version 2.
 
-\begin{table}[h]
-\centering
-\begin{tabular}{|l|c|c|c|c|c|c|}
-\hline
-\multirow{2}{*}{\textbf{Algorithm}} & \multicolumn{2}{c|}{\textbf{Task}} & \multicolumn{2}{c|}{\textbf{Object Size}} & \multirow{2}{*}{\textbf{FPS}} & \multirow{2}{*}{\textbf{SNR}} \\
-\cline{2-5}
- & SOT & MOT & Small & Large & & \\
-\hline
-SAM2 & C & Ma & C & C & -- & -- \\
-\hline
-YOLO & Ma & C & Mi & C & -- & -- \\
-\hline
-FasterRCNN & Ma & C & Mi & C & -- & -- \\
-\hline
-Grounding DINO & -- & -- & -- & -- & -- & -- \\
-\hline
-$\cdots$ & -- & -- & -- & -- & -- & -- \\
-\hline
-\end{tabular}
-\caption{Compliance overview per algorithm and test dimension. C\,=\,Compliant; Mi\,=\,Minor non-compliance; Ma\,=\,Major non-compliance; --\,=\,Under development (to be reported in the final report).\label{tab:compliance-overview}}
-\end{table}
+
 
 
 \bibliographystyle{plain}

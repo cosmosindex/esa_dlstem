@@ -48,6 +48,8 @@
 \titlespacing*{\subsubsection}{0pt}{1ex}{0.2ex}
 \usepackage{longtable,booktabs,array}
 \usepackage{multirow}
+\usepackage{makecell}
+\usepackage{subcaption}
 \usepackage{calc} % for calculating minipage widths
 % Correct order of tables after \paragraph or \subparagraph
 \usepackage{etoolbox}
@@ -114,7 +116,7 @@
 
   \vspace{0.4cm}
 
-  {\fontsize{14}{20}\selectfont 2026-03-12\par}
+  {\fontsize{14}{20}\selectfont 2026-03-13\par}
 
   \vfill
   \begin{flushright}
@@ -210,13 +212,15 @@ Document Change Record
 
 \tocentry{_Toc1974584720}{Reference Documents}{3}
 \tocentry{introduction}{1.\enspace Introduction}{4}
-\tocentry{Test dataset}{2.\enspace Test Dataset}{4}
-\tocsub{dataset-split}{2.1.\enspace Dataset Split}{4}
-\tocsub{data-augmentation}{2.2.\enspace Data Augmentation}{5}
-\tocentry{Evaluation Metrics and Performance Assessment}{3.\enspace Evaluation Metrics and Performance Assessment}{5}
-\tocsub{Evaluation Metrics - SOT}{3.1.\enspace Evaluation Metrics -- SOT}{5}
-\tocsub{Evaluation Metrics - MOT}{3.2.\enspace Evaluation Metrics -- MOT}{6}
-\tocsub{Performance assessment}{3.3.\enspace Performance Assessment}{7}
+\tocsub{introduction}{1.1.\enspace Document Structure}{4}
+\tocentry{Scope of the test}{2.\enspace Scope of the Test}{4}
+\tocentry{Test dataset}{3.\enspace Test Dataset}{6}
+\tocsub{Test dataset}{3.1.\enspace Candidate Datasets}{6}
+\tocsub{Test dataset}{3.2.\enspace Dataset Split}{6}
+\tocentry{Evaluation Metrics and Performance Assessment}{4.\enspace Evaluation Metrics and Performance Assessment}{9}
+\tocsub{Evaluation Metrics - SOT}{4.1.\enspace Evaluation Metrics -- SOT}{9}
+\tocsub{Evaluation Metrics - MOT}{4.2.\enspace Evaluation Metrics -- MOT}{10}
+\tocsub{Performance assessment}{4.3.\enspace Performance Assessment}{11}
 
 \vspace{0.1cm}
 \noindent\rule{\linewidth}{0.6pt}
@@ -241,9 +245,11 @@ Document Change Record
 \endhead
 \bottomrule\noalign{}
 \endlastfoot
-D3 & Reference Data Selection & X \\
-D2 & Algorithm Theoretical Basis Description & X \\
-D4 & Use Cases Specification & X \\
+D2 & Algorithm Theoretical Basis Description & CI/ESA/DLSTEM/2025/D2 \\
+D3 & Reference Data Selection & CI/ESA/DLSTEM/2025/D3 \\
+D4 & Use Cases Specification & CI/ESA/DLSTEM/2025/D4 \\
+D6 & Advanced EO Processing Algorithm Test Report & CI/ESA/DLSTEM/2025/D6 \\
+-- & Statement of the Work & ESA-EOP-SG-SOW-0563 \\
 \end{longtable}
 \renewcommand{\arraystretch}{1}
 % ===== END REFERENCE DOCUMENTS PAGE =====
@@ -253,18 +259,37 @@ D4 & Use Cases Specification & X \\
 \hypertarget{introduction}{%
 \section{Introduction}\label{introduction}}
 
-This is the Test Specification (D5) document of the activity WP2300 of the work package (WP) WP2000 in the DL-STEM project.
-The objective is to define the appropriate metrics and evaluation methods for the specific algorithms and data defined in D2 and D3 for the three use cases described in D4.
+This document constitutes the Test Specification (D5) of activity WP2300 within work package WP2000 of the DL-STEM project. 
+Its primary objective is to define rigorous evaluation metrics and testing methodologies for the algorithms and datasets specified 
+in D2 and D3, targeting the three operational use cases introduced in D4.
 
-\subsection*{Document Structure}
+\subsection{Document Structure}
 
-This document is organised as follows.
-Section~2 identifies the test datasets used across all evaluation activities, covering the OOTB, BIRDSAI SOT, and BIRDSAI MOT benchmarks together with their train/val/test splits.
-Section~3 specifies the functionality to be tested and the evaluation methodology: Section~3.1 addresses Single Object Tracking (SOT) metrics, while Section~3.2 covers Multi-Object Tracking (MOT) detection and tracking metrics.
-Section~3.3 summarises the reference performance levels to be attained for each metric dimension.
+This document is organised as follows. Section~\ref{Scope of the Test} defines 
+the scope of testing, covering the key evaluation dimensions. 
+Section~\ref{Test dataset} describes the test datasets selected for quantitative 
+evaluation, including an overview of the candidate datasets considered and their 
+train/validation/test splits. Section~\ref{Evaluation Metrics and Performance Assessment} 
+specifies the evaluation metrics and performance assessment methodology for both 
+the SOT and MOT tasks, and provides reference performance ranges drawn from 
+published baselines for contextual comparison.
 
-\section{Scope of the test}
+\hypertarget{Scope of the Test}{%
+\section{Scope of the Test}\label{Scope of the Test}}
 
+In accordance with the requirements set out in ESA-EOP-SG-SOW-0563 Appendix~A.5, 
+model performance on the evaluation datasets is assessed in terms of both general 
+performance and performance across the following test dimensions:
+
+\begin{enumerate}
+    \item \textbf{Object size} --- Performance is reported separately for targets of varying sizes, distinguishing between small and large objects to reflect the particular challenges posed by sub-pixel and near-pixel targets characteristic of satellite video.
+
+    \item \textbf{Frame rate (FPS)} --- Performance is evaluated across datasets with varying frame rates, as lower frame rates introduce significant challenges for inter-frame target association and motion estimation, particularly when targets lack distinguishing visual features.
+
+    \item \textbf{Signal-to-Noise Ratio (SNR)} --- SNR is considered as a key evaluation dimension, with particular emphasis on infrared datasets where weak target signatures and sensor noise present additional detection challenges.
+
+    \item \textbf{Motion blur and occlusion} --- Rather than treating these as dataset-level attributes, performance under motion blur and occlusion is reported at the frame level, isolating and evaluating specifically those frames within each video sequence in which these degradations occur.
+\end{enumerate}
 
 \hypertarget{Test dataset}{%
 \section{Test dataset}\label{Test dataset}}
@@ -272,17 +297,54 @@ Section~3.3 summarises the reference performance levels to be attained for each 
 \setlength{\LTpre}{4pt}
 \setlength{\LTpost}{4pt}
 
-% \hypertarget{dataset-preprocessing}{%
-% \subsection{Dataset preprocessing}\label{dataset-preprocessing}}
+This section describes the datasets selected for evaluation, detailing how each dataset is partitioned into train, validation, 
+and test subsets, and summarising their key characteristics relevant to the evaluation tasks.
 
-% The preprocessing pipeline consists of two main steps: splitting each dataset into training, validation, and test subsets, and applying data augmentation during training to improve model generalisation.
+\subsection{Candidate Datasets}
+The candidate datasets considered for evaluation were initially compiled in the reference table 
+provided in Section 3.3 of the Reference Data Selection document (D3). Following a thorough 
+review and analysis, however, only the datasets listed below were deemed suitable for quantitative 
+evaluation. Several datasets were excluded due to limitations such as insufficient or missing 
+annotations, unavailability of raw infrared imagery, or other data quality issues. Datasets that 
+did not meet the inclusion criteria may nonetheless serve as valuable resources for qualitative 
+testing and use-case demonstration in future work.
 
-\subsubsection*{Dataset Split}
+\begin{table}[ht]
+\centering
+\renewcommand{\arraystretch}{1.3}
+\small
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{llllllll}
+\toprule
+\textbf{Dataset} & \textbf{Sensor} & \textbf{Modality} & \textbf{FPS} & \makecell[l]{\textbf{No.\ of}\\\textbf{Videos}} & \makecell[l]{\textbf{Video}\\\textbf{Duration}} & \makecell[l]{\textbf{Object Size}\\\textbf{Range (px\textsuperscript{2})}} & \makecell[l]{\textbf{Label}\\\textbf{Categories}} \\
+\midrule
+RGBT-3M  & DJI & RGB + IR & 30 & 10 & \makecell[l]{59 mins\\in total} & 0--306{,}081   & \makecell[l]{fire, person,\\smoke} \\
+OOTB     & multiple & VNIR       & 10 & 110 & 27s & 30--7{,}820   & \makecell[l]{car, plane,\\ship, train} \\
+SAT-MTB  & Jilin-1 & VNIR       & 10 & 249 & 20s & 2--256{,}635   & \makecell[l]{airplane, car,\\ship, train} \\
+SatSOT   & \makecell[l]{Jilin-1, Skybox,\\Carbonite-2} & VNIR       & 10/25 & 105 & 26s/10s & 9--796{,}576   & \makecell[l]{car, plane,\\ship, train} \\
+VISO     & Jilin-1 & VNIR       & 10 & 47 & 30--300s & 1--4{,}556     & \makecell[l]{car, plane,\\ship} \\
+BIRDSAI  & \makecell[l]{Air\\Shepherd} & IR       & 30 & 172 & 40--45s & 25--14{,}641   & human, animal \\
+GOES     & GOES & \makecell[l]{RGB + NIR\\+ IR} & \makecell[l]{1 frame/\\10 min} & 232 & $\sim$144 days & 1--100   & \makecell[l]{fire, fire-free\\land, invalid} \\
+\bottomrule
+\end{tabular}%
+}
+\caption{Overview of evaluation datasets.}
+\label{tab:datasets}
+\end{table}
+
+\subsection{Dataset Split}
+
+We present here the data split of the OOTB and BIRDSAI datasets, as summarised 
+in Table~\ref{tab:datasets}. The data splits and test results for the 
+remaining datasets listed in the table will be reported in version 2 of 
+this document and Advanced EO Processing Algorithm Test Report D6.
 
 Each dataset is partitioned into three non-overlapping subsets: train, validation, and test. 
 The splitting strategy is adapted to the structure and official annotations available for each dataset.
 
-\textbf{OOTB.} The OOTB dataset \cite{chen2022single} contains 110 videos across four object categories: car (45), plane (25), ship (30), and train (10). 
+\paragraph{OOTB.} 
+
+The OOTB dataset~\cite{chen2022single} contains 110 videos across four object categories: car (45), plane (25), ship (30), and train (10). 
 Since no official split is provided, a stratified random split with ratio \textbf{80\,/\,10\,/\,10} is applied. 
 Stratification is performed by category to preserve class balance across all three subsets. The resulting split of the number of videos is summarised in Table~\ref{tab:ootb-split}.
 
@@ -298,11 +360,13 @@ ship  & 24 & 3 &  3 &  30 \\
 train &  8 & 1 &  1 &  10 \\
 \midrule
 \textbf{Total} & \textbf{88} & \textbf{10} & \textbf{12} & \textbf{110} \\
-\caption{Number of videos per category in the OOTB dataset\cite{chen2022single} under the stratified 80\,/\,10\,/\,10 train\,/\,val\,/\,test split.\label{tab:ootb-split}}\\
+\caption{Number of videos per category in the OOTB dataset~\cite{chen2022single} under the stratified 80\,/\,10\,/\,10 train\,/\,val\,/\,test split.\label{tab:ootb-split}}\\
 \end{longtable}
 \renewcommand{\arraystretch}{1}
 
-\textbf{BIRDSAI.} On the BIRDSAI dataset, we will conduct two tasks: Single Object Tracking (SOT, see Section~\ref{Evaluation Metrics - SOT}) and Multi-Object Tracking (MOT, see Section~\ref{Evaluation Metrics - MOT}), each described in detail in the respective sections.
+\paragraph{BIRDSAI.} 
+
+On the BIRDSAI dataset, we will conduct two tasks: Single Object Tracking (SOT, see Section~\ref{Evaluation Metrics - SOT}) and Multi-Object Tracking (MOT, see Section~\ref{Evaluation Metrics - MOT}), each described in detail in the respective sections.
 For both tasks, we will follow the original dataset's train/test split. Building on this split, we further divide the original test set into a validation set and a test set using a 30/70 ratio.
 
 In the table~\ref{tab:birdsai-mot-split} below, you can find the number of videos, the number of frames, and the total number of bounding boxes for the MOT task under the train, validation, and test splits respectively.
@@ -355,8 +419,6 @@ human          &  61 & 12 &  55 & 128 \\
 \caption{BIRDSAI SOT per-category sequence count by split.\label{tab:birdsai-sot-category}}\\
 \end{longtable}
 \renewcommand{\arraystretch}{1}
-
-\textbf{Evaluation transform.} During validation and testing, only a deterministic resize to $640 \times 640$ pixels is applied, with no stochastic operations, ensuring reproducible evaluation metrics across runs.
 
 
 \setlength{\LTpre}{\bigskipamount}
@@ -430,11 +492,11 @@ where IDTP, IDFP, and IDFN are the counts of correctly identity-matched detectio
 \textbf{ID Switches.} The total number of times a tracked target is assigned a new identity compared to its previous correct assignment. Unlike MOTA and IDF1, this is a raw count where \emph{fewer is better}, and it directly reflects the stability of the association step.
 
 
-\hypertarget{Target Performance}{%
+\hypertarget{Performance assessment}{%
 \subsection{Performance assessment}\label{Performance assessment}}
-Since spaceborne videoThe project does not actually have a mandatory target performance level that must be achieved. 
+Since spaceborne video project does not actually have a mandatory target performance level that must be achieved. 
 Of course, the better the metric values mentioned above, the better our corresponding tested models and methods. 
-However, in order to have a general reference range for the metrics, the table below lists the metric ranges obtained from the original dataset tests mentioned in the papers.
+However, in order to have a general reference range for the metrics, Tables~\ref{tab:results}--\ref{tab:birdsai_det} below list the metric ranges obtained from the original dataset tests mentioned in the papers.
 
 We will make a rough comparison between the results obtained by our method on the test set and the results from the original reference, 
 in order to determine whether our results are reasonable. We are unable to make an accurate judgment, 
@@ -479,12 +541,20 @@ BIRDSAI MOT & -21.07 \\
 \label{tab:birdsai_mot}
 \end{table}
 
-% The overall MOTA of $-$0.1021 is primarily driven by a very high false-negative rate: with a recall of only 0.2211, the majority of ground-truth objects are missed across frames. 
-% The IDF1 of 0.2877 and 506 total ID switches reflect moderate identity consistency, with the tracker struggling to maintain stable associations over longer sequences.
-% The per-category breakdown reveals a large performance gap between the two classes. \textbf{Animal} targets achieve a positive MOTA of $+$0.0424 and IDF1 of 0.3366, benefiting from a larger number of training examples. 
-% \textbf{Human} targets are significantly harder to track, with MOTA of $-$0.4881 and IDF1 of only 0.1369, which is consistent with the lower sample count and the fact that humans appear less frequently and in more variable poses.
-% For target size, \textbf{large} objects outperform \textbf{small} ones across all metrics. Large targets achieve a precision of 0.6545 and a positive MOTA of $+$0.1006, while small targets suffer from a much higher false-positive rate (precision 0.2646), driving their MOTA to $-$0.3812. Notably, recall is nearly identical between the two size groups (0.213 vs.\ 0.214), suggesting that missed detections affect both sizes equally, and that the primary bottleneck for small targets is precision rather than sensitivity.
-
+\begin{table}[h]
+\centering
+\begin{tabular}{|l|c|c|c|}
+\hline
+& FR-CE & FR-WCE & YOLOv2 \\
+\hline
+Overall \textbf{mAP} & 0.430 & 0.438 & 0.304 \\
+\hline
+\end{tabular}
+\caption{Evaluation results on the detection task of the BIRDSAI dataset~\cite{bondi2020birdsai}, 
+using Faster R-CNN trained with cross-entropy loss (CE), 
+weighted cross-entropy loss (WCE), and YOLOv2.}
+\label{tab:birdsai_det}
+\end{table}
 
 \bibliographystyle{plainnat}
 \bibliography{references}
