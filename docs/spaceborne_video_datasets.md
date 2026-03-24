@@ -14,7 +14,7 @@ A curated list of publicly available spaceborne video datasets for computer visi
 | Dataset | Satellite / Sensor | Modality | #Videos / Seq | Downstream Task | Venue / Year | Link |
 |---|---|---|---|---|---|---|
 | ✅ **SatSOT** | Jilin-1 | VNIR | 105 seq | SOT | TGRS 2022 | [IEEE](https://ieeexplore.ieee.org/document/9672083/) |
-| ✅ **AIR-MOT** | Jilin-1 | VNIR | 10 | MOT | Sensors 2024 | [MDPI](https://www.mdpi.com/1424-8220/24/20/6708) |
+| ❓ **AIR-MOT** | Jilin-1 | VNIR | 10 | MOT | Sensors 2024 | [IEEE](https://ieeexplore.ieee.org/document/9715124) · [GitHub](https://github.com/HeQibin/TGraM) |
 | ✅ **Jilin-189** | Jilin-1 | VNIR | 102 videos (647 clips) | VSR | TGRS 2022 | [GitHub](https://github.com/XY-boy/MSTT-STVSR) |
 | ✅ **SAT-MTB** | Jilin-1 | VNIR | 249 | Det · SOT · MOT · Seg | TGRS 2023 | [Zenodo](https://zenodo.org/records/15253996) |
 | ✅ **MWIRSTD** | MWIR cooled imager | MIR | 14 | IR small target Det | arXiv 2024 | [arXiv](https://arxiv.org/abs/2406.08063) |
