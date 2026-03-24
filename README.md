@@ -11,23 +11,23 @@ Project documents in https://drive.google.com/drive/folders/1t2A1LZRL0Su6f_dgsJN
 
 ### Traffic
 
-Dataset bounding box statistics: [bbox_stats_report_trafic.md](bbox_stats_report_trafic.md)
+Dataset bounding box statistics: [bbox_stats_report_trafic.md](docs/bbox_stats_report_trafic.md)
 
 ### Fire
 
-Dataset bounding box statistics: [bbox_stats_report_fire.md](bbox_stats_report_fire.md)
+Dataset bounding box statistics: [bbox_stats_report_fire.md](docs/bbox_stats_report_fire.md)
 
 ### Wild Animals
 
-Dataset bounding box statistics: [bbox_stats_report_wild_animals.md](bbox_stats_report_wild_animals.md)
+Dataset bounding box statistics: [bbox_stats_report_wild_animals.md](docs/bbox_stats_report_wild_animals.md)
 
 ## Video length summary
 
-Video length statistics (frames per video) across all use cases and datasets: [video_length_summary.md](video_length_summary.md)
+Video length statistics (frames per video) across all use cases and datasets: [video_length_summary.md](docs/video_length_summary.md)
 
 ## Split statistics
 
-Train / val / test split breakdown by dataset and category: [split_statistics.md](split_statistics.md)
+Train / val / test split breakdown by dataset and category: [split_statistics.md](docs/split_statistics.md)
 
 
 # algorithms
