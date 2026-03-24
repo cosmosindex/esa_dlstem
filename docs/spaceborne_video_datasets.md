@@ -27,7 +27,7 @@ A curated list of publicly available spaceborne video datasets for computer visi
 | ✅ **LMOD** | Jilin-1 | VNIR | — | Large-scale MOD | TGRS 2025 | [GitHub](https://github.com/RS-Devotee/LMOD) · [IEEE](https://ieeexplore.ieee.org/document/11142571) |
 | 🆕 **SAT-MTB-SOS** | Jilin-1 | VNIR | 113 | Single-object Seg (VOS) | CVPR 2024 W | [IEEE](https://ieeexplore.ieee.org/document/10604055/) |
 | 🆕 **SAT-MTB-VSR** | Jilin-1 | VNIR | 431 clips | Video Super-Resolution | JSTARS 2023 | [GitHub](https://github.com/Alioth2000/RASVSR) |
-| 🆕 **SDM-Car** | Luojia 3-01 | VNIR | 99 | Small/dim vehicle Det | GRSL 2024 | [GitHub](https://github.com/TanedaM/SDM-Car) · [IEEE](https://ieeexplore.ieee.org/document/10746500/) |
+| 🆕 **SDM-Car** | Luojia 3-01 | VNIR | 99 | Small/dim vehicle Det · MOT | GRSL 2024 | [GitHub](https://github.com/TanedaM/SDM-Car) · [IEEE](https://ieeexplore.ieee.org/document/10746500/) |
 | 🆕 **NUDT-MIRSDT-HiNo** | Semi-simulated (aerial IR bg) | Infrared (MWIR/SWIR) | 120 seq | IR MIRST Det (high noise) | Preprint 2025 (→TPAMI) | [arXiv](https://arxiv.org/abs/2506.12766) |
 
 ---
