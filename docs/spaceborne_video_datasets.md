@@ -21,7 +21,7 @@ A curated list of publicly available spaceborne video datasets for computer visi
 | ✅ **VISO (SatVideoDT)** | Jilin-1 | VNIR | 100 | Det · MOT | TGRS 2022 | [GitHub](https://github.com/QingyongHu/VISO) · [Project](https://satvideodt.github.io/) |
 | 🔄 **IRSatVideo-LEO** | Landsat 8/9 (semi-simulated) | Infrared (TIR) | 200 | IR MIRST Det | **TGRS 2025** | [arXiv](https://arxiv.org/abs/2409.12448) · [GitHub](https://github.com/XinyiYing/RFR) |
 | ✅ **SV248S** | Jilin-1 | VNIR | 248 | SOT | — | [GitHub](https://github.com/xdai-dlgvv/SV248S) |
-| ✅ **Cross-Videos OT** | Jilin-1 / Luojia-03 | VNIR | 26 | Cross-satellite SOT | Kaggle 2023 | [Kaggle](https://www.kaggle.com/datasets/lizilong1993/cross-videos-object-tracking) |
+| ❌ **Cross-Videos OT** | Jilin-1 / Luojia-03 | VNIR | 26 | Cross-satellite SOT | Kaggle 2023 | [Kaggle](https://www.kaggle.com/datasets/lizilong1993/cross-videos-object-tracking) |
 | ✅ **OOTB** | Multiple (JL-1, SkySat, ISS) | VNIR | 110 | SOT (oriented bbox) | ISPRS 2024 | [GitHub](https://github.com/YZCU/OOTB) |
 | ✅ **LMOD** | Jilin-1 | VNIR | — | Large-scale MOD | TGRS 2025 | [GitHub](https://github.com/RS-Devotee/LMOD) · [IEEE](https://ieeexplore.ieee.org/document/11142571) |
 | 🆕 **SAT-MTB-SOS** | Jilin-1 | VNIR | 113 | Single-object Seg (VOS) | CVPR 2024 W | [IEEE](https://ieeexplore.ieee.org/document/10604055/) |
