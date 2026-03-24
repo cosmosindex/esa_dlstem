@@ -7,6 +7,10 @@ Project documents in https://drive.google.com/drive/folders/1t2A1LZRL0Su6f_dgsJN
 
 # Datasets
 
+## Spaceborne video datasets collection
+
+Current useful datasets: [spaceborne_video_datasets.md](docs/spaceborne_video_datasets.md)
+
 ## Use cases
 
 ### Traffic
