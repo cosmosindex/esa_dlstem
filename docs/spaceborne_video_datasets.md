@@ -17,7 +17,7 @@ A curated list of publicly available spaceborne video datasets for computer visi
 | ❓ **AIR-MOT** | Jilin-1 | VNIR | 10 | MOT | TGRS 2022 | [IEEE](https://ieeexplore.ieee.org/document/9715124) · [GitHub](https://github.com/HeQibin/TGraM) |
 | ❌ **Jilin-189** | Jilin-1 | VNIR | 102 videos (647 clips) | VSR | TGRS 2022 | [GitHub](https://github.com/XY-boy/MSTT-STVSR) |
 | ✅ **SAT-MTB** | Jilin-1 | VNIR | 249 | Det · SOT · MOT · Seg | TGRS 2023 | [Zenodo](https://zenodo.org/records/15253996) |
-| ❓ **MWIRSTD** | MWIR cooled imager | MIR | 14 | IR small target Det | ICIP2024 | [arXiv](https://arxiv.org/abs/2406.08063) |
+| ❓ **MWIRSTD** | MWIR cooled imager | MIR | 14 | IR small target Det | ICIP2024 | [arXiv](https://arxiv.org/abs/2406.08063) · [GitHub](https://github.com/avinres/MWIRSTD?tab=readme-ov-file) |
 | ✅ **VISO (SatVideoDT)** | Jilin-1 | VNIR | 100 | Det · MOT | TGRS 2022 | [GitHub](https://github.com/QingyongHu/VISO) · [Project](https://satvideodt.github.io/) |
 | 🔄 **IRSatVideo-LEO** | Landsat 8/9 (semi-simulated) | Infrared (TIR) | 200 | IR MIRST Det | **TGRS 2025** | [arXiv](https://arxiv.org/abs/2409.12448) · [GitHub](https://github.com/XinyiYing/RFR) |
 | ✅ **SV248S** | Jilin-1 | VNIR | 248 | SOT | — | [GitHub](https://github.com/xdai-dlgvv/SV248S) |
@@ -27,7 +27,7 @@ A curated list of publicly available spaceborne video datasets for computer visi
 | 🆕 **SAT-MTB-SOS** | Jilin-1 | VNIR | 113 | Single-object Seg (VOS) | CVPR 2024 W | [IEEE](https://ieeexplore.ieee.org/document/10604055/) |
 | ❌ **SAT-MTB-VSR** | Jilin-1 | VNIR | 431 clips | Video Super-Resolution | JSTARS 2023 | [GitHub](https://github.com/Alioth2000/RASVSR) |
 | 🆕 **SDM-Car** | Luojia 3-01 | VNIR | 99 | Small/dim vehicle Det · MOT | GRSL 2024 | [GitHub](https://github.com/TanedaM/SDM-Car) · [IEEE](https://ieeexplore.ieee.org/document/10746500/) |
-| 🆕 **NUDT-MIRSDT-HiNo** | Semi-simulated (aerial IR bg) | Infrared (MWIR/SWIR) | 120 seq | IR MIRST Det (high noise) | Preprint 2025 (→TPAMI) | [arXiv](https://arxiv.org/abs/2506.12766) |
+| ❌ **NUDT-MIRSDT-HiNo** | Semi-simulated (aerial IR bg) | Infrared (MWIR/SWIR) | 120 seq | IR MIRST Det (high noise) | Preprint 2025 (→TPAMI) | [arXiv](https://arxiv.org/abs/2506.12766) |
 
 ---
 
