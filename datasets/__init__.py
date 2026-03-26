@@ -8,6 +8,7 @@ from .base import (
 )
 from .birdsai import BIRDSAIDataset
 from .birdsai_mot import BIRDSAIMOTDataset
+from .lmod import LMODDataset
 
 __all__ = [
     "BaseVideoDataset",
@@ -18,4 +19,5 @@ __all__ = [
     "video_collate_fn",
     "BIRDSAIDataset",
     "BIRDSAIMOTDataset",
+    "LMODDataset",
 ]

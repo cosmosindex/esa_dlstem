@@ -71,3 +71,26 @@ Two categories: `animal` (class=0) and `human` (class=1).
 | val       |      5 |   3,258 |   6,856 |
 | test      |     11 |  12,236 |  71,905 |
 | **Total** | **48** |**36,703**|**165,960**|
+
+---
+
+## LMOD
+
+Split strategy: **80 / 10 / 10** by frame within each sequence (temporal order, no shuffle).
+8 sequences (Seq1–Seq8), Pascal VOC XML annotations (per-frame detection, no tracking IDs).
+Label typos fixed: `cat` → `car`, `w` → `car` (Seq2).
+
+| Category | Train Boxes | Val Boxes | Test Boxes | Total Boxes |
+|----------|----------:|--------:|---------:|----------:|
+| car      |   375,733 |  42,695 |   41,295 |   459,723 |
+| plane    |     7,643 |     862 |      885 |     9,390 |
+| ship     |     8,424 |   1,056 |    1,056 |    10,536 |
+| train    |       486 |     103 |      104 |       693 |
+| **Total**|**392,286**|**44,716**|**43,340**|**480,342**|
+
+| Split     | Videos | Frames | Boxes   |
+|-----------|-------:|-------:|--------:|
+| train     |      8 |  3,249 | 392,286 |
+| val       |      8 |    406 |  44,716 |
+| test      |      8 |    407 |  43,340 |
+| **Total** | **24** |**4,062**|**480,342**|
