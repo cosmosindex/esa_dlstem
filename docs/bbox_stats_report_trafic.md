@@ -46,3 +46,167 @@
 - **SatSOT**: Axis-aligned x,y,w,h; no official train/val/test split.
 - **SAT-MTB**: MOT format; `car` category has no split assignment in the xlsx → marked as `no_split`.
 - **VISO**: COCO format used (same data as VOC/MOT/SOT formats); has train/val/test splits.
+
+---
+
+## LMOD — Detailed Statistics
+
+**LMOD** (Large-scale and Multiclass Moving Object Detection Dataset for Satellite Videos)  
+8 sequences (Seq1–Seq8), 4 062 frames, annotation format: Pascal VOC XML (per-frame detection, no tracking IDs).  
+Categories: car, plane, ship, train.
+
+### Per-Category Summary (same format as above)
+
+| dataset | split | category | total_boxes | small (<32²) | small_% | large (≥32²) | large_% | avg_w | avg_h | avg_area | min_area | max_area |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| LMOD | no_split | car | 459723 | 459723 | 100.0% | 0 | 0.0% | 4.7 | 4.4 | 23 | 0 | 625 |
+| LMOD | no_split | plane | 9390 | 4202 | 44.7% | 5188 | 55.3% | 36.4 | 32.5 | 1251 | 16 | 3481 |
+| LMOD | no_split | ship | 10536 | 10536 | 100.0% | 0 | 0.0% | 11.6 | 8.7 | 114 | 20 | 595 |
+| LMOD | no_split | train | 693 | 144 | 20.8% | 549 | 79.2% | 25.3 | 62.7 | 1699 | 35 | 4131 |
+
+### Dataset Total
+
+| dataset | total_boxes | small (<32²) | small_% | large (≥32²) | large_% | avg_area |
+| --- | --- | --- | --- | --- | --- | --- |
+| LMOD | 480342 | 474605 | 98.8% | 5737 | 1.2% | 51 |
+
+### Extremely Small Objects (max(w,h) ≤ 2 px)
+
+| category | total | extreme (≤2px) | extreme_% | (w,h) breakdown |
+| --- | --- | --- | --- | --- |
+| car | 459723 | 5635 | 1.2% | (0×0): 162, (0×1): 6, (0×2): 3, (1×1): 19, (1×2): 12, (2×1): 79, (2×2): 5354 |
+| plane | 9390 | 0 | 0.0% | — |
+| ship | 10536 | 0 | 0.0% | — |
+| train | 693 | 0 | 0.0% | — |
+
+### Small Object Size Distribution (area < 1024 px², by max side length)
+
+**car** (459,723 small objects)
+
+| max(w,h) px | count | % of small |
+| ---: | ---: | ---: |
+| 0 | 162 | 0.0% |
+| 1 | 25 | 0.0% |
+| 2 | 5,448 | 1.2% |
+| 3 | 50,786 | 11.0% |
+| 4 | 141,097 | 30.7% |
+| 5 | 123,393 | 26.8% |
+| 6 | 73,894 | 16.1% |
+| 7 | 30,831 | 6.7% |
+| 8 | 12,424 | 2.7% |
+| 9 | 5,734 | 1.2% |
+| 10 | 3,448 | 0.8% |
+| 11 | 2,939 | 0.6% |
+| 12 | 2,861 | 0.6% |
+| 13 | 2,338 | 0.5% |
+| 14 | 1,034 | 0.2% |
+| 15 | 549 | 0.1% |
+| 16 | 325 | 0.1% |
+| 17 | 640 | 0.1% |
+| 18 | 722 | 0.2% |
+| 19 | 427 | 0.1% |
+| 20 | 47 | 0.0% |
+| 21 | 549 | 0.1% |
+| 22 | 37 | 0.0% |
+| 23 | 4 | 0.0% |
+| 24 | 4 | 0.0% |
+| 25 | 5 | 0.0% |
+
+**plane** (4,202 small objects)
+
+| max(w,h) px | count | % of small |
+| ---: | ---: | ---: |
+| 4 | 1 | 0.0% |
+| 6 | 1 | 0.0% |
+| 18 | 1 | 0.0% |
+| 19 | 40 | 1.0% |
+| 20 | 352 | 8.4% |
+| 21 | 628 | 14.9% |
+| 22 | 84 | 2.0% |
+| 23 | 7 | 0.2% |
+| 24 | 1 | 0.0% |
+| 25 | 11 | 0.3% |
+| 26 | 50 | 1.2% |
+| 27 | 368 | 8.8% |
+| 28 | 218 | 5.2% |
+| 29 | 211 | 5.0% |
+| 30 | 222 | 5.3% |
+| 31 | 138 | 3.3% |
+| 32 | 104 | 2.5% |
+| 33 | 432 | 10.3% |
+| 34 | 282 | 6.7% |
+| 35 | 286 | 6.8% |
+| 36 | 343 | 8.2% |
+| 37 | 187 | 4.5% |
+| 38 | 114 | 2.7% |
+| 39 | 117 | 2.8% |
+| 40 | 4 | 0.1% |
+
+**ship** (10,536 small objects)
+
+| max(w,h) px | count | % of small |
+| ---: | ---: | ---: |
+| 5 | 2 | 0.0% |
+| 6 | 652 | 6.2% |
+| 7 | 1,388 | 13.2% |
+| 8 | 1,985 | 18.8% |
+| 9 | 1,168 | 11.1% |
+| 10 | 1,154 | 11.0% |
+| 11 | 461 | 4.4% |
+| 12 | 77 | 0.7% |
+| 13 | 629 | 6.0% |
+| 14 | 266 | 2.5% |
+| 15 | 280 | 2.7% |
+| 16 | 218 | 2.1% |
+| 17 | 244 | 2.3% |
+| 18 | 288 | 2.7% |
+| 19 | 603 | 5.7% |
+| 20 | 324 | 3.1% |
+| 21 | 51 | 0.5% |
+| 22 | 125 | 1.2% |
+| 23 | 135 | 1.3% |
+| 24 | 103 | 1.0% |
+| 25 | 70 | 0.7% |
+| 26 | 33 | 0.3% |
+| 27 | 92 | 0.9% |
+| 28 | 4 | 0.0% |
+| 29 | 14 | 0.1% |
+| 30 | 1 | 0.0% |
+| 31 | 1 | 0.0% |
+| 32 | 1 | 0.0% |
+| 33 | 3 | 0.0% |
+| 35 | 101 | 1.0% |
+| 36 | 51 | 0.5% |
+| 37 | 1 | 0.0% |
+| 38 | 11 | 0.1% |
+
+**train** (144 small objects)
+
+| max(w,h) px | count | % of small |
+| ---: | ---: | ---: |
+| 7 | 2 | 1.4% |
+| 8 | 2 | 1.4% |
+| 9 | 2 | 1.4% |
+| 10 | 12 | 8.3% |
+| 11 | 8 | 5.6% |
+| 12 | 5 | 3.5% |
+| 13 | 14 | 9.7% |
+| 14 | 11 | 7.6% |
+| 15 | 7 | 4.9% |
+| 16 | 9 | 6.2% |
+| 17 | 10 | 6.9% |
+| 18 | 19 | 13.2% |
+| 19 | 10 | 6.9% |
+| 31 | 7 | 4.9% |
+| 33 | 1 | 0.7% |
+| 34 | 1 | 0.7% |
+| 37 | 3 | 2.1% |
+| 39 | 8 | 5.6% |
+| 43 | 3 | 2.1% |
+| 45 | 10 | 6.9% |
+
+### Notes (LMOD)
+
+- **LMOD**: Pascal VOC XML per-frame annotations; no tracking IDs; no official train/val/test split.
+- Extremely small objects (max side ≤ 2 px) are a subset of small objects.
+- Small defined as area < 32×32 = 1024 px², consistent with the rest of this report.
