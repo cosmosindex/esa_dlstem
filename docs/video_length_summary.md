@@ -90,6 +90,19 @@ videos cannot be separated at this level — each row represents the entire spli
 | test  | ship     |    351 |
 | test  | train    |     49 |
 
+### LMOD
+
+| Sequence No. | Size (Width×Height) | No. of Frames | Spatial Resolution (m) | FPS (Frame/s) |
+|:---:|:---:|:---:|:---:|:---:|
+| Seq1 | 3,000×1,500 | 750 | 0.92 | 25 |
+| Seq2 | 2,000×1,500 | 500 | 0.92 | 25 |
+| Seq3 | 2,500×1,500 | 320 | 0.92 | 10 |
+| Seq4 | 2,000×2,000 | 320 | 0.92 | 10 |
+| Seq5 | 4,000×1,500 | 320 | 0.92 | 10 |
+| Seq6 | 4,000×2,000 | 320 | 0.92 | 10 |
+| Seq7 | 1,500×1,160 | 1,032 | 1 | 3 |
+| Seq8 | 1,750×1,250 | 500 | 0.92 | 25 |
+
 ---
 
 ## 3. Wild Animal
