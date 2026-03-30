@@ -56,6 +56,11 @@ A curated list of publicly available spaceborne video datasets for computer visi
 ## Notes
 
 - **IRSatVideo-LEO**: Semi-simulated dataset. Backgrounds from Landsat 8/9; satellite motion, target appearance, trajectory and intensity are synthesized. Formally published in TGRS 2025 (previously arXiv 2024).
+  - **200 sequences**, 1024×1024 TIR frames, 91,021 total frames. 16 geographic regions (e.g. EastAfrica, NorthAmericaEast, WestEurope, …).
+  - **Annotations**: Pascal VOC XML bounding boxes (xyxy) + binary segmentation masks (uint8, 0/255). Objects named `target0`, `target1`, … — numeric suffix = track ID, single category `"target"`.
+  - **Official split**: train (160) / test (40). Test further divided by difficulty: easy (17) / middle (13) / hard (10).
+  - **Our split**: train 160 (73,699 frames) / val 13 (5,267 frames) / test 27 (12,055 frames). Val carved from 30% of official test, stratified by region, `seed=42`.
+  - **Tasks**: Det, SOT, MOT, Seg. Detection mode carries track_ids for ByteTrack eval; video mode for SAM2/tracking; `load_mask()` for segmentation.
 - **NUDT-MIRSDT-HiNo**: Extension of NUDT-MIRSDT with higher noise levels. Currently preprint (arXiv 2506.12766, v4 Jan 2026), submitted to IEEE TPAMI — not yet formally accepted. Semi-synthetic sequences; **not real satellite video**.
 - **SAT-MTB-SOS**: Subset of SAT-MTB, re-annotated with pixel-level masks for VOS. No standalone public download link found; dataset may be requested from authors or obtained via the parent SAT-MTB on [Zenodo](https://zenodo.org/records/15253996).
 - **VISO / SatVideoDT**: Non-commercial use only. Download via [Google Drive](https://github.com/QingyongHu/VISO) or Baidu Netdisk (code: VISO).
