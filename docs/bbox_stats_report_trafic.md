@@ -210,3 +210,135 @@ Categories: car, plane, ship, train.
 - **LMOD**: Pascal VOC XML per-frame annotations; no tracking IDs; no official train/val/test split.
 - Extremely small objects (max side ≤ 2 px) are a subset of small objects.
 - Small defined as area < 32×32 = 1024 px², consistent with the rest of this report.
+
+---
+
+## SatSOT — Detailed Statistics
+
+**SatSOT** (Satellite Single-Object Tracking Dataset)
+105 sequences from Jilin-1, 27,664 frames, annotation format: `groundtruth.txt` (x,y,w,h per line; `none` = target absent).
+Categories: car (65), plane (9), ship (5), train (26). Split: 80/10/10 stratified by category, `seed=42`.
+
+### Per-Split, Per-Category Summary
+
+| dataset | split | category | total_boxes | small (<32²) | small_% | tiny (≤5×5) | tiny_% | large (≥32²) | large_% | avg_w | avg_h | avg_area | min_area | max_area |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| SatSOT | train | car | 16,431 | 16,431 | 100.0% | 723 | 4.4% | 0 | 0.0% | 10.5 | 9.3 | 105 | 9 | 432 |
+| SatSOT | train | plane | 2,233 | 625 | 28.0% | 0 | 0.0% | 1,608 | 72.0% | 42.8 | 44.1 | 2,081 | 504 | 4,692 |
+| SatSOT | train | ship | 967 | 967 | 100.0% | 0 | 0.0% | 0 | 0.0% | 30.1 | 14.7 | 443 | 70 | 645 |
+| SatSOT | train | train | 2,810 | 135 | 4.8% | 0 | 0.0% | 2,675 | 95.2% | 171.3 | 82.4 | 41,515 | 574 | 796,576 |
+| SatSOT | val | car | 1,413 | 1,413 | 100.0% | 3 | 0.2% | 0 | 0.0% | 12.3 | 12.4 | 161 | 21 | 400 |
+| SatSOT | val | plane | 300 | 300 | 100.0% | 0 | 0.0% | 0 | 0.0% | 18.3 | 19.4 | 355 | 306 | 380 |
+| SatSOT | val | ship | 300 | 300 | 100.0% | 0 | 0.0% | 0 | 0.0% | 32.0 | 16.0 | 512 | 512 | 512 |
+| SatSOT | val | train | 360 | 0 | 0.0% | 0 | 0.0% | 360 | 100.0% | 210.6 | 193.2 | 17,957 | 4,884 | 71,442 |
+| SatSOT | test | car | 1,545 | 1,545 | 100.0% | 13 | 0.8% | 0 | 0.0% | 12.8 | 10.4 | 135 | 20 | 480 |
+| SatSOT | test | plane | 180 | 180 | 100.0% | 0 | 0.0% | 0 | 0.0% | 30.5 | 28.9 | 882 | 810 | 1,023 |
+| SatSOT | test | ship | 282 | 282 | 100.0% | 0 | 0.0% | 0 | 0.0% | 12.2 | 28.3 | 346 | 208 | 574 |
+| SatSOT | test | train | 240 | 0 | 0.0% | 0 | 0.0% | 240 | 100.0% | 120.8 | 41.9 | 4,824 | 1,702 | 10,620 |
+
+### No-Split Per-Category Summary
+
+| dataset | category | total_boxes | small (<32²) | small_% | tiny (≤5×5) | tiny_% | large (≥32²) | large_% | avg_w | avg_h | avg_area | min_area | max_area |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| SatSOT | car | 19,389 | 19,389 | 100.0% | 739 | 3.8% | 0 | 0.0% | 10.8 | 9.6 | 112 | 9 | 480 |
+| SatSOT | plane | 2,713 | 1,105 | 40.7% | 0 | 0.0% | 1,608 | 59.3% | 39.3 | 40.4 | 1,810 | 306 | 4,692 |
+| SatSOT | ship | 1,549 | 1,549 | 100.0% | 0 | 0.0% | 0 | 0.0% | 27.2 | 17.4 | 439 | 70 | 645 |
+| SatSOT | train | 3,410 | 135 | 4.0% | 0 | 0.0% | 3,275 | 96.0% | 171.9 | 91.2 | 36,446 | 574 | 796,576 |
+
+### Dataset Total
+
+| dataset | total_boxes | small (<32²) | small_% | tiny (≤5×5) | tiny_% | large (≥32²) | large_% | avg_area |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| SatSOT | 27,061 | 22,178 | 82.0% | 739 | 2.7% | 4,883 | 18.0% | 4,879 |
+
+### Extremely Small Objects (≤5×5)
+
+Only **car** has extremely small objects: 739 / 19,389 (3.8%).
+
+| (w×h) | count |
+| --- | ---: |
+| 3×3 | 14 |
+| 3×4 | 5 |
+| 3×5 | 3 |
+| 4×3 | 21 |
+| 4×4 | 62 |
+| 4×5 | 72 |
+| 5×3 | 18 |
+| 5×4 | 131 |
+| 5×5 | 413 |
+
+### Small Object Size Distribution (area < 1024 px², by max side length)
+
+**car** (19,389 small objects)
+
+| max(w,h) px | count | % of small |
+| ---: | ---: | ---: |
+| 3 | 14 | 0.1% |
+| 4 | 88 | 0.5% |
+| 5 | 637 | 3.3% |
+| 6 | 1,653 | 8.5% |
+| 7 | 2,456 | 12.7% |
+| 8 | 1,611 | 8.3% |
+| 9 | 1,440 | 7.4% |
+| 10 | 1,272 | 6.6% |
+| 11 | 1,102 | 5.7% |
+| 12 | 960 | 5.0% |
+| 13 | 1,263 | 6.5% |
+| 14 | 1,626 | 8.4% |
+| 15 | 604 | 3.1% |
+| 16 | 523 | 2.7% |
+| 17 | 1,346 | 6.9% |
+| 18 | 359 | 1.9% |
+| 19 | 768 | 4.0% |
+| 20 | 223 | 1.2% |
+| 21 | 282 | 1.5% |
+| 22 | 258 | 1.3% |
+| 23 | 266 | 1.4% |
+| 24 | 96 | 0.5% |
+| 25 | 431 | 2.2% |
+| 26–36 | 111 | 0.6% |
+
+**plane** (1,105 small objects)
+
+| max(w,h) px | count | % of small |
+| ---: | ---: | ---: |
+| 18 | 4 | 0.4% |
+| 19 | 159 | 14.4% |
+| 20 | 137 | 12.4% |
+| 23 | 75 | 6.8% |
+| 24 | 111 | 10.0% |
+| 25 | 78 | 7.1% |
+| 26–29 | 45 | 4.1% |
+| 30 | 82 | 7.4% |
+| 31 | 75 | 6.8% |
+| 32 | 13 | 1.2% |
+| 33 | 325 | 29.4% |
+| 34 | 1 | 0.1% |
+
+**ship** (1,549 small objects)
+
+| max(w,h) px | count | % of small |
+| ---: | ---: | ---: |
+| 9–23 | 338 | 21.8% |
+| 24–31 | 210 | 13.6% |
+| 32 | 451 | 29.1% |
+| 33–39 | 218 | 14.1% |
+| 40–43 | 332 | 21.4% |
+
+**train** (135 small objects)
+
+| max(w,h) px | count | % of small |
+| ---: | ---: | ---: |
+| 80–88 | 131 | 97.0% |
+| 124–134 | 4 | 3.0% |
+
+> Note: train category "small" objects have area < 1024 but max side 80–134 px — these are very elongated (narrow and long).
+
+### Notes (SatSOT)
+
+- **SatSOT**: SOT dataset, 1 object per sequence. Axis-aligned xywh annotations.
+- Frames with `none` GT (target absent/occluded) are excluded from box counts.
+- **car**: 100% small, 3.8% extremely small (≤5×5). Peak at max side 7 px.
+- **plane**: 40.7% small — bimodal distribution (small ≤33px cluster vs large 40+ px).
+- **ship**: 100% small, concentrated around max side 32–43 px (near the boundary).
+- **train**: 96% large — the 135 "small" ones are narrow elongated shapes (max side 80+).
