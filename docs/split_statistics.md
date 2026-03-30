@@ -94,3 +94,39 @@ Label typos fixed: `cat` → `car`, `w` → `car` (Seq2).
 | val       |      8 |    406 |  44,716 |
 | test      |      8 |    407 |  43,340 |
 | **Total** | **24** |**4,062**|**480,342**|
+
+---
+
+## IRSatVideo-LEO
+
+Split strategy: **Official** train/test from dataset.
+Val carved from **30% of official test** (stratified by geographic region, `seed=42`).
+Single category: `target` (satellite objects). Track IDs from XML object names (`target0`, `target1`, …).
+Binary segmentation masks available per frame.
+
+| Region             | Train | Val | Test | Total |
+|--------------------|------:|----:|-----:|------:|
+| AfricaWest         |     1 |   0 |    0 |     1 |
+| EastAfrica         |    17 |   1 |    1 |    19 |
+| EastAustralia      |    12 |   1 |    3 |    16 |
+| EastEurope         |    15 |   1 |    1 |    17 |
+| EastNorthAisa      |    13 |   2 |    6 |    21 |
+| NorthAfrica        |    10 |   0 |    1 |    11 |
+| NorthAmericaEast   |    13 |   1 |    2 |    16 |
+| NorthAmericaNorth  |    11 |   0 |    0 |    11 |
+| NorthAmericaWest   |     7 |   1 |    2 |    10 |
+| NorthAustralia     |    14 |   1 |    2 |    17 |
+| NorthEurope        |     9 |   0 |    1 |    10 |
+| NorthNorthAisa     |     8 |   1 |    2 |    11 |
+| WestAfrica         |     8 |   1 |    2 |    11 |
+| WestAustralia      |     5 |   1 |    1 |     7 |
+| WestEurope         |     7 |   2 |    3 |    12 |
+| WestNorthAisa      |    10 |   0 |    0 |    10 |
+| **Total**          |**160**|**13**|**27**|**200**|
+
+| Split     | Videos | Frames  |
+|-----------|-------:|--------:|
+| train     |    160 |  73,699 |
+| val       |     13 |   5,267 |
+| test      |     27 |  12,055 |
+| **Total** |**200** |**91,021**|

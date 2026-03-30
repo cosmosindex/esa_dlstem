@@ -30,6 +30,7 @@ from datasets.ootb import OOTBDataset
 from datasets.birdsai import BIRDSAIDataset
 from datasets.birdsai_mot import BIRDSAIMOTDataset
 from datasets.lmod import LMODDataset
+from datasets.irsatvideo import IRSatVideoDataset
 
 # ---------------------------------------------------------------------------
 # Dataset registry — add new dataset classes here
@@ -40,6 +41,7 @@ _DATASET_REGISTRY: dict[str, type] = {
     "BIRDSAI": BIRDSAIDataset,
     "BIRDSAI_MOT": BIRDSAIMOTDataset,
     "LMOD": LMODDataset,
+    "IRSatVideo-LEO": IRSatVideoDataset,
 }
 
 # ---------------------------------------------------------------------------
