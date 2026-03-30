@@ -33,6 +33,7 @@ from datasets.birdsai import BIRDSAIDataset
 from datasets.birdsai_mot import BIRDSAIMOTDataset
 from datasets.lmod import LMODDataset
 from datasets.irsatvideo import IRSatVideoDataset
+from datasets.satsot import SatSOTDataset
 
 # ---------------------------------------------------------------------------
 # Dataset registry — shared with DetectionDataModule; add new classes here
@@ -44,6 +45,7 @@ _DATASET_REGISTRY: dict[str, type] = {
     "BIRDSAI_MOT": BIRDSAIMOTDataset,
     "LMOD": LMODDataset,
     "IRSatVideo-LEO": IRSatVideoDataset,
+    "SatSOT": SatSOTDataset,
 }
 
 # ---------------------------------------------------------------------------

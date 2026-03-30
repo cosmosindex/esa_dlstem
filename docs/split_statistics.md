@@ -130,3 +130,26 @@ Binary segmentation masks available per frame.
 | val       |     13 |   5,267 |
 | test      |     27 |  12,055 |
 | **Total** |**200** |**91,021**|
+
+---
+
+## SatSOT
+
+Split strategy: **80 / 10 / 10** stratified by category, `seed=42`. No official split.
+SOT dataset — single object per sequence, bbox format xywh → xyxy.
+Frames with `none` GT (target absent/occluded) return empty annotations.
+
+| Category | Train | Val | Test | Total |
+|----------|------:|----:|-----:|------:|
+| car      |    52 |   6 |    7 |    65 |
+| plane    |     7 |   1 |    1 |     9 |
+| ship     |     3 |   1 |    1 |     5 |
+| train    |    21 |   3 |    2 |    26 |
+| **Total**|**83** |**11**|**11**|**105**|
+
+| Split     | Videos | Frames |
+|-----------|-------:|-------:|
+| train     |     83 | 22,718 |
+| val       |     11 |  2,478 |
+| test      |     11 |  2,468 |
+| **Total** |**105** |**27,664**|
