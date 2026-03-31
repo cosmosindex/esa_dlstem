@@ -61,6 +61,20 @@ A curated list of publicly available spaceborne video datasets for computer visi
   - **Official split**: train (160) / test (40). Test further divided by difficulty: easy (17) / middle (13) / hard (10).
   - **Our split**: train 160 (73,699 frames) / val 13 (5,267 frames) / test 27 (12,055 frames). Val carved from 30% of official test, stratified by region, `seed=42`.
   - **Tasks**: Det, SOT, MOT, Seg. Detection mode carries track_ids for ByteTrack eval; video mode for SAM2/tracking; `load_mask()` for segmentation.
+- **AIR-MOT-100**: Multi-object tracking dataset from Jilin-1 satellite video (extended version of original 10-sequence AIR-MOT).
+  - **100 sequences**, 1920×1080 JPEG frames, ~22,669 total frames. 2 classes: airplane (class 1, 30 seqs) and car (class 2, 39 seqs). **31 sequences have empty annotations** and are excluded → 69 usable sequences, 19,940 frames.
+  - **Annotations**: MOT CSV format — `frame_id, track_id, x, y, w, h, conf, class, visibility`. x/y = top-left. Class mapping: 1=airplane, 2=car.
+  - **Black padding bars** (among the 69 usable sequences): 45 clean, 17 bottom-only (400px), 6 right-only (1440px), 1 both. (Full 100-seq stats: 59 clean, 29 bottom, 10 right, 2 both.) All annotations within valid content area. Does not significantly affect training — black bars are just padding that gets resized.
+
+    | Black bar status | Count | Effective content area |
+    |---|---:|---|
+    | No black bars | 45 | 1920×1080 (full) |
+    | Bottom only (400px) | 17 | 1920×680 |
+    | Right only (1440px) | 6 | 480×1080 |
+    | Bottom + right | 1 | 480×680 |
+    | **Total** | **69** | |
+  - **No official split**. Our split: 80/10/10 stratified by dominant class, `seed=42` → train 55 (15,559 frames) / val 7 (2,282 frames) / test 7 (2,099 frames).
+  - **Implementation**: `AIRMOTDataset(root, split)`. Registered as `"AIR-MOT"` in both DataModule registries. Seq 100 has special image naming (`000001_8.jpg`), handled automatically.
 - **SatSOT**: SOT dataset from Jilin-1 satellite video.
   - **105 sequences**, variable resolution (e.g. 335×499), 27,664 total frames. 4 categories: car (65), plane (9), ship (5), train (26).
   - **Annotations**: `groundtruth.txt` per sequence — one `x,y,w,h` line per frame (top-left + size). Frames with `none` = target absent/occluded.

@@ -342,3 +342,47 @@ Only **car** has extremely small objects: 739 / 19,389 (3.8%).
 - **plane**: 40.7% small — bimodal distribution (small ≤33px cluster vs large 40+ px).
 - **ship**: 100% small, concentrated around max side 32–43 px (near the boundary).
 - **train**: 96% large — the 135 "small" ones are narrow elongated shapes (max side 80+).
+
+---
+
+## SAT-MTB — Why Car Only Supports Tracking
+
+SAT-MTB 论文中的 "Statistics for Tasks and Object Scenarios" 表格显示 car 类别仅支持 Tracking，不支持 Detection 和 Segmentation。磁盘上也验证了 car 序列只有 `img/` 和 `mot/` 文件夹，没有 `det/` 和 `seg/`。
+
+**根本原因：car 在卫星影像中太小了，小到几乎无法做传统的 detection 和 segmentation。**
+
+### 各类别 bbox 尺寸对比（MOT 标注）
+
+| 类别 | 平均 w×h (px) | 面积 <25 px² 比例 | 面积 25–100 px² 比例 | 面积 >100 px² 比例 | 总标注数 |
+|---|---|---|---|---|---|
+| car | 5.1 × 5.0 | **60.7%** | 37.8% | 1.6% | 704,552 |
+| airplane | 9.9 × 9.2 | 28.1% | 60.2% | 11.7% | 317,287 |
+| ship | 17.6 × 15.7 | — | — | — | 78,637 |
+| train | 79.9 × 48.9 | — | — | — | 18,107 |
+
+Car 的平均 bbox 只有 ~5×5 像素（在 1024×1024 图像上），超过 60% 的目标面积小于 25 平方像素（即 5×5）。
+
+### 为什么小目标不适合 Detection / Segmentation
+
+1. **Detection (HBB/OBB)**: 在 3–5 像素的目标上画 bounding box 基本没有意义——框和目标几乎一样大。HBB 与 OBB 的区分也毫无信息量（旋转一个 5px 的框无法提供额外信息）。标注成本高但收益极低。
+2. **Segmentation**: 在 3–5 像素的目标上标注多边形 mask 不现实，也几乎无法做有意义的评估（IoU 受单像素偏差影响极大）。
+3. **Tracking**: 反而是最适合的任务——通过帧间关联可以追踪微小目标的运动轨迹。MOT 标注只需要 bbox + track ID，即便目标很小也有意义，因为时序信息弥补了空间分辨率不足。
+
+### Train 类别部分序列缺失的原因
+
+Train 共 16 个序列，但标注并非对所有序列都齐全：
+
+| 序列 | det (HBB/OBB) | seg | mot |
+|---|---|---|---|
+| train/01–07 | ✓ | ✓ | ✓ |
+| train/08–10 | ✓ | ✓ | **✗** |
+| train/11–16 | **✗** | **✗** | ✓ |
+
+- **train/08–10** 有 det/seg 但没有 MOT → 只出现在 `det_HBB`、`det_OBB`、`seg` 的 split 中。
+- **train/11–16** 有 MOT 但没有 det/seg → 只出现在 `mot` 的 split 中。
+
+这与论文表格一致：Detection/Segmentation = 144 videos（3 coarse categories，不含 car），Tracking HBB = 249 videos（4 categories，含 car）。
+
+### 结论
+
+Car 没有 detection/segmentation 标注**不是标注遗漏，而是有意为之的设计选择**：car 在卫星分辨率下本质上是 "small/dim moving target"，只适合做 tracking（靠时序信息弥补空间分辨率不足），不适合做单帧的 detection 或 segmentation。同理，train 的部分序列因标注资源分配或适用性考量，只涵盖了部分任务。
