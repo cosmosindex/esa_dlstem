@@ -11,6 +11,7 @@ from .birdsai_mot import BIRDSAIMOTDataset
 from .lmod import LMODDataset
 from .irsatvideo import IRSatVideoDataset
 from .satsot import SatSOTDataset
+from .satmtb import SATMTBDataset
 
 __all__ = [
     "BaseVideoDataset",
@@ -24,4 +25,5 @@ __all__ = [
     "LMODDataset",
     "IRSatVideoDataset",
     "SatSOTDataset",
+    "SATMTBDataset",
 ]

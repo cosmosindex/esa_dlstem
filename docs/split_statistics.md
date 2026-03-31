@@ -153,3 +153,77 @@ Frames with `none` GT (target absent/occluded) return empty annotations.
 | val       |     11 |  2,478 |
 | test      |     11 |  2,468 |
 | **Total** |**105** |**27,664**|
+
+---
+
+## SAT-MTB
+
+Split strategy: **Official** train/test from `data_split.xlsx`.
+Val carved from **30 % of official test** (stratified by category, `seed=42`).
+Multi-task dataset — annotation availability varies by category and task.
+
+### task=det_hbb (Detection — Horizontal Bounding Boxes)
+
+3 categories (no car). 142 videos total.
+
+| Category  | Train | Val | Test | Total |
+|-----------|------:|----:|-----:|------:|
+| airplane  |    37 |   8 |   17 |    62 |
+| ship      |    41 |   9 |   20 |    70 |
+| train     |     6 |   1 |    3 |    10 |
+| **Total** |**84** |**18**|**40**|**142**|
+
+| Split     | Videos | Frames |
+|-----------|-------:|-------:|
+| train     |     84 | 18,932 |
+| val       |     18 |  4,153 |
+| test      |     40 |  9,868 |
+| **Total** |**142** |**32,953**|
+
+### task=det_obb (Detection — Oriented Bounding Boxes)
+
+3 categories (no car). Fewer sequences have OBB annotations. 106 videos total.
+
+| Category  | Train | Val | Test | Total |
+|-----------|------:|----:|-----:|------:|
+| airplane  |    30 |   6 |   15 |    51 |
+| ship      |    26 |   7 |   15 |    48 |
+| train     |     5 |   1 |    1 |     7 |
+| **Total** |**61** |**14**|**31**|**106**|
+
+| Split     | Videos | Frames |
+|-----------|-------:|-------:|
+| train     |     61 | 12,573 |
+| val       |     14 |  3,104 |
+| test      |     31 |  7,101 |
+| **Total** |**106** |**22,778**|
+
+### task=mot (Multi-Object Tracking)
+
+4 categories (includes car). 237 videos total.
+
+| Category  | Train | Val | Test | Total |
+|-----------|------:|----:|-----:|------:|
+| airplane  |    37 |   8 |   17 |    62 |
+| car       |    62 |   9 |   21 |    92 |
+| ship      |    42 |   8 |   20 |    70 |
+| train     |     8 |   2 |    3 |    13 |
+| **Total** |**149**|**27**|**61**|**237**|
+
+| Split     | Videos | Frames |
+|-----------|-------:|-------:|
+| train     |    149 | 28,902 |
+| val       |     27 |  5,538 |
+| test      |     61 | 13,950 |
+| **Total** |**237** |**48,390**|
+
+### task=seg (Instance Segmentation)
+
+3 categories (no car). Same sequences as det_hbb. 142 videos total.
+
+| Category  | Train | Val | Test | Total |
+|-----------|------:|----:|-----:|------:|
+| airplane  |    37 |   8 |   17 |    62 |
+| ship      |    41 |   9 |   20 |    70 |
+| train     |     6 |   1 |    3 |    10 |
+| **Total** |**84** |**18**|**40**|**142**|
