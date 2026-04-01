@@ -100,7 +100,24 @@ A curated list of publicly available spaceborne video datasets for computer visi
     - seg: same as det_hbb (142 videos, 3 categories).
   - **Implementation**: `SATMTBDataset(root, split, task="det_hbb"|"det_obb"|"mot"|"seg")`. Registered as `"SAT-MTB"` in both DataModule registries. `load_masks()` for instance segmentation (task=seg only).
 - **SAT-MTB-SOS**: Subset of SAT-MTB, re-annotated with pixel-level masks for VOS. No standalone public download link found; dataset may be requested from authors or obtained via the parent SAT-MTB on [Zenodo](https://zenodo.org/records/15253996).
-- **VISO / SatVideoDT**: Non-commercial use only. Download via [Google Drive](https://github.com/QingyongHu/VISO) or Baidu Netdisk (code: VISO).
+- **VISO / SatVideoDT**: Satellite video detection & tracking dataset from Jilin-1. Non-commercial use only. Download via [Google Drive](https://github.com/QingyongHu/VISO) or Baidu Netdisk (code: VISO).
+  - **47 sequences** across 4 categories: car (38), plane (6), ship (2), train (1). Variable resolution (247×286 to 1454×750). 16,204 total frames.
+  - **4 annotation formats provided** (same underlying data):
+    - `mot/`: MOT-format `gt.txt` per sequence — used by our implementation.
+    - `sot/`: Per-track text files (`trackID_startFrame_endFrame.txt`).
+    - `coco/`: COCO JSON with train/val/test image directories.
+    - `voc/`: Pascal VOC XML with `ImageSets/Main/{train,val,test}.txt`.
+  - **Annotation format inconsistency** in MOT `gt.txt`:
+    - Car / Train: comma-delimited `frame,obj_id,x,y,w,h,conf,cls,r1,r2` (xywh).
+    - Plane / Ship: space-delimited `frame obj_id x1 y1 x2 y2 r1 r2 r3 r4` (xyxy).
+    - Our parser auto-detects delimiter and coordinate format.
+  - **Official split**: COCO/VOC provide frame-level train/val/test splits. Ship and train categories have **no val split** in the original data (too few sequences). We mapped frame-level splits to sequence-level by majority vote:
+    - Car: seqs 001–024 train, 025–028 val, 029–038 test.
+    - Plane: seqs 039–042 train, 043 val, 044 test.
+    - Ship: 045 train, 047 test (no val).
+    - Train: 046 train only (single sequence).
+  - **Our split**: train 30 (10,902 frames) / val 5 (1,741 frames) / test 12 (3,561 frames).
+  - **Implementation**: `VISODataset(root, split)`. Registered as `"VISO"` in both DataModule registries. Supports detection mode (per-frame) and video mode (clip-based for SAM2/tracking).
 - **SV248S**: Non-commercial use only.
 
 ---

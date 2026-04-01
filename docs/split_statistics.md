@@ -249,3 +249,27 @@ Multi-task dataset — annotation availability varies by category and task.
 | ship      |    41 |   9 |   20 |    70 |
 | train     |     6 |   1 |    3 |    10 |
 | **Total** |**84** |**18**|**40**|**142**|
+
+---
+
+## VISO
+
+Split strategy: **Official** COCO/VOC frame-level split mapped to sequence-level
+by majority vote. Ship has no val (only 2 sequences); the *train* category has no
+val/test (single sequence). Annotation format varies by category: car/train use
+comma-delimited xywh, plane/ship use space-delimited xyxy.
+
+| Category | Train | Val | Test | Total |
+|----------|------:|----:|-----:|------:|
+| car      |    24 |   4 |   10 |    38 |
+| plane    |     4 |   1 |    1 |     6 |
+| ship     |     1 |   0 |    1 |     2 |
+| train    |     1 |   0 |    0 |     1 |
+| **Total**|**30** |**5**|**12**|**47** |
+
+| Split     | Videos | Frames  |
+|-----------|-------:|--------:|
+| train     |     30 |  10,902 |
+| val       |      5 |   1,741 |
+| test      |     12 |   3,561 |
+| **Total** | **47** |**16,204**|

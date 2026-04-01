@@ -34,6 +34,7 @@ from datasets.irsatvideo import IRSatVideoDataset
 from datasets.satsot import SatSOTDataset
 from datasets.satmtb import SATMTBDataset
 from datasets.airmot import AIRMOTDataset
+from datasets.viso import VISODataset
 
 # ---------------------------------------------------------------------------
 # Dataset registry — add new dataset classes here
@@ -48,6 +49,7 @@ _DATASET_REGISTRY: dict[str, type] = {
     "SatSOT": SatSOTDataset,
     "SAT-MTB": SATMTBDataset,
     "AIR-MOT": AIRMOTDataset,
+    "VISO": VISODataset,
 }
 
 # ---------------------------------------------------------------------------
