@@ -273,3 +273,27 @@ comma-delimited xywh, plane/ship use space-delimited xyxy.
 | val       |      5 |   1,741 |
 | test      |     12 |   3,561 |
 | **Total** | **47** |**16,204**|
+
+---
+
+## SV248S
+
+Split strategy: **80 / 10 / 10** stratified by category, `seed=42`. No official split.
+SOT dataset — single object per sequence, bbox format xywh → xyxy.
+Frames with state=1 (invisible) return empty annotations; state=2 (occluded) keep bbox.
+Polygon annotations available for mask-level segmentation.
+
+| Category  | Train | Val | Test | Total |
+|-----------|------:|----:|-----:|------:|
+| car       |   162 |  20 |   20 |   202 |
+| car-large |    30 |   4 |    3 |    37 |
+| plane     |     4 |   1 |    1 |     6 |
+| ship      |     1 |   1 |    1 |     3 |
+| **Total** |**197**|**26**|**25**|**248**|
+
+| Split     | Videos | Frames  |
+|-----------|-------:|--------:|
+| train     |    197 | 124,403 |
+| val       |     26 |  16,111 |
+| test      |     25 |  16,107 |
+| **Total** |**248** |**156,621**|

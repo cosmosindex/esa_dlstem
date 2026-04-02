@@ -118,7 +118,23 @@ A curated list of publicly available spaceborne video datasets for computer visi
     - Train: 046 train only (single sequence).
   - **Our split**: train 30 (10,902 frames) / val 5 (1,741 frames) / test 12 (3,561 frames).
   - **Implementation**: `VISODataset(root, split)`. Registered as `"VISO"` in both DataModule registries. Supports detection mode (per-frame) and video mode (clip-based for SAM2/tracking).
-- **SV248S**: Non-commercial use only.
+- **SV248S**: Single-object tracking dataset from Jilin-1 satellite video (0.92 m resolution, 25 FPS re-encoded via VFI from original 10 FPS). Non-commercial use only.
+  - **248 sequences** from 6 videos, 4 classes: car (202), car-large (37), plane (6), ship (3). Variable crop sizes per sequence (e.g. 326×314). 156,621 total frames.
+  - **Annotations**:
+    - `.rect`: per-frame `x,y,w,h` (top-left + size), comma-separated floats, one line per frame.
+    - `.poly`: per-frame tight polygon `x1,y1,x2,y2,...`, comma-separated floats. Provides mask-level annotation for small targets.
+    - `.state`: per-frame integer flag — 0=NOR (visible), 1=INV (invisible/disappeared), 2=OCC (occluded). Rects are populated even for non-zero states.
+    - `.abs`: JSON metadata with source video info, init_rect, init_poly, class_name, difficulty level.
+    - `.attr`: 10 sequence attributes as CSV integers (STO, LTO, DS, IV, BCH, SM, ND, CO, BCL, IPR).
+  - **Frames**: 1-indexed TIFF files (`000001.tiff`, ...) in per-sequence directories.
+  - **Class mapping**: `car` → vehicle, `car-large` → large-vehicle, `plane` → airplane, `ship` → ship. Note: class names differ from the survey paper.
+  - **No official split**. Our split: 80/10/10 stratified by category, `seed=42` → train 197 (124,403 frames) / val 26 (16,111 frames) / test 25 (16,107 frames).
+  - **Implementation**: `SV248SDataset(root, split)`. Registered as `"SV248S"` in both DataModule registries. `load_mask()` for polygon-based segmentation masks.
+  - **Design decisions**:
+    - State=1 (invisible/disappeared) → empty annotations returned; State=2 (occluded) → bbox kept since the annotation is still spatially meaningful.
+    - `track_ids=[1]` for all frames (SOT — single object per sequence).
+    - Video IDs use `"01/000000"` format (`video_dir/seq_id`) to keep sequences globally unique across the 6 source videos.
+    - `load_mask(video, frame_id)` renders the `.poly` polygon into a binary mask `(H, W)` uint8 (0/255) on demand — not loaded by default in detection/video mode.
 
 ---
 
