@@ -304,16 +304,13 @@ Polygon annotations available for mask-level segmentation.
 
 Split strategy: **Official split** from dataset (train / validation / test directories).
 
-> Note: `6-3.avi` in train has a malformed GT filename (`6-3-gt..csv` — double dot)
-> and is skipped, giving 63 train videos instead of the expected 64.
-
 | Category  | Train | Val | Test | Total |
 |-----------|------:|----:|-----:|------:|
-| car       |    63 |  15 |   20 |    98 |
+| car       |    64 |  15 |   20 |    99 |
 
 | Split     | Videos | Frames |
 |-----------|-------:|-------:|
-| train     |     63 | 10,293 |
+| train     |     64 | 10,483 |
 | val       |     15 |  2,409 |
 | test      |     20 |  3,531 |
-| **Total** | **98** |**16,233**|
+| **Total** | **99** |**16,423**|
