@@ -22,7 +22,7 @@ A curated list of publicly available spaceborne video datasets for computer visi
 | ✅ **OOTB** | Multiple (JL-1, SkySat, ISS) | VNIR | 110 | SOT (oriented bbox) | ISPRS 2024 | [GitHub](https://github.com/YZCU/OOTB) |
 | ✅ **LMOD** | Jilin-1 | VNIR | 8 | Large-scale MOD | TGRS 2025 | [GitHub](https://github.com/RS-Devotee/LMOD) · [IEEE](https://ieeexplore.ieee.org/document/11142571) |
 | 🆕 **SAT-MTB-SOS** | Jilin-1 | VNIR | 113 | Single-object Seg (VOS) | CVPR 2024 W | [IEEE](https://ieeexplore.ieee.org/document/10604055/) |
-| 🆕 **SDM-Car** | Luojia 3-01 | VNIR | 99 | Small/dim vehicle Det · MOT | GRSL 2024 | [GitHub](https://github.com/TanedaM/SDM-Car) · [IEEE](https://ieeexplore.ieee.org/document/10746500/) |
+| ✅ **SDM-Car** | Luojia 3-01 | VNIR | 99 | Small/dim vehicle Det · MOT | GRSL 2024 | [GitHub](https://github.com/TanedaM/SDM-Car) · [IEEE](https://ieeexplore.ieee.org/document/10746500/) |
 
 ---
 
@@ -135,6 +135,15 @@ A curated list of publicly available spaceborne video datasets for computer visi
     - `track_ids=[1]` for all frames (SOT — single object per sequence).
     - Video IDs use `"01/000000"` format (`video_dir/seq_id`) to keep sequences globally unique across the 6 source videos.
     - `load_mask(video, frame_id)` renders the `.poly` polygon into a binary mask `(H, W)` uint8 (0/255) on demand — not loaded by default in detection/video mode.
+
+- **SDM-Car**: Small and dim moving vehicle detection/tracking dataset from Luojia-3-01 satellite (0.75 m resolution). Published in IEEE GRSL 2024.
+  - **99 sequences** (AVI video files), single class: car (vehicle). 1920×1080 resolution. 16,233 total frames across all splits.
+  - **Annotations**: Per-video `-gt.csv` files (headerless CSV). 10 columns: `frame_id, target_id, x, y, w, h, -1, -1, -1, -1`. Coordinates are top-left xywh, absolute pixels. Frames are 0-indexed. Last 4 columns are reserved (always -1).
+  - **Quirk**: `6-3-gt..csv` in train directory has a double-dot typo in the filename — this video is skipped (63/64 train videos usable).
+  - **Some bboxes slightly exceed image bounds** (e.g. x+w up to 2161 in 1920-wide frames). Clipped by `BaseVideoDataset` automatically.
+  - **Official split**: train (64, 63 usable) / validation (15) / test (20).
+  - **Our split**: train 63 (10,293 frames) / val 15 (2,409 frames) / test 20 (3,531 frames).
+  - **Implementation**: `SDMCarDataset(root, split)`. Registered as `"SDM-Car"` in both DataModule registries. Reads frames directly from AVI via OpenCV `VideoCapture`. Single category `"car"` for all objects.
 
 ---
 

@@ -15,6 +15,7 @@ from .satmtb import SATMTBDataset
 from .airmot import AIRMOTDataset
 from .viso import VISODataset
 from .sv248s import SV248SDataset
+from .sdmcar import SDMCarDataset
 
 __all__ = [
     "BaseVideoDataset",
@@ -32,4 +33,5 @@ __all__ = [
     "AIRMOTDataset",
     "VISODataset",
     "SV248SDataset",
+    "SDMCarDataset",
 ]

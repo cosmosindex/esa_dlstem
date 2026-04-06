@@ -297,3 +297,23 @@ Polygon annotations available for mask-level segmentation.
 | val       |     26 |  16,111 |
 | test      |     25 |  16,107 |
 | **Total** |**248** |**156,621**|
+
+---
+
+## SDM-Car
+
+Split strategy: **Official split** from dataset (train / validation / test directories).
+
+> Note: `6-3.avi` in train has a malformed GT filename (`6-3-gt..csv` — double dot)
+> and is skipped, giving 63 train videos instead of the expected 64.
+
+| Category  | Train | Val | Test | Total |
+|-----------|------:|----:|-----:|------:|
+| car       |    63 |  15 |   20 |    98 |
+
+| Split     | Videos | Frames |
+|-----------|-------:|-------:|
+| train     |     63 | 10,293 |
+| val       |     15 |  2,409 |
+| test      |     20 |  3,531 |
+| **Total** | **98** |**16,233**|
