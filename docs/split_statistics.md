@@ -17,6 +17,13 @@ Split strategy: **80 / 10 / 10** stratified by category, `seed=42`.
 | train    |     8 |   1 |    1 |    10 |
 | **Total**|**88** |**10**|**12**|**110**|
 
+| Split     | Videos | Frames |
+|-----------|-------:|-------:|
+| train     |     88 | 23,354 |
+| val       |     10 |  3,217 |
+| test      |     12 |  3,319 |
+| **Total** |**110** |**29,890**|
+
 ---
 
 ## BIRDSAI
