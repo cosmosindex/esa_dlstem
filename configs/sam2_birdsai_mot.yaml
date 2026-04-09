@@ -1,0 +1,27 @@
+# SAM2 MOT evaluation on BIRDSAI (multi-object tracking, wild animals)
+# Usage: python eval_sam2.py --config configs/sam2_birdsai_mot.yaml
+
+dataset: BIRDSAI_MOT
+dataset_root: /data/ESA_DLSTEM_2025/data/wild_animal/BIRDSAI
+class_map:
+  animal: 0
+  human: 1
+
+eval_mode: mot
+img_size: [640, 640]
+
+sam2_model_id: facebook/sam2.1-hiera-large
+prompt_strategy: first_frame
+prompt_interval: 10
+
+clip_len: 32
+clip_stride: 1
+batch_size: 1
+num_workers: 0
+
+iou_thresh: 0.5
+score_thresh: 0.5
+max_wandb_images: 50
+
+wandb_project: esa-dlstem
+wandb_entity: chengziwen693

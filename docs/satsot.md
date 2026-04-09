@@ -1,8 +1,26 @@
-# SatSOT Dataset — Video Resolution Statistics
+# SatSOT Dataset
 
 Dataset path: `/data/ESA_DLSTEM_2025/data/trafic/SatSOT`
 
-## Summary
+## Sequence Attributes
+
+SatSOT defines 11 attributes to characterize tracking challenges in each sequence:
+
+| Attribute | Full Name | Definition |
+|---|---|---|
+| **BC** | Background Clutter | The background has similar appearance as the target |
+| **IV** | Illumination Variation | The illumination of the target region changes significantly |
+| **LQ** | Low Quality | The image is low quality and the target is difficult to be distinguished |
+| **ROT** | Rotation | The target rotates in the video |
+| **POC** | Partial Occlusion | The target is partially occluded in the video |
+| **FOC** | Full Occlusion | The target is fully occluded in the video |
+| **TO** | Tiny Object | At least one ground truth bounding box has less than 25 pixels |
+| **SOB** | Similar Object | There are objects of similar shape or same type around the target |
+| **BJT** | Background Jitter | Background jitter caused by the shaking of satellite camera |
+| **ARC** | Aspect Ratio Change | The ratio of the bounding-box aspect ratio of the first and the current frame is outside the range [0.5, 2] |
+| **DEF** | Deformation | Non-rigid object deformation |
+
+## Resolution Statistics Summary
 
 | | Width (px) | Height (px) |
 |---|---|---|

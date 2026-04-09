@@ -1,0 +1,43 @@
+# SAM2 evaluation on SatSOT (single-object tracking, satellite video)
+# Usage: python eval_sam2.py --config configs/sam2_satsot.yaml
+
+# --- Dataset ---
+dataset: SatSOT
+dataset_root: /data/ESA_DLSTEM_2025/data/trafic/SatSOT
+class_map:
+  car: 0
+  plane: 1
+  ship: 2
+  train: 3
+
+# --- Eval mode ---
+# "sot" → Success AUC, Precision@20
+# "mot" → MOTA, IDF1, TP/FP/FN
+eval_mode: sot
+
+# --- Image size ---
+# Set to null for native resolution (no resize)
+# Set to [H, W] to resize, e.g. [640, 640]
+img_size: null
+
+# --- SAM2 model ---
+sam2_model_id: facebook/sam2.1-hiera-large
+
+# --- Prompt strategy ---
+prompt_strategy: first_frame   # "first_frame" or "every_n"
+prompt_interval: 10            # only used when prompt_strategy == "every_n"
+
+# --- Clip parameters ---
+clip_len: 32
+clip_stride: 1
+batch_size: 1
+num_workers: 0
+
+# --- Visualization / metrics ---
+iou_thresh: 0.3
+score_thresh: 0.5
+max_wandb_images: 50
+
+# --- W&B ---
+wandb_project: esa-dlstem
+wandb_entity: chengziwen693
