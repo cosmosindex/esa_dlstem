@@ -458,7 +458,7 @@ class DetectionVisualizationCallback(L.Callback):
 
             if len(same_class_idx) == 0:
                 # No same-class prediction → miss
-                self._draw_box(img, gt_box.astype(int), _BLUE,
+                self._draw_box(img, gt_box.astype(int), _RED,
                                f"GT {gt_name} [MISS]")
                 sot_records.append({
                     "best_iou": 0.0,
@@ -498,10 +498,10 @@ class DetectionVisualizationCallback(L.Callback):
             })
 
             # Draw GT
-            self._draw_box(img, gt_box.astype(int), _BLUE, f"GT {gt_name}")
+            self._draw_box(img, gt_box.astype(int), _RED, f"GT {gt_name}")
 
             # Draw best prediction
-            color = _GREEN if best_iou >= self.iou_thresh else _RED
+            color = _GREEN if best_iou >= self.iou_thresh else _BLUE
             score = pred_scores[best_pi]
             tid = ""
             if pred_track_ids is not None:
