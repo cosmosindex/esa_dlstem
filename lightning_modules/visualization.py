@@ -135,7 +135,9 @@ class DetectionVisualizationCallback(L.Callback):
                 img_tensor, pred, tgt, video_id,
             )
 
-            filename = f"{video_id}_frame{frame_id:04d}.jpg"
+            # Replace slashes in video_id to avoid subdirectory issues
+            safe_vid = video_id.replace("/", "_")
+            filename = f"{safe_vid}_frame{frame_id:04d}.jpg"
             cv2.imwrite(
                 str(self._vis_dir / filename),
                 cv2.cvtColor(vis, cv2.COLOR_RGB2BGR),
@@ -671,7 +673,9 @@ class SAM2VisualizationCallback(DetectionVisualizationCallback):
                 img, pred, tgt, video_id,
             )
 
-            filename = f"{video_id}_frame{frame_id:04d}.jpg"
+            # Replace slashes in video_id to avoid subdirectory issues
+            safe_vid = video_id.replace("/", "_")
+            filename = f"{safe_vid}_frame{frame_id:04d}.jpg"
             cv2.imwrite(
                 str(self._vis_dir / filename),
                 cv2.cvtColor(vis, cv2.COLOR_RGB2BGR),

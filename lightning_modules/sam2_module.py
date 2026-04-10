@@ -123,7 +123,7 @@ class SAM2EvaluationModule(L.LightningModule):
         has_prompts = True
         if carry is None:
             # First clip of this video — use GT prompts
-            self._add_gt_prompts(clip, T)
+            has_prompts = self._add_gt_prompts(clip, T)
         else:
             # Continuation — use predictions from previous clip's last frame
             has_prompts = self._add_carry_over_prompts(carry)
@@ -192,13 +192,18 @@ class SAM2EvaluationModule(L.LightningModule):
     # Prompt helpers
     # ------------------------------------------------------------------
 
-    def _add_gt_prompts(self, clip: VideoClipSample, T: int):
-        """Add GT prompts according to the configured strategy (first clip only)."""
+    def _add_gt_prompts(self, clip: VideoClipSample, T: int) -> bool:
+        """Add GT prompts according to the configured strategy (first clip only).
+
+        Returns True if at least one prompt was added, False otherwise
+        (e.g. target is invisible on all prompt frames).
+        """
         if self.prompt_strategy == "first_frame":
             indices = [0]
         else:  # every_n
             indices = list(range(0, T, self.prompt_interval))
 
+        added = False
         for t in indices:
             boxes_np = clip.boxes[t].cpu().numpy()
             labels_np = clip.labels[t].cpu().numpy()
@@ -209,6 +214,8 @@ class SAM2EvaluationModule(L.LightningModule):
                     obj_ids[i] = 1000 + i
             if len(boxes_np) > 0:
                 self.model.add_prompts(t, boxes_np, labels_np, obj_ids)
+                added = True
+        return added
 
     def _add_carry_over_prompts(self, prev_pred: dict) -> bool:
         """Use predictions from the previous clip's last frame as prompts
