@@ -1,0 +1,40 @@
+# SAM2 evaluation on SV248S (single-object tracking, Jilin-1 satellite video)
+# Usage: python eval_sam2.py --config configs/sam2_sv248s.yaml
+
+# --- Dataset ---
+dataset: SV248S
+dataset_root: /data/ESA_DLSTEM_2025/data/trafic/SV248S
+class_map:
+  car: 0
+  car-large: 1
+  plane: 2
+  ship: 3
+
+# --- Eval mode ---
+eval_mode: sot
+
+# --- Image size ---
+# null = native resolution (variable per sequence, 225x213 ~ 1192x959)
+img_size: null
+
+# --- SAM2 model ---
+sam2_model_id: facebook/sam2.1-hiera-large
+
+# --- Prompt strategy ---
+prompt_strategy: first_frame
+prompt_interval: 10
+
+# --- Clip parameters ---
+clip_len: 32
+clip_stride: 1
+batch_size: 1
+num_workers: 0
+
+# --- Visualization / metrics ---
+iou_thresh: 0.3
+score_thresh: 0.5
+max_wandb_images: 50
+
+# --- W&B ---
+wandb_project: esa-dlstem
+wandb_entity: chengziwen693
