@@ -10,7 +10,7 @@ class_map:
   train: 3
 
 eval_mode: sot
-img_size: [640, 640]
+img_size: null
 
 sam2_model_id: facebook/sam2.1-hiera-large
 prompt_strategy: first_frame

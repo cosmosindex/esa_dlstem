@@ -62,6 +62,7 @@ class SV248SDataset(BaseVideoDataset):
         self._rect_cache: dict[str, np.ndarray] = {}
         self._state_cache: dict[str, np.ndarray] = {}
         self._poly_cache: dict[str, list[np.ndarray]] = {}
+        self._frame_paths: dict[str, list[Path]] = {}  # vid_id → sorted frame paths
         super().__init__(root=root, split=split, **kwargs)
 
     # ------------------------------------------------------------------
@@ -100,7 +101,7 @@ class SV248SDataset(BaseVideoDataset):
                 # Parse state flags
                 states = self._parse_state(state_path) if state_path.exists() else np.zeros(len(rects), dtype=np.int32)
 
-                # Count actual frames
+                # Count actual frames (may not start from 000001.tiff)
                 frames = sorted(seq.glob("*.tiff"))
                 n = min(len(rects), len(states), len(frames))
                 if n == 0:
@@ -115,6 +116,7 @@ class SV248SDataset(BaseVideoDataset):
                     num_frames=n,
                     frame_ids=list(range(n)),
                 ))
+                self._frame_paths[vid_id] = frames[:n]
                 self._rect_cache[vid_id] = rects[:n]
                 self._state_cache[vid_id] = states[:n]
 
@@ -131,6 +133,7 @@ class SV248SDataset(BaseVideoDataset):
             if self.split == "no_split" or v.split == self.split:
                 self.videos.append(v)
             else:
+                self._frame_paths.pop(v.video_id, None)
                 self._rect_cache.pop(v.video_id, None)
                 self._state_cache.pop(v.video_id, None)
                 self._poly_cache.pop(v.video_id, None)
@@ -168,8 +171,7 @@ class SV248SDataset(BaseVideoDataset):
         return split_map
 
     def _load_frame(self, video: VideoInfo, frame_id: int) -> np.ndarray:
-        vid_dir, seq_id = video.video_id.split("/")
-        path = self.root / vid_dir / "sequences" / seq_id / f"{frame_id + 1:06d}.tiff"
+        path = self._frame_paths[video.video_id][frame_id]
         img = cv2.imread(str(path), cv2.IMREAD_UNCHANGED)
         if img is None:
             raise FileNotFoundError(f"Frame not found: {path}")
