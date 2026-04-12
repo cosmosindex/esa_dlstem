@@ -24,18 +24,34 @@
 **Datasets**: SatSOT (105 seqs), SV248S (248 seqs, 156K frames), SAT-MTB subset, OOTB (110 seqs, OBB), IRSatVideo-LEO (200 seqs, TIR)
 **Primary metrics**: AUC, Precision (P), Normalised Precision (NP)
 
+**SOT model list** (8 models, slimmed from 14):
+
+| Model | Venue | 保留理由 | Eval tier |
+|---|---|---|---|
+| SAM 2 | Meta 2024 | FM zero-shot baseline — generational comparison anchor | ✅ Zero-shot · Done |
+| SAMURAI | — | Motion-aware SAM 2 variant — zero-shot upper bound for FM family | 🟡 Zero-shot |
+| SAM 3 / 3.1 | arXiv Nov 2025 | Text-prompted tracking, no bbox init — core novel experiment | 🟡 Zero-shot |
+| UNINEXT | CVPR 2023 | Universal perception baseline — zero-shot OOD reference | 🟡 Zero-shot |
+| OSTrack-256 | ECCV 2022 | One-stream transformer paradigm anchor, high citation count | 🔵 Pretrained eval |
+| ODTrack | AAAI 2024 | Token propagation — latest in same transformer paradigm | 🔵 Pretrained eval |
+| DreamTrack | CVPR 2025 | Temporal prediction SOTA; constant-velocity satellite motion natural fit | 🔵 Pretrained eval |
+| SiamBAN-OBB / SiamFC++ | — | OBB sub-track only — irreplaceable for OOTB results | 🔵 Pretrained eval · OOTB only |
+
+> **Removed**: SiamRPN++, Ocean, TransT, MixFormer-ViT, ARTrack, ROMTrack — overlapping paradigms with OSTrack/ODTrack; dropped to meet timeline.  
+> **Fine-tune**: OSTrack-256 only (ARTrack removed); DreamTrack pretrained result is the paper's main SOTA reference — no fine-tune needed.
+
 | Day | Date | GPU-0 | GPU-1 | Milestone |
 |---|---|---|---|---|
-| 1 | Apr 8 | 🟡 SAM 2 — zero-shot, all SOT datasets, env setup | 🟡 SAMURAI — zero-shot, all SOT datasets | Zero-shot start |
-| 2 | Apr 9 | 🟡 SAM 3 / 3.1 — zero-shot, text-prompted SOT | 🟡 UNINEXT — zero-shot, all SOT datasets | |
-| 3 | Apr 10 | 🔵 SiamRPN++ — pretrained, SatSOT + SV248S | 🔵 Ocean — pretrained, SatSOT + SV248S | Pretrained start |
-| 4 | Apr 11 | 🔵 TransT — pretrained, all SOT datasets | 🔵 OSTrack-256 — pretrained, all SOT datasets | |
-| 5 | Apr 12 | 🔵 MixFormer-ViT — pretrained, all SOT datasets | 🔵 ARTrack — pretrained, all SOT datasets | |
-| 6 | Apr 13 | 🔵 ROMTrack — pretrained, all SOT datasets | 🔵 ODTrack — pretrained, all SOT datasets | |
-| 7 | Apr 14 | 🔵 DreamTrack — pretrained, all SOT datasets | 🔵 SiamBAN-OBB — pretrained, OOTB only | |
-| 8 | Apr 15 | 🔴 OSTrack fine-tune — train on SatSOT + SV248S train splits | 🔴 ARTrack fine-tune — train on SatSOT + SV248S train splits | Fine-tune start |
-| 9 | Apr 16 | 🔴 OSTrack fine-tune — continued + eval test split | 🔴 ARTrack fine-tune — continued + eval test split | |
-| 10 | Apr 17 | 🟢 SOT result analysis — AUC/P/NP tables, pretrained vs fine-tuned gap, write SOT section draft, flag reruns | ← same | **SOT done** |
+| 1 | Apr 8 | ✅ SAM 2 — zero-shot, all SOT datasets | ✅ SAM 2 — zero-shot, all SOT datasets | ✅ Done |
+| 2 | Apr 9 | 🟡 SAMURAI — zero-shot, all SOT datasets | 🟡 SAM 3 / 3.1 — zero-shot, text-prompted SOT, all SOT datasets | Zero-shot cont. |
+| 3 | Apr 10 | 🟡 UNINEXT — zero-shot, all SOT datasets | 🔵 OSTrack-256 — pretrained, all SOT datasets | Pretrained start |
+| 4 | Apr 11 | 🔵 ODTrack — pretrained, all SOT datasets | 🔵 DreamTrack — pretrained, all SOT datasets | |
+| 5 | Apr 12 | 🔵 SiamBAN-OBB / SiamFC++ — pretrained, OOTB only | 🔵 Rerun / SV248S format + metric sanity check | |
+| 6 | Apr 13 | 🔴 OSTrack-256 fine-tune — SatSOT + SV248S train split (multi-GPU) | 🔴 OSTrack-256 fine-tune — distributed, same run | Fine-tune start |
+| 7 | Apr 14 | 🔴 OSTrack-256 fine-tune — continued + eval on test split | 🔴 Rerun any flagged zero-shot / pretrained results | |
+| 8 | Apr 15 | 🟢 SOT result analysis — AUC/P/NP tables, FM zero-shot vs pretrained gap, pretrained vs fine-tuned gap, write SOT section draft | ← same | **SOT done** |
+| 9 | Apr 16 | 🟢 Buffer — rerun stragglers, IRSatVideo-LEO TIR check, early Detection env setup | ← same | 2-day buffer gained |
+| 10 | Apr 17 | 🟢 Buffer / early Detection Phase prep — dataset format check, COCO weights download | ← same | → Detection ready |
 
 ---
 
@@ -128,8 +144,8 @@ Use separate columns or sub-tables labelled **VNIR** and **TIR** consistently th
 ### 8. Compute estimate (revised)
 | Track | Models | Est. GPU-hours | Notes |
 |---|---|---|---|
-| SOT | 14 | ~90 h | SV248S dominates |
+| SOT | 8 (was 14) | ~55 h | SV248S dominates; 6 models removed |
 | Detection | 14 | ~60 h | IR models faster (fewer seqs) |
 | MOT | 13 | ~65 h | Depends on det file I/O speed |
-| Fine-tune (all tracks) | ~8 | ~200 h | 2 models per track × 4 tracks |
-| **Total** | | **~415 GPU-hours** | ~8.6 days on 2 GPUs running 24/7 — fits in 30 days with buffer |
+| Fine-tune (all tracks) | ~5 | ~130 h | SOT: OSTrack-256 only (ARTrack dropped); Det + MOT unchanged |
+| **Total** | | **~310 GPU-hours** | ~6.5 days on 2 GPUs running 24/7 — ~105 h headroom gained vs original plan |
