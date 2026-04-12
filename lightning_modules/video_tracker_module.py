@@ -1,14 +1,16 @@
 """
-SAM2EvaluationModule
-====================
-Lightning module for evaluating SAM2 on video object tracking datasets.
+VideoTrackerEvaluationModule
+============================
+Lightning module for evaluating prompt-based video object trackers
+(SAM2, SAM3, or any tracker exposing the same stateful interface:
+``init_video / add_prompts / propagate / reset_state / _empty_output``).
 
-SAM2 is prompt-based (no training), so this module only implements test_step.
-It receives VideoClipSample batches from SAM2DataModule and evaluates tracking
-and detection quality.
+Since these trackers are prompt-based (no training), this module only
+implements test_step. It receives VideoClipSample batches from SAM2DataModule
+and evaluates tracking and detection quality.
 
 Prompt strategies (applied to the **first clip** of each video only):
-    "first_frame"  — GT boxes from frame 0 only; SAM2 propagates to all others.
+    "first_frame"  — GT boxes from frame 0 only; tracker propagates to all others.
     "every_n"      — GT boxes injected every N frames; tests re-prompting benefit.
 
 For subsequent clips of the same video, predictions from the previous clip's
@@ -23,27 +25,32 @@ from typing import Literal
 
 import numpy as np
 import torch
+import torch.nn as nn
 import lightning as L
 from torchmetrics.detection import MeanAveragePrecision
 
 from datasets.base import VideoClipSample
-from models.sam2 import SAM2Tracker
 from obb_utils import obb_iou_matrix
 
 
-class SAM2EvaluationModule(L.LightningModule):
+class VideoTrackerEvaluationModule(L.LightningModule):
     """
-    Evaluation-only Lightning module for SAM2 video tracking.
+    Evaluation-only Lightning module for prompt-based video trackers.
+
+    The `model` must expose:
+        init_video(frames) / add_prompts(frame_idx, boxes, labels, obj_ids)
+        propagate() -> list[dict]  /  reset_state()
+        _empty_output() -> dict
 
     Args:
-        model:            SAM2Tracker instance.
+        model:            Tracker instance (SAM2Tracker, SAM3Tracker, ...).
         prompt_strategy:  "first_frame" or "every_n".
         prompt_interval:  Re-prompt every N frames (only for "every_n").
     """
 
     def __init__(
         self,
-        model: SAM2Tracker,
+        model: nn.Module,
         prompt_strategy: Literal["first_frame", "every_n"] = "first_frame",
         prompt_interval: int = 10,
     ):
@@ -133,7 +140,7 @@ class SAM2EvaluationModule(L.LightningModule):
         if has_prompts:
             preds = self.model.propagate()
         else:
-            preds = [SAM2Tracker._empty_output() for _ in range(T)]
+            preds = [self.model._empty_output() for _ in range(T)]
         self.model.reset_state()
 
         if self.device.type == "cuda":
