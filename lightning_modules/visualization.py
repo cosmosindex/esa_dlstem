@@ -706,14 +706,29 @@ class SAM2VisualizationCallback(DetectionVisualizationCallback):
         pred_labels = pred["labels"].cpu().numpy() if isinstance(pred["labels"], torch.Tensor) else pred["labels"]
         pred_track_ids = self._extract_track_ids(pred)
 
+        # OBB data (optional — present for OBB-annotated datasets like OOTB)
+        gt_obb = tgt["obb"].cpu().numpy() if "obb" in tgt and isinstance(tgt["obb"], torch.Tensor) \
+            else (tgt.get("obb"))
+        pred_obb = pred["obb"].cpu().numpy() if "obb" in pred and isinstance(pred["obb"], torch.Tensor) \
+            else (pred.get("obb"))
+
         keep = pred_scores >= self.score_thresh
         pred_boxes = pred_boxes[keep]
         pred_scores = pred_scores[keep]
         pred_labels = pred_labels[keep]
         if pred_track_ids is not None:
             pred_track_ids = pred_track_ids[keep]
+        if pred_obb is not None:
+            pred_obb = pred_obb[keep]
+
+        use_obb = (gt_obb is not None and pred_obb is not None)
 
         if self.sot_mode:
+            if use_obb:
+                return self._sot_draw_obb(
+                    img, gt_boxes, gt_labels, gt_obb,
+                    pred_boxes, pred_scores, pred_labels, pred_track_ids, pred_obb,
+                )
             return self._sot_draw(
                 img, gt_boxes, gt_labels,
                 pred_boxes, pred_scores, pred_labels, pred_track_ids,
@@ -746,3 +761,112 @@ class SAM2VisualizationCallback(DetectionVisualizationCallback):
             "per_class": per_class,
             "per_size": per_size,
         }
+
+    # ------------------------------------------------------------------
+    # OBB-aware SOT drawing (used when OBB data is present in the batch)
+    # ------------------------------------------------------------------
+
+    def _sot_draw_obb(
+        self,
+        img: np.ndarray,
+        gt_boxes: np.ndarray,       # (M, 4) AABB — used for size classification only
+        gt_labels: np.ndarray,
+        gt_obb: np.ndarray,         # (M, 8) OBB corners
+        pred_boxes: np.ndarray,     # (N, 4) AABB
+        pred_scores: np.ndarray,
+        pred_labels: np.ndarray,
+        pred_track_ids: np.ndarray | None,
+        pred_obb: np.ndarray,       # (N, 8) OBB corners
+    ) -> tuple[np.ndarray, dict]:
+        """OBB-aware version of _sot_draw: uses OBB IoU and draws oriented polygons."""
+        from obb_utils import obb_iou_1_vs_n
+
+        sot_records: list[dict] = []
+        matched_pred_indices: set[int] = set()
+
+        for gi in range(len(gt_obb)):
+            gt_poly = gt_obb[gi]
+            gt_box = gt_boxes[gi]
+            gt_cls = int(gt_labels[gi])
+            gt_name = self.class_names.get(gt_cls, f"cls{gt_cls}")
+            gt_sk = _size_key(gt_box)
+
+            same_class_idx = np.where(pred_labels == gt_cls)[0]
+
+            if len(same_class_idx) == 0:
+                self._draw_obb_polygon(img, gt_poly, _RED, f"GT {gt_name} [MISS]")
+                sot_records.append({
+                    "best_iou": 0.0,
+                    "center_dist": float("inf"),
+                    "norm_center_dist": float("inf"),
+                    "gt_class": gt_name,
+                    "gt_size": gt_sk,
+                })
+                continue
+
+            sc_obb = pred_obb[same_class_idx]
+            ious = obb_iou_1_vs_n(gt_poly, sc_obb)
+            best_local = int(ious.argmax())
+            best_iou = float(ious[best_local])
+            best_pi = int(same_class_idx[best_local])
+            matched_pred_indices.add(best_pi)
+
+            best_poly = pred_obb[best_pi]
+
+            # Center distance — use OBB centroid (mean of 4 corners)
+            gt_pts = gt_poly.reshape(4, 2)
+            pr_pts = best_poly.reshape(4, 2)
+            gt_cx, gt_cy = float(gt_pts[:, 0].mean()), float(gt_pts[:, 1].mean())
+            pr_cx, pr_cy = float(pr_pts[:, 0].mean()), float(pr_pts[:, 1].mean())
+            cdist = float(np.sqrt((gt_cx - pr_cx) ** 2 + (gt_cy - pr_cy) ** 2))
+
+            gt_w, gt_h = gt_box[2] - gt_box[0], gt_box[3] - gt_box[1]
+            gt_diag = float(np.sqrt(gt_w ** 2 + gt_h ** 2))
+            ncdist = cdist / max(gt_diag, 1e-6)
+
+            sot_records.append({
+                "best_iou": round(best_iou, 4),
+                "center_dist": round(cdist, 2),
+                "norm_center_dist": round(ncdist, 4),
+                "gt_class": gt_name,
+                "gt_size": gt_sk,
+            })
+
+            # Draw GT OBB (red)
+            self._draw_obb_polygon(img, gt_poly, _RED, f"GT {gt_name}")
+
+            # Draw best prediction OBB
+            color = _GREEN if best_iou >= self.iou_thresh else _BLUE
+            score = pred_scores[best_pi]
+            tid = ""
+            if pred_track_ids is not None:
+                tid = f" T#{int(pred_track_ids[best_pi])}"
+            self._draw_obb_polygon(
+                img, best_poly, color,
+                f"{gt_name}{tid} IoU={best_iou:.2f} {score:.2f}",
+            )
+
+        # Unmatched predictions in gray (context only)
+        for pi in range(len(pred_obb)):
+            if pi not in matched_pred_indices:
+                name = self.class_names.get(int(pred_labels[pi]), f"cls{pred_labels[pi]}")
+                self._draw_obb_polygon(
+                    img, pred_obb[pi], _GRAY, f"{name} {pred_scores[pi]:.2f}",
+                )
+
+        return img, {"sot_records": sot_records}
+
+    @staticmethod
+    def _draw_obb_polygon(img: np.ndarray, obb: np.ndarray, color: tuple, label: str):
+        """Draw an OBB as a 4-point polygon with a label."""
+        pts = obb.reshape(4, 2).astype(np.int32)
+        cv2.polylines(img, [pts], isClosed=True, color=color, thickness=2)
+
+        # Label near the topmost corner
+        top_idx = int(pts[:, 1].argmin())
+        lx, ly = int(pts[top_idx, 0]), int(pts[top_idx, 1])
+        (tw, th), _ = cv2.getTextSize(label, _FONT, _FONT_SCALE, _THICKNESS)
+        y_top = max(ly - th - 4, 0)
+        cv2.rectangle(img, (lx, y_top), (lx + tw, y_top + th + 4), color, -1)
+        cv2.putText(img, label, (lx, y_top + th + 1), _FONT, _FONT_SCALE,
+                    (255, 255, 255), _THICKNESS)

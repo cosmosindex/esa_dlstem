@@ -20,6 +20,8 @@ from pathlib import Path
 
 import numpy as np
 
+from obb_utils import obb_iou_1_vs_n
+
 
 # Evaluation thresholds
 SUCCESS_THRESHOLDS = np.linspace(0, 1, 21)         # 0.00, 0.05, ..., 1.00
@@ -64,8 +66,18 @@ class SOTMetrics:
         pred_labels: np.ndarray,    # (N,)
         video_id: str,
         frame_id: int,
+        gt_obb: np.ndarray | None = None,    # (M, 8) OBB corners
+        pred_obb: np.ndarray | None = None,  # (N, 8) OBB corners
     ):
-        """Process one frame: for each GT, find the best same-class prediction."""
+        """Process one frame: for each GT, find the best same-class prediction.
+
+        When gt_obb and pred_obb are provided, IoU is computed using OBB
+        (oriented bounding box) intersection. Center distance uses the OBB
+        centroid (mean of 4 corners).
+        """
+        use_obb = (gt_obb is not None and pred_obb is not None
+                   and len(gt_obb) > 0 and len(pred_obb) > 0)
+
         for gi in range(len(gt_boxes)):
             gt_box = gt_boxes[gi]
             gt_cls = int(gt_labels[gi])
@@ -87,15 +99,25 @@ class SOTMetrics:
                 continue
 
             # Best same-class prediction by IoU
-            sc_boxes = pred_boxes[same_cls]
-            ious = _iou_1_vs_n(gt_box, sc_boxes)
+            if use_obb:
+                sc_obb = pred_obb[same_cls]
+                ious = obb_iou_1_vs_n(gt_obb[gi], sc_obb)
+            else:
+                sc_boxes = pred_boxes[same_cls]
+                ious = _iou_1_vs_n(gt_box, sc_boxes)
             best_idx = int(ious.argmax())
             best_iou = float(ious[best_idx])
-            best_box = sc_boxes[best_idx]
 
-            # Center distance
-            gt_cx, gt_cy = (gt_box[0] + gt_box[2]) / 2, (gt_box[1] + gt_box[3]) / 2
-            pr_cx, pr_cy = (best_box[0] + best_box[2]) / 2, (best_box[1] + best_box[3]) / 2
+            # Center distance — use OBB centroid when available
+            if use_obb:
+                gt_pts = gt_obb[gi].reshape(4, 2)
+                gt_cx, gt_cy = float(gt_pts[:, 0].mean()), float(gt_pts[:, 1].mean())
+                pr_pts = pred_obb[same_cls[best_idx]].reshape(4, 2)
+                pr_cx, pr_cy = float(pr_pts[:, 0].mean()), float(pr_pts[:, 1].mean())
+            else:
+                best_box = pred_boxes[same_cls[best_idx]]
+                gt_cx, gt_cy = (gt_box[0] + gt_box[2]) / 2, (gt_box[1] + gt_box[3]) / 2
+                pr_cx, pr_cy = (best_box[0] + best_box[2]) / 2, (best_box[1] + best_box[3]) / 2
             cdist = float(np.sqrt((gt_cx - pr_cx) ** 2 + (gt_cy - pr_cy) ** 2))
 
             # Normalised by GT diagonal

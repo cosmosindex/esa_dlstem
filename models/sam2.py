@@ -22,6 +22,8 @@ import numpy as np
 import torch
 import torch.nn as nn
 
+from obb_utils import mask_to_obb, obb_to_aabb
+
 
 class SAM2Tracker(nn.Module):
     """
@@ -135,6 +137,7 @@ class SAM2Tracker(nn.Module):
             List of per-frame dicts (ordered by frame index):
             {
                 'boxes':     (N, 4) xyxy float tensor,
+                'obb':       (N, 8) OBB corner float tensor (from minAreaRect),
                 'labels':    (N,)   long  tensor,
                 'scores':    (N,)   float tensor (mask area ratio as proxy),
                 'track_ids': (N,)   long  tensor,
@@ -148,18 +151,21 @@ class SAM2Tracker(nn.Module):
             # mask_logits: (N_objects, 1, H, W) float — threshold at 0
             masks = (mask_logits > 0.0).cpu()
 
-            boxes_list, scores_list, ids_list, labels_list = [], [], [], []
+            boxes_list, obb_list, scores_list, ids_list, labels_list = [], [], [], [], []
             for obj_id, mask in zip(obj_ids, masks):
-                mask_2d = mask[0]  # (H, W) bool
-                box = self._mask_to_box(mask_2d)
-                if box is None:
+                mask_2d = mask[0].numpy()  # (H, W) bool
+                obb_8 = mask_to_obb(mask_2d)
+                if obb_8 is None:
                     continue
-                # Score: fraction of mask area relative to box area (crude proxy)
-                mask_area = float(mask_2d.sum())
-                box_area = float((box[2] - box[0]) * (box[3] - box[1]))
-                score = mask_area / max(box_area, 1.0)
+                box_xyxy = obb_to_aabb(obb_8)
 
-                boxes_list.append(box)
+                # Score: fraction of mask area relative to OBB area (crude proxy)
+                mask_area = float(mask_2d.sum())
+                obb_area = float(cv2.contourArea(obb_8.reshape(4, 2)))
+                score = mask_area / max(obb_area, 1.0)
+
+                boxes_list.append(torch.from_numpy(box_xyxy))
+                obb_list.append(torch.from_numpy(obb_8))
                 scores_list.append(min(score, 1.0))
                 ids_list.append(int(obj_id))
                 labels_list.append(self._obj_id_to_label.get(int(obj_id), 0))
@@ -167,6 +173,7 @@ class SAM2Tracker(nn.Module):
             if boxes_list:
                 frame_outputs[frame_idx] = {
                     "boxes":     torch.stack(boxes_list),
+                    "obb":       torch.stack(obb_list),
                     "labels":    torch.tensor(labels_list, dtype=torch.long),
                     "scores":    torch.tensor(scores_list, dtype=torch.float32),
                     "track_ids": torch.tensor(ids_list, dtype=torch.long),
@@ -195,19 +202,10 @@ class SAM2Tracker(nn.Module):
     # ------------------------------------------------------------------
 
     @staticmethod
-    def _mask_to_box(mask: torch.Tensor) -> torch.Tensor | None:
-        """Convert a boolean H×W mask to an xyxy bounding box tensor."""
-        ys, xs = torch.where(mask)
-        if len(xs) == 0:
-            return None
-        return torch.tensor(
-            [xs.min(), ys.min(), xs.max(), ys.max()], dtype=torch.float32
-        )
-
-    @staticmethod
     def _empty_output() -> dict:
         return {
             "boxes":     torch.zeros((0, 4), dtype=torch.float32),
+            "obb":       torch.zeros((0, 8), dtype=torch.float32),
             "labels":    torch.zeros(0, dtype=torch.long),
             "scores":    torch.zeros(0, dtype=torch.float32),
             "track_ids": torch.zeros(0, dtype=torch.long),

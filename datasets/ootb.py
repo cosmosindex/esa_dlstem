@@ -144,6 +144,7 @@ class OOTBDataset(BaseVideoDataset):
         box_xyxy = self._obb_to_aabb(*coords)                # unpack 8 values
         return {
             "boxes":     np.array([box_xyxy], dtype=np.float32),
+            "obb":       np.array([coords],   dtype=np.float32),  # (1, 8) raw OBB corners
             "labels":    np.array([self._map_label(video.category)], dtype=np.int64),
             "track_ids": np.array([1], dtype=np.int64),  # SOT — single object, ID=1
         }

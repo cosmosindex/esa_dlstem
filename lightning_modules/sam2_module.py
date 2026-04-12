@@ -28,6 +28,7 @@ from torchmetrics.detection import MeanAveragePrecision
 
 from datasets.base import VideoClipSample
 from models.sam2 import SAM2Tracker
+from obb_utils import obb_iou_matrix
 
 
 class SAM2EvaluationModule(L.LightningModule):
@@ -147,41 +148,47 @@ class SAM2EvaluationModule(L.LightningModule):
             self._carry_over[video_id] = preds[-1]
 
         # --- Evaluate each frame ---
+        has_obb = clip.obb is not None
         frame_results = []
         for t in range(min(T, len(preds))):
             pred = preds[t]
             gt_boxes = clip.boxes[t]
             gt_labels = clip.labels[t]
             gt_track_ids = clip.track_ids[t]
+            gt_obb = clip.obb[t] if has_obb else None
 
             # Ensure pred tensors are on the same device as GT
             device = gt_boxes.device
-            for k in ("boxes", "scores", "labels", "track_ids"):
+            for k in ("boxes", "obb", "scores", "labels", "track_ids"):
                 if k in pred and isinstance(pred[k], torch.Tensor):
                     pred[k] = pred[k].to(device)
 
             tgt = {"boxes": gt_boxes, "labels": gt_labels}
 
-            # MAP expects lists of dicts
+            # MAP expects lists of dicts (AABB-based, kept as secondary reference)
             self._test_map.update(
                 [{"boxes": pred["boxes"], "scores": pred["scores"], "labels": pred["labels"]}],
                 [tgt],
             )
 
-            # Detection TP/FP/FN
-            self._update_det_accumulators(pred, tgt)
+            # Detection TP/FP/FN — use OBB IoU when available
+            pred_obb = pred.get("obb")
+            self._update_det_accumulators(pred, tgt, pred_obb=pred_obb, gt_obb=gt_obb)
 
-            # Tracking accumulators
-            self._update_tracking_accumulators(pred, gt_boxes, gt_track_ids)
+            # Tracking accumulators — use OBB IoU when available
+            self._update_tracking_accumulators(
+                pred, gt_boxes, gt_track_ids,
+                pred_obb=pred_obb, gt_obb=gt_obb,
+            )
 
             # Collect for visualization callback
+            target_dict = {"boxes": gt_boxes, "labels": gt_labels}
+            if gt_obb is not None:
+                target_dict["obb"] = gt_obb
             frame_results.append({
                 "image_np": frames_np[t],
                 "pred": pred,
-                "target": {
-                    "boxes": gt_boxes,
-                    "labels": gt_labels,
-                },
+                "target": target_dict,
                 "video_id": video_id,
                 "frame_id": clip.frame_ids[t],
             })
@@ -245,7 +252,11 @@ class SAM2EvaluationModule(L.LightningModule):
     # Metric accumulators
     # ------------------------------------------------------------------
 
-    def _update_det_accumulators(self, pred: dict, tgt: dict):
+    def _update_det_accumulators(
+        self, pred: dict, tgt: dict,
+        pred_obb: torch.Tensor | None = None,
+        gt_obb: torch.Tensor | None = None,
+    ):
         gt_boxes = tgt["boxes"]
         pred_boxes = pred["boxes"]
         M, N = len(gt_boxes), len(pred_boxes)
@@ -257,7 +268,12 @@ class SAM2EvaluationModule(L.LightningModule):
             self._det_fn += M
             return
 
-        iou = self._iou_matrix(gt_boxes, pred_boxes)
+        # Use OBB IoU when both sides have OBB data
+        if pred_obb is not None and gt_obb is not None and len(pred_obb) > 0 and len(gt_obb) > 0:
+            iou = obb_iou_matrix(gt_obb, pred_obb)
+        else:
+            iou = self._iou_matrix(gt_boxes, pred_boxes)
+
         matched_gt: set[int] = set()
         matched_pred: set[int] = set()
         rows, cols = (iou >= 0.5).nonzero(as_tuple=False).T
@@ -277,6 +293,8 @@ class SAM2EvaluationModule(L.LightningModule):
 
     def _update_tracking_accumulators(
         self, pred: dict, gt_boxes: torch.Tensor, gt_track_ids: torch.Tensor,
+        pred_obb: torch.Tensor | None = None,
+        gt_obb: torch.Tensor | None = None,
     ):
         pred_boxes = pred["boxes"]
         pred_ids = pred.get("track_ids", torch.arange(len(pred_boxes)))
@@ -290,7 +308,12 @@ class SAM2EvaluationModule(L.LightningModule):
             self._num_fp += N
             return
 
-        iou = self._iou_matrix(gt_boxes, pred_boxes)
+        # Use OBB IoU when both sides have OBB data
+        if pred_obb is not None and gt_obb is not None and len(pred_obb) > 0 and len(gt_obb) > 0:
+            iou = obb_iou_matrix(gt_obb, pred_obb)
+        else:
+            iou = self._iou_matrix(gt_boxes, pred_boxes)
+
         matched_gt: set[int] = set()
         matched_pred: set[int] = set()
 
@@ -317,6 +340,7 @@ class SAM2EvaluationModule(L.LightningModule):
 
     @staticmethod
     def _iou_matrix(boxes_a: torch.Tensor, boxes_b: torch.Tensor) -> torch.Tensor:
+        """AABB IoU matrix (fallback for non-OBB datasets)."""
         x1 = torch.max(boxes_a[:, None, 0], boxes_b[None, :, 0])
         y1 = torch.max(boxes_a[:, None, 1], boxes_b[None, :, 1])
         x2 = torch.min(boxes_a[:, None, 2], boxes_b[None, :, 2])

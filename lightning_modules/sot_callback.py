@@ -153,17 +153,25 @@ class SAM2SOTEvalCallback(L.Callback):
             pred_scores = _to_numpy(pred["scores"])
             pred_labels = _to_numpy(pred["labels"])
 
+            # OBB data (optional — present for OBB-annotated datasets like OOTB)
+            gt_obb = _to_numpy(tgt["obb"]) if "obb" in tgt else None
+            pred_obb = _to_numpy(pred["obb"]) if "obb" in pred else None
+
             # Filter low confidence
             keep = pred_scores >= self.score_thresh
             pred_boxes = pred_boxes[keep]
             pred_scores = pred_scores[keep]
             pred_labels = pred_labels[keep]
+            if pred_obb is not None:
+                pred_obb = pred_obb[keep]
 
             self.sot.update(
                 gt_boxes, gt_labels,
                 pred_boxes, pred_scores, pred_labels,
                 video_id=str(video_id),
                 frame_id=int(frame_id),
+                gt_obb=gt_obb,
+                pred_obb=pred_obb,
             )
 
     def on_test_epoch_end(self, trainer: L.Trainer, pl_module: L.LightningModule):

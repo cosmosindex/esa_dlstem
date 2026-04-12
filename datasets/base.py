@@ -85,6 +85,7 @@ class VideoClipSample:
     video_id:  str
     orig_size: tuple[int, int]
     dataset:   str
+    obb:       list[torch.Tensor] | None = None  # T × [N_t, 8] OBB corners (optional)
 
 
 # ---------------------------------------------------------------------------
@@ -311,6 +312,8 @@ class BaseVideoDataset(ABC, Dataset):
         selected_fids = [fids[p] for p in selected_positions if p < len(fids)]
 
         frames, boxes_list, labels_list, tids_list = [], [], [], []
+        obb_list: list[torch.Tensor] = []
+        has_obb = False
         orig_size = None
 
         for fid in selected_fids:
@@ -335,6 +338,10 @@ class BaseVideoDataset(ABC, Dataset):
             labels_list.append(torch.as_tensor(ann["labels"][keep],   dtype=torch.int64))
             tids_list.append(torch.as_tensor(ann["track_ids"][keep],  dtype=torch.int64))
 
+            if "obb" in ann:
+                has_obb = True
+                obb_list.append(torch.as_tensor(ann["obb"][keep], dtype=torch.float32))
+
         return VideoClipSample(
             frames    = torch.stack(frames),        # [T, C, H, W]
             boxes     = boxes_list,
@@ -344,6 +351,7 @@ class BaseVideoDataset(ABC, Dataset):
             video_id  = video.video_id,
             orig_size = orig_size,
             dataset   = video.dataset,
+            obb       = obb_list if has_obb else None,
         )
 
     # -----------------------------------------------------------------------
