@@ -22,7 +22,7 @@ import numpy as np
 import torch
 import torch.nn as nn
 
-from obb_utils import mask_to_obb, obb_to_aabb
+from obb_utils import mask_to_obb, mask_to_aabb
 
 
 class SAM2Tracker(nn.Module):
@@ -154,10 +154,14 @@ class SAM2Tracker(nn.Module):
             boxes_list, obb_list, scores_list, ids_list, labels_list = [], [], [], [], []
             for obj_id, mask in zip(obj_ids, masks):
                 mask_2d = mask[0].numpy()  # (H, W) bool
+                # Tight AABB from the mask itself (best for HBB GT datasets)
+                box_xyxy = mask_to_aabb(mask_2d)
+                if box_xyxy is None:
+                    continue
+                # OBB from cv2.minAreaRect (best for OBB GT datasets)
                 obb_8 = mask_to_obb(mask_2d)
                 if obb_8 is None:
                     continue
-                box_xyxy = obb_to_aabb(obb_8)
 
                 # Score: fraction of mask area relative to OBB area (crude proxy)
                 mask_area = float(mask_2d.sum())

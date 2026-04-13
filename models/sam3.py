@@ -32,7 +32,7 @@ import numpy as np
 import torch
 import torch.nn as nn
 
-from obb_utils import mask_to_obb, obb_to_aabb
+from obb_utils import mask_to_obb, mask_to_aabb
 
 
 class SAM3Tracker(nn.Module):
@@ -266,10 +266,14 @@ class SAM3Tracker(nn.Module):
             mask_2d = masks[i, 0].numpy()  # (H, W) bool
             if not mask_2d.any():
                 continue
+            # Tight AABB from the mask itself (best for HBB GT datasets)
+            box_xyxy = mask_to_aabb(mask_2d)
+            if box_xyxy is None:
+                continue
+            # OBB from cv2.minAreaRect (best for OBB GT datasets)
             obb_8 = mask_to_obb(mask_2d)
             if obb_8 is None:
                 continue
-            box_xyxy = obb_to_aabb(obb_8)
 
             boxes_list.append(torch.from_numpy(box_xyxy))
             obb_list.append(torch.from_numpy(obb_8))

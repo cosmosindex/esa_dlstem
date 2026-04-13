@@ -46,6 +46,22 @@ def obb_to_aabb(obb: np.ndarray) -> np.ndarray:
     return np.array([x_min, y_min, x_max, y_max], dtype=np.float32)
 
 
+def mask_to_aabb(mask: np.ndarray) -> np.ndarray | None:
+    """Compute the tight axis-aligned bounding box of a boolean mask.
+
+    Returns (4,) float32 xyxy, or None if mask is empty.
+    Unlike `obb_to_aabb(mask_to_obb(mask))`, this gives the *tight* AABB
+    which better matches HBB ground-truth annotations.
+    """
+    ys, xs = np.where(mask)
+    if xs.size == 0:
+        return None
+    return np.array(
+        [xs.min(), ys.min(), xs.max(), ys.max()],
+        dtype=np.float32,
+    )
+
+
 def obb_iou(obb_a: np.ndarray, obb_b: np.ndarray) -> float:
     """Compute IoU between two OBBs, each (8,) = x1,y1,...,x4,y4.
 
