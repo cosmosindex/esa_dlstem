@@ -29,7 +29,7 @@
 | Model | Venue | 保留理由 | Eval tier |
 |---|---|---|---|
 | SAM 2 | Meta 2024 | FM zero-shot baseline — generational comparison anchor | ✅ Zero-shot · Done |
-| SAMURAI | — | Motion-aware SAM 2 variant — zero-shot upper bound for FM family | 🟡 Zero-shot |
+| SAMURAI | — | Motion-aware SAM 2 variant — zero-shot upper bound for FM family | ✅ Zero-shot |
 | SAM 3 / 3.1 | arXiv Nov 2025 | Text-prompted tracking, no bbox init — core novel experiment | 🟡 Zero-shot |
 | UNINEXT | CVPR 2023 | Universal perception baseline — zero-shot OOD reference | 🟡 Zero-shot |
 | OSTrack-256 | ECCV 2022 | One-stream transformer paradigm anchor, high citation count | 🔵 Pretrained eval |
@@ -43,7 +43,7 @@
 | Day | Date | GPU-0 | GPU-1 | Milestone |
 |---|---|---|---|---|
 | 1 | Apr 8 | ✅ SAM 2 — zero-shot, all SOT datasets | ✅ SAM 2 — zero-shot, all SOT datasets | ✅ Done |
-| 2 | Apr 9 | 🟡 SAMURAI — zero-shot, all SOT datasets | 🟡 SAM 3 / 3.1 — zero-shot, text-prompted SOT, all SOT datasets | Zero-shot cont. |
+| 2 | Apr 9 | ✅ SAMURAI — zero-shot, all SOT datasets | ✅ SAM 3 — zero-shot, text-prompted SOT, all SOT datasets | Zero-shot cont. |
 | 3 | Apr 10 | 🟡 UNINEXT — zero-shot, all SOT datasets | 🔵 OSTrack-256 — pretrained, all SOT datasets | Pretrained start |
 | 4 | Apr 11 | 🔵 ODTrack — pretrained, all SOT datasets | 🔵 DreamTrack — pretrained, all SOT datasets | |
 | 5 | Apr 12 | 🔵 SiamBAN-OBB / SiamFC++ — pretrained, OOTB only | 🔵 Rerun / SV248S format + metric sanity check | |

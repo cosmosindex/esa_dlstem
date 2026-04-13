@@ -181,6 +181,21 @@ Zero-shot FM performance on satellite video is the most NeurIPS-relevant narrati
 
 > ⚠ **SAM 3 paper status**: arXiv Nov 2025, submitted to ICLR 2026 (under double-blind review). Cite as preprint in your paper and note it is not yet formally published.
 
+### SAM 3 vs SAM 3.1
+
+SAM 3.1 (released 2026-03-27, see `sam3/RELEASE_SAM3p1.md`) is an iterative update to SAM 3 — same architecture and training data, but with a new multi-object inference path and efficiency optimisations. For this benchmark, the relevant differences are:
+
+| Aspect | SAM 3 (Nov 2025) | SAM 3.1 (Mar 2026) |
+|---|---|---|
+| Video pipeline | Per-object forward passes — scales linearly with N objects | **Object Multiplex**: objects grouped into fixed-capacity buckets with shared memory, processed jointly |
+| Multi-object speed | Baseline | **~7× speedup at 128 objects on a single H100** |
+| Inference optimisations | — | Reduced CPU-GPU sync in det/track association; better `torch.compile` + op fusion; batched postprocess + vision encoder |
+| Video PCS (SA-Co/VEval) | cgF1 30.3 / pHOTA 58.0 (SA-V) | 30.5 / 58.7; +2.1 cgF1 on YT-Temporal-1B |
+| VOS | — | Improves on 6/7 benchmarks, notably **+2.0 J&F on MOSEv2** |
+| Checkpoints | `facebook/sam3` | `facebook/sam3.1` |
+
+**Practical implication for our MOT / VOS evaluation**: SAM 3.1 is the preferred checkpoint for any dense-scene dataset (AIR-MOT, SDM-Car, IRSatVideo-LEO with many simultaneous targets) — the ~7× multi-object speedup makes full-dataset inference tractable. For SOT / low-object-count sequences the two are essentially equivalent; either can be used.
+
 ### Domain gap analysis
 Use the pretrained (out-of-domain) vs fine-tuned (in-domain) gap on 2–3 representative models to quantify how challenging the domain shift is — this justifies why your benchmark is needed.
 
