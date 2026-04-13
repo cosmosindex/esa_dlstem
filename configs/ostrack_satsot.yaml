@@ -1,0 +1,33 @@
+# OSTrack-384 (ECCV 2022) evaluation on SatSOT — single-object tracking, HBB.
+# Usage: python eval_ostrack.py --config configs/ostrack_satsot.yaml
+
+dataset: SatSOT
+dataset_root: /data/ESA_DLSTEM_2025/data/trafic/SatSOT
+class_map:
+  car: 0
+  plane: 1
+  ship: 2
+  train: 3
+
+eval_mode: sot
+img_size: null
+
+# OSTrack variant: vitb_384_mae_ce_32x4_ep300 = paper's main "OSTrack-384" with CE
+variant: vitb_384_mae_ce_32x4_ep300
+yaml_path: /home/ziwen/code/esa_dlstem/OSTrack/experiments/ostrack/vitb_384_mae_ce_32x4_ep300.yaml
+ckpt_path: /work/ziwen/checkpoints/ostrack/vitb_384_mae_ce_32x4_ep300/OSTrack_ep0300.pth.tar
+
+prompt_strategy: first_frame
+prompt_interval: 10
+
+clip_len: 32
+clip_stride: 1
+batch_size: 1
+num_workers: 0
+
+iou_thresh: 0.3
+score_thresh: 0.5
+max_wandb_images: 50
+
+wandb_project: esa-dlstem
+wandb_entity: chengziwen693

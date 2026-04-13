@@ -1,12 +1,12 @@
 """
-Unified ODTrack (AAAI 2024) evaluation script.
+Unified OSTrack (ECCV 2022) evaluation script.
 
-ODTrack is a classical Siamese-transformer single-object tracker. It runs
-frame-by-frame with a cached template, produces HBB outputs, and is built
-directly from a local yaml + checkpoint (no HF download).
+OSTrack is a one-stream Siamese transformer SOT tracker. Runs frame-by-frame
+with a cached template, produces HBB outputs, built directly from a local
+yaml + checkpoint (no HF download).
 
 Usage:
-    python eval_odtrack.py --config configs/odtrack_satsot.yaml
+    python eval_ostrack.py --config configs/ostrack_satsot.yaml
 """
 
 import argparse
@@ -17,7 +17,7 @@ import lightning as L
 import yaml
 from lightning.pytorch.loggers import WandbLogger
 
-from models.odtrack import ODTrackTracker
+from models.ostrack import OSTrackTracker
 from lightning_modules import (
     SAM2DataModule,
     SAM2DataModuleConfig,
@@ -34,7 +34,7 @@ def load_config(path: str) -> dict:
 
 
 def main():
-    parser = argparse.ArgumentParser(description="ODTrack evaluation")
+    parser = argparse.ArgumentParser(description="OSTrack evaluation")
     parser.add_argument("--config", required=True, help="Path to YAML config file")
     args = parser.parse_args()
 
@@ -42,13 +42,13 @@ def main():
     torch.set_float32_matmul_precision("high")
 
     dataset_name = cfg["dataset"]
-    variant = cfg.get("variant", "baseline_large")
+    variant = cfg.get("variant", "vitb_384_mae_ce_32x4_ep300")
     prompt_strategy = cfg.get("prompt_strategy", "first_frame")
     prompt_interval = cfg.get("prompt_interval", 10)
 
-    run_name = f"odtrack_{variant}_{prompt_strategy}_{dataset_name.lower()}"
+    run_name = f"ostrack_{variant}_{prompt_strategy}_{dataset_name.lower()}"
     if prompt_strategy == "every_n":
-        run_name = f"odtrack_{variant}_every{prompt_interval}_{dataset_name.lower()}"
+        run_name = f"ostrack_{variant}_every{prompt_interval}_{dataset_name.lower()}"
 
     experiment_dir = f"/work/ziwen/experiments/{run_name}_{datetime.now():%Y%m%d_%H%M%S}"
 
@@ -70,7 +70,7 @@ def main():
         eval_transform=eval_transform,
     )
 
-    tracker = ODTrackTracker(
+    tracker = OSTrackTracker(
         yaml_path=cfg["yaml_path"],
         ckpt_path=cfg["ckpt_path"],
     )
@@ -121,7 +121,7 @@ def main():
     )
 
     print("=" * 60)
-    print(f"ODTrack Evaluation: {variant} | {prompt_strategy} | {dataset_name} | "
+    print(f"OSTrack Evaluation: {variant} | {prompt_strategy} | {dataset_name} | "
           f"{'native' if img_size is None else f'{img_size[0]}x{img_size[1]}'}")
     print(f"Output: {experiment_dir}")
     print("=" * 60)

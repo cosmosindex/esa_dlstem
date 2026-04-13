@@ -102,15 +102,27 @@ class SOTEvalCallback(L.Callback):
 
 class SAM2SOTEvalCallback(L.Callback):
     """
-    SOT evaluation callback for SAM2 (video clip batches).
+    SOT evaluation callback for video-clip-batched trackers.
 
-    Reads per-frame results returned by SAM2EvaluationModule.test_step()
-    and computes SOT metrics.
+    Despite the legacy ``SAM2`` name prefix, this is used by every tracker
+    evaluated via ``VideoTrackerEvaluationModule`` (SAM 2/3, SAMURAI,
+    OSTrack, ODTrack, …). It reads per-frame results returned by
+    ``test_step()`` and accumulates SOT metrics.
 
     Args:
         class_names:    Dict mapping class id -> display name.
         output_dir:     Directory to save plots and metrics JSON.
         score_thresh:   Only consider predictions with score >= this value.
+        obb_eval_mode:  How to handle OBB annotations if present.
+            * ``"polygon"`` (default) — polygon IoU + polygon centroid.
+              Use for mask-based trackers (SAM 2/3, SAMURAI) where the
+              ``obb`` field is a real rotated rectangle from
+              ``cv2.minAreaRect``.
+            * ``"ootb_aabb"`` — OOTB v1.0 protocol: collapse both GT and
+              prediction polygons to their min/max AABB, then plain AABB
+              IoU + AABB centre; reports P@5 and NP@0.5 alongside the
+              usual metrics. Use for HBB-only trackers on OOTB so numbers
+              match the 33 trackers in the OOTB paper.
     """
 
     def __init__(
@@ -118,12 +130,14 @@ class SAM2SOTEvalCallback(L.Callback):
         class_names: dict[int, str],
         output_dir: str | Path = "experiments",
         score_thresh: float = 0.5,
+        obb_eval_mode: str = "polygon",
     ):
         super().__init__()
         self.class_names = class_names
         self.output_dir = Path(output_dir)
         self.score_thresh = score_thresh
-        self.sot = SOTMetrics(class_names=class_names)
+        self.obb_eval_mode = obb_eval_mode
+        self.sot = SOTMetrics(class_names=class_names, obb_eval_mode=obb_eval_mode)
 
     def on_test_epoch_start(self, trainer: L.Trainer, pl_module: L.LightningModule):
         self.sot.reset()
@@ -197,17 +211,21 @@ def _log_and_save(
     # Overall
     pl_module.log("test/sot_success_auc", result["success_auc"], prog_bar=True)
     pl_module.log("test/sot_precision_20", result["precision_20"], prog_bar=True)
+    pl_module.log("test/sot_precision_5", result["precision_5"])
+    pl_module.log("test/sot_norm_precision_05", result["norm_precision_05"])
     pl_module.log("test/sot_mean_iou", result["mean_iou"])
 
     # Per-category
     for name, cat_result in result.get("per_category", {}).items():
         pl_module.log(f"test/sot_success_auc_{name}", cat_result["success_auc"])
         pl_module.log(f"test/sot_precision_20_{name}", cat_result["precision_20"])
+        pl_module.log(f"test/sot_precision_5_{name}", cat_result["precision_5"])
 
     # Per-size
     for name, size_result in result.get("per_size", {}).items():
         pl_module.log(f"test/sot_success_auc_{name}", size_result["success_auc"])
         pl_module.log(f"test/sot_precision_20_{name}", size_result["precision_20"])
+        pl_module.log(f"test/sot_precision_5_{name}", size_result["precision_5"])
 
     # Save JSON
     output_dir.mkdir(parents=True, exist_ok=True)

@@ -24,31 +24,30 @@
 **Datasets**: SatSOT (105 seqs), SV248S (248 seqs, 156K frames), SAT-MTB subset, OOTB (110 seqs, OBB), IRSatVideo-LEO (200 seqs, TIR)
 **Primary metrics**: AUC, Precision (P), Normalised Precision (NP)
 
-**SOT model list** (8 models, slimmed from 14):
+**SOT model list** (7 models, slimmed from 14):
 
 | Model | Venue | 保留理由 | Eval tier |
 |---|---|---|---|
 | SAM 2 | Meta 2024 | FM zero-shot baseline — generational comparison anchor | ✅ Zero-shot · Done |
 | SAMURAI | — | Motion-aware SAM 2 variant — zero-shot upper bound for FM family | ✅ Zero-shot |
 | SAM 3 / 3.1 | arXiv Nov 2025 | Text-prompted tracking, no bbox init — core novel experiment | 🟡 Zero-shot |
-| OSTrack-256 | ECCV 2022 | One-stream transformer paradigm anchor, high citation count | 🔵 Pretrained eval |
+| OSTrack-384 | ECCV 2022 | One-stream transformer paradigm anchor, high citation count | 🔵 Pretrained eval |
 | ODTrack | AAAI 2024 | Token propagation — latest in same transformer paradigm | 🔵 Pretrained eval |
 | DreamTrack | CVPR 2025 | Temporal prediction SOTA; constant-velocity satellite motion natural fit | 🔵 Pretrained eval · ⚠ code not yet released |
-| SiamBAN-OBB / SiamFC++ | — | OBB sub-track only — irreplaceable for OOTB results | 🔵 Pretrained eval · OOTB only |
 | UNINEXT | CVPR 2023 | Universal perception baseline — zero-shot OOD reference; older, run last if time permits | 🟡 Zero-shot · Low priority |
 
-> **Removed**: SiamRPN++, Ocean, TransT, MixFormer-ViT, ARTrack, ROMTrack — overlapping paradigms with OSTrack/ODTrack; dropped to meet timeline.  
-> **Fine-tune**: OSTrack-256 only (ARTrack removed); DreamTrack pretrained result is the paper's main SOTA reference — no fine-tune needed.
+> **Removed**: SiamRPN++, Ocean, TransT, MixFormer-ViT, ARTrack, ROMTrack — overlapping paradigms with OSTrack/ODTrack; dropped to meet timeline. Also removed **SiamBAN-OBB / SiamFC++** — a separate "OBB-output" tracker is not needed: OOTB's official v1.0 toolkit evaluates HBB trackers by collapsing both GT and prediction polygons to their AABB before computing IoU, so OSTrack / ODTrack can be evaluated on OOTB under the paper's own protocol (`obb_eval_mode: ootb_aabb` in our configs). SAM-family trackers stay on polygon IoU (`obb_eval_mode: polygon`) since they produce real rotated masks.  
+> **Fine-tune**: OSTrack-384 only (ARTrack removed); DreamTrack pretrained result is the paper's main SOTA reference — no fine-tune needed.
 
 | Day | Date | GPU-0 | GPU-1 | Milestone |
 |---|---|---|---|---|
 | 1 | Apr 8 | ✅ SAM 2 — zero-shot, all SOT datasets | ✅ SAM 2 — zero-shot, all SOT datasets | ✅ Done |
 | 2 | Apr 9 | ✅ SAMURAI — zero-shot, all SOT datasets | ✅ SAM 3 — zero-shot, text-prompted SOT, all SOT datasets | Zero-shot cont. |
-| 3 | Apr 10 | ✅ ODTrack — pretrained, all SOT datasets | 🔵 OSTrack-256 — pretrained, all SOT datasets | Pretrained start |
-| 4 | Apr 11 | 🔵 SiamBAN-OBB / SiamFC++ — pretrained, OOTB only | 🔵 DreamTrack — pretrained, all SOT datasets *(blocked: code not yet public — defer or substitute)* | |
+| 3 | Apr 10 | ✅ ODTrack — pretrained, SatSOT + SV248S + OOTB (OOTB uses `ootb_aabb` eval mode) | ✅ OSTrack-384 — pretrained, SatSOT + SV248S + OOTB (same protocol) | Pretrained start |
+| 4 | Apr 11 | 🔵 DreamTrack — pretrained, all SOT datasets *(blocked: code not yet public — defer or substitute)* | 🔵 Rerun / sanity check slot (was SiamBAN-OBB — removed, see model-list note) | |
 | 5 | Apr 12 | 🟡 UNINEXT — zero-shot, all SOT datasets (low priority, drop if behind schedule) | 🔵 Rerun / SV248S format + metric sanity check | |
-| 6 | Apr 13 | 🔴 OSTrack-256 fine-tune — SatSOT + SV248S train split (multi-GPU) | 🔴 OSTrack-256 fine-tune — distributed, same run | Fine-tune start |
-| 7 | Apr 14 | 🔴 OSTrack-256 fine-tune — continued + eval on test split | 🔴 Rerun any flagged zero-shot / pretrained results | |
+| 6 | Apr 13 | 🔴 OSTrack-384 fine-tune — SatSOT + SV248S train split (multi-GPU) | 🔴 OSTrack-384 fine-tune — distributed, same run | Fine-tune start |
+| 7 | Apr 14 | 🔴 OSTrack-384 fine-tune — continued + eval on test split | 🔴 Rerun any flagged zero-shot / pretrained results | |
 | 8 | Apr 15 | 🟢 SOT result analysis — AUC/P/NP tables, FM zero-shot vs pretrained gap, pretrained vs fine-tuned gap, write SOT section draft | ← same | **SOT done** |
 | 9 | Apr 16 | 🟢 Buffer — rerun stragglers, IRSatVideo-LEO TIR check, early Detection env setup | ← same | 2-day buffer gained |
 | 10 | Apr 17 | 🟢 Buffer / early Detection Phase prep — dataset format check, COCO weights download | ← same | → Detection ready |
