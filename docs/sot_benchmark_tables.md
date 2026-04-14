@@ -6,7 +6,7 @@
 
 | Symbol | Definition | Type |
 |---|---|---|
-| **P@20** | CLE < 20px 的帧占比，单点值 | Single-threshold scalar |
+| **P@5** | CLE < 5px 的帧占比，单点值 | Single-threshold scalar |
 | **PR** | Precision curve 在 0–50px 全段的 AUC | Area under curve |
 | **NPR** | Normalized precision curve 在 0–0.5 全段的 AUC | Area under curve |
 | **SR** | Success curve 在 0–1 IoU 全段的 AUC | Area under curve |
