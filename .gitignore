@@ -5,6 +5,7 @@ __pycache__/
 *.pyd
 
 .claude/skills/add-dataset/SKILL.md
+.claude/skills/dataset-resolution/
 .vscode/settings.json
 wandb
 yolo11n.pt
