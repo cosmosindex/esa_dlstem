@@ -1,0 +1,50 @@
+# pysot-native ModelBuilder config for the SiamRPN++ R50-L234-DWXCorr checkpoint
+# we were given at /work/ziwen/checkpoints/siamrpn/siamrpn_r50_l234_dwxcorr.pth.
+#
+# NOTE: this is NOT identical to pysot/experiments/siamrpn_r50_l234_dwxcorr/config.yaml.
+# The checkpoint we have was trained with an alternative fork that uses per-layer
+# adjust widths [128, 256, 512] (matching each ResNet stage's raw width/4) instead
+# of the official uniform [256, 256, 256]. Its neck/rpn_head weight shapes were
+# verified against this checkpoint before writing this file. Tracker hyperparams
+# (PENALTY_K / WINDOW_INFLUENCE / LR) are borrowed from pysot's official values
+# — they're post-hoc confidence penalties, not learned.
+
+META_ARC: "siamrpn_r50_l234_dwxcorr"
+
+BACKBONE:
+    TYPE: "resnet50"
+    KWARGS:
+        used_layers: [2, 3, 4]
+
+ADJUST:
+    ADJUST: true
+    TYPE: "AdjustAllLayer"
+    KWARGS:
+        in_channels: [512, 1024, 2048]
+        out_channels: [128, 256, 512]       # checkpoint-specific, not official
+
+RPN:
+    TYPE: "MultiRPN"
+    KWARGS:
+        anchor_num: 5
+        in_channels: [128, 256, 512]        # checkpoint-specific, not official
+        weighted: true
+
+MASK:
+    MASK: false
+
+ANCHOR:
+    STRIDE: 8
+    RATIOS: [0.33, 0.5, 1, 2, 3]
+    SCALES: [8]
+    ANCHOR_NUM: 5
+
+TRACK:
+    TYPE: "SiamRPNTracker"
+    PENALTY_K: 0.05
+    WINDOW_INFLUENCE: 0.42
+    LR: 0.38
+    EXEMPLAR_SIZE: 127
+    INSTANCE_SIZE: 255
+    BASE_SIZE: 8
+    CONTEXT_AMOUNT: 0.5
