@@ -5,6 +5,7 @@
 > **GPU**: 2× NVIDIA RTX 5000 Ada Generation (32 GB each), CUDA 13.1
 > **Strategy**: Zero-shot → Pretrained eval → Fine-tune, per track
 > **Track order**: SOT (Days 1–10) → Detection (Days 11–20) → MOT (Days 21–28) → Buffer (Days 28–30)
+> **Last updated**: April 14, 2026 — Phase 1 model list and schedule revised
 
 ---
 
@@ -12,10 +13,12 @@
 
 | Symbol | Meaning |
 |---|---|
+| ✅ Done | Completed |
 | 🟡 Zero-shot | Load official pretrained weights, run directly on test set — no training |
 | 🔵 Pretrained eval | Load COCO/LaSOT/MOT17 pretrained weights, eval on our test set (OOD generalisation) |
 | 🔴 Fine-tune | Fine-tune on our train split, eval on test — upper bound reference |
 | 🟢 Analysis | Result compilation, writing, table generation |
+| ⚠ Blocked | Cannot run — see note |
 
 ---
 
@@ -24,33 +27,59 @@
 **Datasets**: SatSOT (105 seqs), SV248S (248 seqs, 156K frames), SAT-MTB subset, OOTB (110 seqs, OBB), IRSatVideo-LEO (200 seqs, TIR)
 **Primary metrics**: AUC, Precision (P), Normalised Precision (NP)
 
-**SOT model list** (7 models, slimmed from 14):
+---
 
-| Model | Venue | 保留理由 | Eval tier |
-|---|---|---|---|
-| SAM 2 | Meta 2024 | FM zero-shot baseline — generational comparison anchor | ✅ Zero-shot · Done |
-| SAMURAI | — | Motion-aware SAM 2 variant — zero-shot upper bound for FM family | ✅ Zero-shot |
-| SAM 3 / 3.1 | arXiv Nov 2025 | Text-prompted tracking, no bbox init — core novel experiment | 🟡 Zero-shot |
-| OSTrack-384 | ECCV 2022 | One-stream transformer paradigm anchor, high citation count | 🔵 Pretrained eval |
-| ODTrack | AAAI 2024 | Token propagation — latest in same transformer paradigm | 🔵 Pretrained eval |
-| DreamTrack | CVPR 2025 | Temporal prediction SOTA; constant-velocity satellite motion natural fit | 🔵 Pretrained eval · ⚠ code not yet released |
-| UNINEXT | CVPR 2023 | Universal perception baseline — zero-shot OOD reference; older, run last if time permits | 🟡 Zero-shot · Low priority |
+### SOT Model List (11 models — updated April 14)
 
-> **Removed**: SiamRPN++, Ocean, TransT, MixFormer-ViT, ARTrack, ROMTrack — overlapping paradigms with OSTrack/ODTrack; dropped to meet timeline. Also removed **SiamBAN-OBB / SiamFC++** — a separate "OBB-output" tracker is not needed: OOTB's official v1.0 toolkit evaluates HBB trackers by collapsing both GT and prediction polygons to their AABB before computing IoU, so OSTrack / ODTrack can be evaluated on OOTB under the paper's own protocol (`obb_eval_mode: ootb_aabb` in our configs). SAM-family trackers stay on polygon IoU (`obb_eval_mode: polygon`) since they produce real rotated masks.  
-> **Fine-tune**: OSTrack-384 only (ARTrack removed); DreamTrack pretrained result is the paper's main SOTA reference — no fine-tune needed.
+| Model | Venue | 类别 | 备注 | Eval tier | 评估数据集 |
+|---|---|---|---|---|---|
+| SiamRPN++ | CVPR 2019 | Siamese 经典 | 全领域公共锚点，引用极高 | ✅ Pretrained | 全部 |
+| OSTrack-256 | ECCV 2022 | One-stream transformer 基准 | 范式奠基 | ✅ Pretrained | 全部 |
+| ODTrack | AAAI 2024 | One-stream transformer 最新 | token propagation | ✅ Pretrained | 全部 |
+| LoRAT | ECCV 2024 | 大 ViT + LoRA | Scaling ViT 方向代表 | ✅ Pretrained | 全部 |
+| LoRATv2 | NeurIPS 2025 | Causal temporal + LoRA | 时序建模 SOTA | ⚠ 待定 · 代码未公开 | — |
+| DreamTrack | CVPR 2025 | 时序未来预测 | 卫星匀速运动契合 | ⚠ 待定 · 代码未公开 | — |
+| DF | JSTARS 2022 | SV-specific CF | 唯一领域专用方法 | ⚠ 待定 · MATLAB 不兼容 Python | — |
+| SAM 2 | Meta 2024 | FM zero-shot 基准 | 代际对比起点 | ✅ Zero-shot | 全部 |
+| SAM 3 / SAM 3.1 | Meta Nov 2025 | FM zero-shot 最新 | 文本驱动，novelty 极高 | ✅ Zero-shot | 全部 |
+| SAMURAI *(可选)* | arXiv 2024 | SAM 2 + 运动感知 | 读完论文后决定 | ✅ Zero-shot | 全部 |
+| STAR | TGRS 2025 | SV-specific Transformer | 在 SatSOT-train fine-tune；SV248S / OOTB 未见过，作为 domain-adapted upper bound。**不可与 Pretrained eval 行横向比较，论文中单独标注†** | 🔴 Fine-tuned† | SV248S + OOTB 仅 |
 
-| Day | Date | GPU-0 | GPU-1 | Milestone |
+> **†** STAR 训练细节：150 epoch 预训练于 GOT-10k / TrackingNet / LaSOT / COCO，随后 60 epoch fine-tune 于 SatSOT-train（947条，来自 SatMTB）。SatSOT test split 与训练集同源，存在泄漏风险，**故不在 SatSOT 上评估 STAR**。
+>
+> **⚠ 待定说明**：LoRATv2 / DreamTrack 代码一旦公开即可补测；DF 需 MATLAB 环境或联系作者获取 Python 版本，当前实验 pipeline 无法直接运行。
+
+---
+
+### Phase 1 Day-by-Day Schedule (revised April 14)
+
+| Day | Date | GPU-0 | GPU-1 | 状态 |
 |---|---|---|---|---|
-| 1 | Apr 8 | ✅ SAM 2 — zero-shot, all SOT datasets | ✅ SAM 2 — zero-shot, all SOT datasets | ✅ Done |
-| 2 | Apr 9 | ✅ SAMURAI — zero-shot, all SOT datasets | ✅ SAM 3 — zero-shot, text-prompted SOT, all SOT datasets | Zero-shot cont. |
-| 3 | Apr 10 | ✅ ODTrack — pretrained, SatSOT + SV248S + OOTB (OOTB uses `ootb_aabb` eval mode) | ✅ OSTrack-384 — pretrained, SatSOT + SV248S + OOTB (same protocol) | Pretrained start |
-| 4 | Apr 11 | 🔵 DreamTrack — pretrained, all SOT datasets *(blocked: code not yet public — defer or substitute)* | 🔵 Rerun / sanity check slot (was SiamBAN-OBB — removed, see model-list note) | |
-| 5 | Apr 12 | 🟡 UNINEXT — zero-shot, all SOT datasets (low priority, drop if behind schedule) | 🔵 Rerun / SV248S format + metric sanity check | |
-| 6 | Apr 13 | 🔴 OSTrack-384 fine-tune — SatSOT + SV248S train split (multi-GPU) | 🔴 OSTrack-384 fine-tune — distributed, same run | Fine-tune start |
-| 7 | Apr 14 | 🔴 OSTrack-384 fine-tune — continued + eval on test split | 🔴 Rerun any flagged zero-shot / pretrained results | |
-| 8 | Apr 15 | 🟢 SOT result analysis — AUC/P/NP tables, FM zero-shot vs pretrained gap, pretrained vs fine-tuned gap, write SOT section draft | ← same | **SOT done** |
-| 9 | Apr 16 | 🟢 Buffer — rerun stragglers, IRSatVideo-LEO TIR check, early Detection env setup | ← same | 2-day buffer gained |
-| 10 | Apr 17 | 🟢 Buffer / early Detection Phase prep — dataset format check, COCO weights download | ← same | → Detection ready |
+| 1 | Apr 8 | ✅ SAM 2 — zero-shot, all SOT datasets | ✅ SAM 2 — zero-shot, all SOT datasets | ✅ 完成 |
+| 2 | Apr 9 | ✅ SAMURAI — zero-shot, all SOT datasets | ✅ SAM 3 / 3.1 — zero-shot, text-prompted SOT, all SOT datasets | ✅ 完成 |
+| 3 | Apr 10 | ✅ ODTrack — pretrained, SatSOT + SV248S + OOTB | ✅ OSTrack-256 — pretrained, SatSOT + SV248S + OOTB | ✅ 完成 |
+| 4 | Apr 11 | ✅ SiamRPN++ — pretrained, all SOT datasets | ✅ LoRAT — pretrained, all SOT datasets | ✅ 完成 |
+| 5 | Apr 12 | ✅ Rerun / SV248S format + metric sanity check | ✅ IRSatVideo-LEO TIR zero-shot SAM 2 / SAM 3 check | ✅ 完成 |
+| 6 | Apr 13 | ✅ OSTrack-256 fine-tune — SatSOT + SV248S train split (multi-GPU) | ✅ OSTrack-256 fine-tune — distributed, same run | ✅ 完成 |
+| **7** | **Apr 14 今天** | 🔴 **STAR fine-tune — 加载官方 checkpoint，在 SatSOT-train 上继续 fine-tune** | 🔴 **STAR fine-tune — distributed, same run** | 🔄 进行中 |
+| 8 | Apr 15 | 🔴 STAR eval — SV248S test split (156K frames，预计 8–12h) | 🔴 STAR eval — OOTB test split (parallel) | |
+| 9 | Apr 16 | 🟢 SOT result analysis — AUC/P/NP 表格，FM zero-shot vs pretrained gap，pretrained vs fine-tuned gap，STAR upper bound 单独标注，写 SOT section draft | ← same | **SOT 实验完成** |
+| 10 | Apr 17 | 🟢 Buffer — rerun 任何标记异常结果；Detection phase 环境准备，COCO weights 下载 | ← same | → Detection ready |
+
+---
+
+### Phase 1 风险点
+
+**1. STAR fine-tune 时间估计**
+STAR 在 SatSOT-train（947条）上 fine-tune 60 epoch，在 RTX 5000 Ada 双卡上约需 6–10 小时。eval on SV248S（156K frames）预计 8–12 小时。Day 7–8 时间紧，如 fine-tune 超时，可在 Day 9 buffer 中补 eval。
+
+**2. DF / LoRATv2 / DreamTrack 三个 blocked 模型**
+目前标记为"待定"，不占用 Phase 1 时间：
+- DF：如需纳入，需在 Phase 4 buffer（May 5）前联系作者获取 Python 版本，或通过 MATLAB Engine API 集成（额外 0.5 天工作量）
+- LoRATv2 / DreamTrack：代码公开后可在 buffer 期补测，不影响主要 deadline
+
+**3. STAR 评估数据集限制**
+STAR 只在 SV248S + OOTB 上评估（不含 SatSOT），论文表格中需单独一行并加 † 注释，避免 reviewer 误以为和 pretrained eval 可横向比较。
 
 ---
 
@@ -96,7 +125,7 @@
 
 | Day | Date | Task |
 |---|---|---|
-| 28 | May 5 | Rerun any failed or suspicious results — missing metrics, NaN values, model crashes, TIR zero-shot SAM 3 recheck |
+| 28 | May 5 | Rerun any failed or suspicious results — missing metrics, NaN values, model crashes, TIR zero-shot SAM 3 recheck；如 DF Python 版本已获取，可在此补测 |
 | 29 | May 6 | Main result tables + figures — LaTeX tables, per-dataset AP/AUC/HOTA, modality gap figures, FM zero-shot vs pretrained bars |
 | 30 | May 7 | Final paper assembly — abstract, intro, benchmark design section, conclusion, references, supplementary appendix |
 
@@ -116,35 +145,44 @@ The MOT evaluation depends entirely on the detection files generated from the ch
 MOTIP and TGraM / MO-TAMA are end-to-end joint detection + tracking models — they do not use the shared detector.
 **Action**: Report them in a separate sub-table labelled "End-to-End (E2E)" in the MOT results section, clearly distinguished from Tracking-by-Detection (TbD) methods. Do not compare E2E AP directly with TbD AP.
 
-### 4. Segmentation track — optional fast path
+### 4. STAR 表格标注规范
+STAR 在论文 SOT 结果表中需单独处理：
+- 放在表格最后一行，用横线与 pretrained eval 行隔开
+- 标注 "†domain-adapted (fine-tuned on SatSOT-train)"
+- 只填写 SV248S 和 OOTB 列的数字，SatSOT 列留空或标 "—"
+- 不参与整体排名，仅作为 upper bound 参考
+
+### 5. Segmentation track — optional fast path
 Segmentation is not in the 30-day plan. If you want minimal seg coverage without extra GPU time:
-- SAM 2, SAM 3, EntitySAM are already running on Days 1–2 and Day 21 — grab their segmentation mask outputs at the same time (zero marginal cost).
+- SAM 2, SAM 3 are already running on Days 1–2 — grab their segmentation mask outputs at the same time (zero marginal cost).
 - Report J&F score on SAT-MTB-SOS only, no fine-tune, one paragraph in the paper.
 - Do not start a full seg track — it will break the timeline.
 
-### 5. Daily backup
+### 6. Daily backup
 At the end of every day, `rsync` all result files to `compute01.cosmos-index.com`.
 ```bash
 rsync -avz ./results/ ziwen@compute01.cosmos-index.com:~/benchmark_results/
 ```
 One corrupted local disk should not cost you a week of experiments.
 
-### 6. SAM 3 paper citation status
+### 7. SAM 3 paper citation status
 SAM 3 (arXiv Nov 2025) is currently under double-blind review at ICLR 2026. Cite as:
 ```
 Carion et al., "SAM 3: Segment Anything with Concepts", arXiv:2511.16719, 2025.
 ```
 Check ICLR 2026 acceptance status before submission (~May 2026) and update citation format if accepted.
 
-### 7. TIR vs VNIR — always report separately
+### 8. TIR vs VNIR — always report separately
 IRSatVideo-LEO is a fundamentally different modality. Never mix TIR and VNIR numbers in the same table row.
 Use separate columns or sub-tables labelled **VNIR** and **TIR** consistently throughout the paper.
 
-### 8. Compute estimate (revised)
+### 9. Compute estimate (revised April 14)
+
 | Track | Models | Est. GPU-hours | Notes |
 |---|---|---|---|
-| SOT | 8 (was 14) | ~55 h | SV248S dominates; 6 models removed |
+| SOT pretrained + zero-shot | 7 (done) | ~55 h | 已完成 |
+| SOT STAR fine-tune + eval | 1 | ~20 h | Day 7–8，SV248S eval 占大头 |
 | Detection | 14 | ~60 h | IR models faster (fewer seqs) |
 | MOT | 13 | ~65 h | Depends on det file I/O speed |
-| Fine-tune (all tracks) | ~5 | ~130 h | SOT: OSTrack-256 only (ARTrack dropped); Det + MOT unchanged |
-| **Total** | | **~310 GPU-hours** | ~6.5 days on 2 GPUs running 24/7 — ~105 h headroom gained vs original plan |
+| Fine-tune (Det + MOT) | ~5 | ~130 h | SOT fine-tune already counted above |
+| **Total remaining** | | **~330 GPU-hours** | ~6.9 days on 2 GPUs running 24/7 — 仍在 deadline 内 |
