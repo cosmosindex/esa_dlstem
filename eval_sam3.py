@@ -16,7 +16,7 @@ import lightning as L
 import yaml
 from lightning.pytorch.loggers import WandbLogger
 
-from models import SAM3Tracker
+from models import SAM3Tracker, SAM3TextTracker
 from lightning_modules import (
     SAM2DataModule,
     SAM2DataModuleConfig,
@@ -72,10 +72,23 @@ def main():
     )
 
     # --- Model ---
-    tracker = SAM3Tracker(
-        checkpoint_path=cfg.get("sam3_checkpoint_path"),
-        apply_temporal_disambiguation=cfg.get("apply_temporal_disambiguation", True),
-    )
+    tracker_type = cfg.get("tracker_type", "box")
+    if tracker_type == "text":
+        # Class names ordered by their integer id, so label assignment is stable
+        class_names_ordered = [
+            name for name, _ in sorted(class_map.items(), key=lambda kv: kv[1])
+        ]
+        tracker = SAM3TextTracker(
+            class_names=class_names_ordered,
+            label_to_id=class_map,
+            checkpoint_path=cfg.get("sam3_checkpoint_path"),
+            apply_temporal_disambiguation=cfg.get("apply_temporal_disambiguation", True),
+        )
+    else:
+        tracker = SAM3Tracker(
+            checkpoint_path=cfg.get("sam3_checkpoint_path"),
+            apply_temporal_disambiguation=cfg.get("apply_temporal_disambiguation", True),
+        )
 
     module = VideoTrackerEvaluationModule(
         model=tracker,

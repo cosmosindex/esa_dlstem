@@ -1,0 +1,38 @@
+# SAM3 evaluation on AIR-MOT-100 (aerial/satellite multi-object tracking)
+# Usage: python eval_sam3.py --config configs/sam3_airmot.yaml
+
+dataset: AIR-MOT
+dataset_root: /data/ESA_DLSTEM_2025/data/trafic/AIR-MOT-100
+class_map:
+  airplane: 0
+  car: 1
+
+eval_mode: mot
+img_size: null
+
+# SAM3 checkpoint: null → auto-download from Hugging Face (facebook/sam3)
+sam3_checkpoint_path: null
+apply_temporal_disambiguation: true
+
+# Open-vocabulary MOT: use SAM3TextTracker with class names as text prompts.
+# No GT boxes are required — SAM3's detector discovers instances per frame
+# and its temporal-disambiguation tracker associates them across frames.
+tracker_type: text
+prompt_strategy: text
+prompt_interval: 10
+
+# clip_stride is the frame-subsampling step *inside* a clip (1 = every frame).
+# clip_len should be >= the longest test sequence so each video fits in a
+# single clip — SAM3 track IDs are not consistent across clip boundaries.
+# AIR-MOT test: 7 videos / 2099 frames total (avg ~300, see docs/split_statistics.md).
+clip_len: 400
+clip_stride: 1
+batch_size: 1
+num_workers: 0
+
+iou_thresh: 0.3
+score_thresh: 0.5
+max_wandb_images: 50
+
+wandb_project: esa-dlstem
+wandb_entity: chengziwen693

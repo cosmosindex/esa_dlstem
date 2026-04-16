@@ -322,3 +322,226 @@ class SAM3Tracker(nn.Module):
             "scores":    torch.zeros(0, dtype=torch.float32),
             "track_ids": torch.zeros(0, dtype=torch.long),
         }
+
+
+class SAM3TextTracker(nn.Module):
+    """
+    Text-prompted SAM3 for open-vocabulary video MOT.
+
+    Instead of taking per-object box prompts (SOT style), this wrapper takes a
+    single text prompt *per video* (set via :meth:`set_text_prompt` before
+    :meth:`propagate`) and runs SAM 3's combined detector+tracker pipeline once
+    with that noun phrase.  For AIR-MOT-style datasets where each video has a
+    known dominant class (``"airplane"`` or ``"car"``), this means one SAM 3
+    invocation per clip — SAM 3 detects every instance of that class in every
+    frame and its temporal-disambiguation tracker links them with consistent
+    IDs.
+
+    If no text prompt is set before ``propagate()``, the wrapper falls back to
+    looping over ``class_names`` and merging the results — useful when the
+    dataset does not expose a per-video dominant class.
+
+    The underlying pattern is the benchmark-eval path implemented in
+    ``Sam3VideoInferenceWithInstanceInteractivity.forward()``
+    (sam3/model/sam3_video_inference.py:909) — for each noun phrase, call
+    ``add_prompt(text_str=name)`` → ``propagate_in_video`` → ``reset_state``.
+
+    Track IDs are made globally unique across classes by offsetting each
+    class's local obj_ids by the running max across previously-processed
+    classes.  Track IDs are *not* stable across clips of the same video —
+    SAM 3 is re-run from scratch per clip, so configure ``clip_len`` large
+    enough to cover full sequences when possible.
+
+    Args:
+        class_names:    Ordered list of text prompts (one per class).
+        label_to_id:    Map from class name → integer label id, used to fill
+                        the ``labels`` field of each per-frame output dict.
+        checkpoint_path / apply_temporal_disambiguation / offload_video_to_cpu:
+                        Same meaning as :class:`SAM3Tracker`.
+    """
+
+    def __init__(
+        self,
+        class_names: list[str],
+        label_to_id: dict[str, int],
+        checkpoint_path: str | None = None,
+        apply_temporal_disambiguation: bool = True,
+        offload_video_to_cpu: bool = True,
+    ):
+        super().__init__()
+        self.class_names = list(class_names)
+        self.label_to_id = dict(label_to_id)
+        self.checkpoint_path = checkpoint_path
+        self.apply_temporal_disambiguation = apply_temporal_disambiguation
+        self.offload_video_to_cpu = offload_video_to_cpu
+
+        self.predictor = self._build_predictor()
+
+        self._inference_state = None
+        self._tmp_dir: str | None = None
+        self._video_h: int | None = None
+        self._video_w: int | None = None
+        self._num_frames: int = 0
+        # Text prompt set externally per clip; None → fall back to all classes
+        self._current_text: str | None = None
+
+    def set_text_prompt(self, text: str | None):
+        """Set the text prompt to use for the next :meth:`propagate` call."""
+        self._current_text = text if text else None
+
+    def _build_predictor(self):
+        """Build the full SAM3 video model (detector + tracker combined)."""
+        SAM3Tracker._ensure_pkg_resources_shim()
+
+        import sam3 as _sam3_pkg
+        from pathlib import Path
+        sam3_pkg_dir = Path(_sam3_pkg.__path__[0])
+        bpe_path = str(sam3_pkg_dir / "assets" / "bpe_simple_vocab_16e6.txt.gz")
+
+        from sam3.model_builder import build_sam3_video_model
+
+        model = build_sam3_video_model(
+            checkpoint_path=self.checkpoint_path,
+            bpe_path=bpe_path,
+            apply_temporal_disambiguation=self.apply_temporal_disambiguation,
+        )
+        model.eval()
+        return model
+
+    # ------------------------------------------------------------------
+    # Stateful video-level API
+    # ------------------------------------------------------------------
+
+    def init_video(self, frames: list[np.ndarray]):
+        """Dump RGB frames to a tmp dir and initialise SAM3 inference state."""
+        self._tmp_dir = tempfile.mkdtemp(prefix="sam3txt_")
+        for i, f in enumerate(frames):
+            path = os.path.join(self._tmp_dir, f"{i:05d}.jpg")
+            cv2.imwrite(path, cv2.cvtColor(f, cv2.COLOR_RGB2BGR))
+
+        self._video_h, self._video_w = frames[0].shape[:2]
+        self._num_frames = len(frames)
+
+        self._inference_state = self.predictor.init_state(
+            resource_path=self._tmp_dir,
+            offload_video_to_cpu=self.offload_video_to_cpu,
+        )
+
+    def add_prompts(self, frame_idx, boxes, labels=None, obj_ids=None):
+        """No-op. Text prompts are added internally during ``propagate()``.
+
+        Kept as a method so ``VideoTrackerEvaluationModule`` can call it
+        without a type check; any boxes passed by the eval module are
+        ignored.
+        """
+        return
+
+    def propagate(self) -> list[dict]:
+        """Run detector+tracker with the current text prompt.
+
+        If a per-clip prompt was set via :meth:`set_text_prompt`, only that
+        single noun phrase is used (one SAM 3 invocation).  Otherwise the
+        wrapper falls back to looping over all ``class_names`` and merging
+        the results.
+        """
+        if self._inference_state is None or self._num_frames == 0:
+            return [self._empty_output() for _ in range(self._num_frames)]
+
+        W, H = self._video_w, self._video_h
+        frame_accum: dict[int, list[dict]] = {i: [] for i in range(self._num_frames)}
+
+        if self._current_text is not None:
+            prompts_to_run = [self._current_text]
+        else:
+            prompts_to_run = self.class_names
+
+        next_global_id = 1
+        for class_name in prompts_to_run:
+            label_int = self.label_to_id.get(class_name, 0)
+
+            # add_prompt auto-resets state before adding the new text prompt.
+            # frame_idx is a formal argument; text prompts apply to all frames.
+            self.predictor.add_prompt(
+                self._inference_state,
+                frame_idx=0,
+                text_str=class_name,
+            )
+
+            start_offset = next_global_id
+            max_local_oid = -1
+
+            for frame_idx, out in self.predictor.propagate_in_video(
+                self._inference_state,
+                start_frame_idx=0,
+                max_frame_num_to_track=self._num_frames,
+                reverse=False,
+            ):
+                obj_ids = out["out_obj_ids"]         # (N,) int64
+                probs = out["out_probs"]             # (N,) float
+                boxes_xywh = out["out_boxes_xywh"]   # (N, 4) normalized xywh
+                masks = out["out_binary_masks"]      # (N, H, W) bool
+
+                for i in range(len(obj_ids)):
+                    mask_2d = masks[i]
+                    if not mask_2d.any():
+                        continue
+
+                    x, y, w, h = [float(v) for v in boxes_xywh[i]]
+                    x1, y1 = x * W, y * H
+                    x2, y2 = x1 + w * W, y1 + h * H
+
+                    obb_8 = mask_to_obb(mask_2d)
+                    if obb_8 is None:
+                        continue
+
+                    local_oid = int(obj_ids[i])
+                    max_local_oid = max(max_local_oid, local_oid)
+
+                    frame_accum[int(frame_idx)].append({
+                        "box": np.array([x1, y1, x2, y2], dtype=np.float32),
+                        "obb": obb_8,
+                        "score": float(probs[i]),
+                        "label": label_int,
+                        "track_id": local_oid + start_offset,
+                    })
+
+            if max_local_oid >= 0:
+                next_global_id += max_local_oid + 1
+
+            # Reset so the next class starts with a clean state
+            self.predictor.reset_state(self._inference_state)
+
+        out_list = []
+        for i in range(self._num_frames):
+            objs = frame_accum[i]
+            if not objs:
+                out_list.append(self._empty_output())
+                continue
+            out_list.append({
+                "boxes":     torch.from_numpy(np.stack([o["box"] for o in objs])),
+                "obb":       torch.from_numpy(np.stack([o["obb"] for o in objs])),
+                "labels":    torch.tensor([o["label"] for o in objs], dtype=torch.long),
+                "scores":    torch.tensor([o["score"] for o in objs], dtype=torch.float32),
+                "track_ids": torch.tensor([o["track_id"] for o in objs], dtype=torch.long),
+            })
+        return out_list
+
+    def reset_state(self):
+        if self._inference_state is not None:
+            try:
+                self.predictor.reset_state(self._inference_state)
+            except Exception:
+                pass
+            self._inference_state = None
+        self._num_frames = 0
+
+        if self._tmp_dir is not None:
+            import shutil
+            shutil.rmtree(self._tmp_dir, ignore_errors=True)
+            self._tmp_dir = None
+
+        self._current_text = None
+
+    @staticmethod
+    def _empty_output() -> dict:
+        return SAM3Tracker._empty_output()

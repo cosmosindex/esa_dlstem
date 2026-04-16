@@ -85,6 +85,7 @@ class VideoClipSample:
     video_id:  str
     orig_size: tuple[int, int]
     dataset:   str
+    category:  str = ""           # dominant/raw category name of the source video
     obb:       list[torch.Tensor] | None = None  # T × [N_t, 8] OBB corners (optional)
 
 
@@ -246,8 +247,10 @@ class BaseVideoDataset(ABC, Dataset):
         for vi, v in enumerate(self.videos):
             n = len(v.frame_ids)
             if n < total_span:
-                # Video too short for a full clip — use what is available
-                if n >= self.clip_len:
+                # Video too short for a full clip — emit one clip starting at
+                # frame 0; _get_clip_sample truncates to the frames that exist
+                # (selected_fids filters `p < len(fids)`).
+                if n > 0:
                     self._clip_index.append((vi, 0))
                 continue
             for start in range(0, n - total_span + 1, step):
@@ -351,6 +354,7 @@ class BaseVideoDataset(ABC, Dataset):
             video_id  = video.video_id,
             orig_size = orig_size,
             dataset   = video.dataset,
+            category  = video.category,
             obb       = obb_list if has_obb else None,
         )
 

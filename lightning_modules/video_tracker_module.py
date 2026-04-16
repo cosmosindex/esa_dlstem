@@ -12,10 +12,14 @@ and evaluates tracking and detection quality.
 Prompt strategies (applied to the **first clip** of each video only):
     "first_frame"  — GT boxes from frame 0 only; tracker propagates to all others.
     "every_n"      — GT boxes injected every N frames; tests re-prompting benefit.
+    "text"         — No boxes are passed. The tracker runs open-vocabulary
+                     detection+tracking from its own internal text prompts
+                     (e.g. SAM3TextTracker). Used for MOT-style evaluation.
 
 For subsequent clips of the same video, predictions from the previous clip's
 last frame are used as prompts (no GT), ensuring fair comparison with other
-models that do not receive GT re-prompting at clip boundaries.
+models that do not receive GT re-prompting at clip boundaries. Under the
+"text" strategy no carry-over is performed — each clip runs detection fresh.
 """
 
 from __future__ import annotations
@@ -51,7 +55,7 @@ class VideoTrackerEvaluationModule(L.LightningModule):
     def __init__(
         self,
         model: nn.Module,
-        prompt_strategy: Literal["first_frame", "every_n"] = "first_frame",
+        prompt_strategy: Literal["first_frame", "every_n", "text"] = "first_frame",
         prompt_interval: int = 10,
     ):
         super().__init__()
@@ -124,23 +128,33 @@ class VideoTrackerEvaluationModule(L.LightningModule):
 
         self.model.init_video(frames_np)
 
-        # Decide prompt source: GT (first clip) or carry-over (subsequent)
         video_id = clip.video_id
-        carry = self._carry_over.get(video_id)
 
-        has_prompts = True
-        if carry is None:
-            # First clip of this video — use GT prompts
-            has_prompts = self._add_gt_prompts(clip, T)
-        else:
-            # Continuation — use predictions from previous clip's last frame
-            has_prompts = self._add_carry_over_prompts(carry)
-
-        # Propagate (skip if no prompts — tracker lost all objects)
-        if has_prompts:
+        if self.prompt_strategy == "text":
+            # Open-vocabulary MOT: tracker uses text prompts, not GT boxes.
+            # Forward the clip's dominant category if the tracker accepts it,
+            # so datasets like AIR-MOT drive SAM3 with a single noun phrase
+            # per video instead of looping over every class.
+            if hasattr(self.model, "set_text_prompt"):
+                self.model.set_text_prompt(getattr(clip, "category", "") or None)
             preds = self.model.propagate()
         else:
-            preds = [self.model._empty_output() for _ in range(T)]
+            # Decide prompt source: GT (first clip) or carry-over (subsequent)
+            carry = self._carry_over.get(video_id)
+
+            has_prompts = True
+            if carry is None:
+                # First clip of this video — use GT prompts
+                has_prompts = self._add_gt_prompts(clip, T)
+            else:
+                # Continuation — use predictions from previous clip's last frame
+                has_prompts = self._add_carry_over_prompts(carry)
+
+            # Propagate (skip if no prompts — tracker lost all objects)
+            if has_prompts:
+                preds = self.model.propagate()
+            else:
+                preds = [self.model._empty_output() for _ in range(T)]
         self.model.reset_state()
 
         if self.device.type == "cuda":
@@ -151,7 +165,8 @@ class VideoTrackerEvaluationModule(L.LightningModule):
         self._test_num_frames += T
 
         # Store last frame predictions for next clip of this video
-        if preds:
+        # (skipped for text strategy — each clip re-runs detection from scratch)
+        if preds and self.prompt_strategy != "text":
             self._carry_over[video_id] = preds[-1]
 
         # --- Evaluate each frame ---
