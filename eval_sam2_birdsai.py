@@ -82,6 +82,7 @@ def run_mot_evaluation(
         model=tracker,
         prompt_strategy=prompt_strategy,
         prompt_interval=prompt_interval,
+        sot_mode=False,  # MOT evaluation — keep AP/MOTA/IDF1
     )
 
     logger = WandbLogger(
@@ -143,6 +144,7 @@ def run_sot_evaluation(
         model=tracker,
         prompt_strategy=prompt_strategy,
         prompt_interval=prompt_interval,
+        sot_mode=True,  # SOT evaluation — skip AP/MOTA/IDF1
     )
 
     logger = WandbLogger(

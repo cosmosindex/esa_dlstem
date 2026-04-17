@@ -50,3 +50,14 @@ logs/sv248s_sot/20260417_083151/samurai.log
 .gitignore
 logs/sv248s_sot/20260417_083151/siamrpn.log
 run_all_sv248s_sot.sh
+logs/ootb_sot/20260417_121943/lorat.log
+logs/ootb_sot/20260417_121943/odtrack.log
+logs/ootb_sot/20260417_121943/ostrack.log
+.gitignore
+logs/ootb_sot/20260417_121943/sam2.log
+logs/ootb_sot/20260417_121943/sam3.log
+logs/ootb_sot/20260417_121943/samurai.log
+logs/ootb_sot/20260417_121943/siamrpn.log
+.gitignore
+.gitignore
+run_all_ootb_sot.sh

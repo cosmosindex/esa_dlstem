@@ -50,6 +50,11 @@ class VideoTrackerEvaluationModule(L.LightningModule):
         model:            Tracker instance (SAM2Tracker, SAM3Tracker, ...).
         prompt_strategy:  "first_frame" or "every_n".
         prompt_interval:  Re-prompt every N frames (only for "every_n").
+        sot_mode:         If True, skip detection (AP/AR/Precision/Recall) and
+                          MOT (MOTA/IDF1/ID_switches) metrics entirely — these
+                          are meaningless for single-object tracking (1 GT,
+                          1 track per video). SOT-specific metrics
+                          (SR/PR/NPR/P@5) are computed by SAM2SOTEvalCallback.
     """
 
     def __init__(
@@ -57,6 +62,7 @@ class VideoTrackerEvaluationModule(L.LightningModule):
         model: nn.Module,
         prompt_strategy: Literal["first_frame", "every_n", "text"] = "first_frame",
         prompt_interval: int = 10,
+        sot_mode: bool = False,
     ):
         super().__init__()
         self.save_hyperparameters(ignore=["model"])
@@ -64,20 +70,21 @@ class VideoTrackerEvaluationModule(L.LightningModule):
         self.model = model
         self.prompt_strategy = prompt_strategy
         self.prompt_interval = prompt_interval
+        self.sot_mode = sot_mode
 
-        # Detection metrics
-        self._test_map = MeanAveragePrecision(iou_thresholds=[0.5])
-        self._det_tp = 0
-        self._det_fp = 0
-        self._det_fn = 0
+        # Detection / MOT metrics — not instantiated in sot_mode.
+        if not sot_mode:
+            self._test_map = MeanAveragePrecision(iou_thresholds=[0.5])
+            self._det_tp = 0
+            self._det_fp = 0
+            self._det_fn = 0
 
-        # Tracking accumulators
-        self._num_gt = 0
-        self._num_tp = 0
-        self._num_fp = 0
-        self._num_fn = 0
-        self._num_id_switch = 0
-        self._last_gt_to_pred: dict[int, int] = {}
+            self._num_gt = 0
+            self._num_tp = 0
+            self._num_fp = 0
+            self._num_fn = 0
+            self._num_id_switch = 0
+            self._last_gt_to_pred: dict[int, int] = {}
 
         # Timing
         self._test_time_total = 0.0
@@ -187,21 +194,26 @@ class VideoTrackerEvaluationModule(L.LightningModule):
 
             tgt = {"boxes": gt_boxes, "labels": gt_labels}
 
-            # MAP expects lists of dicts (AABB-based, kept as secondary reference)
-            self._test_map.update(
-                [{"boxes": pred["boxes"], "scores": pred["scores"], "labels": pred["labels"]}],
-                [tgt],
-            )
-
-            # Detection TP/FP/FN — use OBB IoU when available
             pred_obb = pred.get("obb")
-            self._update_det_accumulators(pred, tgt, pred_obb=pred_obb, gt_obb=gt_obb)
 
-            # Tracking accumulators — use OBB IoU when available
-            self._update_tracking_accumulators(
-                pred, gt_boxes, gt_track_ids,
-                pred_obb=pred_obb, gt_obb=gt_obb,
-            )
+            # Skip detection / MOT accumulation entirely in SOT mode — those
+            # metrics are not meaningful for single-object tracking and the
+            # SOT-specific metrics come from SAM2SOTEvalCallback.
+            if not self.sot_mode:
+                # MAP expects lists of dicts (AABB-based, kept as secondary reference)
+                self._test_map.update(
+                    [{"boxes": pred["boxes"], "scores": pred["scores"], "labels": pred["labels"]}],
+                    [tgt],
+                )
+
+                # Detection TP/FP/FN — use OBB IoU when available
+                self._update_det_accumulators(pred, tgt, pred_obb=pred_obb, gt_obb=gt_obb)
+
+                # Tracking accumulators — use OBB IoU when available
+                self._update_tracking_accumulators(
+                    pred, gt_boxes, gt_track_ids,
+                    pred_obb=pred_obb, gt_obb=gt_obb,
+                )
 
             # Collect for visualization callback
             target_dict = {"boxes": gt_boxes, "labels": gt_labels}
@@ -378,31 +390,33 @@ class VideoTrackerEvaluationModule(L.LightningModule):
     # ------------------------------------------------------------------
 
     def on_test_epoch_end(self):
-        # Detection AP
-        result = self._test_map.compute()
-        self.log("test/AP50", result["map_50"], prog_bar=True)
-        self.log("test/AP", result["map"])
-        self.log("test/AR_100", result.get("mar_100", torch.tensor(0.0)))
-        self._test_map.reset()
+        # Detection + MOT metrics — skipped in SOT mode (see __init__ docstring).
+        if not self.sot_mode:
+            # Detection AP
+            result = self._test_map.compute()
+            self.log("test/AP50", result["map_50"], prog_bar=True)
+            self.log("test/AP", result["map"])
+            self.log("test/AR_100", result.get("mar_100", torch.tensor(0.0)))
+            self._test_map.reset()
 
-        # Detection precision / recall
-        prec = self._det_tp / max(self._det_tp + self._det_fp, 1)
-        rec = self._det_tp / max(self._det_tp + self._det_fn, 1)
-        self.log("test/Precision", torch.tensor(prec))
-        self.log("test/Recall", torch.tensor(rec))
+            # Detection precision / recall
+            prec = self._det_tp / max(self._det_tp + self._det_fp, 1)
+            rec = self._det_tp / max(self._det_tp + self._det_fn, 1)
+            self.log("test/Precision", torch.tensor(prec))
+            self.log("test/Recall", torch.tensor(rec))
 
-        # Tracking metrics
-        denom = max(self._num_gt, 1)
-        mota = 1.0 - (self._num_fp + self._num_fn + self._num_id_switch) / denom
-        t_prec = self._num_tp / max(self._num_tp + self._num_fp, 1)
-        t_rec = self._num_tp / max(self._num_tp + self._num_fn, 1)
-        idf1 = 2 * t_prec * t_rec / max(t_prec + t_rec, 1e-6)
+            # Tracking metrics
+            denom = max(self._num_gt, 1)
+            mota = 1.0 - (self._num_fp + self._num_fn + self._num_id_switch) / denom
+            t_prec = self._num_tp / max(self._num_tp + self._num_fp, 1)
+            t_rec = self._num_tp / max(self._num_tp + self._num_fn, 1)
+            idf1 = 2 * t_prec * t_rec / max(t_prec + t_rec, 1e-6)
 
-        self.log("test/MOTA", torch.tensor(mota), prog_bar=True)
-        self.log("test/IDF1", torch.tensor(idf1))
-        self.log("test/ID_switches", torch.tensor(float(self._num_id_switch)))
+            self.log("test/MOTA", torch.tensor(mota), prog_bar=True)
+            self.log("test/IDF1", torch.tensor(idf1))
+            self.log("test/ID_switches", torch.tensor(float(self._num_id_switch)))
 
-        # Speed
+        # Speed (always logged)
         fps = self._test_num_frames / max(self._test_time_total, 1e-9)
         self.log("test/total_time_s", torch.tensor(self._test_time_total))
         self.log("test/fps", torch.tensor(fps), prog_bar=True)

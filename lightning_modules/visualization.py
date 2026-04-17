@@ -46,8 +46,9 @@ _THICKNESS  = 1
 _SMALL_AREA_THRESH = 1024
 
 # SOT evaluation thresholds
-_SUCCESS_THRESHOLDS  = [i * 0.05 for i in range(21)]    # 0.00 … 1.00
-_PRECISION_THRESHOLDS = list(range(0, 51, 1))            # 0 … 50 pixels
+_SUCCESS_THRESHOLDS  = [i * 0.05 for i in range(21)]    # 0.00 … 1.00 (SR AUC)
+_PRECISION_THRESHOLDS = list(range(0, 31, 1))            # 0 … 30 px (PR AUC, OOTB protocol)
+_NORM_PRECISION_THRESHOLDS = [i * 0.025 for i in range(21)]  # 0.000 … 0.500 (NPR AUC)
 
 
 def _box_area(box: np.ndarray) -> float:
@@ -566,21 +567,28 @@ class DetectionVisualizationCallback(L.Callback):
         }
         success_auc = round(sum(success_plot.values()) / len(_SUCCESS_THRESHOLDS), 4)
 
-        # Precision plot (center distance)
+        # Precision plot (centre-location error, 0–30 px; OOTB protocol)
         precision_plot = {
             str(d): round(sum(1 for v in cdists if v <= d) / n, 4)
             for d in _PRECISION_THRESHOLDS
         }
+        precision_auc = round(sum(precision_plot.values()) / len(_PRECISION_THRESHOLDS), 4)
 
-        # Normalised precision plot
+        # Normalised precision plot (norm-CLE, 0–0.5)
         norm_precision_plot = {
-            f"{t:.2f}": round(sum(1 for v in ncdists if v <= t) / n, 4)
-            for t in _SUCCESS_THRESHOLDS  # reuse 0..1 thresholds
+            f"{t:.3f}": round(sum(1 for v in ncdists if v <= t) / n, 4)
+            for t in _NORM_PRECISION_THRESHOLDS
         }
+        norm_precision_auc = round(
+            sum(norm_precision_plot.values()) / len(_NORM_PRECISION_THRESHOLDS), 4
+        )
 
         return {
             "n_frames": n,
             "success_auc": success_auc,
+            "precision_auc": precision_auc,
+            "norm_precision_auc": norm_precision_auc,
+            "precision_5": round(sum(1 for v in cdists if v <= 5) / n, 4),
             "precision_20": round(sum(1 for v in cdists if v <= 20) / n, 4),
             "norm_precision_50": round(sum(1 for v in ncdists if v <= 0.5) / n, 4),
             "success_plot": success_plot,

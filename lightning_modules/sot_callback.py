@@ -208,23 +208,28 @@ def _log_and_save(
     output_dir: Path,
 ):
     """Shared logging, JSON export, and plot generation for both callbacks."""
-    # Overall
+    # Overall — primary metrics (SR, PR-AUC over 0-30 px, NPR-AUC over 0-0.5)
     pl_module.log("test/sot_success_auc", result["success_auc"], prog_bar=True)
-    pl_module.log("test/sot_precision_20", result["precision_20"], prog_bar=True)
+    pl_module.log("test/sot_precision_auc", result["precision_auc"], prog_bar=True)
+    pl_module.log("test/sot_norm_precision_auc", result["norm_precision_auc"])
+    # Diagnostic + legacy scalars
     pl_module.log("test/sot_precision_5", result["precision_5"])
+    pl_module.log("test/sot_precision_20", result["precision_20"])
     pl_module.log("test/sot_norm_precision_05", result["norm_precision_05"])
     pl_module.log("test/sot_mean_iou", result["mean_iou"])
 
     # Per-category
     for name, cat_result in result.get("per_category", {}).items():
         pl_module.log(f"test/sot_success_auc_{name}", cat_result["success_auc"])
-        pl_module.log(f"test/sot_precision_20_{name}", cat_result["precision_20"])
+        pl_module.log(f"test/sot_precision_auc_{name}", cat_result["precision_auc"])
+        pl_module.log(f"test/sot_norm_precision_auc_{name}", cat_result["norm_precision_auc"])
         pl_module.log(f"test/sot_precision_5_{name}", cat_result["precision_5"])
 
     # Per-size
     for name, size_result in result.get("per_size", {}).items():
         pl_module.log(f"test/sot_success_auc_{name}", size_result["success_auc"])
-        pl_module.log(f"test/sot_precision_20_{name}", size_result["precision_20"])
+        pl_module.log(f"test/sot_precision_auc_{name}", size_result["precision_auc"])
+        pl_module.log(f"test/sot_norm_precision_auc_{name}", size_result["norm_precision_auc"])
         pl_module.log(f"test/sot_precision_5_{name}", size_result["precision_5"])
 
     # Save JSON

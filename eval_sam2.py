@@ -76,10 +76,14 @@ def main():
     # --- Model ---
     tracker = SAM2Tracker(model_id=cfg.get("sam2_model_id", "facebook/sam2.1-hiera-large"))
 
+    eval_mode = cfg.get("eval_mode", "sot")
+    sot_mode = eval_mode == "sot"
+
     module = SAM2EvaluationModule(
         model=tracker,
         prompt_strategy=prompt_strategy,
         prompt_interval=prompt_interval,
+        sot_mode=sot_mode,
     )
 
     # --- Logger ---
@@ -91,8 +95,6 @@ def main():
     )
 
     # --- Callbacks ---
-    eval_mode = cfg.get("eval_mode", "sot")
-    sot_mode = eval_mode == "sot"
 
     callbacks = [
         SAM2VisualizationCallback(

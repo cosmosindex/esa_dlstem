@@ -5,12 +5,25 @@ Standalone metrics class for SOT evaluation.
 No Lightning dependency — can be used anywhere.
 
 Standard SOT metrics:
-  - Success Plot:    fraction of frames with IoU >= threshold, for threshold in [0, 1]
-                     Reported as AUC (area under the success curve).
-  - Precision Plot:  fraction of frames with center distance <= threshold, for threshold in [0, 50] px
-                     Reported as Precision@20 (value at 20 px threshold).
+  - Success Plot (SR):    fraction of frames with IoU >= threshold, threshold in [0, 1].
+                          Reported as AUC of the success curve.
+  - Precision Plot (PR):  fraction of frames with centre distance <= threshold.
+                          Reported as AUC of the precision curve over [0, 30] px,
+                          following OOTB's protocol for satellite video (Chen
+                          et al., ISPRS 2024), which argues that the generic-
+                          vision 20 px threshold corresponds to satellite-
+                          video's 5 px due to the lower spatial resolution and
+                          smaller objects, so the AUC is integrated over the
+                          pixel-accuracy regime that actually matters for
+                          satellite targets.
+  - Normalised Precision (NPR): fraction of frames with centre distance / GT
+                                diagonal <= threshold. Reported as AUC over
+                                [0, 0.5], following the GOT-10k / LaSOT-ext
+                                normalised-precision convention.
+  - P@5 (diagnostic):     fraction of frames with CLE < 5 px, single-threshold
+                          scalar, mirroring OOTB's primary precision metric.
 
-Reference: OTB benchmark (Wu et al., 2015)
+References: OTB (Wu et al., 2015); OOTB (Chen et al., ISPRS 2024).
 
 OBB evaluation modes
 --------------------
@@ -45,13 +58,24 @@ import numpy as np
 from obb_utils import obb_iou_1_vs_n, obb_to_aabb
 
 
-# Evaluation thresholds (default / polygon mode)
-SUCCESS_THRESHOLDS = np.linspace(0, 1, 21)         # 0.00, 0.05, ..., 1.00
-PRECISION_THRESHOLDS = np.arange(0, 51, dtype=float)  # 0, 1, ..., 50 px
+# Evaluation thresholds.
+#
+# SR (success): AUC over IoU ∈ [0, 1].
+# PR (precision): AUC over centre-location error ∈ [0, 30] px — follows the
+#     OOTB v1.0 MATLAB toolkit (perfPlot.m) and the satellite-video protocol
+#     argued in Chen et al., ISPRS 2024 (GV's 20 px ≈ SV's 5 px).
+# NPR (normalised precision): AUC over normalised centre distance ∈ [0, 0.5],
+#     matching GOT-10k / LaSOT-ext normalised-precision convention.
+# `PRECISION_THRESHOLDS_OTB` is kept only for back-compat plots / the legacy
+# P@20 number reported alongside the OOTB protocol for readers used to OTB.
+SUCCESS_THRESHOLDS = np.linspace(0, 1, 21)                 # 0.00, 0.05, …, 1.00
+PRECISION_THRESHOLDS = np.arange(0, 31, dtype=float)        # 0, 1, …, 30 px (PR)
+NORM_PRECISION_THRESHOLDS = np.linspace(0, 0.5, 21)         # 0.000, 0.025, …, 0.500 (NPR)
 
-# OOTB-compatible thresholds (match OOTB v1.0 perfPlot.m)
-OOTB_PRECISION_THRESHOLDS = np.arange(0, 31, dtype=float)   # 0, 1, ..., 30 px
-OOTB_NORM_PRECISION_THRESHOLDS = np.linspace(0, 1, 21)       # 0.00, 0.05, ..., 1.00
+# Back-compat aliases (legacy OTB plot range / full OOTB norm range 0–1).
+PRECISION_THRESHOLDS_OTB = np.arange(0, 51, dtype=float)    # 0, 1, …, 50 px
+OOTB_PRECISION_THRESHOLDS = PRECISION_THRESHOLDS            # alias — OOTB = primary
+OOTB_NORM_PRECISION_THRESHOLDS = np.linspace(0, 1, 21)      # 0.00, 0.05, …, 1.00
 
 OBB_EVAL_MODES = ("polygon", "ootb_aabb")
 
@@ -352,21 +376,21 @@ def _plot_precision(
 
     cdists_all = np.array([r.center_dist for r in all_records])
     prec_all = np.array([np.mean(cdists_all <= t) for t in PRECISION_THRESHOLDS])
-    p20_all = float(np.mean(cdists_all <= 20))
+    pr_auc_all = float(prec_all.mean())
     ax.plot(PRECISION_THRESHOLDS, prec_all, "k-", linewidth=2,
-            label=f"Overall [{p20_all:.3f}]")
+            label=f"Overall [PR={pr_auc_all:.3f}]")
 
     for name, recs in sorted(groups.items()):
         cdists = np.array([r.center_dist for r in recs])
         curve = np.array([np.mean(cdists <= t) for t in PRECISION_THRESHOLDS])
-        p20 = float(np.mean(cdists <= 20))
+        pr_auc = float(curve.mean())
         ax.plot(PRECISION_THRESHOLDS, curve, "--", linewidth=1.5,
-                label=f"{name} [{p20:.3f}]")
+                label=f"{name} [PR={pr_auc:.3f}]")
 
     ax.set_xlabel("Center location error (pixels)")
     ax.set_ylabel("Precision")
-    ax.set_title(title)
-    ax.set_xlim(0, 50)
+    ax.set_title(f"{title} — PR AUC over 0–30 px (OOTB protocol)")
+    ax.set_xlim(0, PRECISION_THRESHOLDS[-1])
     ax.set_ylim(0, 1.05)
     ax.legend(loc="lower right", fontsize=8)
     ax.grid(True, alpha=0.3)
@@ -379,47 +403,63 @@ def _plot_precision(
 def _compute_from_records(records: list[SOTRecord]) -> dict:
     """Compute SOT summary from a list of records.
 
-    Always produces the full set of metrics so that a single evaluation run
-    can be read under either the OTB (P@20) or OOTB (P@5 + NP@0.5) protocol
-    without re-computing:
+    Primary metrics (reported in the benchmark table):
 
-    * `success_auc` / `success_plot` — AUC over 0..1 in 0.05 steps
-    * `precision_20` — OTB-style Precision at 20 px
-    * `precision_5`  — OOTB-style Precision at 5 px
-    * `norm_precision_05` — OOTB-style Normalised Precision at 0.5
-    * `precision_plot` / `ootb_precision_plot` / `ootb_norm_precision_plot`
+    * `success_auc`        — SR: AUC of the success curve over IoU ∈ [0, 1].
+    * `precision_auc`      — PR: AUC of the precision curve over CLE ∈ [0, 30] px
+                             (OOTB's satellite-video protocol; GV's 20 px ≈ SV's 5 px).
+    * `norm_precision_auc` — NPR: AUC of the normalised precision curve over
+                             normalised CLE ∈ [0, 0.5].
+    * `precision_5`        — Diagnostic P@5: fraction of frames with CLE < 5 px
+                             (OOTB's primary precision scalar).
+
+    Legacy / compatibility fields (kept so older readers still work):
+    `precision_20` (OTB P@20), `norm_precision_05` (single-threshold NP@0.5),
+    `precision_plot_otb` (0–50 px curve), `precision_plot` (0–30 px curve),
+    `norm_precision_plot` (0–0.5 curve), `ootb_norm_precision_plot` (0–1 curve).
     """
     n = len(records)
     ious = np.array([r.best_iou for r in records])
     cdists = np.array([r.center_dist for r in records])
     ncdists = np.array([r.norm_center_dist for r in records])
 
+    # --- SR: success AUC over IoU ∈ [0, 1] ---
     success_curve = [float(np.mean(ious >= t)) for t in SUCCESS_THRESHOLDS]
     success_auc = float(np.mean(success_curve))
 
-    # OTB-style precision (0..50 px, report 20 px)
+    # --- PR: precision AUC over CLE ∈ [0, 30] px (OOTB protocol) ---
     precision_curve = [float(np.mean(cdists <= t)) for t in PRECISION_THRESHOLDS]
-    precision_20 = float(np.mean(cdists <= 20))
-
-    # OOTB-style precision (0..30 px, report 5 px)
-    ootb_precision_curve = [float(np.mean(cdists <= t)) for t in OOTB_PRECISION_THRESHOLDS]
+    precision_auc = float(np.mean(precision_curve))
     precision_5 = float(np.mean(cdists <= 5))
 
-    # OOTB-style normalised precision (0..1, report 0.5)
-    ootb_nprec_curve = [float(np.mean(ncdists <= t)) for t in OOTB_NORM_PRECISION_THRESHOLDS]
+    # --- NPR: normalised precision AUC over norm-CLE ∈ [0, 0.5] ---
+    nprec_curve = [float(np.mean(ncdists <= t)) for t in NORM_PRECISION_THRESHOLDS]
+    norm_precision_auc = float(np.mean(nprec_curve))
+
+    # --- Legacy / back-compat (OTB P@20 range, OOTB 0–1 NP range) ---
+    precision_curve_otb = [float(np.mean(cdists <= t)) for t in PRECISION_THRESHOLDS_OTB]
+    precision_20 = float(np.mean(cdists <= 20))
+    nprec_curve_full = [float(np.mean(ncdists <= t)) for t in OOTB_NORM_PRECISION_THRESHOLDS]
     norm_precision_05 = float(np.mean(ncdists <= 0.5))
 
     return {
         "n_frames": n,
+        # primary (ranked + diagnostic)
         "success_auc": round(success_auc, 4),
-        "precision_20": round(precision_20, 4),
+        "precision_auc": round(precision_auc, 4),
+        "norm_precision_auc": round(norm_precision_auc, 4),
         "precision_5": round(precision_5, 4),
-        "norm_precision_05": round(norm_precision_05, 4),
         "mean_iou": round(float(np.mean(ious)), 4),
+        # legacy / compatibility
+        "precision_20": round(precision_20, 4),
+        "norm_precision_05": round(norm_precision_05, 4),
+        # curves
         "success_plot": {f"{t:.2f}": round(v, 4) for t, v in zip(SUCCESS_THRESHOLDS, success_curve)},
         "precision_plot": {str(int(t)): round(v, 4) for t, v in zip(PRECISION_THRESHOLDS, precision_curve)},
-        "ootb_precision_plot": {str(int(t)): round(v, 4) for t, v in zip(OOTB_PRECISION_THRESHOLDS, ootb_precision_curve)},
-        "ootb_norm_precision_plot": {f"{t:.2f}": round(v, 4) for t, v in zip(OOTB_NORM_PRECISION_THRESHOLDS, ootb_nprec_curve)},
+        "norm_precision_plot": {f"{t:.3f}": round(v, 4) for t, v in zip(NORM_PRECISION_THRESHOLDS, nprec_curve)},
+        "precision_plot_otb": {str(int(t)): round(v, 4) for t, v in zip(PRECISION_THRESHOLDS_OTB, precision_curve_otb)},
+        "ootb_precision_plot": {str(int(t)): round(v, 4) for t, v in zip(PRECISION_THRESHOLDS, precision_curve)},
+        "ootb_norm_precision_plot": {f"{t:.2f}": round(v, 4) for t, v in zip(OOTB_NORM_PRECISION_THRESHOLDS, nprec_curve_full)},
     }
 
 

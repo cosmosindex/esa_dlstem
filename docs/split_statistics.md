@@ -7,21 +7,30 @@
 
 ## OOTB
 
-Split strategy: **80 / 10 / 10** stratified by category, `seed=42`.
+Split strategy: **80 / 10 / 10** hybrid stratification, `seed=42`. No official split.
+The previous class-only split had 0 sequences in val for attributes **PO** and
+**IM** (two of the 12 fine-grained attributes defined in the OOTB paper), so
+per-attribute val reporting was not possible. Current split uses iterative
+multi-label stratification (Sechidis et al. 2011) on category ⊕ the 12
+sequence attributes (DEF, IPR, PO, FO, IV, MB, BC, OON, SA, LT, IM, AM),
+keeping per-attribute coverage within ~3 pp of the target 80/10/10 in every
+split — see [ootb_split_attributes.md](ootb_split_attributes.md). Every
+attribute has ≥ 1 positive sequence in test.
+SOT dataset — single object per sequence, OBB ground truth.
 
 | Category | Train | Val | Test | Total |
 |----------|------:|----:|-----:|------:|
-| car      |    36 |   4 |    5 |    45 |
+| car      |    36 |   5 |    4 |    45 |
 | plane    |    20 |   2 |    3 |    25 |
-| ship     |    24 |   3 |    3 |    30 |
+| ship     |    22 |   4 |    4 |    30 |
 | train    |     8 |   1 |    1 |    10 |
-| **Total**|**88** |**10**|**12**|**110**|
+| **Total**|**86** |**12**|**12**|**110**|
 
 | Split     | Videos | Frames |
 |-----------|-------:|-------:|
-| train     |     88 | 23,354 |
-| val       |     10 |  3,217 |
-| test      |     12 |  3,319 |
+| train     |     86 | 23,511 |
+| val       |     12 |  2,797 |
+| test      |     12 |  3,582 |
 | **Total** |**110** |**29,890**|
 
 ---

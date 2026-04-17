@@ -90,10 +90,14 @@ def main():
             apply_temporal_disambiguation=cfg.get("apply_temporal_disambiguation", True),
         )
 
+    eval_mode = cfg.get("eval_mode", "sot")
+    sot_mode = eval_mode == "sot"
+
     module = VideoTrackerEvaluationModule(
         model=tracker,
         prompt_strategy=prompt_strategy,
         prompt_interval=prompt_interval,
+        sot_mode=sot_mode,
     )
 
     # --- Logger ---
@@ -105,8 +109,6 @@ def main():
     )
 
     # --- Callbacks ---
-    eval_mode = cfg.get("eval_mode", "sot")
-    sot_mode = eval_mode == "sot"
 
     callbacks = [
         SAM2VisualizationCallback(

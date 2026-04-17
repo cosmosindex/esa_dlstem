@@ -75,10 +75,14 @@ def main():
         ckpt_path=cfg["ckpt_path"],
     )
 
+    eval_mode = cfg.get("eval_mode", "sot")
+    sot_mode = eval_mode == "sot"
+
     module = VideoTrackerEvaluationModule(
         model=tracker,
         prompt_strategy=prompt_strategy,
         prompt_interval=prompt_interval,
+        sot_mode=sot_mode,
     )
 
     logger = WandbLogger(
@@ -87,9 +91,6 @@ def main():
         name=run_name,
         log_model=False,
     )
-
-    eval_mode = cfg.get("eval_mode", "sot")
-    sot_mode = eval_mode == "sot"
 
     callbacks = [
         SAM2VisualizationCallback(
