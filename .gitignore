@@ -38,3 +38,15 @@ reports/DL-STEM-APATR-0001.blg
 reports/DL-STEM-APATR-0001.bbl
 .DS_Store
 .claude/skills/add-sot-tracker/SKILL.md
+logs/sv248s_sot/20260417_083151/lorat.log
+logs/sv248s_sot/20260417_083151/odtrack.log
+.gitignore
+.gitignore
+logs/sv248s_sot/20260417_083151/ostrack.log
+logs/sv248s_sot/20260417_083151/sam2.log
+.gitignore
+logs/sv248s_sot/20260417_083151/sam3.log
+logs/sv248s_sot/20260417_083151/samurai.log
+.gitignore
+logs/sv248s_sot/20260417_083151/siamrpn.log
+run_all_sv248s_sot.sh

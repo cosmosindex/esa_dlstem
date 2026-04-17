@@ -285,24 +285,30 @@ comma-delimited xywh, plane/ship use space-delimited xyxy.
 
 ## SV248S
 
-Split strategy: **80 / 10 / 10** stratified by category, `seed=42`. No official split.
+Split strategy: **80 / 10 / 10** hybrid stratification, `seed=42`. No official split.
+Tiny classes (plane, ship; n ≤ 10) are pre-assigned round-robin so every split has
+≥ 1 of each class; the remaining sequences are then distributed via iterative
+multi-label stratification (Sechidis et al. 2011) on category ⊕ the 10 sequence
+attributes (STO, LTO, DS, IV, BCH, SM, ND, CO, BCL, IPR). This keeps per-attribute
+coverage within ~2 pp of the target 80/10/10 in every split — see
+[sv248s_split_attributes.md](sv248s_split_attributes.md).
 SOT dataset — single object per sequence, bbox format xywh → xyxy.
 Frames with state=1 (invisible) return empty annotations; state=2 (occluded) keep bbox.
 Polygon annotations available for mask-level segmentation.
 
 | Category  | Train | Val | Test | Total |
 |-----------|------:|----:|-----:|------:|
-| car       |   162 |  20 |   20 |   202 |
-| car-large |    30 |   4 |    3 |    37 |
-| plane     |     4 |   1 |    1 |     6 |
+| car       |   161 |  19 |   22 |   202 |
+| car-large |    29 |   4 |    4 |    37 |
+| plane     |     2 |   2 |    2 |     6 |
 | ship      |     1 |   1 |    1 |     3 |
-| **Total** |**197**|**26**|**25**|**248**|
+| **Total** |**193**|**26**|**29**|**248**|
 
 | Split     | Videos | Frames  |
 |-----------|-------:|--------:|
-| train     |    197 | 124,403 |
-| val       |     26 |  16,111 |
-| test      |     25 |  16,107 |
+| train     |    193 | 121,174 |
+| val       |     26 |  17,261 |
+| test      |     29 |  18,186 |
 | **Total** |**248** |**156,621**|
 
 ---
