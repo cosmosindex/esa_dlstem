@@ -66,9 +66,60 @@ _TASK_SHEET: dict[str, str] = {
     "seg": "seg",
 }
 
-_CATEGORIES = ("airplane", "car", "ship", "train")
+# Coarse-grained categories (level 1): 4 classes.
+COARSE_CATEGORIES = ("airplane", "car", "ship", "train")
+
+# Fine-grained categories (level 2): 14 classes, grouped by coarse parent.
+#   airplane: WA, NA, RA, FA, CA
+#   ship:     SB, YH, CS, FH, NV, OS
+#   car:      LC, SC
+#   train:    TN
+FINE_CATEGORIES = (
+    "WA", "NA", "RA", "FA", "CA",
+    "SB", "YH", "CS", "FH", "NV", "OS",
+    "LC", "SC",
+    "TN",
+)
+
+# Fine-grained label string (as stored in XML/JSON annotations) → coarse name.
+# Keys cover both the short codes (WA, NA, …) and common full-name variants
+# seen in annotations, so the parser is tolerant of both conventions.
+FINE_TO_COARSE: dict[str, str] = {
+    # airplane
+    "WA": "airplane", "NA": "airplane", "RA": "airplane",
+    "FA": "airplane", "CA": "airplane",
+    "wide-bodied aircraft": "airplane", "narrow-bodied aircraft": "airplane",
+    "rear-engined aircraft": "airplane", "four-engine aircraft": "airplane",
+    "corporate aircraft": "airplane",
+    # ship
+    "SB": "ship", "YH": "ship", "CS": "ship",
+    "FH": "ship", "NV": "ship", "OS": "ship",
+    "speed boat": "ship", "yacht": "ship", "cruise": "ship",
+    "freighter": "ship", "naval vessel": "ship", "other ship": "ship",
+    # car
+    "LC": "car", "SC": "car",
+    "large car": "car", "small car": "car",
+    # train
+    "TN": "train", "train": "train",
+}
+
+_CATEGORIES = COARSE_CATEGORIES  # back-compat alias for the private uses below
 
 TaskType = Literal["det_hbb", "det_obb", "mot", "seg"]
+
+
+def _derive_coarse(raw_name: str) -> str:
+    """Return the coarse parent of an annotation's class string.
+
+    Falls back to the raw string itself if it is already a coarse name
+    (e.g. MOT annotations store only coarse-level labels), so callers don't
+    have to know which granularity each task produces.
+    """
+    if raw_name in FINE_TO_COARSE:
+        return FINE_TO_COARSE[raw_name]
+    if raw_name in COARSE_CATEGORIES:
+        return raw_name
+    return raw_name  # unknown; caller's class_map will map it to -1
 
 
 class SATMTBDataset(BaseVideoDataset):
@@ -90,11 +141,18 @@ class SATMTBDataset(BaseVideoDataset):
         root: str | Path,
         split: str = "train",
         task: TaskType = "det_hbb",
+        class_map_fine: dict[str, int] | None = None,
         **kwargs,
     ):
         if task not in self.TASKS:
             raise ValueError(f"task must be one of {self.TASKS}, got {task!r}")
         self.task = task
+        # Optional second-level class map (14 fine-grained classes). When set,
+        # ``_load_annotations`` returns a ``labels_fine`` array alongside the
+        # coarse ``labels`` array. Annotation strings missing from this map
+        # produce ``-1`` in the fine-label array — the coarse label is always
+        # required for the sample to survive the coarse class_map filter.
+        self.class_map_fine: dict[str, int] = class_map_fine or {}
         self._ann_cache: dict[str, dict[int, list[dict]]] = {}
         super().__init__(root=root, split=split, **kwargs)
 
@@ -170,32 +228,37 @@ class SATMTBDataset(BaseVideoDataset):
     ) -> dict[str, np.ndarray]:
         objs = self._ann_cache.get(video.video_id, {}).get(frame_id, [])
 
+        empty = {
+            "boxes": np.zeros((0, 4), dtype=np.float32),
+            "labels": np.zeros(0, dtype=np.int64),
+            "labels_fine": np.zeros(0, dtype=np.int64),
+            "track_ids": np.zeros(0, dtype=np.int64),
+        }
         if not objs:
-            return {
-                "boxes": np.zeros((0, 4), dtype=np.float32),
-                "labels": np.zeros(0, dtype=np.int64),
-                "track_ids": np.zeros(0, dtype=np.int64),
-            }
+            return empty
 
-        boxes, labels, track_ids = [], [], []
+        boxes, labels, labels_fine, track_ids = [], [], [], []
         for obj in objs:
             lbl = self._map_label(obj["class"])
             if lbl < 0:
                 continue
+            fine_name = obj.get("class_fine")
+            lbl_fine = (
+                self.class_map_fine.get(fine_name, -1)
+                if fine_name is not None else -1
+            )
             boxes.append(obj["box"])
             labels.append(lbl)
+            labels_fine.append(lbl_fine)
             track_ids.append(obj["track_id"])
 
         if not boxes:
-            return {
-                "boxes": np.zeros((0, 4), dtype=np.float32),
-                "labels": np.zeros(0, dtype=np.int64),
-                "track_ids": np.zeros(0, dtype=np.int64),
-            }
+            return empty
 
         return {
             "boxes": np.array(boxes, dtype=np.float32),
             "labels": np.array(labels, dtype=np.int64),
+            "labels_fine": np.array(labels_fine, dtype=np.int64),
             "track_ids": np.array(track_ids, dtype=np.int64),
         }
 
@@ -211,9 +274,10 @@ class SATMTBDataset(BaseVideoDataset):
 
         Returns:
             Dict with keys:
-                masks:     ``(N, H, W)`` uint8 ``{0, 1}``
-                labels:    ``(N,)`` int64 (global class id)
-                track_ids: ``(N,)`` int64
+                masks:       ``(N, H, W)`` uint8 ``{0, 1}``
+                labels:      ``(N,)`` int64 (coarse global class id)
+                labels_fine: ``(N,)`` int64 (fine class id; -1 if unmapped)
+                track_ids:   ``(N,)`` int64
         """
         if self.task != "seg":
             raise RuntimeError("load_masks() requires task='seg'")
@@ -224,12 +288,14 @@ class SATMTBDataset(BaseVideoDataset):
             / "seg" / f"{frame_id:06d}.json"
         )
 
+        empty = {
+            "masks": np.zeros((0, 0, 0), dtype=np.uint8),
+            "labels": np.zeros(0, dtype=np.int64),
+            "labels_fine": np.zeros(0, dtype=np.int64),
+            "track_ids": np.zeros(0, dtype=np.int64),
+        }
         if not json_path.exists():
-            return {
-                "masks": np.zeros((0, 0, 0), dtype=np.uint8),
-                "labels": np.zeros(0, dtype=np.int64),
-                "track_ids": np.zeros(0, dtype=np.int64),
-            }
+            return empty
 
         with open(json_path) as f:
             data = json.load(f)
@@ -237,17 +303,22 @@ class SATMTBDataset(BaseVideoDataset):
         img_info = data["images"][0]
         h, w = int(img_info["height"]), int(img_info["width"])
 
-        # category_id → coarse-grained (supercategory) name
-        cat_id_map: dict[int, str] = {}
+        # category_id → (coarse, fine-or-None) — mirrors _parse_seg.
+        cat_id_map: dict[int, tuple[str, str | None]] = {}
         for c in data.get("categories", []):
-            cat_id_map[c["id"]] = c.get("supercategory", c["name"])
+            coarse = c.get("supercategory") or _derive_coarse(c.get("name", ""))
+            fine = c.get("name") if c.get("supercategory") else None
+            cat_id_map[c["id"]] = (coarse or "unknown", fine)
 
-        masks_list, labels_list, tids_list = [], [], []
+        masks_list, labels_list, labels_fine_list, tids_list = [], [], [], []
         for ann in data.get("annotations", []):
-            cat_name = cat_id_map.get(ann["category_id"], "unknown")
-            lbl = self._map_label(cat_name)
+            coarse, fine = cat_id_map.get(ann["category_id"], ("unknown", None))
+            lbl = self._map_label(coarse)
             if lbl < 0:
                 continue
+            lbl_fine = (
+                self.class_map_fine.get(fine, -1) if fine is not None else -1
+            )
 
             # Rasterise polygon(s) to binary mask
             mask = np.zeros((h, w), dtype=np.uint8)
@@ -257,18 +328,16 @@ class SATMTBDataset(BaseVideoDataset):
 
             masks_list.append(mask)
             labels_list.append(lbl)
+            labels_fine_list.append(lbl_fine)
             tids_list.append(ann.get("id", -1))
 
         if not masks_list:
-            return {
-                "masks": np.zeros((0, h, w), dtype=np.uint8),
-                "labels": np.zeros(0, dtype=np.int64),
-                "track_ids": np.zeros(0, dtype=np.int64),
-            }
+            return {**empty, "masks": np.zeros((0, h, w), dtype=np.uint8)}
 
         return {
             "masks": np.stack(masks_list),
             "labels": np.array(labels_list, dtype=np.int64),
+            "labels_fine": np.array(labels_fine_list, dtype=np.int64),
             "track_ids": np.array(tids_list, dtype=np.int64),
         }
 
@@ -382,6 +451,9 @@ class SATMTBDataset(BaseVideoDataset):
             root = tree.getroot()
             objs: list[dict] = []
             for obj_el in root.findall("object"):
+                # XML <name> is the fine-grained label (e.g. "WA"). Derive the
+                # coarse parent for class_map filtering; keep the fine name for
+                # class_map_fine lookup.
                 name = obj_el.findtext("name", "unknown")
                 obj_id = int(obj_el.findtext("objectID", "-1"))
                 bb = obj_el.find("bndbox")
@@ -389,10 +461,12 @@ class SATMTBDataset(BaseVideoDataset):
                 ymin = float(bb.findtext("ymin", "0"))
                 xmax = float(bb.findtext("xmax", "0"))
                 ymax = float(bb.findtext("ymax", "0"))
-                objs.append(
-                    {"box": [xmin, ymin, xmax, ymax],
-                     "class": name, "track_id": obj_id}
-                )
+                objs.append({
+                    "box": [xmin, ymin, xmax, ymax],
+                    "class": _derive_coarse(name),
+                    "class_fine": name,
+                    "track_id": obj_id,
+                })
             cache[fid] = objs
         return cache
 
@@ -425,10 +499,12 @@ class SATMTBDataset(BaseVideoDataset):
                 # OBB → AABB
                 xmin, xmax = min(corners_x), max(corners_x)
                 ymin, ymax = min(corners_y), max(corners_y)
-                objs.append(
-                    {"box": [xmin, ymin, xmax, ymax],
-                     "class": name, "track_id": obj_id}
-                )
+                objs.append({
+                    "box": [xmin, ymin, xmax, ymax],
+                    "class": _derive_coarse(name),
+                    "class_fine": name,
+                    "track_id": obj_id,
+                })
             cache[fid] = objs
         return cache
 
@@ -458,10 +534,15 @@ class SATMTBDataset(BaseVideoDataset):
                 cls_id = int(parts[7])
                 cat_name = _MOT_CLASS_MAP.get(cls_id, "unknown")
 
-                cache[fid].append(
-                    {"box": [x, y, x + w, y + h],
-                     "class": cat_name, "track_id": obj_id}
-                )
+                # MOT annotations only carry the coarse class id — no fine-
+                # grained label is available, so ``class_fine`` is None and
+                # the downstream labels_fine column will be -1 for MOT data.
+                cache[fid].append({
+                    "box": [x, y, x + w, y + h],
+                    "class": cat_name,
+                    "class_fine": None,
+                    "track_id": obj_id,
+                })
         return dict(cache)
 
     # --- Segmentation ---
@@ -481,19 +562,28 @@ class SATMTBDataset(BaseVideoDataset):
             with open(json_path) as f:
                 data = json.load(f)
 
-            # category_id → coarse-grained (supercategory) name
-            cat_id_map: dict[int, str] = {}
+            # category_id → (coarse supercategory, fine name) pair. COCO-like
+            # schemas put the fine-grained label in ``name`` and the coarse
+            # parent in ``supercategory``; fall back gracefully when only one
+            # of the two is present.
+            cat_id_map: dict[int, tuple[str, str | None]] = {}
             for c in data.get("categories", []):
-                cat_id_map[c["id"]] = c.get("supercategory", c["name"])
+                coarse = c.get("supercategory") or _derive_coarse(c.get("name", ""))
+                fine = c.get("name") if c.get("supercategory") else None
+                cat_id_map[c["id"]] = (coarse or "unknown", fine)
 
             objs: list[dict] = []
             for ann in data.get("annotations", []):
-                cat_name = cat_id_map.get(ann["category_id"], "unknown")
-                bbox = ann["bbox"]      # [xmin, ymin, xmax, ymax]
-                objs.append(
-                    {"box": [float(bbox[0]), float(bbox[1]),
-                             float(bbox[2]), float(bbox[3])],
-                     "class": cat_name, "track_id": ann.get("id", -1)}
+                coarse, fine = cat_id_map.get(
+                    ann["category_id"], ("unknown", None)
                 )
+                bbox = ann["bbox"]      # [xmin, ymin, xmax, ymax]
+                objs.append({
+                    "box": [float(bbox[0]), float(bbox[1]),
+                            float(bbox[2]), float(bbox[3])],
+                    "class": coarse,
+                    "class_fine": fine,
+                    "track_id": ann.get("id", -1),
+                })
             cache[fid] = objs
         return cache
