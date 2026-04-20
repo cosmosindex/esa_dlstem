@@ -245,6 +245,22 @@ class OOTBDataset(BaseVideoDataset):
 
         return split_idx
 
+    def sequence_attributes(self) -> dict[str, list[str]]:
+        """Return {video_id: [attr_name, ...]} for videos in this split.
+
+        Reads the already-loaded ``_attr_cache`` and decodes the 12 OOTB
+        flags (``ATTR_NAMES``) into the list of attributes whose flag is 1.
+        Sequences without an anno file yield an empty list.
+        """
+        out: dict[str, list[str]] = {}
+        for v in self.videos:
+            flags = self._attr_cache.get(v.video_id)
+            if flags is None:
+                out[v.video_id] = []
+            else:
+                out[v.video_id] = [ATTR_NAMES[i] for i, f in enumerate(flags) if int(f) > 0]
+        return out
+
     def _load_frame(self, video: VideoInfo, frame_id: int) -> np.ndarray:
         path = self.root / video.video_id / "img" / f"{frame_id + 1:04d}.jpg"
         img  = cv2.imread(str(path))

@@ -18,6 +18,7 @@ Directory layout::
 Categories: car, plane, ship, train.
 """
 
+import json
 import re
 from collections import defaultdict
 
@@ -28,6 +29,16 @@ from pathlib import Path
 from .base import BaseVideoDataset, VideoInfo
 
 _SPLIT_SEED = 42
+
+# Sequence attributes present in SatSOT.json (multi-label, per sequence).
+# Order is nominal — attrs are stored as a list of strings in the metadata,
+# so presence (not position) is what matters.
+ATTR_NAMES = (
+    "ARC", "BC", "BJT", "DEF", "FOC",
+    "IV", "LQ", "POC", "ROT", "SOB", "TO",
+)
+
+_META_FILENAME = "SatSOT.json"
 
 
 class SatSOTDataset(BaseVideoDataset):
@@ -42,6 +53,7 @@ class SatSOTDataset(BaseVideoDataset):
 
     def __init__(self, root: str | Path, split: str = "train", **kwargs):
         self._gt_cache: dict[str, np.ndarray] = {}
+        self._attr_cache: dict[str, list[str]] = {}  # vid_id → list of attr names
         super().__init__(root=root, split=split, **kwargs)
 
     # ------------------------------------------------------------------
@@ -49,6 +61,19 @@ class SatSOTDataset(BaseVideoDataset):
     # ------------------------------------------------------------------
 
     def _build_index(self) -> None:
+        # Load per-sequence attribute metadata once (SatSOT.json) if present.
+        meta_path = self.root / _META_FILENAME
+        meta_attrs: dict[str, list[str]] = {}
+        if meta_path.exists():
+            try:
+                with open(meta_path) as f:
+                    meta = json.load(f)
+                meta_attrs = {
+                    k: list(v.get("attr", [])) for k, v in meta.items()
+                }
+            except (json.JSONDecodeError, OSError):
+                meta_attrs = {}
+
         all_videos: list[VideoInfo] = []
         for seq_dir in sorted(self.root.iterdir()):
             if not seq_dir.is_dir():
@@ -77,6 +102,8 @@ class SatSOTDataset(BaseVideoDataset):
                 frame_ids=list(range(n)),
             ))
             self._gt_cache[seq_dir.name] = gt[:n]
+            if seq_dir.name in meta_attrs:
+                self._attr_cache[seq_dir.name] = meta_attrs[seq_dir.name]
 
         # Stratified split 80/10/10 per category
         split_map = self._stratified_split(all_videos)
@@ -87,6 +114,7 @@ class SatSOTDataset(BaseVideoDataset):
                 self.videos.append(v)
             else:
                 self._gt_cache.pop(v.video_id, None)
+                self._attr_cache.pop(v.video_id, None)
 
     @staticmethod
     def _stratified_split(
@@ -119,6 +147,14 @@ class SatSOTDataset(BaseVideoDataset):
                 split_map[vid] = "test"
 
         return split_map
+
+    def sequence_attributes(self) -> dict[str, list[str]]:
+        """Return {video_id: [attr_name, ...]} for videos in this split.
+
+        Attributes come from ``SatSOT.json`` (per-sequence ``attr`` list).
+        Sequences missing from the metadata file yield an empty list.
+        """
+        return {v.video_id: list(self._attr_cache.get(v.video_id, [])) for v in self.videos}
 
     def _load_frame(self, video: VideoInfo, frame_id: int) -> np.ndarray:
         path = self.root / video.video_id / "img" / f"{frame_id + 1:04d}.jpg"

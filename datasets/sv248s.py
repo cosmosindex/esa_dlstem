@@ -280,6 +280,22 @@ class SV248SDataset(BaseVideoDataset):
 
         return split_idx
 
+    def sequence_attributes(self) -> dict[str, list[str]]:
+        """Return {video_id: [attr_name, ...]} for videos in this split.
+
+        Reads the already-loaded ``_attr_cache`` and decodes the 10 SV248S
+        flags (``ATTR_NAMES``) into the list of attributes whose flag is 1.
+        Sequences without a .attr file yield an empty list.
+        """
+        out: dict[str, list[str]] = {}
+        for v in self.videos:
+            flags = self._attr_cache.get(v.video_id)
+            if flags is None:
+                out[v.video_id] = []
+            else:
+                out[v.video_id] = [ATTR_NAMES[i] for i, f in enumerate(flags) if int(f) > 0]
+        return out
+
     def _load_frame(self, video: VideoInfo, frame_id: int) -> np.ndarray:
         path = self._frame_paths[video.video_id][frame_id]
         img = cv2.imread(str(path), cv2.IMREAD_UNCHANGED)

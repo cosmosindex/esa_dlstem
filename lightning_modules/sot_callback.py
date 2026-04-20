@@ -20,6 +20,7 @@ from pathlib import Path
 import numpy as np
 import torch
 import lightning as L
+from torch.utils.data import ConcatDataset
 
 from .sot_metrics import SOTMetrics
 
@@ -51,6 +52,7 @@ class SOTEvalCallback(L.Callback):
 
     def on_test_epoch_start(self, trainer: L.Trainer, pl_module: L.LightningModule):
         self.sot.reset()
+        self.sot.sequence_attributes = _collect_sequence_attributes(trainer)
 
     def on_test_batch_end(
         self,
@@ -141,6 +143,7 @@ class SAM2SOTEvalCallback(L.Callback):
 
     def on_test_epoch_start(self, trainer: L.Trainer, pl_module: L.LightningModule):
         self.sot.reset()
+        self.sot.sequence_attributes = _collect_sequence_attributes(trainer)
 
     def on_test_batch_end(
         self,
@@ -232,6 +235,13 @@ def _log_and_save(
         pl_module.log(f"test/sot_norm_precision_auc_{name}", size_result["norm_precision_auc"])
         pl_module.log(f"test/sot_precision_5_{name}", size_result["precision_5"])
 
+    # Per sequence attribute (multi-label — groups may overlap)
+    for name, attr_result in result.get("per_sequence_attribute", {}).items():
+        pl_module.log(f"test/sot_success_auc_{name}", attr_result["success_auc"])
+        pl_module.log(f"test/sot_precision_auc_{name}", attr_result["precision_auc"])
+        pl_module.log(f"test/sot_norm_precision_auc_{name}", attr_result["norm_precision_auc"])
+        pl_module.log(f"test/sot_precision_5_{name}", attr_result["precision_5"])
+
     # Save JSON
     output_dir.mkdir(parents=True, exist_ok=True)
     with open(output_dir / "sot_metrics.json", "w") as f:
@@ -248,6 +258,38 @@ def _to_numpy(x) -> np.ndarray:
     if isinstance(x, torch.Tensor):
         return x.cpu().numpy()
     return np.asarray(x)
+
+
+def _collect_sequence_attributes(trainer: L.Trainer) -> dict[str, list[str]]:
+    """Walk the trainer's test dataset and merge ``sequence_attributes()``.
+
+    Handles plain datasets and ``ConcatDataset``. Datasets without a
+    ``sequence_attributes`` method contribute nothing.
+    """
+    dataset = None
+    dm = getattr(trainer, "datamodule", None)
+    if dm is not None:
+        dataset = getattr(dm, "test_dataset", None)
+    if dataset is None:
+        loaders = getattr(trainer, "test_dataloaders", None)
+        if loaders:
+            first = loaders[0] if isinstance(loaders, (list, tuple)) else loaders
+            dataset = getattr(first, "dataset", None)
+
+    if dataset is None:
+        return {}
+
+    parts = dataset.datasets if isinstance(dataset, ConcatDataset) else [dataset]
+    merged: dict[str, list[str]] = {}
+    for ds in parts:
+        fn = getattr(ds, "sequence_attributes", None)
+        if not callable(fn):
+            continue
+        try:
+            merged.update(fn())
+        except Exception:
+            continue
+    return merged
 
 
 def _log_plots_wandb(trainer: L.Trainer, plot_paths: dict[str, Path]):

@@ -113,6 +113,7 @@ class SOTMetrics:
         self,
         class_names: dict[int, str] | None = None,
         obb_eval_mode: str = "polygon",
+        sequence_attributes: dict[str, list[str]] | None = None,
     ):
         if obb_eval_mode not in OBB_EVAL_MODES:
             raise ValueError(
@@ -120,6 +121,10 @@ class SOTMetrics:
             )
         self.class_names = class_names or {}
         self.obb_eval_mode = obb_eval_mode
+        # video_id → list of sequence-level attribute names that are active.
+        # Multi-label: a single sequence can have several attributes, so this
+        # creates overlapping (non-partition) groups when aggregating metrics.
+        self.sequence_attributes: dict[str, list[str]] = sequence_attributes or {}
         self.records: list[SOTRecord] = []
 
     def reset(self):
@@ -240,7 +245,7 @@ class SOTMetrics:
     # ------------------------------------------------------------------
 
     def compute(self) -> dict:
-        """Compute overall + per-category + per-size SOT metrics."""
+        """Compute overall + per-category + per-size + per-attribute metrics."""
         if not self.records:
             return {}
 
@@ -261,6 +266,16 @@ class SOTMetrics:
         result["per_size"] = {
             name: _compute_from_records(recs) for name, recs in sorted(by_size.items())
         }
+
+        # Per sequence attribute (multi-label: a record may appear in several
+        # attribute groups, so groups do NOT partition the record set).
+        if self.sequence_attributes:
+            by_attr = _group_by_attribute(self.records, self.sequence_attributes)
+            if by_attr:
+                result["per_sequence_attribute"] = {
+                    name: _compute_from_records(recs)
+                    for name, recs in sorted(by_attr.items())
+                }
 
         return result
 
@@ -315,12 +330,44 @@ class SOTMetrics:
             "Precision Plot (per size)",
         )
 
+        # --- Per sequence attribute (OOTB: 12 attrs, SV248S: 10, SatSOT: 11) ---
+        if self.sequence_attributes:
+            by_attr = _group_by_attribute(self.records, self.sequence_attributes)
+            if by_attr:
+                paths["success_plot_attr"] = _plot_success(
+                    self.records, by_attr, output_dir / "success_plot_attr.png",
+                    "Success Plot (per sequence attribute)",
+                )
+                paths["precision_plot_attr"] = _plot_precision(
+                    self.records, by_attr, output_dir / "precision_plot_attr.png",
+                    "Precision Plot (per sequence attribute)",
+                )
+
         return paths
 
 
 # ======================================================================
 # Private helpers
 # ======================================================================
+
+def _group_by_attribute(
+    records: list[SOTRecord],
+    sequence_attributes: dict[str, list[str]],
+) -> dict[str, list[SOTRecord]]:
+    """Multi-label groupings by sequence-level attribute.
+
+    For each record, look up its ``video_id`` in ``sequence_attributes`` and
+    append it to every attribute group named in that list. Records whose
+    video carries no attributes (or is missing from the mapping) don't
+    contribute to any attribute group.
+    """
+    groups: dict[str, list[SOTRecord]] = {}
+    for r in records:
+        attrs = sequence_attributes.get(r.video_id, ())
+        for attr in attrs:
+            groups.setdefault(attr, []).append(r)
+    return groups
+
 
 def _plot_success(
     all_records: list[SOTRecord],
