@@ -62,3 +62,15 @@ logs/ootb_sot/20260417_121943/siamrpn.log
 .gitignore
 run_all_ootb_sot.sh
 logs/ootb_sot/20260420_080240/siamrpn.log
+logs/ootb_sot/20260420_080240/lorat.log
+.gitignore
+logs/ootb_sot/20260420_080240/odtrack.log
+logs/ootb_sot/20260420_080240/ostrack.log
+logs/ootb_sot/20260420_080240/sam2.log
+logs/ootb_sot/20260420_080240/sam3.log
+logs/ootb_sot/20260420_080240/samurai.log
+logs/sv248s_sot/20260420_083349/lorat.log
+.gitignore
+logs/sv248s_sot/20260420_083349/odtrack.log
+logs/sv248s_sot/20260420_083349/ostrack.log
+logs/sv248s_sot/20260420_083349/siamrpn.log
