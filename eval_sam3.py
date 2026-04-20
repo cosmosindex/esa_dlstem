@@ -9,6 +9,7 @@ Usage:
 """
 
 import argparse
+import os
 from datetime import datetime
 
 import torch
@@ -49,7 +50,8 @@ def main():
     if prompt_strategy == "every_n":
         run_name = f"sam3_every{prompt_interval}_{dataset_name.lower()}"
 
-    experiment_dir = f"/work/ziwen/experiments/{run_name}_{datetime.now():%Y%m%d_%H%M%S}"
+    exp_root = os.environ.get("EXPERIMENT_ROOT", "/work/ziwen/experiments")
+    experiment_dir = f"{exp_root}/{run_name}_{datetime.now():%Y%m%d_%H%M%S}"
 
     # --- Transform ---
     img_size = cfg.get("img_size")

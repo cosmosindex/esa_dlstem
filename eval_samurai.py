@@ -16,6 +16,7 @@ Usage:
 from models.samurai import SamuraiTracker  # noqa: E402, isort: skip
 
 import argparse  # noqa: E402
+import os  # noqa: E402
 from datetime import datetime  # noqa: E402
 
 import torch  # noqa: E402
@@ -55,7 +56,8 @@ def main():
     if prompt_strategy == "every_n":
         run_name = f"samurai_{model_name}_every{prompt_interval}_{dataset_name.lower()}"
 
-    experiment_dir = f"/work/ziwen/experiments/{run_name}_{datetime.now():%Y%m%d_%H%M%S}"
+    exp_root = os.environ.get("EXPERIMENT_ROOT", "/work/ziwen/experiments")
+    experiment_dir = f"{exp_root}/{run_name}_{datetime.now():%Y%m%d_%H%M%S}"
 
     img_size = cfg.get("img_size")
     eval_transform = build_eval_transform(tuple(img_size)) if img_size else None
