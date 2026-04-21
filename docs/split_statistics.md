@@ -176,13 +176,13 @@ Frames with `none` GT (target absent/occluded) return empty annotations.
 
 Split strategy: **80 / 10 / 10** stratified by dominant class per sequence, `seed=42`. No official split.
 MOT dataset from Jilin-1 satellite video. 100 sequences total, **31 have empty annotations** and are excluded.
-2 classes: `airplane` (class 1 in raw annotations) and `car` (class 2).
+2 classes: `airplane` (class 1 in raw annotations) and `ship` (class 2).
 Some sequences have black padding bars (bottom and/or right); annotations are within valid content.
 
 | Category  | Train | Val | Test | Total |
 |-----------|------:|----:|-----:|------:|
 | airplane  |    24 |   3 |    3 |    30 |
-| car       |    31 |   4 |    4 |    39 |
+| ship      |    31 |   4 |    4 |    39 |
 | **Total** |**55** |**7**|**7** |**69** |
 
 | Split     | Videos | Frames |

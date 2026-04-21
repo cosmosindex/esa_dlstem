@@ -18,7 +18,7 @@ Annotation format (MOT CSV, 9 columns per line)::
     frame_id, track_id, x, y, w, h, conf, class, visibility
 
 - ``x, y`` = top-left corner.
-- ``class``: 1 = airplane, 2 = car.
+- ``class``: 1 = airplane, 2 = ship.
 - 31 out of 100 sequences have empty annotations and are excluded.
 - Some sequences have black padding bars (bottom and/or right); all
   annotations are within the valid content region.
@@ -40,7 +40,7 @@ from .base import BaseVideoDataset, VideoInfo
 _SPLIT_SEED = 42
 
 # Raw MOT class id → category name
-_CLASS_MAP: dict[str, str] = {"1": "airplane", "2": "car"}
+_CLASS_MAP: dict[str, str] = {"1": "airplane", "2": "ship"}
 
 
 class AIRMOTDataset(BaseVideoDataset):

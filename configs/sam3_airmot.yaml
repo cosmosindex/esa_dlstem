@@ -5,7 +5,7 @@ dataset: AIR-MOT
 dataset_root: /data/ESA_DLSTEM_2025/data/trafic/AIR-MOT-100
 class_map:
   airplane: 0
-  car: 1
+  ship: 1
 
 eval_mode: mot
 img_size: null
