@@ -7,7 +7,7 @@ drive it directly via our thin `LoRATTracker` wrapper, bypassing the trackit
 framework's data pipeline.
 
 Usage:
-    python eval_lorat.py --config configs/lorat_satsot.yaml
+    python eval_lorat.py --config configs/SOT/lorat_satsot.yaml
 """
 
 import argparse

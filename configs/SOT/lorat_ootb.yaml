@@ -1,5 +1,5 @@
 # LoRAT (ECCV 2024) evaluation on OOTB — Oriented Object Tracking Benchmark.
-# Usage: python eval_lorat.py --config configs/lorat_ootb.yaml
+# Usage: python eval_lorat.py --config configs/SOT/lorat_ootb.yaml
 #
 # OBB handling:
 #   LoRAT outputs axis-aligned HBB only. OOTB GT is a rotated 4-corner polygon.

@@ -27,7 +27,7 @@ Faithful polygon-level evaluation.
 | Precision threshold | 20 px (OTB convention) |
 | Success thresholds | `[0.00, 0.05, …, 1.00]` (21 points) |
 
-Used by: `configs/sam2_ootb.yaml`, `configs/sam3_ootb.yaml`, `configs/samurai_ootb.yaml`.
+Used by: `configs/SOT/sam2_ootb.yaml`, `configs/SOT/sam3_ootb.yaml`, `configs/SOT/samurai_ootb.yaml`.
 
 This is **stricter** than OOTB's official protocol — IoU numbers are lower than what the OOTB paper reports, because the metric punishes rotation mismatch. It's the right metric to compare a truly OBB-aware tracker against itself on rotated targets.
 
@@ -47,7 +47,7 @@ Matches the official **OOTB v1.0 MATLAB toolkit** at `github.com/YZCU/OOTB`, spe
 
 Key insight: the OOTB toolkit **collapses polygon GT to AABB before computing IoU**. It does NOT use polygon IoU anywhere in its evaluation code. So "OOTB-compatible" means "AABB-of-polygon IoU", not "polygon IoU".
 
-Used by: `configs/ostrack_ootb.yaml`, `configs/odtrack_ootb.yaml`, and any future HBB-only tracker evaluated on OOTB.
+Used by: `configs/SOT/ostrack_ootb.yaml`, `configs/SOT/odtrack_ootb.yaml`, and any future HBB-only tracker evaluated on OOTB.
 
 Under this mode an HBB tracker can be directly compared with the 33 trackers reported in the OOTB ISPRS 2024 paper — same metric, same thresholds.
 

@@ -6,7 +6,7 @@ with a cached template, produces HBB outputs, built directly from a local
 yaml + checkpoint (no HF download).
 
 Usage:
-    python eval_ostrack.py --config configs/ostrack_satsot.yaml
+    python eval_ostrack.py --config configs/SOT/ostrack_satsot.yaml
 """
 
 import argparse

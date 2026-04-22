@@ -6,7 +6,7 @@ SiamRPN++ is the classical ResNet-50 Siamese-RPN tracker from SenseTime
 Uses pysot's stock `ModelBuilder` + `SiamRPNTracker` via our thin wrapper.
 
 Usage:
-    python eval_siamrpn.py --config configs/siamrpn_satsot.yaml
+    python eval_siamrpn.py --config configs/SOT/siamrpn_satsot.yaml
 """
 
 import argparse

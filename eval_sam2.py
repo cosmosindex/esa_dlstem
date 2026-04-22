@@ -5,8 +5,8 @@ Supports any registered dataset via a YAML config file.
 Handles both SOT and MOT evaluation modes, native or resized resolution.
 
 Usage:
-    python eval_sam2.py --config configs/sam2_satsot.yaml
-    python eval_sam2.py --config configs/sam2_ootb.yaml
+    python eval_sam2.py --config configs/SOT/sam2_satsot.yaml
+    python eval_sam2.py --config configs/SOT/sam2_ootb.yaml
 """
 
 import argparse

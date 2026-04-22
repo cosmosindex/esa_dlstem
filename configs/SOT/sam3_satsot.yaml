@@ -1,5 +1,5 @@
 # SAM3 evaluation on SatSOT (single-object tracking, satellite video, HBB)
-# Usage: python eval_sam3.py --config configs/sam3_satsot.yaml
+# Usage: python eval_sam3.py --config configs/SOT/sam3_satsot.yaml
 
 # --- Dataset ---
 dataset: SatSOT

@@ -1,5 +1,5 @@
 # OSTrack-384 (ECCV 2022) evaluation on OOTB — Oriented Object Tracking Benchmark.
-# Usage: python eval_ostrack.py --config configs/ostrack_ootb.yaml
+# Usage: python eval_ostrack.py --config configs/SOT/ostrack_ootb.yaml
 #
 # OBB handling:
 #   OSTrack outputs axis-aligned HBB only. OOTB GT is a rotated 4-corner polygon.

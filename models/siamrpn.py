@@ -21,13 +21,13 @@ Integration quirks
 * The checkpoint we have (`siamrpn_r50_l234_dwxcorr.pth`) comes from a fork
   with per-layer adjust widths [128, 256, 512] instead of the official
   uniform [256, 256, 256]. We ship a compatible pysot-native yaml at
-  `configs/pysot_siamrpn_r50_l234_dwxcorr.yaml` that encodes the right widths.
+  `configs/SOT/pysot_siamrpn_r50_l234_dwxcorr.yaml` that encodes the right widths.
 * HBB-only tracker (no masks). `obb` is the 8-corner form of the AABB as a
   compatibility stub.
 
 Usage mirrors OSTrackTracker:
     tracker = SiamRPNTracker_Wrapper(
-        yaml_path="configs/pysot_siamrpn_r50_l234_dwxcorr.yaml",
+        yaml_path="configs/SOT/pysot_siamrpn_r50_l234_dwxcorr.yaml",
         ckpt_path="/work/ziwen/checkpoints/siamrpn/siamrpn_r50_l234_dwxcorr.pth",
     )
     tracker.init_video(frames)

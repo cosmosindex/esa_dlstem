@@ -1,5 +1,5 @@
-# LoRAT (ECCV 2024) evaluation on SatSOT — single-object tracking, HBB.
-# Usage: python eval_lorat.py --config configs/lorat_satsot.yaml
+# SiamRPN++ (CVPR 2019) evaluation on SatSOT — single-object tracking, HBB.
+# Usage: python eval_siamrpn.py --config configs/SOT/siamrpn_satsot.yaml
 
 dataset: SatSOT
 dataset_root: /data/ESA_DLSTEM_2025/data/trafic/SatSOT
@@ -12,11 +12,9 @@ class_map:
 eval_mode: sot
 img_size: null
 
-# LoRAT variant: g-378 = ViT-g/14 DINOv2 backbone, 378×378 search region (largest / best).
-variant: g-378
-lorat_root: /home/ziwen/code/esa_dlstem/LoRAT
-method_name: LoRAT
-ckpt_path: /work/ziwen/checkpoints/lorat/lorat_g378.bin
+variant: r50_l234_dwxcorr
+yaml_path: /home/ziwen/code/esa_dlstem/configs/SOT/pysot_siamrpn_r50_l234_dwxcorr.yaml
+ckpt_path: /work/ziwen/checkpoints/siamrpn/siamrpn_r50_l234_dwxcorr.pth
 
 prompt_strategy: first_frame
 prompt_interval: 10

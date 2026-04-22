@@ -8,7 +8,7 @@ with the pip-installed `sam2` used by the other eval scripts, we import
 activates samurai's fork as the process-wide `sam2`.
 
 Usage:
-    python eval_samurai.py --config configs/samurai_ootb.yaml
+    python eval_samurai.py --config configs/SOT/samurai_ootb.yaml
 """
 
 # IMPORTANT: import SamuraiTracker first so samurai's sam2 fork is activated

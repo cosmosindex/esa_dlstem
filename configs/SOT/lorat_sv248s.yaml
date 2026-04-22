@@ -1,5 +1,5 @@
-# SiamRPN++ (CVPR 2019) evaluation on SV248S — Jilin-1 single-object tracking, HBB.
-# Usage: python eval_siamrpn.py --config configs/siamrpn_sv248s.yaml
+# LoRAT (ECCV 2024) evaluation on SV248S — Jilin-1 single-object tracking, HBB.
+# Usage: python eval_lorat.py --config configs/SOT/lorat_sv248s.yaml
 
 dataset: SV248S
 dataset_root: /data/ESA_DLSTEM_2025/data/trafic/SV248S
@@ -12,9 +12,10 @@ class_map:
 eval_mode: sot
 img_size: null
 
-variant: r50_l234_dwxcorr
-yaml_path: /home/ziwen/code/esa_dlstem/configs/pysot_siamrpn_r50_l234_dwxcorr.yaml
-ckpt_path: /work/ziwen/checkpoints/siamrpn/siamrpn_r50_l234_dwxcorr.pth
+variant: g-378
+lorat_root: /home/ziwen/code/esa_dlstem/LoRAT
+method_name: LoRAT
+ckpt_path: /work/ziwen/checkpoints/lorat/lorat_g378.bin
 
 prompt_strategy: first_frame
 prompt_interval: 10

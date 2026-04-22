@@ -10,10 +10,10 @@ python eval_sam2.py --config configs/<config_name>.yaml
 
 | Config | Dataset | Resolution | Eval Mode |
 |---|---|---|---|
-| `configs/sam2_satsot.yaml` | SatSOT | native (`img_size: null`) | SOT |
-| `configs/sam2_ootb.yaml` | OOTB | 640x640 | SOT |
+| `configs/SOT/sam2_satsot.yaml` | SatSOT | native (`img_size: null`) | SOT |
+| `configs/SOT/sam2_ootb.yaml` | OOTB | 640x640 | SOT |
 | `configs/sam2_birdsai_mot.yaml` | BIRDSAI_MOT | 640x640 | MOT |
-| `configs/sam2_birdsai_sot.yaml` | BIRDSAI | 640x640 | SOT |
+| `configs/SOT/sam2_birdsai_sot.yaml` | BIRDSAI | 640x640 | SOT |
 
 ## Config Fields
 
@@ -88,5 +88,5 @@ wandb_entity: chengziwen693
 
 The per-dataset eval scripts below are superseded by `eval_sam2.py` and kept for reference only:
 
-- `eval_sam2_ootb.py` → use `configs/sam2_ootb.yaml`
-- `eval_sam2_birdsai.py` → use `configs/sam2_birdsai_mot.yaml` or `configs/sam2_birdsai_sot.yaml`
+- `eval_sam2_ootb.py` → use `configs/SOT/sam2_ootb.yaml`
+- `eval_sam2_birdsai.py` → use `configs/sam2_birdsai_mot.yaml` or `configs/SOT/sam2_birdsai_sot.yaml`

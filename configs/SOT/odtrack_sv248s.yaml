@@ -1,18 +1,17 @@
-# ODTrack (AAAI 2024) evaluation on SatSOT — single-object tracking, HBB.
-# Usage: python eval_odtrack.py --config configs/odtrack_satsot.yaml
+# ODTrack (AAAI 2024) evaluation on SV248S — Jilin-1 single-object tracking, HBB.
+# Usage: python eval_odtrack.py --config configs/SOT/odtrack_sv248s.yaml
 
-dataset: SatSOT
-dataset_root: /data/ESA_DLSTEM_2025/data/trafic/SatSOT
+dataset: SV248S
+dataset_root: /data/ESA_DLSTEM_2025/data/trafic/SV248S
 class_map:
   car: 0
-  plane: 1
-  ship: 2
-  train: 3
+  car-large: 1
+  plane: 2
+  ship: 3
 
 eval_mode: sot
 img_size: null
 
-# ODTrack variant: "baseline" (ViT-B, 371MB) or "baseline_large" (ViT-L, 1.2GB)
 variant: baseline_large
 yaml_path: /home/ziwen/code/esa_dlstem/ODTrack/experiments/odtrack/baseline_large.yaml
 ckpt_path: /work/ziwen/checkpoints/odtrack/baseline_large/ODTrack_ep0300.pth.tar

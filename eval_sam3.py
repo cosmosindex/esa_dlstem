@@ -5,7 +5,7 @@ Supports any registered dataset via a YAML config file. Mirrors eval_sam2.py
 but uses SAM3Tracker + VideoTrackerEvaluationModule.
 
 Usage:
-    python eval_sam3.py --config configs/sam3_ootb.yaml
+    python eval_sam3.py --config configs/SOT/sam3_ootb.yaml
 """
 
 import argparse

@@ -1,5 +1,5 @@
 # SAM3 evaluation on SV248S (Jilin-1 satellite single-object tracking, HBB)
-# Usage: python eval_sam3.py --config configs/sam3_sv248s.yaml
+# Usage: python eval_sam3.py --config configs/SOT/sam3_sv248s.yaml
 
 # --- Dataset ---
 dataset: SV248S

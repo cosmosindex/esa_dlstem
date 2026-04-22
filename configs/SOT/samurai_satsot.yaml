@@ -1,13 +1,13 @@
-# SAMURAI evaluation on SV248S (Jilin-1 single-object tracking, HBB)
-# Usage: python eval_samurai.py --config configs/samurai_sv248s.yaml
+# SAMURAI evaluation on SatSOT (satellite video single-object tracking, HBB)
+# Usage: python eval_samurai.py --config configs/SOT/samurai_satsot.yaml
 
-dataset: SV248S
-dataset_root: /data/ESA_DLSTEM_2025/data/trafic/SV248S
+dataset: SatSOT
+dataset_root: /data/ESA_DLSTEM_2025/data/trafic/SatSOT
 class_map:
   car: 0
-  car-large: 1
-  plane: 2
-  ship: 3
+  plane: 1
+  ship: 2
+  train: 3
 
 eval_mode: sot
 img_size: null

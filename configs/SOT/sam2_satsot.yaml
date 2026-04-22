@@ -1,5 +1,5 @@
 # SAM2 evaluation on SatSOT (single-object tracking, satellite video)
-# Usage: python eval_sam2.py --config configs/sam2_satsot.yaml
+# Usage: python eval_sam2.py --config configs/SOT/sam2_satsot.yaml
 
 # --- Dataset ---
 dataset: SatSOT

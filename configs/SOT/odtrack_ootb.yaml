@@ -1,7 +1,7 @@
 # ODTrack (AAAI 2024) evaluation on OOTB — Oriented Object Tracking Benchmark.
-# Usage: python eval_odtrack.py --config configs/odtrack_ootb.yaml
+# Usage: python eval_odtrack.py --config configs/SOT/odtrack_ootb.yaml
 #
-# OBB handling: see configs/ostrack_ootb.yaml — identical protocol (OOTB v1.0).
+# OBB handling: see configs/SOT/ostrack_ootb.yaml — identical protocol (OOTB v1.0).
 
 dataset: OOTB
 dataset_root: /data/ESA_DLSTEM_2025/data/trafic/OOTB

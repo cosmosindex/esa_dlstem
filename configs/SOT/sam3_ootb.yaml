@@ -1,5 +1,5 @@
 # SAM3 evaluation on OOTB (traffic, single-object tracking, OBB metrics)
-# Usage: python eval_sam3.py --config configs/sam3_ootb.yaml
+# Usage: python eval_sam3.py --config configs/SOT/sam3_ootb.yaml
 
 dataset: OOTB
 dataset_root: /data/ESA_DLSTEM_2025/data/trafic/OOTB

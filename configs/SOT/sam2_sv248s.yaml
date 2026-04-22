@@ -1,5 +1,5 @@
 # SAM2 evaluation on SV248S (single-object tracking, Jilin-1 satellite video)
-# Usage: python eval_sam2.py --config configs/sam2_sv248s.yaml
+# Usage: python eval_sam2.py --config configs/SOT/sam2_sv248s.yaml
 
 # --- Dataset ---
 dataset: SV248S

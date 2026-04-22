@@ -6,7 +6,7 @@ frame-by-frame with a cached template, produces HBB outputs, and is built
 directly from a local yaml + checkpoint (no HF download).
 
 Usage:
-    python eval_odtrack.py --config configs/odtrack_satsot.yaml
+    python eval_odtrack.py --config configs/SOT/odtrack_satsot.yaml
 """
 
 import argparse

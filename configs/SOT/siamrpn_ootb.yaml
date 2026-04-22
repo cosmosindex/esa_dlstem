@@ -1,5 +1,5 @@
 # SiamRPN++ (CVPR 2019) evaluation on OOTB — Oriented Object Tracking Benchmark.
-# Usage: python eval_siamrpn.py --config configs/siamrpn_ootb.yaml
+# Usage: python eval_siamrpn.py --config configs/SOT/siamrpn_ootb.yaml
 #
 # OBB handling:
 #   SiamRPN++ outputs axis-aligned HBB only. We evaluate under the **official
@@ -19,7 +19,7 @@ obb_eval_mode: ootb_aabb
 img_size: null
 
 variant: r50_l234_dwxcorr
-yaml_path: /home/ziwen/code/esa_dlstem/configs/pysot_siamrpn_r50_l234_dwxcorr.yaml
+yaml_path: /home/ziwen/code/esa_dlstem/configs/SOT/pysot_siamrpn_r50_l234_dwxcorr.yaml
 ckpt_path: /work/ziwen/checkpoints/siamrpn/siamrpn_r50_l234_dwxcorr.pth
 
 prompt_strategy: first_frame

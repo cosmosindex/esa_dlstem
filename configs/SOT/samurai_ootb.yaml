@@ -1,5 +1,5 @@
-# SAM2 evaluation on OOTB (traffic, single-object tracking)
-# Usage: python eval_sam2.py --config configs/sam2_ootb.yaml
+# SAMURAI evaluation on OOTB (traffic, single-object tracking, OBB metrics)
+# Usage: python eval_samurai.py --config configs/SOT/samurai_ootb.yaml
 
 dataset: OOTB
 dataset_root: /data/ESA_DLSTEM_2025/data/trafic/OOTB
@@ -12,7 +12,10 @@ class_map:
 eval_mode: sot
 img_size: null
 
-sam2_model_id: facebook/sam2.1-hiera-large
+# SAMURAI model
+model_name: large              # tiny | small | base_plus | large
+ckpt_path: null                # null → download from facebook/sam2.1-hiera-<name>
+
 prompt_strategy: first_frame
 prompt_interval: 10
 

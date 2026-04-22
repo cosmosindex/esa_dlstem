@@ -1,5 +1,5 @@
 # SAM2 SOT evaluation on BIRDSAI (single-object tracking splits, wild animals)
-# Usage: python eval_sam2.py --config configs/sam2_birdsai_sot.yaml
+# Usage: python eval_sam2.py --config configs/SOT/sam2_birdsai_sot.yaml
 
 dataset: BIRDSAI
 dataset_root: /data/ESA_DLSTEM_2025/data/wild_animal/BIRDSAI

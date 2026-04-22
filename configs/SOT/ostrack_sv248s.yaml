@@ -1,5 +1,5 @@
 # OSTrack-384 (ECCV 2022) evaluation on SV248S — Jilin-1 single-object tracking, HBB.
-# Usage: python eval_ostrack.py --config configs/ostrack_sv248s.yaml
+# Usage: python eval_ostrack.py --config configs/SOT/ostrack_sv248s.yaml
 
 dataset: SV248S
 dataset_root: /data/ESA_DLSTEM_2025/data/trafic/SV248S
