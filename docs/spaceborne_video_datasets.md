@@ -80,6 +80,25 @@ A curated list of publicly available spaceborne video datasets for computer visi
   - **Annotations**: `groundtruth.txt` per sequence — one `x,y,w,h` line per frame (top-left + size). Frames with `none` = target absent/occluded.
   - **No official split**. Our split: 80/10/10 stratified by category, `seed=42` → train 83 (22,718 frames) / val 11 (2,478 frames) / test 11 (2,468 frames).
   - **JSON metadata**: `SatSOT.json` with per-sequence attributes (BC, DEF, ARC, ROT, etc.) and `gt_rect` in xywh.
+
+## Sequence Attributes
+
+SatSOT defines 11 attributes to characterize tracking challenges in each sequence:
+
+| Attribute | Full Name | Definition |
+|---|---|---|
+| **BC** | Background Clutter | The background has similar appearance as the target |
+| **IV** | Illumination Variation | The illumination of the target region changes significantly |
+| **LQ** | Low Quality | The image is low quality and the target is difficult to be distinguished |
+| **ROT** | Rotation | The target rotates in the video |
+| **POC** | Partial Occlusion | The target is partially occluded in the video |
+| **FOC** | Full Occlusion | The target is fully occluded in the video |
+| **TO** | Tiny Object | At least one ground truth bounding box has less than 25 pixels |
+| **SOB** | Similar Object | There are objects of similar shape or same type around the target |
+| **BJT** | Background Jitter | Background jitter caused by the shaking of satellite camera |
+| **ARC** | Aspect Ratio Change | The ratio of the bounding-box aspect ratio of the first and the current frame is outside the range [0.5, 2] |
+| **DEF** | Deformation | Non-rigid object deformation |
+
 - **NUDT-MIRSDT-HiNo**: Extension of NUDT-MIRSDT with higher noise levels. Currently preprint (arXiv 2506.12766, v4 Jan 2026), submitted to IEEE TPAMI — not yet formally accepted. Semi-synthetic sequences; **not real satellite video**.
 - **SAT-MTB**: Multi-task satellite video benchmark from Jilin-1 satellite. Published in IEEE TGRS 2023.
   - **240 sequences** across 4 coarse-grained categories: airplane (62), car (92), ship (70), train (16). Variable resolution (512×512 to 3000×1500). 12 fine-grained subcategories (e.g. `narrow_bodied_aircraft`, `yacht`, `speed_boat`).
