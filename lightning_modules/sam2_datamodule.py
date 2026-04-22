@@ -82,6 +82,10 @@ class SAM2DataModuleConfig:
     num_workers: int = 4
     pin_memory: bool = True
 
+    # Split served by ``test_dataloader()`` — usually ``"test"``, but can be
+    # set to ``"no_split"`` to evaluate on the entire dataset (train+val+test).
+    split: str = "test"
+
     # Extra kwargs forwarded to every dataset constructor
     dataset_kwargs: dict[str, Any] = field(default_factory=dict)
 
@@ -139,7 +143,7 @@ class SAM2DataModule(L.LightningDataModule):
             self.val_dataset = self._build_concat("val", transform=self.eval_transform, **shared)
 
         if stage in ("test", None):
-            self.test_dataset = self._build_concat("test", transform=self.eval_transform, **shared)
+            self.test_dataset = self._build_concat(self.cfg.split, transform=self.eval_transform, **shared)
 
     def _build_concat(self, split: str, **kwargs) -> ConcatDataset:
         """Instantiate every configured dataset for the given split and concatenate."""

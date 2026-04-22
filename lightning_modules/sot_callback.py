@@ -20,9 +20,9 @@ from pathlib import Path
 import numpy as np
 import torch
 import lightning as L
-from torch.utils.data import ConcatDataset
 
 from .sot_metrics import SOTMetrics
+from .visualization import _collect_sequence_attributes
 
 
 class SOTEvalCallback(L.Callback):
@@ -258,38 +258,6 @@ def _to_numpy(x) -> np.ndarray:
     if isinstance(x, torch.Tensor):
         return x.cpu().numpy()
     return np.asarray(x)
-
-
-def _collect_sequence_attributes(trainer: L.Trainer) -> dict[str, list[str]]:
-    """Walk the trainer's test dataset and merge ``sequence_attributes()``.
-
-    Handles plain datasets and ``ConcatDataset``. Datasets without a
-    ``sequence_attributes`` method contribute nothing.
-    """
-    dataset = None
-    dm = getattr(trainer, "datamodule", None)
-    if dm is not None:
-        dataset = getattr(dm, "test_dataset", None)
-    if dataset is None:
-        loaders = getattr(trainer, "test_dataloaders", None)
-        if loaders:
-            first = loaders[0] if isinstance(loaders, (list, tuple)) else loaders
-            dataset = getattr(first, "dataset", None)
-
-    if dataset is None:
-        return {}
-
-    parts = dataset.datasets if isinstance(dataset, ConcatDataset) else [dataset]
-    merged: dict[str, list[str]] = {}
-    for ds in parts:
-        fn = getattr(ds, "sequence_attributes", None)
-        if not callable(fn):
-            continue
-        try:
-            merged.update(fn())
-        except Exception:
-            continue
-    return merged
 
 
 def _log_plots_wandb(trainer: L.Trainer, plot_paths: dict[str, Path]):

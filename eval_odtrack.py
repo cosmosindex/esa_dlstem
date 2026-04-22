@@ -68,6 +68,7 @@ def main():
             clip_stride=cfg.get("clip_stride", 1),
             batch_size=cfg.get("batch_size", 1),
             num_workers=cfg.get("num_workers", 0),
+            split=os.environ.get("SOT_SPLIT", cfg.get("split", "test")),
         ),
         eval_transform=eval_transform,
     )

@@ -23,12 +23,50 @@ Colours:
 from __future__ import annotations
 
 import json
+import os
 from pathlib import Path
 
 import cv2
 import numpy as np
 import torch
 import lightning as L
+from torch.utils.data import ConcatDataset
+
+
+_NO_ATTR_FOLDER = "_no_attr"
+
+
+def _collect_sequence_attributes(trainer: L.Trainer) -> dict[str, list[str]]:
+    """Walk trainer's test dataset and merge ``sequence_attributes()``.
+
+    Mirrors the helper in ``sot_callback`` so visualisations can be
+    grouped by the dataset's per-sequence attributes. Datasets without a
+    ``sequence_attributes`` method contribute nothing.
+    """
+    dataset = None
+    dm = getattr(trainer, "datamodule", None)
+    if dm is not None:
+        dataset = getattr(dm, "test_dataset", None)
+    if dataset is None:
+        loaders = getattr(trainer, "test_dataloaders", None)
+        if loaders:
+            first = loaders[0] if isinstance(loaders, (list, tuple)) else loaders
+            dataset = getattr(first, "dataset", None)
+
+    if dataset is None:
+        return {}
+
+    parts = dataset.datasets if isinstance(dataset, ConcatDataset) else [dataset]
+    merged: dict[str, list[str]] = {}
+    for ds in parts:
+        fn = getattr(ds, "sequence_attributes", None)
+        if not callable(fn):
+            continue
+        try:
+            merged.update(fn())
+        except Exception:
+            continue
+    return merged
 
 
 # Colour palette (RGB)
@@ -101,6 +139,10 @@ class DetectionVisualizationCallback(L.Callback):
         # Per-video tracking state (detection mode only)
         self._video_tracking: dict[str, dict[int, int]] = {}
 
+        # {video_id: [attr_name, ...]} — resolved from test dataset at epoch
+        # start; drives per-attribute subfolder layout under ``visualizations/``.
+        self._seq_attrs: dict[str, list[str]] = {}
+
     # ------------------------------------------------------------------
     # Hooks
     # ------------------------------------------------------------------
@@ -112,6 +154,48 @@ class DetectionVisualizationCallback(L.Callback):
 
         self._vis_dir = self.output_dir / "visualizations"
         self._vis_dir.mkdir(parents=True, exist_ok=True)
+
+        self._seq_attrs = _collect_sequence_attributes(trainer)
+
+    def _save_vis(self, vis: np.ndarray, video_id: str, frame_id: int) -> None:
+        """Write a visualisation.
+
+        When the test dataset exposes ``sequence_attributes()`` (OOTB, SatSOT,
+        SV248S, …), each frame is written under every attribute folder its
+        video carries: ``visualizations/<attr>/<vid>_frame<fid>.jpg``. Videos
+        whose attribute list is empty fall back to ``_no_attr/``. Datasets
+        that don't expose any attributes keep the flat layout.
+
+        The first folder gets the real file; the remaining attribute folders
+        receive a hardlink (with symlink fallback), so a frame with K
+        attributes costs ~1× disk instead of K×.
+        """
+        safe_vid = video_id.replace("/", "_")
+        filename = f"{safe_vid}_frame{frame_id:04d}.jpg"
+        bgr = cv2.cvtColor(vis, cv2.COLOR_RGB2BGR)
+
+        if not self._seq_attrs:
+            cv2.imwrite(str(self._vis_dir / filename), bgr)
+            return
+
+        attrs = self._seq_attrs.get(video_id) or []
+        folders = attrs if attrs else [_NO_ATTR_FOLDER]
+
+        primary = self._vis_dir / folders[0]
+        primary.mkdir(parents=True, exist_ok=True)
+        primary_path = primary / filename
+        cv2.imwrite(str(primary_path), bgr)
+
+        for attr in folders[1:]:
+            sub = self._vis_dir / attr
+            sub.mkdir(parents=True, exist_ok=True)
+            link_path = sub / filename
+            if link_path.exists() or link_path.is_symlink():
+                link_path.unlink()
+            try:
+                os.link(primary_path, link_path)
+            except OSError:
+                os.symlink(os.path.relpath(primary_path, sub), link_path)
 
     def on_test_batch_end(
         self,
@@ -136,13 +220,7 @@ class DetectionVisualizationCallback(L.Callback):
                 img_tensor, pred, tgt, video_id,
             )
 
-            # Replace slashes in video_id to avoid subdirectory issues
-            safe_vid = video_id.replace("/", "_")
-            filename = f"{safe_vid}_frame{frame_id:04d}.jpg"
-            cv2.imwrite(
-                str(self._vis_dir / filename),
-                cv2.cvtColor(vis, cv2.COLOR_RGB2BGR),
-            )
+            self._save_vis(vis, video_id, frame_id)
 
             per_image_metrics["video_id"] = video_id
             per_image_metrics["frame_id"] = frame_id
@@ -681,13 +759,7 @@ class SAM2VisualizationCallback(DetectionVisualizationCallback):
                 img, pred, tgt, video_id,
             )
 
-            # Replace slashes in video_id to avoid subdirectory issues
-            safe_vid = video_id.replace("/", "_")
-            filename = f"{safe_vid}_frame{frame_id:04d}.jpg"
-            cv2.imwrite(
-                str(self._vis_dir / filename),
-                cv2.cvtColor(vis, cv2.COLOR_RGB2BGR),
-            )
+            self._save_vis(vis, video_id, frame_id)
 
             per_image_metrics["video_id"] = video_id
             per_image_metrics["frame_id"] = frame_id
