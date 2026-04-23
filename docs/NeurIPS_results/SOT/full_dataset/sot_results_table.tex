@@ -1,0 +1,31 @@
+% Requires: \usepackage{booktabs} \usepackage{multirow} \usepackage{array}
+% Optional (for colored rows): \usepackage[table]{xcolor}
+
+\begin{table*}[t]
+\centering
+\caption{Comparison of single object tracking (SOT) methods on three spaceborne video benchmarks (SatSOT, SV248S, OOTB). We report Success Rate (SR), Normalized Precision Rate (NPR), Precision Rate (PR), and Precision at 5 pixels (P@5). \textbf{Bold} indicates the best result and \underline{underlined} indicates the second best per metric. Methods are grouped by evaluation protocol: \emph{Pretrained} trackers use their official weights without adaptation, while \emph{Zero-shot} segmentation foundation models are evaluated without any task-specific training.}
+\label{tab:sot_results}
+\setlength{\tabcolsep}{4pt}
+\renewcommand{\arraystretch}{1.15}
+\small
+\begin{tabular}{l l c *{4}{c} *{4}{c} *{4}{c}}
+\toprule
+\multirow{2}{*}{\textbf{Method}} & \multirow{2}{*}{\textbf{Venue}} & & \multicolumn{4}{c}{\textbf{SatSOT}} & \multicolumn{4}{c}{\textbf{SV248S}} & \multicolumn{4}{c}{\textbf{OOTB}} \\
+\cmidrule(lr){4-7} \cmidrule(lr){8-11} \cmidrule(lr){12-15}
+ & & & SR & NPR & PR & P@5 & SR & NPR & PR & P@5 & SR & NPR & PR & P@5 \\
+\midrule
+\multicolumn{15}{l}{\textit{Pretrained trackers}} \\
+\midrule
+SiamRPN++    & CVPR 2019 & & 0.3102 & 0.3684 & 0.4933 & 0.4060 & 0.1409 & 0.1532 & 0.3820 & 0.2771 & 0.3568 & 0.5033 & 0.6222 & 0.4868 \\
+OSTrack-384  & ECCV 2022 & & 0.3527 & 0.4028 & 0.5180 & 0.4811 & 0.1729 & 0.1941 & 0.3730 & 0.3486 & 0.4347 & 0.6093 & 0.7116 & 0.6004 \\
+ODTrack      & AAAI 2024 & & 0.3458 & 0.3951 & \underline{0.5353} & 0.4616 & 0.1673 & 0.1682 & 0.4182 & 0.3565 & 0.3808 & 0.5249 & 0.6358 & 0.5303 \\
+LoRAT-g378   & ECCV 2024 & & \underline{0.4156} & \underline{0.4775} & 0.5251 & \underline{0.5210} & \textbf{0.3732} & \textbf{0.4268} & \underline{0.5270} & \underline{0.5087} & \underline{0.4801} & \underline{0.6607} & \underline{0.7201} & \underline{0.6645} \\
+\midrule
+\multicolumn{15}{l}{\textit{Zero-shot segmentation foundation models}} \\
+\midrule
+SAM 2        & ICCV 2024  & & 0.3505 & 0.4161 & 0.4774 & 0.4490 & 0.2353 & 0.2680 & 0.3832 & 0.3701 & 0.4508 & 0.6107 & 0.6868 & 0.6533 \\
+SAMURAI      & arXiv 2024 & & 0.3681 & 0.4409 & 0.5172 & 0.4721 & 0.2514 & 0.2849 & 0.4232 & 0.3978 & 0.4443 & 0.5912 & 0.6652 & 0.6420 \\
+SAM 3        & arXiv 2025 & & \textbf{0.4684} & \textbf{0.5505} & \textbf{0.6559} & \textbf{0.6242} & \underline{0.3429} & \underline{0.4100} & \textbf{0.6167} & \textbf{0.6004} & \textbf{0.5161} & \textbf{0.7114} & \textbf{0.7922} & \textbf{0.7872} \\
+\bottomrule
+\end{tabular}
+\end{table*}
