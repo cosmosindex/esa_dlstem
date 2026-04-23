@@ -182,3 +182,91 @@ BCL 在 SV248S 里是 “sequence 含 ≥10 帧 INV（invisible）” 的统计�
 - **Tier 2 (Dataset-specific attributes)**：每个数据集独有的 attribute 在自己的 table 里单独报告（如 SatSOT 的 TO/BJT，SV248S 的 SM/ND/BCH/CO，OOTB 的 MB/LT/IM/AM）。这样既不丢信息，又不会做不公平的跨数据集比较。
 
 论文里可以放一个类似第 2 节的 mapping table 作为 appendix，再在正文里放一个精简的 Tier 1 vs Tier 2 示意图。这对 reviewer 来说是很加分的 transparency。
+
+---
+
+## 5. Result Tables
+
+> **Conventions.** Rows = attributes, columns = trackers. Metric reported is **SR** (Success Rate, AUC of success plot). Tracker placeholders `T1 … T11` stand for the 11 selected SOT models (Siamese / one-stream transformer / large ViT / foundation models including SAM 2 / SAM 3 / SAMURAI) — replace with final model names before submission. `—` denotes an attribute that is not annotated in the corresponding dataset. **Bold** = best, <u>underline</u> = second-best per row.
+
+### 5.1 Tier 1 — Overlap Attributes (Cross-Dataset Comparable)
+
+Attributes that appear (or can be safely mapped) across **at least two** of the three datasets. Results are reported **per dataset** (not aggregated) so the reader can see dataset-specific patterns at a glance. Each tracker occupies three sub-columns: **Sa** = SatSOT, **Sv** = SV248S, **Oo** = OOTB.
+
+**Table 5.1 — Tier 1 per-attribute SR results, reported per dataset.**
+
+| Attribute | T1 Sa | T1 Sv | T1 Oo | T2 Sa | T2 Sv | T2 Oo | T3 Sa | T3 Sv | T3 Oo | T4 Sa | T4 Sv | T4 Oo | T5 Sa | T5 Sv | T5 Oo | T6 Sa | T6 Sv | T6 Oo | T7 Sa | T7 Sv | T7 Oo | T8 Sa | T8 Sv | T8 Oo | T9 Sa | T9 Sv | T9 Oo | T10 Sa | T10 Sv | T10 Oo | T11 Sa | T11 Sv | T11 Oo |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| IV (Illumination Variation)              |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
+| ROT (Rotation, in-plane)                 |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
+| POC (Partial Occlusion)¹                 |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
+| FOC (Full Occlusion)¹                    |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
+| SOB (Similar Object)²                    |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
+| BC (Background Clutter)                  |  | — |  |  | — |  |  | — |  |  | — |  |  | — |  |  | — |  |  | — |  |  | — |  |  | — |  |  | — |  |  | — |  |
+| DEF (Deformation)                        |  | — |  |  | — |  |  | — |  |  | — |  |  | — |  |  | — |  |  | — |  |  | — |  |  | — |  |  | — |  |  | — |  |
+| ARC (Aspect Ratio Change)³               |  | — |  |  | — |  |  | — |  |  | — |  |  | — |  |  | — |  |  | — |  |  | — |  |  | — |  |  | — |  |  | — |  |
+| **Overall (dataset-level)**              |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
+
+**Notes for Tier 1.**
+¹ Occlusion mapping is an approximation — SatSOT / OOTB define it spatially (partial vs full), SV248S temporally (STO ≤50 frames vs LTO >50 frames). We map POC ≈ {SatSOT POC, SV248S STO, OOTB PO} and FOC ≈ {SatSOT FOC, SV248S LTO, OOTB FO}.
+² SOB aggregates SatSOT SOB, SV248S DS (quantitative, 2.5× OS radius) and OOTB SA (qualitative).
+³ ARC on SatSOT uses aspect-ratio threshold [0.5, 2]; on OOTB (OON) uses [0.3, 3]. Thresholds differ, so the two columns are not strictly comparable in absolute terms — treat them as per-dataset difficulty rather than an apples-to-apples cross-dataset metric.
+⁴ BC, DEF, ARC are not annotated in SV248S → `—`. All other attributes in Tier 1 are annotated in all three datasets.
+
+---
+
+### 5.2 Tier 2 — Dataset-Specific Attributes
+
+Attributes unique to a single dataset — reported **per dataset**, one SR column per tracker. One sub-table per dataset.
+
+#### 5.2.1 SatSOT-Specific Attributes
+
+**Table 5.2.1 — SR on SatSOT-specific attributes.**
+
+| Attribute | T1 | T2 | T3 | T4 | T5 | T6 | T7 | T8 | T9 | T10 | T11 |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| LQ (Low Quality)                         |  |  |  |  |  |  |  |  |  |  |  |
+| TO (Tiny Object, <25 px)                 |  |  |  |  |  |  |  |  |  |  |  |
+| BJT (Background Jitter)                  |  |  |  |  |  |  |  |  |  |  |  |
+| **Overall SatSOT**                       |  |  |  |  |  |  |  |  |  |  |  |
+
+---
+
+#### 5.2.2 SV248S-Specific Attributes
+
+**Table 5.2.2 — SR on SV248S-specific attributes.**
+
+| Attribute | T1 | T2 | T3 | T4 | T5 | T6 | T7 | T8 | T9 | T10 | T11 |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| BCH (Background Change)                  |  |  |  |  |  |  |  |  |  |  |  |
+| INV / BCL (Invisible, ≥10 INV frames)    |  |  |  |  |  |  |  |  |  |  |  |
+| CO (Continuous Occlusion, ≥2 events)     |  |  |  |  |  |  |  |  |  |  |  |
+| ND (Natural Disturbance)                 |  |  |  |  |  |  |  |  |  |  |  |
+| SM (Slow Motion, <2.2 pps)               |  |  |  |  |  |  |  |  |  |  |  |
+| **Overall SV248S**                       |  |  |  |  |  |  |  |  |  |  |  |
+
+---
+
+#### 5.2.3 OOTB-Specific Attributes
+
+**Table 5.2.3 — SR on OOTB-specific attributes.**
+
+| Attribute | T1 | T2 | T3 | T4 | T5 | T6 | T7 | T8 | T9 | T10 | T11 |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| MB (Motion Blur)                         |  |  |  |  |  |  |  |  |  |  |  |
+| LT (Less Textures)                       |  |  |  |  |  |  |  |  |  |  |  |
+| IM (Isotropic Motion)                    |  |  |  |  |  |  |  |  |  |  |  |
+| AM (Anisotropic Motion)                  |  |  |  |  |  |  |  |  |  |  |  |
+| **Overall OOTB**                         |  |  |  |  |  |  |  |  |  |  |  |
+
+---
+
+### 5.3 使用建议
+
+- 论文正文放一张 **Table 5.1 (Tier 1)** 作为 headline result。
+- Appendix 放三张 **Table 5.2.x (Tier 2)**，对每个数据集的独有 attribute 做 fine-grained breakdown。
+- Tier 1 采用 **per-dataset reporting**（Sa / Sv / Oo 三子列），避免跨数据集平均带来的歧义；同时清楚展示每个 tracker 在不同数据集上的行为差异（例如是否在某个数据集上 overfit）。
+- 每行可以额外附一列 **#Seq**（带该 attribute 的 sequence 数量）帮 reviewer 判断统计意义；如果需要再加上。
+- 指标计算约定（避免 reviewer 质疑）：
+  - 每个 attribute 行 = 含该 attribute 的 sequence 集合上，per-sequence SR 的均值（不是帧级）。
+  - Overall 行 = 对应数据集的 all-sequence SR 均值，而非各 attribute 行的再次平均。
