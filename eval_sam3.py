@@ -70,6 +70,7 @@ def main():
             batch_size=cfg.get("batch_size", 1),
             num_workers=cfg.get("num_workers", 0),
             split=os.environ.get("SOT_SPLIT", cfg.get("split", "test")),
+            dataset_kwargs=cfg.get("dataset_kwargs", {}),
         ),
         eval_transform=eval_transform,
     )

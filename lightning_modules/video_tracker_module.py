@@ -95,6 +95,17 @@ class VideoTrackerEvaluationModule(L.LightningModule):
         # subsequent clips use these carry-over predictions.
         self._carry_over: dict[str, dict] = {}
 
+        # Text-mode track-ID stitching state (MOT, prompt_strategy="text").
+        # SAM3 text-tracker's track_ids restart at 1 on every clip. We stitch
+        # IDs across clip boundaries externally via IoU matching:
+        #   - match this clip's frame-0 boxes against the previous clip's
+        #     last-frame boxes (global IDs)
+        #   - matched → reuse previous global ID
+        #   - unmatched → allocate a fresh video-global ID
+        # Kept separate from `_carry_over` since no box is ever sent back to
+        # the model (model stays fully open-vocab, no GT leakage).
+        self._text_id_state: dict[str, dict] = {}
+
     # ------------------------------------------------------------------
     # Test step
     # ------------------------------------------------------------------
@@ -145,6 +156,7 @@ class VideoTrackerEvaluationModule(L.LightningModule):
             if hasattr(self.model, "set_text_prompt"):
                 self.model.set_text_prompt(getattr(clip, "category", "") or None)
             preds = self.model.propagate()
+            self._stitch_text_track_ids(preds, video_id)
         else:
             # Decide prompt source: GT (first clip) or carry-over (subsequent)
             carry = self._carry_over.get(video_id)
@@ -371,6 +383,84 @@ class VideoTrackerEvaluationModule(L.LightningModule):
 
         self._num_fn += M - len(matched_gt)
         self._num_fp += N - len(matched_pred)
+
+    # ------------------------------------------------------------------
+    # Text-mode cross-clip track ID stitching (MOT open-vocabulary)
+    # ------------------------------------------------------------------
+
+    def _stitch_text_track_ids(self, preds: list[dict], video_id: str):
+        """Remap clip-local track_ids to video-global ids via IoU matching.
+
+        The SAM3 text-tracker restarts obj_ids at 1 for every clip. To keep
+        IDs continuous across clip boundaries of the same video, we match
+        the current clip's frame-0 predictions against the previous clip's
+        last-frame predictions (already in video-global id space) by IoU.
+        Matched detections reuse the previous global id; unmatched ones
+        receive fresh video-global ids allocated from a per-video counter.
+
+        No model state is changed — we only rewrite the ``track_ids`` field
+        of every frame's pred dict in place.
+        """
+        if not preds:
+            return
+
+        state = self._text_id_state.setdefault(video_id, {
+            "next_global": 1,
+            "prev_last": None,  # {"boxes": Tensor[N,4], "track_ids": Tensor[N]}
+        })
+
+        # Greedy IoU match: first non-empty frame of this clip → previous last
+        local_to_global: dict[int, int] = {}
+        prev = state["prev_last"]
+        first = next((p for p in preds if len(p.get("boxes", [])) > 0), None)
+        if (prev is not None
+                and first is not None
+                and len(prev["boxes"]) > 0):
+            iou = self._iou_matrix(prev["boxes"], first["boxes"])
+            rows, cols = (iou >= 0.3).nonzero(as_tuple=False).T
+            if rows.numel() > 0:
+                order = iou[rows, cols].argsort(descending=True)
+                rows, cols = rows[order], cols[order]
+                matched_prev: set[int] = set()
+                matched_cur: set[int] = set()
+                for r, c in zip(rows.tolist(), cols.tolist()):
+                    if r in matched_prev or c in matched_cur:
+                        continue
+                    matched_prev.add(r)
+                    matched_cur.add(c)
+                    local_id = int(first["track_ids"][c])
+                    global_id = int(prev["track_ids"][r])
+                    # Only bind if this local id hasn't been claimed already
+                    local_to_global.setdefault(local_id, global_id)
+
+        # Rewrite track_ids for every frame in the clip using the mapping
+        # (unknown locals get a fresh video-global id, cached for later frames).
+        for frame_pred in preds:
+            tids = frame_pred.get("track_ids")
+            if tids is None or len(tids) == 0:
+                continue
+            new_ids = []
+            for lid in tids.tolist():
+                lid = int(lid)
+                if lid in local_to_global:
+                    new_ids.append(local_to_global[lid])
+                else:
+                    gid = state["next_global"]
+                    state["next_global"] += 1
+                    local_to_global[lid] = gid
+                    new_ids.append(gid)
+            frame_pred["track_ids"] = torch.tensor(
+                new_ids, dtype=tids.dtype, device=tids.device,
+            )
+
+        # Cache this clip's last non-empty frame for the next clip's boundary.
+        for frame_pred in reversed(preds):
+            if len(frame_pred.get("boxes", [])) > 0:
+                state["prev_last"] = {
+                    "boxes": frame_pred["boxes"].detach().clone(),
+                    "track_ids": frame_pred["track_ids"].detach().clone(),
+                }
+                break
 
     @staticmethod
     def _iou_matrix(boxes_a: torch.Tensor, boxes_b: torch.Tensor) -> torch.Tensor:

@@ -1,0 +1,31 @@
+# SAM3 open-vocabulary MOT on SDM-Car (Luojia-3-01 satellite video of vehicles).
+# No GT boxes are ever passed to the model — SAM3's text-prompted detector
+# discovers instances per frame. Track IDs reset at each clip boundary.
+# Single-class dataset (all objects are cars).
+
+dataset: SDM-Car
+dataset_root: /data/ESA_DLSTEM_2025/data/trafic/SDM-Car
+class_map:
+  car: 0
+
+eval_mode: mot
+split: test
+img_size: null
+
+sam3_checkpoint_path: null
+apply_temporal_disambiguation: true
+
+tracker_type: text
+prompt_strategy: text
+
+clip_len: 32
+clip_stride: 1
+batch_size: 1
+num_workers: 0
+
+iou_thresh: 0.3
+score_thresh: 0.5
+max_wandb_images: 50
+
+wandb_project: esa-dlstem
+wandb_entity: chengziwen693
