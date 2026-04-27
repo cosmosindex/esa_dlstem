@@ -336,3 +336,25 @@ Split strategy: **Official split** from dataset (train / validation / test direc
 | val       |     15 |  2,409 |
 | test      |     20 |  3,531 |
 | **Total** | **99** |**16,423**|
+
+---
+
+## RsCarData
+
+Split strategy: **Official test split honoured unchanged** (the 7 1024×1024
+sequences `002,003,005,006,008,009,010` used in HiEUM's TPAMI 2024 paper).
+Val carved from 10 % of the official train split (``seed=42``) so the
+test numbers can be compared one-to-one with the paper.
+Single class: `car` (the dataset is the car / vehicle subset of VISO with
+re-curated MOT-format labels).
+
+| Category  | Train | Val | Test | Total |
+|-----------|------:|----:|-----:|------:|
+| car       |    63 |   7 |    7 |    77 |
+
+| Split     | Videos | Frames | Resolution     |
+|-----------|-------:|-------:|----------------|
+| train     |     63 | 24,532 | 512×512        |
+| val       |      7 |  2,902 | 512×512        |
+| test      |      7 |  2,255 | 1024×1024      |
+| **Total** | **77** |**29,689** | mixed       |

@@ -237,6 +237,14 @@ Each sequence in OOTB is labeled with 12 fine-grained attributes (from the OOTB 
   - **Our split**: train 64 (10,483 frames) / val 15 (2,409 frames) / test 20 (3,531 frames).
   - **Implementation**: `SDMCarDataset(root, split)`. Registered as `"SDM-Car"` in both DataModule registries. Reads frames directly from AVI via OpenCV `VideoCapture`. Single category `"car"` for all objects.
 
+- **RsCarData**: The vehicle subset of VISO that the HiEUM paper (Xiao et al., TPAMI 2024) trained and evaluated on. VISO ships four categories (plane / car / ship / train); RsCarData keeps only the car/vehicle sequences and re-curates them with MOT-format track IDs.
+  - **77 sequences**, single class: car. 70 train sequences at 512×512 (data augmentation crops, 27,434 frames) and 7 test sequences at 1024×1024 (full satellite frames, 2,255 frames).
+  - **Annotations**: Two COCO-MOT JSONs at `annotations/{train_mot.json, test1024_mot.json}`. Each lists `videos`, `images` (with `video_id`, `video_frame_id`), and `annotations` (with `track_id`, `bbox` in xywh top-left absolute pixels, single category `car`). Two separate plain-COCO files (`instances_*.json`) ship the same data without track_ids — unused.
+  - **Image layout**: `images/{train,test1024}/<seq>/img1/<frame:06d>.jpg`. Sequence ids are zero-padded 3-digit strings (`001`..`070` for train; `002,003,005,006,008,009,010` for test). Frame ids are 1-indexed and dense.
+  - **Official split**: train (70) / test (7). Test sequence ids correspond to HiEUM's `dataNum=[3,5,2,8,10,6,9]` evaluation list.
+  - **Our split**: test held intact (7 sequences) for paper-compatible eval; val carved from train at 10 % (7 sequences, `seed=42`); remaining 63 sequences used as train.
+  - **Implementation**: `RsCarDataset(root, split)`. Registered as `"RsCarData"` in both DataModule registries. Reads JPEGs via OpenCV `imread`. Mixed train/test resolutions handled transparently — each video stores its own height/width via the on-disk image.
+
 ---
 
 ## Citation Hints
@@ -251,4 +259,5 @@ OOTB:        Chen et al., ISPRS 2024. DOI: 10.1016/j.isprsjprs.2024.03.013
 IRSatVideo-LEO: Ying et al., IEEE TGRS 2025. arXiv: 2409.12448
 SDM-Car:     Zhang et al., IEEE GRSL 2024. DOI: 10.1109/LGRS.2024.3493249
 LMOD:        IEEE TGRS 2025. DOI: 10.1109/TGRS.2025.11142571
+RsCarData:   Xiao et al., IEEE TPAMI 2024. DOI: 10.1109/TPAMI.2024.3409824 (HiEUM, re-annotation of VISO car subset)
 ```
