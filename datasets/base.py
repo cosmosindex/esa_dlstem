@@ -54,10 +54,16 @@ class VideoInfo:
     """Metadata for a single video / sequence."""
     video_id:   str
     dataset:    str              # e.g. "OOTB", "BIRDSAI"
-    category:   str              # original category name, e.g. "car"
+    category:   str              # dominant category name (single class), e.g. "car"
     split:      str              # "train" / "val" / "test" / "no_split"
     num_frames: int
     frame_ids:  list[int]        # ordered list of usable frame indices
+    # Optional: every distinct category present *anywhere* in the sequence,
+    # for datasets where a single sequence can mix multiple classes (e.g.
+    # LMOD's car+plane+ship+train seqs). Used by ``BaseVideoDataset``'s
+    # ``categories`` filter so single-class evaluators can opt into
+    # "sequence contains class X" semantics rather than "dominant == X".
+    categories_present: tuple[str, ...] = ()
 
 
 @dataclass
@@ -129,6 +135,7 @@ class BaseVideoDataset(ABC, Dataset):
         clip_overlap: float = 0.0,
         transform: Optional[Callable] = None,
         class_map: Optional[dict[str, int]] = None,
+        categories: Optional[list[str]] = None,
     ):
         self.root         = Path(root)
         self.split        = split
@@ -138,10 +145,22 @@ class BaseVideoDataset(ABC, Dataset):
         self.clip_overlap = clip_overlap
         self.transform    = transform
         self.class_map    = class_map or {}
+        # If set, drop any video whose VideoInfo.category isn't in this list.
+        # Useful when a single-class detector (e.g. HiEUM) should only see
+        # sequences whose dominant class matches its training distribution.
+        self.categories   = list(categories) if categories else None
 
         # Populated by _build_index()
         self.videos: list[VideoInfo] = []
         self._build_index()
+        if self.categories is not None:
+            wanted = set(self.categories)
+            self.videos = [
+                v for v in self.videos
+                if (v.categories_present
+                    and any(c in wanted for c in v.categories_present))
+                or v.category in wanted
+            ]
 
         if not self.videos:
             raise RuntimeError(

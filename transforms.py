@@ -89,3 +89,56 @@ def build_eval_transform(img_size: tuple[int, int] = (640, 640)) -> Albumentatio
             ),
         )
     )
+
+
+def build_satmot_train_transform(crop_size: int = 1024) -> AlbumentationsWrapper:
+    """Cross-dataset satellite-MOT training transform.
+
+    Designed for the LMOD/SAT-MTB/VISO/SDM-Car/AIRMOT mix: most objects are
+    very small (LMOD avg-area ≈ 51 px² with 98.8% < 32×32), so we **crop**
+    instead of resizing to preserve pixel area. PadIfNeeded handles frames
+    smaller than ``crop_size``. Boxes whose post-augmentation visibility
+    drops below ``min_visibility=0.1`` are dropped — a slightly looser
+    threshold than the default 0.3 since small-object boxes are easy to
+    clip.
+    """
+    return AlbumentationsWrapper(
+        A.Compose(
+            [
+                A.PadIfNeeded(
+                    min_height=crop_size, min_width=crop_size,
+                    border_mode=0, fill=0,
+                ),
+                A.RandomCrop(height=crop_size, width=crop_size),
+                A.HorizontalFlip(p=0.5),
+                A.VerticalFlip(p=0.2),
+                A.RandomBrightnessContrast(
+                    brightness_limit=0.15, contrast_limit=0.15, p=0.3,
+                ),
+            ],
+            bbox_params=A.BboxParams(
+                format="pascal_voc",
+                label_fields=["labels"],
+                min_visibility=0.1,
+            ),
+        )
+    )
+
+
+def build_satmot_eval_transform() -> AlbumentationsWrapper:
+    """Cross-dataset satellite-MOT eval transform.
+
+    No spatial transform — the FasterRCNN model's internal GeneralizedRCNN
+    transform handles resizing to ``min_size``/``max_size`` while preserving
+    aspect ratio. Boxes pass through unchanged.
+    """
+    return AlbumentationsWrapper(
+        A.Compose(
+            [],
+            bbox_params=A.BboxParams(
+                format="pascal_voc",
+                label_fields=["labels"],
+                min_visibility=0.0,
+            ),
+        )
+    )

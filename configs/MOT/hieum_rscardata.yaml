@@ -1,0 +1,46 @@
+# HiEUM moving-object detection on RsCarData (the VISO car/vehicle subset
+# the original paper used). 7 test sequences at 1024x1024, single class
+# car — same protocol HiEUM was trained and evaluated on, so numbers
+# from this run are directly comparable to the paper's 89.7 % F1 (modulo
+# our IoU≥0.5 metric vs. their center-distance criterion).
+
+dataset: RsCarData
+dataset_root: /data/ESA_DLSTEM_2025/data/trafic/RsCarData
+class_map:
+  car: 0
+
+eval_mode: mot
+split: test
+img_size: null
+
+hieum_checkpoint_path: /work/ziwen/checkpoints/hieum/model_best.pth
+hieum_layers: 3
+hieum_seq_len: 20
+hieum_image_size: [1024, 1024]
+hieum_thresh: 3.0
+hieum_max_dets: 128
+hieum_nms_iou: 0.1
+
+clip_len: 20
+clip_stride: 1
+batch_size: 1
+num_workers: 0
+
+iou_thresh: 0.3
+# Score floor passed to the wrapper: anything decayed below this by
+# Soft-NMS gets dropped *before* the metric accumulator sees it. Keep
+# below the lowest sweep value so the sweep can re-test cutoffs above.
+score_thresh: 0.05
+# Match GT vs pred by centroid Euclidean distance (HiEUM paper protocol,
+# Sec 4.2 "we follow [4,14] to employ distance metric ... threshold set to
+# 5 pixels"). Use match_metric: iou to fall back to bbox-overlap matching.
+match_metric: centroid
+centroid_dist_thresh: 5.0
+# Score-threshold sweep — exactly the values HiEUM Table III reports
+# under. The eval module re-runs matching at every cutoff and logs the
+# best F1, so this run is directly comparable to the paper's 89.7 % F1.
+score_sweep: [0.10, 0.15, 0.20, 0.25, 0.30, 0.32, 0.34, 0.35]
+max_wandb_images: 50
+
+wandb_project: esa-dlstem
+wandb_entity: chengziwen693

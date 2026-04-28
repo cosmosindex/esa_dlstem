@@ -1,0 +1,20 @@
+# SORT on RsCarData test (HiEUM dets cached upstream).
+dataset: rscardata
+tracker: sort
+cache_dir: /data/ESA_DLSTEM_2025/experiments/Detection/hieum_dets_cache/rscardata
+
+# Drop very-low-score HiEUM dets before feeding to the tracker. Score
+# floor in the HiEUM cache is already 0.05 — raise here per tracker if
+# its association is sensitive to clutter.
+score_floor: 0.25
+
+# Eval criterion: HiEUM paper protocol (centroid Euclidean ≤ 5 px).
+match_metric: centroid
+centroid_dist_thresh: 5.0
+iou_thresh: 0.5
+
+tracker_kwargs:
+  max_age: 5
+  min_hits: 1
+  iou_threshold: 0.1   # cars are 7-15 px → IoU≥0.3 over-rejects
+  score_thresh: 0.0

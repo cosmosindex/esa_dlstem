@@ -1,0 +1,38 @@
+# GroundingDINO open-vocabulary detection on AIR-MOT-100.
+# Detection-only evaluation: per-frame text-prompted detection, no GT boxes
+# ever reach the model, no MOT/tracking metrics computed.
+# Track IDs are unique-within-frame placeholders (no temporal correspondence).
+
+dataset: AIR-MOT
+dataset_root: /data/ESA_DLSTEM_2025/data/trafic/AIR-MOT-100
+class_map:
+  airplane: 0
+  ship: 1
+
+eval_mode: mot
+det_only_mode: true
+
+split: test
+img_size: null
+
+# GroundingDINO weights & config
+gdino_config_path: GroundingDINO/groundingdino/config/GroundingDINO_SwinT_OGC.py
+gdino_checkpoint_path: /work/ziwen/checkpoints/grounding_dino/groundingdino_swint_ogc.pth
+box_threshold: 0.35
+text_threshold: 0.25
+
+# Open-vocab text prompting (GroundingDINO has no temporal model; this is just
+# how the existing pipeline routes per-clip captions through set_text_prompt)
+prompt_strategy: text
+
+clip_len: 32
+clip_stride: 1
+batch_size: 1
+num_workers: 0
+
+iou_thresh: 0.3
+score_thresh: 0.5
+max_wandb_images: 50
+
+wandb_project: esa-dlstem
+wandb_entity: chengziwen693

@@ -3,6 +3,8 @@ from .yolo import YOLODetector
 from .sam2 import SAM2Tracker
 from .sam3 import SAM3Tracker, SAM3TextTracker
 from .dinov3 import DINOv3Detector
+from .grounding_dino import GroundingDINODetector
+from .hieum import HiEUMDetector
 
 __all__ = [
     "FasterRCNNDetector",
@@ -11,4 +13,6 @@ __all__ = [
     "SAM3Tracker",
     "SAM3TextTracker",
     "DINOv3Detector",
+    "GroundingDINODetector",
+    "HiEUMDetector",
 ]

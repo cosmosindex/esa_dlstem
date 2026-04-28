@@ -1,0 +1,16 @@
+dataset: satmtb
+tracker: botsort
+cache_dir: /data/ESA_DLSTEM_2025/experiments/Detection/hieum_dets_cache/satmtb
+score_floor: 0.10
+match_metric: centroid
+centroid_dist_thresh: 5.0
+iou_thresh: 0.5
+tracker_kwargs:
+  track_high_thresh: 0.30
+  track_low_thresh: 0.10
+  new_track_thresh: 0.35
+  track_buffer: 30
+  match_thresh: 0.5
+  cmc_method: none
+  mot20: false
+  frame_rate: 30

@@ -1,0 +1,14 @@
+# ByteTrack on RsCarData (HiEUM cached dets).
+dataset: rscardata
+tracker: bytetrack
+cache_dir: /data/ESA_DLSTEM_2025/experiments/Detection/hieum_dets_cache/rscardata
+score_floor: 0.10                # let ByteTrack's two-stage rescue use 0.10–track_thresh
+match_metric: centroid
+centroid_dist_thresh: 5.0
+iou_thresh: 0.5
+tracker_kwargs:
+  track_thresh: 0.30             # high-conf threshold; HiEUM scores cluster 0.3–0.5
+  track_buffer: 30
+  match_thresh: 0.5              # 1 - IoU; cars are tiny so IoU acceptance is loose
+  mot20: false
+  frame_rate: 30

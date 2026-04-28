@@ -76,9 +76,10 @@ _BLUE   = (50, 80, 220)    # FN / GT
 _ORANGE = (255, 165, 0)    # TP with ID switch
 _GRAY   = (150, 150, 150)  # ignored (SOT mode)
 
-_FONT       = cv2.FONT_HERSHEY_SIMPLEX
-_FONT_SCALE = 0.45
-_THICKNESS  = 1
+_FONT                 = cv2.FONT_HERSHEY_SIMPLEX
+_DEFAULT_FONT_SCALE   = 0.45    # tracking-style legible labels
+_DEFAULT_BOX_THICK    = 2       # tracking-style boxes
+_THICKNESS            = 1       # text stroke (kept thin universally)
 
 # Size threshold: small < 32×32 = 1024 px²  (matches bbox_stats_report_trafic.md)
 _SMALL_AREA_THRESH = 1024
@@ -101,18 +102,50 @@ def _center(box: np.ndarray) -> tuple[float, float]:
     return (float(box[0] + box[2]) / 2, float(box[1] + box[3]) / 2)
 
 
+def _centroid_dist_matrix(boxes_a: np.ndarray, boxes_b: np.ndarray) -> np.ndarray:
+    """Pairwise Euclidean distances between bbox centres of two xyxy sets."""
+    if len(boxes_a) == 0 or len(boxes_b) == 0:
+        return np.zeros((len(boxes_a), len(boxes_b)), dtype=np.float32)
+    cx_a = (boxes_a[:, 0] + boxes_a[:, 2]) * 0.5
+    cy_a = (boxes_a[:, 1] + boxes_a[:, 3]) * 0.5
+    cx_b = (boxes_b[:, 0] + boxes_b[:, 2]) * 0.5
+    cy_b = (boxes_b[:, 1] + boxes_b[:, 3]) * 0.5
+    dx = cx_a[:, None] - cx_b[None, :]
+    dy = cy_a[:, None] - cy_b[None, :]
+    return np.sqrt(dx * dx + dy * dy).astype(np.float32)
+
+
 class DetectionVisualizationCallback(L.Callback):
     """
     Visualise test-set detections as bounding-box overlays.
 
     Args:
-        class_names:       Dict mapping class id → display name, e.g. {1: "car"}.
-        output_dir:        Local directory to save all visualizations and metrics.
-        iou_thresh:        IoU threshold for TP / FP / FN matching (detection mode).
-        max_wandb_images:  Max images to log to W&B (local saves are unlimited).
-        score_thresh:      Only draw predictions with score >= this value.
-        sot_mode:          If True, use SOT evaluation (Success/Precision plots)
-                           instead of detection TP/FP/FN metrics.
+        class_names:          Dict mapping class id → display name, e.g. {1: "car"}.
+        output_dir:           Local directory to save all visualizations and metrics.
+        iou_thresh:           IoU threshold for TP / FP / FN matching (detection mode).
+                              Used only when ``match_metric == "iou"``.
+        max_wandb_images:     Max images to log to W&B (local saves are unlimited).
+        score_thresh:         Only draw predictions with score >= this value.
+        sot_mode:             If True, use SOT evaluation (Success/Precision plots)
+                              instead of detection TP/FP/FN metrics.
+        match_metric:         How to decide whether a pred matches a GT.
+                              ``"iou"``       — bbox IoU >= ``iou_thresh`` (default).
+                              ``"centroid"``  — Euclidean distance between bbox
+                                              centres <= ``centroid_dist_thresh``.
+                                              This is the protocol HiEUM and
+                                              other SVMOD papers (Xiao et al.
+                                              TPAMI 2024; refs [4,14] in their
+                                              paper) report numbers under.
+        centroid_dist_thresh: Pixel threshold for centroid matching. Paper uses 5.
+        det_only_mode:        If True, drop tracking-only label suffixes
+                              (``T#<id>`` for predictions, ``GT#<id>`` for GT)
+                              from the per-box overlay. Use this for detectors
+                              with no temporal-id concept (HiEUM, Faster-RCNN
+                              under ByteTrack, etc.).
+        font_scale:           OpenCV ``fontScale`` for label text. Lower for
+                              dense small-object datasets (satellite cars).
+        box_thickness:        Bounding-box rectangle stroke width. 1 for tiny
+                              objects, 2 for tracking-style legibility.
     """
 
     def __init__(
@@ -123,6 +156,11 @@ class DetectionVisualizationCallback(L.Callback):
         max_wandb_images: int = 50,
         score_thresh: float = 0.5,
         sot_mode: bool = False,
+        match_metric: str = "iou",
+        centroid_dist_thresh: float = 5.0,
+        det_only_mode: bool = False,
+        font_scale: float = _DEFAULT_FONT_SCALE,
+        box_thickness: int = _DEFAULT_BOX_THICK,
     ):
         super().__init__()
         self.class_names = class_names
@@ -131,6 +169,13 @@ class DetectionVisualizationCallback(L.Callback):
         self.max_wandb_images = max_wandb_images
         self.score_thresh = score_thresh
         self.sot_mode = sot_mode
+        if match_metric not in ("iou", "centroid"):
+            raise ValueError(f"match_metric must be 'iou' or 'centroid', got {match_metric!r}")
+        self.match_metric = match_metric
+        self.centroid_dist_thresh = float(centroid_dist_thresh)
+        self.det_only_mode = bool(det_only_mode)
+        self.font_scale = float(font_scale)
+        self.box_thickness = int(box_thickness)
 
         self._wandb_logged = 0
         self._vis_dir: Path | None = None
@@ -250,6 +295,14 @@ class DetectionVisualizationCallback(L.Callback):
         with open(summary_path, "w") as f:
             json.dump(summary, f, indent=2)
 
+        # If the module ran a score-threshold sweep, dump the full
+        # per-threshold table to a separate file. ``test_metrics.json``
+        # only carries the best operating point.
+        sweep = getattr(pl_module, "sweep_summary", None)
+        if sweep is not None:
+            with open(self.output_dir / "sweep_results.json", "w") as f:
+                json.dump(sweep, f, indent=2)
+
     # ------------------------------------------------------------------
     # Dispatch: detection vs SOT
     # ------------------------------------------------------------------
@@ -342,7 +395,15 @@ class DetectionVisualizationCallback(L.Callback):
         gt_boxes: np.ndarray,
         pred_boxes: np.ndarray,
     ) -> tuple[np.ndarray, np.ndarray, np.ndarray, list[tuple[int, int]]]:
-        """Greedy IoU matching."""
+        """Greedy GT-to-pred matching under either IoU or centroid distance.
+
+        Branches on ``self.match_metric``: under ``"iou"`` we keep the
+        legacy behaviour (descending IoU >= ``iou_thresh``); under
+        ``"centroid"`` we accept pairs whose bbox centres are within
+        ``centroid_dist_thresh`` pixels and assign them in ascending
+        distance order. Centroid matching is what HiEUM (and the SVMOD
+        literature in general) reports against.
+        """
         M, N = len(gt_boxes), len(pred_boxes)
         tp_mask = np.zeros(N, dtype=bool)
         fp_mask = np.ones(N, dtype=bool)
@@ -352,15 +413,21 @@ class DetectionVisualizationCallback(L.Callback):
         if M == 0 or N == 0:
             return tp_mask, fp_mask, fn_mask, matched_pairs
 
-        iou = self._iou_matrix(gt_boxes, pred_boxes)
-        matched_gt: set[int] = set()
-        matched_pred: set[int] = set()
+        if self.match_metric == "centroid":
+            dist = _centroid_dist_matrix(gt_boxes, pred_boxes)
+            pairs = np.argwhere(dist <= self.centroid_dist_thresh)
+            scores = dist[pairs[:, 0], pairs[:, 1]] if len(pairs) > 0 else np.array([])
+            order = scores.argsort() if len(pairs) > 0 else np.array([], dtype=int)
+        else:
+            iou = self._iou_matrix(gt_boxes, pred_boxes)
+            pairs = np.argwhere(iou >= self.iou_thresh)
+            scores = iou[pairs[:, 0], pairs[:, 1]] if len(pairs) > 0 else np.array([])
+            order = scores.argsort()[::-1] if len(pairs) > 0 else np.array([], dtype=int)
 
-        pairs = np.argwhere(iou >= self.iou_thresh)
         if len(pairs) > 0:
-            scores = iou[pairs[:, 0], pairs[:, 1]]
-            order = scores.argsort()[::-1]
             pairs = pairs[order]
+            matched_gt: set[int] = set()
+            matched_pred: set[int] = set()
             for r, c in pairs:
                 if r in matched_gt or c in matched_pred:
                     continue
@@ -464,25 +531,30 @@ class DetectionVisualizationCallback(L.Callback):
         fn_mask: np.ndarray,
         idsw_preds: set[int],
     ):
+        # In detection-only mode the predictions carry no real temporal IDs
+        # (per-frame ``arange(N)+1`` placeholders); the ``T#``/``GT#`` suffix
+        # would clutter the overlay without adding information.
+        show_tids = not self.det_only_mode
+
         for i, is_fn in enumerate(fn_mask):
             if is_fn:
                 b = gt_boxes[i].astype(int)
                 name = self.class_names.get(int(gt_labels[i]), f"cls{gt_labels[i]}")
-                tid = f" GT#{int(gt_track_ids[i])}" if gt_track_ids is not None else ""
+                tid = f" GT#{int(gt_track_ids[i])}" if (show_tids and gt_track_ids is not None) else ""
                 self._draw_box(img, b, _RED, f"FN {name}{tid}")
 
         for i, is_fp in enumerate(fp_mask):
             if is_fp:
                 b = pred_boxes[i].astype(int)
                 name = self.class_names.get(int(pred_labels[i]), f"cls{pred_labels[i]}")
-                tid = f" T#{int(pred_track_ids[i])}" if pred_track_ids is not None else ""
+                tid = f" T#{int(pred_track_ids[i])}" if (show_tids and pred_track_ids is not None) else ""
                 self._draw_box(img, b, _BLUE, f"FP {name}{tid} {pred_scores[i]:.2f}")
 
         for i, is_tp in enumerate(tp_mask):
             if is_tp:
                 b = pred_boxes[i].astype(int)
                 name = self.class_names.get(int(pred_labels[i]), f"cls{pred_labels[i]}")
-                tid = f" T#{int(pred_track_ids[i])}" if pred_track_ids is not None else ""
+                tid = f" T#{int(pred_track_ids[i])}" if (show_tids and pred_track_ids is not None) else ""
                 if i in idsw_preds:
                     self._draw_box(img, b, _ORANGE, f"IDsw {name}{tid} {pred_scores[i]:.2f}")
                 else:
@@ -687,13 +759,12 @@ class DetectionVisualizationCallback(L.Callback):
             return ids.cpu().numpy()
         return np.asarray(ids)
 
-    @staticmethod
-    def _draw_box(img: np.ndarray, box: np.ndarray, color: tuple, label: str):
+    def _draw_box(self, img: np.ndarray, box: np.ndarray, color: tuple, label: str):
         x1, y1, x2, y2 = box
-        cv2.rectangle(img, (x1, y1), (x2, y2), color, 2)
-        (tw, th), _ = cv2.getTextSize(label, _FONT, _FONT_SCALE, _THICKNESS)
+        cv2.rectangle(img, (x1, y1), (x2, y2), color, self.box_thickness)
+        (tw, th), _ = cv2.getTextSize(label, _FONT, self.font_scale, _THICKNESS)
         cv2.rectangle(img, (x1, y1 - th - 4), (x1 + tw, y1), color, -1)
-        cv2.putText(img, label, (x1, y1 - 2), _FONT, _FONT_SCALE,
+        cv2.putText(img, label, (x1, y1 - 2), _FONT, self.font_scale,
                     (255, 255, 255), _THICKNESS)
 
     @staticmethod
@@ -936,17 +1007,16 @@ class SAM2VisualizationCallback(DetectionVisualizationCallback):
 
         return img, {"sot_records": sot_records}
 
-    @staticmethod
-    def _draw_obb_polygon(img: np.ndarray, obb: np.ndarray, color: tuple, label: str):
+    def _draw_obb_polygon(self, img: np.ndarray, obb: np.ndarray, color: tuple, label: str):
         """Draw an OBB as a 4-point polygon with a label."""
         pts = obb.reshape(4, 2).astype(np.int32)
-        cv2.polylines(img, [pts], isClosed=True, color=color, thickness=2)
+        cv2.polylines(img, [pts], isClosed=True, color=color, thickness=self.box_thickness)
 
         # Label near the topmost corner
         top_idx = int(pts[:, 1].argmin())
         lx, ly = int(pts[top_idx, 0]), int(pts[top_idx, 1])
-        (tw, th), _ = cv2.getTextSize(label, _FONT, _FONT_SCALE, _THICKNESS)
+        (tw, th), _ = cv2.getTextSize(label, _FONT, self.font_scale, _THICKNESS)
         y_top = max(ly - th - 4, 0)
         cv2.rectangle(img, (lx, y_top), (lx + tw, y_top + th + 4), color, -1)
-        cv2.putText(img, label, (lx, y_top + th + 1), _FONT, _FONT_SCALE,
+        cv2.putText(img, label, (lx, y_top + th + 1), _FONT, self.font_scale,
                     (255, 255, 255), _THICKNESS)

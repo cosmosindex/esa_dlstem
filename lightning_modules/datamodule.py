@@ -37,6 +37,7 @@ from datasets.airmot import AIRMOTDataset
 from datasets.viso import VISODataset
 from datasets.sv248s import SV248SDataset
 from datasets.sdmcar import SDMCarDataset
+from datasets.rscardata import RsCarDataset
 
 # ---------------------------------------------------------------------------
 # Dataset registry — add new dataset classes here
@@ -54,6 +55,7 @@ _DATASET_REGISTRY: dict[str, type] = {
     "VISO": VISODataset,
     "SV248S": SV248SDataset,
     "SDM-Car": SDMCarDataset,
+    "RsCarData": RsCarDataset,
 }
 
 # ---------------------------------------------------------------------------
@@ -80,6 +82,12 @@ class DataModuleConfig:
 
     # Extra kwargs forwarded to every dataset constructor
     dataset_kwargs: dict[str, Any] = field(default_factory=dict)
+
+    # Per-dataset kwargs override (merged on top of `dataset_kwargs`).
+    # Only applied to the dataset whose name is the dict key. Useful when one
+    # dataset needs an extra arg (e.g. SAT-MTB's `task: mot`) that other
+    # datasets in the same DataModule don't accept.
+    per_dataset_kwargs: dict[str, dict[str, Any]] = field(default_factory=dict)
 
 
 # ---------------------------------------------------------------------------
@@ -141,7 +149,8 @@ class DetectionDataModule(L.LightningDataModule):
                     f"Unknown dataset '{name}'. "
                     f"Registered: {list(_DATASET_REGISTRY.keys())}"
                 )
-            parts.append(cls(root=root, split=split, **kwargs))
+            ds_kwargs = {**kwargs, **self.cfg.per_dataset_kwargs.get(name, {})}
+            parts.append(cls(root=root, split=split, **ds_kwargs))
         return ConcatDataset(parts)
 
     # ------------------------------------------------------------------

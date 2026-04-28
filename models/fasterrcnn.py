@@ -17,6 +17,7 @@ from torchvision.models.detection import (
     FasterRCNN_ResNet50_FPN_V2_Weights,
 )
 from torchvision.models.detection.faster_rcnn import FastRCNNPredictor
+from torchvision.models.detection.rpn import AnchorGenerator
 
 
 class FasterRCNNDetector(nn.Module):
@@ -39,20 +40,63 @@ class FasterRCNNDetector(nn.Module):
         nms_thresh: float = 0.5,
         detections_per_img: int = 100,
         enable_tracking: bool = False,
+        # ---- satellite-MOT tuning knobs (optional) ----
+        anchor_sizes: tuple | None = None,
+        anchor_aspect_ratios: tuple | None = None,
+        rpn_fg_iou_thresh: float | None = None,
+        rpn_bg_iou_thresh: float | None = None,
+        box_fg_iou_thresh: float | None = None,
+        box_bg_iou_thresh: float | None = None,
+        rpn_pre_nms_top_n_train: int | None = None,
+        rpn_post_nms_top_n_train: int | None = None,
+        min_size: int | None = None,
+        max_size: int | None = None,
     ):
         super().__init__()
+
+        # Optional: small-object-friendly multi-scale anchor pyramid.
+        # When passed, the FPN's 5 levels each get the listed anchor sizes;
+        # default torchvision anchors ((32,),(64,),(128,),(256,),(512,)) are
+        # too coarse for satellite imagery where most objects are < 32 px.
+        rpn_kwargs = {}
+        if anchor_sizes is not None:
+            ratios = anchor_aspect_ratios or ((0.5, 1.0, 2.0),) * len(anchor_sizes)
+            rpn_kwargs["rpn_anchor_generator"] = AnchorGenerator(
+                sizes=anchor_sizes, aspect_ratios=ratios,
+            )
+        # Relax IoU thresholds — small objects' centroid-jitter can drag IoU
+        # below the default 0.7 RPN positive cutoff and starve training.
+        if rpn_fg_iou_thresh is not None:
+            rpn_kwargs["rpn_fg_iou_thresh"] = rpn_fg_iou_thresh
+        if rpn_bg_iou_thresh is not None:
+            rpn_kwargs["rpn_bg_iou_thresh"] = rpn_bg_iou_thresh
+        if box_fg_iou_thresh is not None:
+            rpn_kwargs["box_fg_iou_thresh"] = box_fg_iou_thresh
+        if box_bg_iou_thresh is not None:
+            rpn_kwargs["box_bg_iou_thresh"] = box_bg_iou_thresh
+        if rpn_pre_nms_top_n_train is not None:
+            rpn_kwargs["rpn_pre_nms_top_n_train"] = rpn_pre_nms_top_n_train
+        if rpn_post_nms_top_n_train is not None:
+            rpn_kwargs["rpn_post_nms_top_n_train"] = rpn_post_nms_top_n_train
+        # Bigger input resolution preserves small-object pixel area.
+        if min_size is not None:
+            rpn_kwargs["min_size"] = min_size
+        if max_size is not None:
+            rpn_kwargs["max_size"] = max_size
 
         if use_v2:
             weights = FasterRCNN_ResNet50_FPN_V2_Weights.DEFAULT if pretrained else None
             self.model = fasterrcnn_resnet50_fpn_v2(
                 weights=weights,
                 trainable_backbone_layers=trainable_backbone_layers,
+                **rpn_kwargs,
             )
         else:
             weights = FasterRCNN_ResNet50_FPN_Weights.DEFAULT if pretrained else None
             self.model = fasterrcnn_resnet50_fpn(
                 weights=weights,
                 trainable_backbone_layers=trainable_backbone_layers,
+                **rpn_kwargs,
             )
 
         # Override post-processing thresholds

@@ -1,0 +1,36 @@
+# HiEUM moving-object detection on AIR-MOT-100, restricted to the `car`
+# class. AIR-MOT only carries airplane/ship GT — there is no `car` GT in
+# AIR-MOT, which means precision will be measured (every HiEUM detection
+# is a false positive against the empty car-GT pool) but recall is
+# undefined. We still launch the run so the driver completes uniformly
+# across MOT datasets; the resulting numbers should be interpreted as a
+# false-positive sanity check rather than a real recall comparison.
+
+dataset: AIR-MOT
+dataset_root: /data/ESA_DLSTEM_2025/data/trafic/AIR-MOT-100
+class_map:
+  car: 0
+
+eval_mode: mot
+split: test
+img_size: null
+
+hieum_checkpoint_path: /work/ziwen/checkpoints/hieum/model_best.pth
+hieum_layers: 3
+hieum_seq_len: 20
+hieum_image_size: [1024, 1024]
+hieum_thresh: 3.0
+hieum_max_dets: 128
+hieum_nms_iou: 0.1
+
+clip_len: 20
+clip_stride: 1
+batch_size: 1
+num_workers: 0
+
+iou_thresh: 0.3
+score_thresh: 0.2
+max_wandb_images: 50
+
+wandb_project: esa-dlstem
+wandb_entity: chengziwen693

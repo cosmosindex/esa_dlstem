@@ -115,6 +115,7 @@ class LMODDataset(BaseVideoDataset):
                     video_id=f"{seq_dir.name}_{split_name}",
                     dataset="LMOD",
                     category=category,
+                    categories_present=tuple(sorted(categories_in_seq)),
                     split=split_name,
                     num_frames=len(split_fids),
                     frame_ids=split_fids,

@@ -1,0 +1,19 @@
+dataset: sdmcar
+tracker: tracktrack
+cache_dir: /data/ESA_DLSTEM_2025/experiments/Detection/hieum_dets_with_feats_cache/sdmcar
+score_floor: 0.10
+match_metric: centroid
+centroid_dist_thresh: 5.0
+iou_thresh: 0.5
+tracker_kwargs:
+  feat_dim: 2048
+  det_thr: 0.30
+  init_thr: 0.40
+  match_thr: 0.70
+  tai_thr: 0.45
+  penalty_p: 0.20
+  penalty_q: 0.40
+  reduce_step: 0.05
+  min_len: 3
+  min_box_area: 25.0
+  max_time_lost: 30

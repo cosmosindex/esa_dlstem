@@ -1,0 +1,41 @@
+
+# HiEUM moving-object detection on SAT-MTB, restricted to the `car` class.
+# Other GT categories (airplane/ship/train) are dropped at the dataset
+# level (class_map omits them, so labels become -1 and are filtered out).
+# HiEUM is a single-class car detector — keeping only car GT makes
+# precision/recall comparable across datasets.
+
+dataset: SAT-MTB
+dataset_root: /data/ESA_DLSTEM_2025/data/trafic/SAT-MTB
+class_map:
+  car: 0
+
+dataset_kwargs:
+  task: mot
+  categories: ["car"]
+
+eval_mode: mot
+split: test
+img_size: null
+
+hieum_checkpoint_path: /work/ziwen/checkpoints/hieum/model_best.pth
+hieum_layers: 3
+hieum_seq_len: 20
+hieum_image_size: [1024, 1024]
+hieum_thresh: 3.0
+hieum_max_dets: 128
+hieum_nms_iou: 0.1
+
+clip_len: 20
+clip_stride: 1
+batch_size: 1
+num_workers: 0
+
+iou_thresh: 0.3
+score_thresh: 0.2
+match_metric: centroid       # HiEUM paper protocol — see hieum_rscardata.yaml
+centroid_dist_thresh: 5.0
+max_wandb_images: 50
+
+wandb_project: esa-dlstem
+wandb_entity: chengziwen693

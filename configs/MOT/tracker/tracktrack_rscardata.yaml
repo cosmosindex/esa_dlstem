@@ -1,0 +1,30 @@
+# TrackTrack on RsCarData (HiEUM cached dets + FastReID feats).
+# Driver: eval_tracktrack.py (NOT eval_tracker.py — TrackTrack needs feats).
+dataset: rscardata
+tracker: tracktrack
+cache_dir: /data/ESA_DLSTEM_2025/experiments/Detection/hieum_dets_with_feats_cache/rscardata
+
+# HiEUM cache score floor is 0.05; lift to 0.10 to match the other trackers.
+score_floor: 0.10
+
+match_metric: centroid
+centroid_dist_thresh: 5.0
+iou_thresh: 0.5
+
+# Defaults loosened from MOT17 pedestrian baseline:
+#   - det_thr / init_thr / match_thr lowered (HiEUM scores cluster 0.3-0.5)
+#   - tai_thr loosened (small box overlap noisy)
+#   - min_box_area dropped (cars ~10x10 px → area ~100 borderline)
+#   - max_time_lost shorter (cars rarely fully occluded for >1 s in satellite footage)
+tracker_kwargs:
+  feat_dim: 2048
+  det_thr: 0.30
+  init_thr: 0.40
+  match_thr: 0.70
+  tai_thr: 0.45
+  penalty_p: 0.20
+  penalty_q: 0.40
+  reduce_step: 0.05
+  min_len: 3
+  min_box_area: 25.0
+  max_time_lost: 30

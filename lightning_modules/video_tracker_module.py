@@ -25,7 +25,7 @@ models that do not receive GT re-prompting at clip boundaries. Under the
 from __future__ import annotations
 
 import time
-from typing import Literal
+from typing import Literal, Optional
 
 import numpy as np
 import torch
@@ -55,6 +55,12 @@ class VideoTrackerEvaluationModule(L.LightningModule):
                           are meaningless for single-object tracking (1 GT,
                           1 track per video). SOT-specific metrics
                           (SR/PR/NPR/P@5) are computed by SAM2SOTEvalCallback.
+        det_only_mode:    If True, suppress MOT metrics (MOTA/IDF1/ID_switches)
+                          and skip text-mode track-ID stitching. Detection
+                          metrics (AP/AR/Precision/Recall) are still computed.
+                          Use this when the model has no temporal model
+                          (e.g. GroundingDINO as a per-frame detector).
+                          Mutually exclusive with ``sot_mode``.
     """
 
     def __init__(
@@ -63,28 +69,74 @@ class VideoTrackerEvaluationModule(L.LightningModule):
         prompt_strategy: Literal["first_frame", "every_n", "text"] = "first_frame",
         prompt_interval: int = 10,
         sot_mode: bool = False,
+        det_only_mode: bool = False,
+        match_metric: Literal["iou", "centroid"] = "iou",
+        centroid_dist_thresh: float = 5.0,
+        score_sweep: Optional[list[float]] = None,
     ):
         super().__init__()
         self.save_hyperparameters(ignore=["model"])
+
+        if sot_mode and det_only_mode:
+            raise ValueError("sot_mode and det_only_mode are mutually exclusive")
+        if match_metric not in ("iou", "centroid"):
+            raise ValueError(f"match_metric must be 'iou' or 'centroid', got {match_metric!r}")
 
         self.model = model
         self.prompt_strategy = prompt_strategy
         self.prompt_interval = prompt_interval
         self.sot_mode = sot_mode
+        self.det_only_mode = det_only_mode
+        # How TP/FP/FN matching is decided in det + MOT accumulators below.
+        # ``"iou"`` keeps the legacy behaviour (IoU >= 0.5 hard-coded);
+        # ``"centroid"`` reproduces the SVMOD-paper protocol HiEUM reports
+        # under (Euclidean distance between bbox centres <= ``centroid_dist_thresh``,
+        # default 5 px). When centroid matching is on we skip the
+        # torchmetrics MAP path since AP is inherently IoU-based.
+        self.match_metric = match_metric
+        self.centroid_dist_thresh = float(centroid_dist_thresh)
+
+        # Optional score-threshold sweep for SVMOD-style reporting.
+        # When set, the same forward pass is matched against GT under
+        # multiple confidence cutoffs; we log per-threshold P/R/F1 plus
+        # the best F1 in test_metrics.json. HiEUM's paper sweeps
+        # [0.1, 0.15, 0.2, 0.25, 0.3, 0.32, 0.34, 0.35] and reports the
+        # peak F1, **macro-averaged over the 7 test sequences** (see
+        # ``eval_func_final`` in HiEUM's repo). Both micro (pooled
+        # TP/FP/FN over all frames) and macro (per-seq P/R/F1 then
+        # arithmetic mean) are logged so users can compare apples to
+        # apples with whichever protocol a paper reports.
+        self.score_sweep = sorted(set(float(s) for s in score_sweep)) if score_sweep else None
+        self._sweep_acc: dict[float, dict[str, int]] = (
+            {s: {"tp": 0, "fp": 0, "fn": 0} for s in self.score_sweep}
+            if self.score_sweep else {}
+        )
+        # Per-sequence per-threshold accumulators for macro averaging.
+        # Keyed by ``(video_id, threshold) → {"tp", "fp", "fn"}``.
+        self._sweep_seq_acc: dict[tuple[str, float], dict[str, int]] = {}
+        # Populated by ``_build_sweep_summary`` at epoch end. The
+        # visualization callback dumps this to ``sweep_results.json``.
+        self.sweep_summary: Optional[dict] = None
 
         # Detection / MOT metrics — not instantiated in sot_mode.
         if not sot_mode:
-            self._test_map = MeanAveragePrecision(iou_thresholds=[0.5])
+            # MAP is IoU-based; only meaningful under match_metric="iou".
+            self._test_map = (
+                MeanAveragePrecision(iou_thresholds=[0.5])
+                if match_metric == "iou" else None
+            )
             self._det_tp = 0
             self._det_fp = 0
             self._det_fn = 0
 
-            self._num_gt = 0
-            self._num_tp = 0
-            self._num_fp = 0
-            self._num_fn = 0
-            self._num_id_switch = 0
-            self._last_gt_to_pred: dict[int, int] = {}
+            # MOT-only accumulators — skipped in det_only_mode.
+            if not det_only_mode:
+                self._num_gt = 0
+                self._num_tp = 0
+                self._num_fp = 0
+                self._num_fn = 0
+                self._num_id_switch = 0
+                self._last_gt_to_pred: dict[int, int] = {}
 
         # Timing
         self._test_time_total = 0.0
@@ -156,7 +208,9 @@ class VideoTrackerEvaluationModule(L.LightningModule):
             if hasattr(self.model, "set_text_prompt"):
                 self.model.set_text_prompt(getattr(clip, "category", "") or None)
             preds = self.model.propagate()
-            self._stitch_text_track_ids(preds, video_id)
+            # Cross-clip ID stitching only matters for MOT — skip in det-only.
+            if not self.det_only_mode:
+                self._stitch_text_track_ids(preds, video_id)
         else:
             # Decide prompt source: GT (first clip) or carry-over (subsequent)
             carry = self._carry_over.get(video_id)
@@ -212,20 +266,31 @@ class VideoTrackerEvaluationModule(L.LightningModule):
             # metrics are not meaningful for single-object tracking and the
             # SOT-specific metrics come from SAM2SOTEvalCallback.
             if not self.sot_mode:
-                # MAP expects lists of dicts (AABB-based, kept as secondary reference)
-                self._test_map.update(
-                    [{"boxes": pred["boxes"], "scores": pred["scores"], "labels": pred["labels"]}],
-                    [tgt],
-                )
+                # MAP expects lists of dicts (AABB-based, kept as secondary
+                # reference). Skipped under centroid matching since AP is
+                # inherently IoU-based and would mix two protocols.
+                if self._test_map is not None:
+                    self._test_map.update(
+                        [{"boxes": pred["boxes"], "scores": pred["scores"], "labels": pred["labels"]}],
+                        [tgt],
+                    )
 
                 # Detection TP/FP/FN — use OBB IoU when available
                 self._update_det_accumulators(pred, tgt, pred_obb=pred_obb, gt_obb=gt_obb)
 
-                # Tracking accumulators — use OBB IoU when available
-                self._update_tracking_accumulators(
-                    pred, gt_boxes, gt_track_ids,
-                    pred_obb=pred_obb, gt_obb=gt_obb,
-                )
+                # Score-threshold sweep — same matcher, different score cutoffs.
+                if self.score_sweep:
+                    self._update_score_sweep(
+                        pred, tgt, video_id=video_id,
+                        pred_obb=pred_obb, gt_obb=gt_obb,
+                    )
+
+                # Tracking accumulators — skipped in det_only_mode.
+                if not self.det_only_mode:
+                    self._update_tracking_accumulators(
+                        pred, gt_boxes, gt_track_ids,
+                        pred_obb=pred_obb, gt_obb=gt_obb,
+                    )
 
             # Collect for visualization callback
             target_dict = {"boxes": gt_boxes, "labels": gt_labels}
@@ -298,6 +363,30 @@ class VideoTrackerEvaluationModule(L.LightningModule):
     # Metric accumulators
     # ------------------------------------------------------------------
 
+    def _build_match_score(
+        self,
+        gt_boxes: torch.Tensor,
+        pred_boxes: torch.Tensor,
+        pred_obb: torch.Tensor | None,
+        gt_obb: torch.Tensor | None,
+    ) -> tuple[torch.Tensor, torch.Tensor, bool]:
+        """Build the (score, accept-mask) matrices for greedy matching.
+
+        ``score`` is the value sorted on (descending for IoU, ascending for
+        centroid-distance); ``accept`` is a bool matrix of pairs that meet
+        the threshold. Returns ``(score, accept, descending)`` so the
+        caller can pick sort direction.
+        """
+        if self.match_metric == "centroid":
+            dist = self._centroid_dist_matrix(gt_boxes, pred_boxes)
+            return dist, dist <= self.centroid_dist_thresh, False
+
+        if pred_obb is not None and gt_obb is not None and len(pred_obb) > 0 and len(gt_obb) > 0:
+            iou = obb_iou_matrix(gt_obb, pred_obb)
+        else:
+            iou = self._iou_matrix(gt_boxes, pred_boxes)
+        return iou, iou >= 0.5, True
+
     def _update_det_accumulators(
         self, pred: dict, tgt: dict,
         pred_obb: torch.Tensor | None = None,
@@ -314,17 +403,15 @@ class VideoTrackerEvaluationModule(L.LightningModule):
             self._det_fn += M
             return
 
-        # Use OBB IoU when both sides have OBB data
-        if pred_obb is not None and gt_obb is not None and len(pred_obb) > 0 and len(gt_obb) > 0:
-            iou = obb_iou_matrix(gt_obb, pred_obb)
-        else:
-            iou = self._iou_matrix(gt_boxes, pred_boxes)
+        score, accept, descending = self._build_match_score(
+            gt_boxes, pred_boxes, pred_obb, gt_obb,
+        )
 
         matched_gt: set[int] = set()
         matched_pred: set[int] = set()
-        rows, cols = (iou >= 0.5).nonzero(as_tuple=False).T
+        rows, cols = accept.nonzero(as_tuple=False).T
         if rows.numel() > 0:
-            order = iou[rows, cols].argsort(descending=True)
+            order = score[rows, cols].argsort(descending=descending)
             rows, cols = rows[order], cols[order]
             for r, c in zip(rows.tolist(), cols.tolist()):
                 if r in matched_gt or c in matched_pred:
@@ -336,6 +423,71 @@ class VideoTrackerEvaluationModule(L.LightningModule):
         self._det_tp += tp
         self._det_fp += N - tp
         self._det_fn += M - tp
+
+    def _update_score_sweep(
+        self, pred: dict, tgt: dict,
+        video_id: str,
+        pred_obb: torch.Tensor | None = None,
+        gt_obb: torch.Tensor | None = None,
+    ):
+        """Per-frame accumulator that re-runs matching at every cutoff in
+        ``self.score_sweep``. Reuses the same matcher
+        (``_build_match_score``) so the 5 px centroid criterion is honored.
+
+        Maintains both **global** counts (``self._sweep_acc``) for micro-
+        averaged P/R/F1 *and* **per-video** counts (``self._sweep_seq_acc``)
+        so we can compute the macro-average HiEUM's paper reports.
+
+        Cheap because: K ≤ 128 preds and dozens-to-hundreds of GT per
+        frame; matching is O(M·N).
+        """
+        gt_boxes = tgt["boxes"]
+        all_boxes = pred["boxes"]
+        all_scores = pred["scores"]
+        M = len(gt_boxes)
+        N_full = len(all_boxes)
+
+        for thr in self.score_sweep:
+            keep = all_scores >= thr
+            pred_boxes = all_boxes[keep]
+            sub_pred_obb = pred_obb[keep] if (pred_obb is not None and N_full > 0) else None
+            N = len(pred_boxes)
+
+            acc = self._sweep_acc[thr]
+            seq_acc = self._sweep_seq_acc.setdefault(
+                (video_id, thr), {"tp": 0, "fp": 0, "fn": 0},
+            )
+            if M == 0:
+                acc["fp"] += N
+                seq_acc["fp"] += N
+                continue
+            if N == 0:
+                acc["fn"] += M
+                seq_acc["fn"] += M
+                continue
+
+            score, accept, descending = self._build_match_score(
+                gt_boxes, pred_boxes, sub_pred_obb, gt_obb,
+            )
+            matched_gt: set[int] = set()
+            matched_pred: set[int] = set()
+            rows, cols = accept.nonzero(as_tuple=False).T
+            if rows.numel() > 0:
+                order = score[rows, cols].argsort(descending=descending)
+                rows, cols = rows[order], cols[order]
+                for r, c in zip(rows.tolist(), cols.tolist()):
+                    if r in matched_gt or c in matched_pred:
+                        continue
+                    matched_gt.add(r)
+                    matched_pred.add(c)
+
+            tp = len(matched_gt)
+            acc["tp"] += tp
+            acc["fp"] += N - tp
+            acc["fn"] += M - tp
+            seq_acc["tp"] += tp
+            seq_acc["fp"] += N - tp
+            seq_acc["fn"] += M - tp
 
     def _update_tracking_accumulators(
         self, pred: dict, gt_boxes: torch.Tensor, gt_track_ids: torch.Tensor,
@@ -354,18 +506,16 @@ class VideoTrackerEvaluationModule(L.LightningModule):
             self._num_fp += N
             return
 
-        # Use OBB IoU when both sides have OBB data
-        if pred_obb is not None and gt_obb is not None and len(pred_obb) > 0 and len(gt_obb) > 0:
-            iou = obb_iou_matrix(gt_obb, pred_obb)
-        else:
-            iou = self._iou_matrix(gt_boxes, pred_boxes)
+        score, accept, descending = self._build_match_score(
+            gt_boxes, pred_boxes, pred_obb, gt_obb,
+        )
 
         matched_gt: set[int] = set()
         matched_pred: set[int] = set()
 
-        rows, cols = (iou >= 0.5).nonzero(as_tuple=False).T
+        rows, cols = accept.nonzero(as_tuple=False).T
         if rows.numel() > 0:
-            order = iou[rows, cols].argsort(descending=True)
+            order = score[rows, cols].argsort(descending=descending)
             rows, cols = rows[order], cols[order]
             for r, c in zip(rows.tolist(), cols.tolist()):
                 if r in matched_gt or c in matched_pred:
@@ -383,6 +533,92 @@ class VideoTrackerEvaluationModule(L.LightningModule):
 
         self._num_fn += M - len(matched_gt)
         self._num_fp += N - len(matched_pred)
+
+    def _build_sweep_summary(self) -> dict:
+        """Aggregate the per-threshold sweep into a compact, serialisable dict.
+
+        Layout::
+
+            {
+              "thresholds": [0.10, 0.15, ...],
+              "micro":  {"Pr": [...], "Re": [...], "F1": [...]},
+              "macro":  {"Pr": [...], "Re": [...], "F1": [...]},
+              "best_micro": {"score_thresh": 0.35, "Precision": ..., "Recall": ..., "F1": ...},
+              "best_macro": {"score_thresh": 0.35, "Precision": ..., "Recall": ..., "F1": ...},
+              "per_video_macro": {video_id: {"score_thresh": <best>, "Pr":..., "Re":..., "F1":...}},
+            }
+        """
+        thrs = list(self.score_sweep)
+        video_ids = sorted({vid for (vid, _) in self._sweep_seq_acc.keys()})
+
+        micro = {"Pr": [], "Re": [], "F1": []}
+        macro = {"Pr": [], "Re": [], "F1": []}
+        best_mi = {"score_thresh": thrs[0], "Precision": -1.0, "Recall": -1.0, "F1": -1.0}
+        best_ma = {"score_thresh": thrs[0], "Precision": -1.0, "Recall": -1.0, "F1": -1.0}
+
+        for thr in thrs:
+            a = self._sweep_acc[thr]
+            p_mi = a["tp"] / max(a["tp"] + a["fp"], 1)
+            r_mi = a["tp"] / max(a["tp"] + a["fn"], 1)
+            f_mi = 2 * p_mi * r_mi / max(p_mi + r_mi, 1e-9)
+            micro["Pr"].append(p_mi); micro["Re"].append(r_mi); micro["F1"].append(f_mi)
+
+            seq_p, seq_r, seq_f = [], [], []
+            for vid in video_ids:
+                sa = self._sweep_seq_acc.get((vid, thr))
+                if sa is None or (sa["tp"] + sa["fp"] + sa["fn"]) == 0:
+                    continue
+                sp = sa["tp"] / max(sa["tp"] + sa["fp"], 1)
+                sr = sa["tp"] / max(sa["tp"] + sa["fn"], 1)
+                sf = 2 * sp * sr / max(sp + sr, 1e-9)
+                seq_p.append(sp); seq_r.append(sr); seq_f.append(sf)
+            p_ma = sum(seq_p) / max(len(seq_p), 1)
+            r_ma = sum(seq_r) / max(len(seq_r), 1)
+            f_ma = sum(seq_f) / max(len(seq_f), 1)
+            macro["Pr"].append(p_ma); macro["Re"].append(r_ma); macro["F1"].append(f_ma)
+
+            if f_mi > best_mi["F1"]:
+                best_mi = {"score_thresh": thr, "Precision": p_mi, "Recall": r_mi, "F1": f_mi}
+            if f_ma > best_ma["F1"]:
+                best_ma = {"score_thresh": thr, "Precision": p_ma, "Recall": r_ma, "F1": f_ma}
+
+        # Per-video best (under macro convention's per-video numbers at best_macro thr)
+        per_video_macro = {}
+        for vid in video_ids:
+            sa = self._sweep_seq_acc.get((vid, best_ma["score_thresh"]))
+            if sa is None:
+                continue
+            sp = sa["tp"] / max(sa["tp"] + sa["fp"], 1)
+            sr = sa["tp"] / max(sa["tp"] + sa["fn"], 1)
+            sf = 2 * sp * sr / max(sp + sr, 1e-9)
+            per_video_macro[vid] = {
+                "score_thresh": best_ma["score_thresh"],
+                "Precision": sp, "Recall": sr, "F1": sf,
+                "tp": sa["tp"], "fp": sa["fp"], "fn": sa["fn"],
+            }
+
+        return {
+            "thresholds": thrs,
+            "micro": micro,
+            "macro": macro,
+            "best_micro": best_mi,
+            "best_macro": best_ma,
+            "per_video_macro": per_video_macro,
+        }
+
+    @staticmethod
+    def _centroid_dist_matrix(boxes_a: torch.Tensor, boxes_b: torch.Tensor) -> torch.Tensor:
+        """Pairwise Euclidean distance between bbox centres of two xyxy sets."""
+        if len(boxes_a) == 0 or len(boxes_b) == 0:
+            return torch.zeros((len(boxes_a), len(boxes_b)),
+                               device=boxes_a.device, dtype=boxes_a.dtype)
+        cx_a = (boxes_a[:, 0] + boxes_a[:, 2]) * 0.5
+        cy_a = (boxes_a[:, 1] + boxes_a[:, 3]) * 0.5
+        cx_b = (boxes_b[:, 0] + boxes_b[:, 2]) * 0.5
+        cy_b = (boxes_b[:, 1] + boxes_b[:, 3]) * 0.5
+        dx = cx_a[:, None] - cx_b[None, :]
+        dy = cy_a[:, None] - cy_b[None, :]
+        return torch.sqrt(dx * dx + dy * dy)
 
     # ------------------------------------------------------------------
     # Text-mode cross-clip track ID stitching (MOT open-vocabulary)
@@ -482,29 +718,54 @@ class VideoTrackerEvaluationModule(L.LightningModule):
     def on_test_epoch_end(self):
         # Detection + MOT metrics — skipped in SOT mode (see __init__ docstring).
         if not self.sot_mode:
-            # Detection AP
-            result = self._test_map.compute()
-            self.log("test/AP50", result["map_50"], prog_bar=True)
-            self.log("test/AP", result["map"])
-            self.log("test/AR_100", result.get("mar_100", torch.tensor(0.0)))
-            self._test_map.reset()
+            # Detection AP — IoU-based; only meaningful under match_metric="iou".
+            if self._test_map is not None:
+                result = self._test_map.compute()
+                self.log("test/AP50", result["map_50"], prog_bar=True)
+                self.log("test/AP", result["map"])
+                self.log("test/AR_100", result.get("mar_100", torch.tensor(0.0)))
+                self._test_map.reset()
 
-            # Detection precision / recall
+            # Detection precision / recall — F1 is added so SVMOD-style
+            # papers (HiEUM and friends) can report directly off this run.
             prec = self._det_tp / max(self._det_tp + self._det_fp, 1)
             rec = self._det_tp / max(self._det_tp + self._det_fn, 1)
-            self.log("test/Precision", torch.tensor(prec))
-            self.log("test/Recall", torch.tensor(rec))
+            f1 = 2 * prec * rec / max(prec + rec, 1e-9)
+            self.log("test/Precision", torch.tensor(prec), prog_bar=True)
+            self.log("test/Recall", torch.tensor(rec), prog_bar=True)
+            self.log("test/F1", torch.tensor(f1), prog_bar=True)
 
-            # Tracking metrics
-            denom = max(self._num_gt, 1)
-            mota = 1.0 - (self._num_fp + self._num_fn + self._num_id_switch) / denom
-            t_prec = self._num_tp / max(self._num_tp + self._num_fp, 1)
-            t_rec = self._num_tp / max(self._num_tp + self._num_fn, 1)
-            idf1 = 2 * t_prec * t_rec / max(t_prec + t_rec, 1e-6)
+            # Score-threshold sweep — paper protocol (HiEUM Table III).
+            # We compute both aggregations internally:
+            #   micro: pool TP/FP/FN over all frames, then one P/R/F1.
+            #   macro: per-sequence P/R/F1, then arithmetic mean — this
+            #          is HiEUM's ``eval_func_final`` convention, so the
+            #          paper-comparable number lives here.
+            #
+            # Only the *best macro* operating point is logged via
+            # ``self.log`` (so ``test_metrics.json`` stays compact); the
+            # full per-threshold breakdown is exposed via
+            # ``self.sweep_summary`` for the visualization callback to
+            # write into a separate ``sweep_results.json`` file.
+            if self.score_sweep:
+                self.sweep_summary = self._build_sweep_summary()
+                best = self.sweep_summary["best_macro"]
+                self.log("test/best_F1", torch.tensor(best["F1"]), prog_bar=True)
+                self.log("test/best_Precision", torch.tensor(best["Precision"]))
+                self.log("test/best_Recall", torch.tensor(best["Recall"]))
+                self.log("test/best_score_thresh", torch.tensor(best["score_thresh"]))
 
-            self.log("test/MOTA", torch.tensor(mota), prog_bar=True)
-            self.log("test/IDF1", torch.tensor(idf1))
-            self.log("test/ID_switches", torch.tensor(float(self._num_id_switch)))
+            # Tracking metrics — skipped in det_only_mode.
+            if not self.det_only_mode:
+                denom = max(self._num_gt, 1)
+                mota = 1.0 - (self._num_fp + self._num_fn + self._num_id_switch) / denom
+                t_prec = self._num_tp / max(self._num_tp + self._num_fp, 1)
+                t_rec = self._num_tp / max(self._num_tp + self._num_fn, 1)
+                idf1 = 2 * t_prec * t_rec / max(t_prec + t_rec, 1e-6)
+
+                self.log("test/MOTA", torch.tensor(mota), prog_bar=True)
+                self.log("test/IDF1", torch.tensor(idf1))
+                self.log("test/ID_switches", torch.tensor(float(self._num_id_switch)))
 
         # Speed (always logged)
         fps = self._test_num_frames / max(self._test_time_total, 1e-9)

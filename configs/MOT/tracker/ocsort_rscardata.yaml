@@ -1,0 +1,16 @@
+dataset: rscardata
+tracker: ocsort
+cache_dir: /data/ESA_DLSTEM_2025/experiments/Detection/hieum_dets_cache/rscardata
+score_floor: 0.0                 # OC-SORT uses its own det_thresh internally
+match_metric: centroid
+centroid_dist_thresh: 5.0
+iou_thresh: 0.5
+tracker_kwargs:
+  det_thresh: 0.30
+  max_age: 30
+  min_hits: 1
+  iou_threshold: 0.1
+  delta_t: 3
+  asso_func: iou
+  inertia: 0.2
+  use_byte: false

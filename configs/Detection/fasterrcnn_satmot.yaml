@@ -1,0 +1,107 @@
+# Cross-dataset Faster R-CNN fine-tuning on satellite MOT detection.
+#
+# Train union: LMOD + SAT-MTB + VISO + SDM-Car + AIR-MOT.
+# Validation/test: pooled across all 5 datasets during training; per-dataset
+# breakdown produced by `eval_fasterrcnn_satmot.py` after training.
+#
+# Class taxonomy (4 global classes, FasterRCNN labels 1..4, 0=background):
+#   plane=1, car=2, ship=3, train=4
+# Both spellings (`plane` and `airplane`) alias to the same global id so
+# SAT-MTB and AIR-MOT (which use `airplane`) work without per-dataset shims.
+
+# ----- Dataset roots ------------------------------------------------------
+datasets:
+  LMOD:    /data/ESA_DLSTEM_2025/data/trafic/LMOD
+  SAT-MTB: /data/ESA_DLSTEM_2025/data/trafic/SAT-MTB
+  VISO:    /data/ESA_DLSTEM_2025/data/trafic/VISO
+  SDM-Car: /data/ESA_DLSTEM_2025/data/trafic/SDM-Car
+  AIR-MOT: /data/ESA_DLSTEM_2025/data/trafic/AIR-MOT-100
+
+# SAT-MTB-only: load MOT-format annotations (so its `car` rows come through;
+# the HBB/OBB XMLs do not have `car`). Other datasets don't accept `task`.
+per_dataset_kwargs:
+  SAT-MTB:
+    task: mot
+
+# Class map: raw category name → FasterRCNN label (0 reserved for background).
+# `airplane` → 1 aliases SAT-MTB / AIR-MOT to the same id as VISO/LMOD's `plane`.
+class_map:
+  plane:    1
+  airplane: 1
+  car:      2
+  ship:     3
+  train:    4
+
+num_classes: 5  # 4 foreground + 1 background
+
+# ----- Model --------------------------------------------------------------
+# v1 (not v2) — torchvision's `fasterrcnn_resnet50_fpn_v2` hard-codes its own
+# `rpn_anchor_generator` and rejects user overrides; v1 accepts ours.
+use_v2: false
+pretrained: true
+trainable_backbone_layers: 3
+score_thresh: 0.05
+nms_thresh: 0.5
+detections_per_img: 300       # bumped from 100; satellite frames have many
+
+# Multi-scale anchor pyramid for small-to-large objects.
+# Anchor counts must be UNIFORM across FPN levels — torchvision's RPNHead
+# uses a single num_anchors value for all levels. So each level gets
+# 2 sizes × 3 ratios = 6 anchors per location.
+# P2 stride 4:  4/8  px → LMOD/VISO/SDM-Car cars (avg ~5×5)
+# P3 stride 8:  16/32 px → LMOD/AIRMOT plane (avg ~36×33), SAT-MTB ship
+# P4 stride 16: 48/96 px → SAT-MTB airplane (avg 50×50), LMOD train
+# P5 stride 32: 128/256 px → SAT-MTB ship up to 200, mid-size SAT-MTB train
+# P6 stride 64: 256/512 px → SAT-MTB train (max 304×203, ~512 along long side)
+anchor_sizes:
+  - [4, 8]
+  - [16, 32]
+  - [48, 96]
+  - [128, 256]
+  - [256, 512]
+anchor_aspect_ratios:
+  - [0.5, 1.0, 2.0]
+  - [0.5, 1.0, 2.0]
+  - [0.5, 1.0, 2.0]
+  - [0.5, 1.0, 2.0]
+  - [0.5, 1.0, 2.0]
+
+# Relaxed RPN/box thresholds for small objects.
+# torchvision asserts bg <= fg in both stages, so we lower both symmetrically.
+rpn_fg_iou_thresh: 0.5        # default 0.7
+rpn_bg_iou_thresh: 0.2        # default 0.3
+box_fg_iou_thresh: 0.4        # default 0.5
+box_bg_iou_thresh: 0.3        # default 0.5 — must be ≤ box_fg_iou_thresh
+rpn_pre_nms_top_n_train: 4000
+rpn_post_nms_top_n_train: 2000
+
+# Larger input resolution preserves small-object pixel area.
+min_size: 1024                # default 800
+max_size: 1333
+
+# ----- Training transform (RandomCrop 1024 keeps native pixel scale) ------
+train_crop_size: 1024
+
+# ----- Lightning training -------------------------------------------------
+batch_size: 4                 # 1024² + RandomCrop is memory-heavy
+num_workers: 0                # NUM_WORKERS=0 (fork+CUDA deadlock per project rule)
+max_epochs: 30
+lr: 5.0e-4
+weight_decay: 1.0e-4
+warmup_epochs: 3
+lr_scheduler: cosine
+precision: 16-mixed
+
+# ----- Run / logging ------------------------------------------------------
+run_name: fasterrcnn_satmot
+experiment_root: /work/ziwen/experiments
+wandb_project: esa-dlstem
+wandb_entity: chengziwen693
+visualization_max_wandb_images: 50
+visualization_score_thresh: 0.5
+visualization_iou_thresh: 0.5
+
+# Early-stopping / checkpoint monitor metric.
+monitor_metric: val/mAP
+monitor_mode: max
+patience: 8

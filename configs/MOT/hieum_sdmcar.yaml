@@ -1,0 +1,38 @@
+# HiEUM (Xiao et al., TPAMI 2024) moving-object detection on SDM-Car.
+# Single-class car dataset — best fit for HiEUM's RsCarData-pretrained
+# checkpoint. No GT prompts ever reach the model; HiEUM consumes a clip
+# of 20 consecutive frames and emits per-frame point detections that we
+# decode into bboxes.
+
+dataset: SDM-Car
+dataset_root: /data/ESA_DLSTEM_2025/data/trafic/SDM-Car
+class_map:
+  car: 0
+
+eval_mode: mot
+split: test
+img_size: null
+
+hieum_checkpoint_path: /work/ziwen/checkpoints/hieum/model_best.pth
+hieum_layers: 3
+hieum_seq_len: 20
+hieum_image_size: [1024, 1024]
+hieum_thresh: 3.0
+hieum_max_dets: 128
+hieum_nms_iou: 0.1
+
+# clip_len MUST equal hieum_seq_len — HiEUM's checkpoint bakes T=20 into
+# its per-frame conv_std layer.
+clip_len: 20
+clip_stride: 1
+batch_size: 1
+num_workers: 0
+
+iou_thresh: 0.3
+score_thresh: 0.2
+match_metric: centroid       # HiEUM paper protocol — see hieum_rscardata.yaml
+centroid_dist_thresh: 5.0
+max_wandb_images: 50
+
+wandb_project: esa-dlstem
+wandb_entity: chengziwen693

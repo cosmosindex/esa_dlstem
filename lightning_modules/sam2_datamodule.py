@@ -39,6 +39,7 @@ from datasets.airmot import AIRMOTDataset
 from datasets.viso import VISODataset
 from datasets.sv248s import SV248SDataset
 from datasets.sdmcar import SDMCarDataset
+from datasets.rscardata import RsCarDataset
 
 # ---------------------------------------------------------------------------
 # Dataset registry — shared with DetectionDataModule; add new classes here
@@ -56,6 +57,7 @@ _DATASET_REGISTRY: dict[str, type] = {
     "VISO": VISODataset,
     "SV248S": SV248SDataset,
     "SDM-Car": SDMCarDataset,
+    "RsCarData": RsCarDataset,
 }
 
 # ---------------------------------------------------------------------------
