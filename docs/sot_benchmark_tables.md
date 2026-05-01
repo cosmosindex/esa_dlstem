@@ -115,11 +115,13 @@ Before reporting tiny-subset results, we report subset sizes per dataset to allo
 
 | Dataset | Total Sequences | Tiny Sequences (median √area < 8 px) | Tiny Fraction |
 |---|---|---|---|
-| SatSOT | TBD | TBD | TBD |
-| SV248S | 248 | TBD | TBD |
-| OOTB | TBD | TBD | TBD |
+| SatSOT |  105 |  25 | 23.8% |
+| SV248S |  248 | 207 | 83.5% |
+| OOTB   |  110 |  16 | 14.5% |
 
-> **Reliability note**: If a dataset's tiny subset contains fewer than ~10 sequences, the resulting per-dataset metrics will have high variance and should be interpreted with caution. In this case, we will either (a) explicitly flag the limitation in the caption, or (b) report the tiny analysis only on the dataset(s) where the subset is large enough to support meaningful conclusions, with the small-subset dataset moved to supplementary.
+> Computed over the *whole* dataset (no_split) by `tools/reaggregate_sot_per_sequence.py` from raw GT (OOTB polygon shoelace area; SatSOT/SV248S `w·h` of `xywh`, with SatSOT `none` and SV248S `state==1` invisible frames excluded). Per-sequence median of `sqrt(area)` across valid annotated frames; sequence is *tiny* iff median < 8 px. Per-sequence median √area values are written to `analysis/per_seq/tiny_subsets.json` for inspection.
+>
+> **Reliability note**: SV248S's 207-sequence tiny subset is large; OOTB's 16-sequence subset is at the small end of the reliability range and per-tracker numbers there will be noisier. SatSOT (25) is in between.
 
 ### 4.3 Tiny Subset Results Table — Metrics
 
