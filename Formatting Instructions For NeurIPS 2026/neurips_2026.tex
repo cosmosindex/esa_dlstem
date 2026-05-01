@@ -245,6 +245,52 @@ Fig.~\ref{fig:sr_npr_vs_bbox_size} shows the model performance w.r.t. object siz
 \end{figure}
 
 
+\subsection{Performance by object class}
+\input{tables/sv248s_sot_categories}
+
+\subsection{Performance under unified sequence attributes}
+Tab.~\ref{tab:sot_unified_attributes} reports per-tracker SR / NPR / PR under our unified attribute taxonomy (BC, IV, ROT, OCC, SOB, DEF). Each unified attribute consolidates the corresponding native labels of every dataset that annotates it (e.g.\ OCC = SatSOT \{POC, FOC\} $\cup$ SV248S \{STO, LTO, CO\} $\cup$ OOTB \{PO, FO\}); the full mapping and the dataset-unique residue are reported in the supplementary. Per-(dataset, attribute) numbers are first computed with per-sequence aggregation (PR over CLE $\in [0, 50]$ px) and then arithmetic-mean across the datasets that annotate the attribute.
+
+\input{tables/SOT/whole_dataset/sot_unified_attributes_table}
+
+\subsection{Qualitative comparison}
+
+
+\section{Discussion}
+
+
+
+\section{Conclusion}
+We introduced Space-tracker, the first unified and curated "million-scale" benchmark dataset designed for the detection and tracking of small targets in spaceborne videos. By merging XX disparate datasets into a consistent COCO-style framework, we provide a singular diagnostic platform to address the unique geometric and radiometric constraints of the aerospace domain. Our primary contribution lies in the unification of 12 fine-grained attributes, such as sub-pixel target size and non-stationary backgrounds, enabling a rigorous assessment of tracker failure modes across VNIR and thermal spectra. Extensive benchmarking of seven state-of-the-art models reveals that while modern architectures excel at motion modeling, sub-pixel accuracy and long-term occlusion remain critical technical bottlenecks. Space-tracker establishes a necessary performance baseline for advancing real-time monitoring applications in high-stakes domains such as disaster management and environmental conservation. Moving forward, we commit to the long-term maintenance of this benchmark through an open evaluation server to ensure its continued utility as an evolving standard for the research community.
+
+
+\begin{ack}
+Use unnumbered first level headings for the acknowledgments. All acknowledgments
+go at the end of the paper before the list of references. Moreover, you are required to declare
+funding (financial activities supporting the submitted work) and competing interests (related financial activities outside the submitted work).
+More information about this disclosure can be found at: \url{https://neurips.cc/Conferences/2026/PaperInformation/FundingDisclosure}.
+
+
+Do {\bf not} include this section in the anonymized submission, only in the final paper. You can use the \texttt{ack} environment provided in the style file to automatically hide this section in the anonymized submission.
+\end{ack}
+
+%\section*{References}
+\bibliographystyle{plainnat}
+\bibliography{references}
+
+\newpage
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\appendix
+
+\section{Technical appendices and supplementary material}
+
+
+\input{tables/SOT/unified_attributes_table}
+
+\input{tables/SOT/whole_dataset/split_attributes_table}
+
+
 \subsection{Performance analysis w.r.t. object attributes}
 The model performance w.r.t to different object attributes on the dataset SV248S is shown in Tab.~\ref{tab:sot_attributes_sv248s}. We can conclude the following findings.
 \begin{itemize}
@@ -286,7 +332,7 @@ The model performance w.r.t to different object attributes on the dataset SatSot
     indicating that SAM~3 already surpasses the strongest pretrained
     baseline on standard tracking difficulties.
 \end{itemize}
- \input{tables/sot_attributes_satsot_table} 
+ \input{tables/sot_attributes_satsot_table}
 The model performance w.r.t to different object attributes on the dataset OOTB is shown in Tab.~\ref{tab:sot_attributes_ootb}. We can conclude the following findings.
 \begin{itemize}
     \item \textbf{Isotropic Motion (IM).} The three SAM-family trackers
@@ -310,46 +356,6 @@ The model performance w.r.t to different object attributes on the dataset OOTB i
     motion blur still benefits from in-domain supervision.
 \end{itemize}
   \input{tables/sot_attributes_ootb_table}
-
-\subsection{Performance by object class}
-\input{tables/sv248s_sot_categories}
-
-\subsection{Qualitative comparison}
-
-
-\section{Discussion}
-
-
-
-\section{Conclusion}
-We introduced Space-tracker, the first unified and curated "million-scale" benchmark dataset designed for the detection and tracking of small targets in spaceborne videos. By merging XX disparate datasets into a consistent COCO-style framework, we provide a singular diagnostic platform to address the unique geometric and radiometric constraints of the aerospace domain. Our primary contribution lies in the unification of 12 fine-grained attributes, such as sub-pixel target size and non-stationary backgrounds, enabling a rigorous assessment of tracker failure modes across VNIR and thermal spectra. Extensive benchmarking of seven state-of-the-art models reveals that while modern architectures excel at motion modeling, sub-pixel accuracy and long-term occlusion remain critical technical bottlenecks. Space-tracker establishes a necessary performance baseline for advancing real-time monitoring applications in high-stakes domains such as disaster management and environmental conservation. Moving forward, we commit to the long-term maintenance of this benchmark through an open evaluation server to ensure its continued utility as an evolving standard for the research community.
-
-
-\begin{ack}
-Use unnumbered first level headings for the acknowledgments. All acknowledgments
-go at the end of the paper before the list of references. Moreover, you are required to declare
-funding (financial activities supporting the submitted work) and competing interests (related financial activities outside the submitted work).
-More information about this disclosure can be found at: \url{https://neurips.cc/Conferences/2026/PaperInformation/FundingDisclosure}.
-
-
-Do {\bf not} include this section in the anonymized submission, only in the final paper. You can use the \texttt{ack} environment provided in the style file to automatically hide this section in the anonymized submission.
-\end{ack}
-
-%\section*{References}
-\bibliographystyle{plainnat}
-\bibliography{references}
-
-\newpage
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\appendix
-
-\section{Technical appendices and supplementary material}
-
-
-\input{tables/SOT/unified_attributes_table}
-
-\input{tables/SOT/whole_dataset/split_attributes_table}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
