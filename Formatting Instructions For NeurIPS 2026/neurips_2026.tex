@@ -262,6 +262,27 @@ Given that small-object tracking is the defining challenge of satellite video, w
 
 \subsection{Experiment protocol}
 
+\subsubsection{Single Object Tracking}
+
+\paragraph{Inference protocol.}
+All trackers are evaluated under a strict one-shot protocol: the ground-truth bounding box is injected only at frame 0 of each video, and every subsequent frame is produced by the tracker's own temporal propagation,
+with no further GT correction. Each video is partitioned at the dataloader level into non-overlapping clips of $T{=}32$ frames (stride 1, overlap 0); videos shorter than $T$ yield a single truncated clip.
+This clip length keeps the protocol reproducible on modest hardware while remaining long enough to exercise each tracker's temporal modeling. We use batch size 1 throughout---each forward pass consumes
+one clip of shape $[T,C,H,W]$---as every tracker treats a clip as a stateful temporal sequence and trailing clips of short videos have variable length.
+Clip partitioning is purely a dataloader convenience and does not reset internal tracker state: SAM-family memory banks and Siamese exemplar templates persist across clip boundaries via a carry-over mechanism,
+in which the predicted bounding box at the last frame of clip $k$ serves as the prompt for the first frame of clip $k{+}1$. The ground truth is never re-injected after frame 0, ensuring all trackers are
+compared under identical supervision. If a tracker loses the target at a clip boundary---producing no valid box to carry forward---all subsequent frames of that video are recorded as empty predictions.
+All trackers run inference at the native resolution of each dataset with no resizing applied.
+
+\paragraph{Prediction post-processing and rotated annotations.}
+Predictions with confidence below $\tau{=}0.5$ are discarded prior to metric accumulation.
+OOTB ground truth is provided as oriented bounding boxes (OBBs), so we adapt the overlap computation to each tracker's native output: mask-producing models (SAM~2, SAM~3, SAMURAI) are converted to OBBs and scored
+against the GT under OBB IoU, whereas HBB-producing trackers (SiamRPN++, OSTrack, ODTrack, LoRAT) are scored against the GT OBB's enclosing HBB under standard HBB IoU. SatSOT and SV248S are annotated as HBBs natively and require no such branching.
+
+\paragraph{Tracker variants.}
+We use the largest publicly released variant of each tracker without any satellite-domain fine-tuning: SiamRPN++ with a ResNet-50 backbone (layer 2--4 fusion, depthwise cross-correlation);
+OSTrack with a ViT-B backbone (MAE-pretrained, 384$^2$ search region, candidate elimination); ODTrack with the ViT-L baseline; LoRAT with a DINOv2 ViT-g/14 backbone and 378$^2$ search region;
+SAM~2 with the Hiera-L encoder (SAM~2.1 weights); SAMURAI reusing the same SAM~2.1 Hiera-L weights augmented by a Kalman motion model for re-prompting; and SAM~3 with the official release and temporal disambiguation enabled.
 
 \section{Experiment results}
 \subsection{Performance overview}
