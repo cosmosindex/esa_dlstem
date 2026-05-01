@@ -69,7 +69,9 @@
 \usepackage{graphicx}
 \usepackage{array}
 \usepackage[table]{xcolor}
-\usepackage{amsmath} 
+\usepackage{amsmath, amssymb}
+\usepackage{bbm}   % for \mathbbm{1} (indicator function)
+\usepackage{float} % provides [H] specifier to pin a float in place
 \title{Space-tracker: a curated benchmark dataset for small object detection and tracking from spaceborne videos}
 
 
@@ -94,9 +96,10 @@
   \And
   Gordon Campbell \\
   European Space Agency\\
-   \AND
+   \And
    Yuanyuan Wang \thanks{corresponding author. yuanyuan.wang@cosmos-index.com}\\
    CosmosIndex \\
+   Munich, Germany\\
 }   
   % \texttt{email} \\
   % \And
@@ -216,10 +219,46 @@ To establish a robust performance baseline for Space-tracker, we adopt a selecti
 \textbf{Large Geospatial and Vision Foundation Models}: Reflecting the most recent paradigm shift, we evaluate large-scale foundation models such as SAM 2 and DINO v3. These models are selected for their robust zero-shot generalization and ability to leverage high-quality feature representations learned from vast amounts of unlabeled data. By evaluating prompt-driven video segmentation and tracking, we explore the potential of transfer learning to overcome the extreme scarcity of labeled spaceborne data.
 
 \subsection{Evaluation metrics}
-\textbf{Single Object Tracking}:
-We report four per-sequence scalars for every SOT tracker, then average them across the test split of each dataset: the Success AUC ($\mathrm{SR}$), the Normalized Precision AUC ($\mathrm{NPR}$), the Precision AUC ($\mathrm{PR}$), and the precision at $5\,$px ($\mathrm{P}@5$). Let $b_t$ and $g_t$ denote the predicted and ground-truth boxes at frame $t$ with centres $c_t,\,c^{\star}_t$ and let $d^{\star}_t$ be the GT diagonal. Then $\mathrm{SR}$ is the AUC of the success ratio $S(\tau)=\Pr[\mathrm{IoU}(b_t,g_t)\ge\tau]$ over $\tau\in[0,1]$, $\mathrm{PR}$ and $\mathrm{NPR}$ are AUCs of the precision ratio $P(\rho)=\Pr[\lVert c_t-c^{\star}_t\rVert_2 < \rho]$ over the raw centre-location error $\rho$ (in pixels) and over its normalization $\rho/d^{\star}_t$, integrated on $[0,50]\,$px and $[0,0.5]$ respectively, and $\mathrm{P}@5$ is the single-threshold value $P(5)$. We treat $\mathrm{SR}$ as the \emph{primary} ranking metric, $\mathrm{NPR}$ as the \emph{secondary} metric, $\mathrm{PR}$ as a reference reported for completeness, and $\mathrm{P}@5$ as a diagnostic that is neither ranked nor cross-dataset-averaged.
-
-This four-metric design balances comparability with the dominant generic-vision SOT benchmarks---OTB~\citep{wu2013otb}, TrackingNet~\citep{muller2018trackingnet}, LaSOT~\citep{fan2019lasot}, and GOT-10k~\citep{huang2021got10k}---against fidelity to the small-target regime of spaceborne video. $\mathrm{SR}$ is the de-facto headline number across these benchmarks and the most directly comparable single scalar between papers, which motivates its use as our primary metric. $\mathrm{NPR}$ is elevated to the secondary metric because its scale invariance is essential at our target sizes: the raw centre-location error underlying $\mathrm{PR}$ collapses toward zero whenever the ground truth shrinks, so on the smallest targets $\mathrm{PR}$ stops discriminating between trackers regardless of their actual quality, whereas $\mathrm{NPR}$ remains informative. We integrate $\mathrm{NPR}$ over $[0,0.5]$ following the post-2018 convention of TrackingNet, LaSOT, and GOT-10k rather than the $[0,1]$ adopted by OOTB~\citep{CHEN2024212ootb}, because beyond a normalized error of $0.5$ even competitive trackers saturate and the upper segment compresses inter-method gaps, while on spaceborne video a normalized CLE above $0.5$ already corresponds to a near-total localization failure that $\mathrm{SR}$ at low IoU already captures. $\mathrm{PR}$ is integrated over $[0,50]\,$px following OTB rather than OOTB's $[0,30]\,$px to avoid saturation on the relatively larger targets in parts of OOTB and to keep $\mathrm{PR}$ numerically comparable across the three SOT datasets, whose target-size distributions are heterogeneous. $\mathrm{P}@5$ is retained from the OOTB protocol as a diagnostic for fine-grained localization: at our target scale a 5-pixel error already approaches the full target extent, so $\mathrm{P}@5$ exposes differences that the three AUC-style metrics smooth out; we do not rank or cross-dataset-average it because its operational meaning is tied to the per-dataset pixel scale.
+\subsubsection{Single Object Tracking}
+\label{sec:metrics_sot}
+ 
+We evaluate SOT trackers using four complementary metrics---\textbf{Success Rate (SR)}, \textbf{Normalized Precision (NPR)}, \textbf{Precision (PR)}, and \textbf{P@5}---chosen to align with the dominant convention in modern generic-vision SOT benchmarks~\citep{muller2018trackingnet,fan2019lasot,huang2021got10k} while preserving the small-object diagnostic granularity required by satellite video. Let $\{B_t^{\mathrm{pred}}\}_{t=1}^{T}$ and $\{B_t^{\mathrm{gt}}\}_{t=1}^{T}$ denote the predicted and ground-truth bounding boxes for a sequence of length $T$, and let $\mathrm{IoU}_t$ and $\mathrm{CLE}_t = \lVert c_t^{\mathrm{pred}} - c_t^{\mathrm{gt}} \rVert_2$ denote the per-frame intersection-over-union and centre-location error (in pixels) respectively.
+ 
+\paragraph{Success Rate (SR).}
+Following OTB~\citep{wu2015otb}, the success plot reports the fraction of frames whose IoU exceeds a threshold $\tau \in [0, 1]$,
+\begin{equation}
+S(\tau) \;=\; \frac{1}{T} \sum_{t=1}^{T} \mathbbm{1}\!\left[\mathrm{IoU}_t > \tau\right],
+\end{equation}
+and we report the area under this curve, $\mathrm{SR} = \int_0^1 S(\tau)\, \mathrm{d}\tau$, which is mathematically equivalent to the mean IoU over all frames. SR serves as our \emph{primary ranking metric} owing to its wide adoption and scale-invariance in the IoU regime.
+ 
+\paragraph{Precision (PR).}
+The precision plot reports the fraction of frames whose CLE falls below a pixel threshold $d$,
+\begin{equation}
+P(d) \;=\; \frac{1}{T} \sum_{t=1}^{T} \mathbbm{1}\!\left[\mathrm{CLE}_t < d\right],
+\end{equation}
+and we report $\mathrm{PR} = \frac{1}{50} \int_0^{50} P(d)\, \mathrm{d}d$, the AUC normalized to $[0,1]$. We adopt the $[0, 50]$~px range originally defined by OTB~\citep{wu2015otb} and used in the precision plots of TrackingNet~\citep{muller2018trackingnet} and LaSOT~\citep{fan2019lasot}, rather than the narrower $[0, 30]$~px range of OOTB~\citep{chen2024ootb}. The wider range avoids saturation on the relatively larger targets present in OOTB while keeping PR numerically comparable across our three datasets, which span heterogeneous target-size distributions.
+ 
+\paragraph{Normalized Precision (NPR).}
+Raw CLE is sensitive to absolute target scale, which conflates localization quality with target size---a particular concern for satellite video where targets vary from a few to tens of pixels. We therefore additionally report normalized precision, where CLE is rescaled by the ground-truth box diagonal,
+\begin{equation}
+\widetilde{\mathrm{CLE}}_t \;=\; \frac{\lVert c_t^{\mathrm{pred}} - c_t^{\mathrm{gt}} \rVert_2}{\sqrt{(w_t^{\mathrm{gt}})^2 + (h_t^{\mathrm{gt}})^2}},
+\qquad
+\widetilde{P}(d) \;=\; \frac{1}{T} \sum_{t=1}^{T} \mathbbm{1}\!\left[\widetilde{\mathrm{CLE}}_t < d\right].
+\end{equation}
+We report the AUC over $\widetilde{\mathrm{CLE}} \in [0, 0.5]$, $\mathrm{NPR} = \frac{1}{0.5} \int_0^{0.5} \widetilde{P}(d)\, \mathrm{d}d$, in line with the post-2018 mainstream convention established by TrackingNet~\citep{muller2018trackingnet}, LaSOT~\citep{fan2019lasot}, and GOT-10k~\citep{huang2021got10k}. We deliberately deviate from OOTB's $[0, 1]$ range for two reasons: (i)~beyond $\widetilde{\mathrm{CLE}} \approx 0.5$ the curves of competitive trackers saturate and contribute little discriminative signal, compressing the gap between methods; (ii)~on satellite video where ground-truth diagonals are small, normalized errors above $0.5$ indicate near-total localization failure, a regime already captured by SR at low IoU thresholds. NPR serves as our \emph{secondary ranking metric}, and is particularly informative for cross-scale comparisons. For direct comparability with OOTB's published numbers, the legacy single-threshold value $\mathrm{NP}_{0.5} = \widetilde{P}(0.5)$ is additionally reported in the supplementary material.
+ 
+\paragraph{P@5.}
+As a diagnostic for fine-grained localization on small targets, we report $\mathrm{P@5} = P(5)$, the fraction of frames with sub-$5$-pixel centre error, following OOTB's adoption of $\mathrm{PR@5px}$ as its primary precision metric. P@5 is reported alongside the three AUC-based metrics but is \emph{not used for ranking}, since its meaning depends on dataset-specific pixel scale and it provides finer-grained information than the PR AUC alone.
+ 
+\paragraph{Aggregation.}
+All metrics are computed per sequence and then averaged across sequences with equal weight. Formally, for any per-frame quantity $m_{i,t}$ on sequence $i \in \{1,\dots,N\}$ at frame $t \in \{1,\dots,T_i\}$, the dataset-level score is
+\begin{equation}
+\overline{m} \;=\; \frac{1}{N} \sum_{i=1}^{N} \left( \frac{1}{T_i} \sum_{t=1}^{T_i} m_{i,t} \right),
+\end{equation}
+treating each sequence as an independent evaluation unit regardless of its length. This is the convention adopted by OTB~\citep{wu2015otb}, LaSOT~\citep{fan2019lasot}, and GOT-10k~\citep{huang2021got10k}, and matches the protocol used by the original SatSOT, SV248S, and OOTB papers, ensuring our reported numbers are directly comparable to published baselines on these datasets. To provide a single-number summary across datasets, we additionally report the equal-weight arithmetic mean of SR, NPR, and PR over the three datasets, following the spirit of TrackingNet / LaSOT / GOT-10k aggregate reporting; per-dataset results remain the primary unit of comparison. P@5 is not aggregated across datasets, as its interpretation is pixel-scale dependent.
+ 
+\paragraph{Tiny-object subset.}
+Given that small-object tracking is the defining challenge of satellite video, we additionally evaluate all trackers on a \emph{tiny-object subset} isolated by a sequence-level criterion: a sequence belongs to the subset if the median ground-truth equivalent side length $\sqrt{w_t^{\mathrm{gt}} \, h_t^{\mathrm{gt}}}$ across its annotated frames is below $8$~pixels, i.e., median area below $64$~px$^2$. The $8$-pixel cutoff is selected as the satellite-video analogue of COCO's small-object threshold ($\sqrt{\mathrm{area}} < 32$~px)~\citep{lin2014coco}, scaled to reflect the substantially smaller target sizes characteristic of spaceborne imagery. On this subset we report SR, NPR, and P@5; PR is omitted because for sub-$8$-pixel targets the $[0, 50]$~px integration range is dominated by errors that exceed the target's full extent and consequently lacks discriminative meaning.
 
 \subsection{Experiment protocol}
 
