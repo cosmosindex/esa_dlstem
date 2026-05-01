@@ -32,9 +32,12 @@
 \centering
 \caption{Shared sequence attributes across SatSOT, SV248S, and OOTB.
 Rows list attributes that are annotated in at least two of the three
-datasets. The last three columns give the corresponding per-dataset
-label (``---'' if not annotated).
-Dataset-specific abbreviations appearing in the last three columns are:
+datasets. Columns 4--6 give the corresponding per-dataset label (``---''
+if not annotated); the last two columns report the total number of
+sequences and frames pooled across the datasets that annotate this
+attribute (a sequence is counted once per dataset it belongs to,
+i.e.\ values are summed across the three dataset cells).
+Dataset-specific abbreviations appearing in columns 4--6 are:
 \textbf{IPR} = In-Plane Rotation,
 \textbf{DS} = Dense Similarity,
 \textbf{PO} = Partial Occlusion,
@@ -48,16 +51,16 @@ Dataset-specific abbreviations appearing in the last three columns are:
 \setlength{\tabcolsep}{4pt}
 \renewcommand{\arraystretch}{1.15}
 \resizebox{\textwidth}{!}{%
-\begin{tabular}{llp{7.4cm}ccc}
+\begin{tabular}{llp{6.6cm}cccrr}
 \toprule
-\textbf{Abbr.} & \textbf{Full Name} & \textbf{Definition} & \textbf{SatSOT} & \textbf{SV248S} & \textbf{OOTB} \\
+\textbf{Abbr.} & \textbf{Full Name} & \textbf{Definition} & \textbf{SatSOT} & \textbf{SV248S} & \textbf{OOTB} & \textbf{\#Seq} & \textbf{\#Frames} \\
 \midrule
-BC   & Background Clutter       & Background has similar appearance (texture/color) to the target                                       & BC  & ---                        & BC  \\
-IV   & Illumination Variation   & Illumination around the target changes significantly                                                  & IV  & IV                         & IV  \\
-ROT  & Rotation (in-plane)      & Target rotates in the image plane ($\geq 30^{\circ}$ for SV248S)                                      & ROT & IPR                        & IPR \\
-OCC  & Occlusion$^{1}$          & Target is occluded by scene structures (any degree, any duration)                                     & POC $\cup$ FOC & STO $\cup$ LTO $\cup$ CO & PO $\cup$ FO  \\
-SOB  & Similar Object           & Nearby objects share shape/type/appearance with the target ($\leq 2.5\times$ object size for SV248S)  & SOB & DS$^{2}$                   & SA  \\
-DEF  & Deformation              & Non-rigid object deformation                                                                          & DEF & ---                        & DEF \\
+BC   & Background Clutter       & Background has similar appearance (texture/color) to the target                                       & BC  & ---                        & BC             & 126 & 31{,}687  \\
+IV   & Illumination Variation   & Illumination around the target changes significantly                                                  & IV  & IV                         & IV             & 144 & 64{,}447  \\
+ROT  & Rotation (in-plane)      & Target rotates in the image plane ($\geq 30^{\circ}$ for SV248S)                                      & ROT & IPR                        & IPR            & 207 & 100{,}938 \\
+OCC  & Occlusion$^{1}$          & Target is occluded by scene structures (any degree, any duration)                                     & POC $\cup$ FOC & STO $\cup$ LTO $\cup$ CO & PO $\cup$ FO  & 148 & 73{,}649  \\
+SOB  & Similar Object           & Nearby objects share shape/type/appearance with the target ($\leq 2.5\times$ object size for SV248S)  & SOB & DS$^{2}$                   & SA             & 252 & 133{,}070 \\
+DEF  & Deformation              & Non-rigid object deformation                                                                          & DEF & ---                        & DEF            &  22 &  4{,}050  \\
 \bottomrule
 \end{tabular}
 }
@@ -89,9 +92,11 @@ definitional.
 Rows list attributes that are annotated in exactly one of the three
 datasets, or that are nominally related across datasets but whose
 definitions are incompatible enough that merging would be misleading
-(POC vs.\ STO, FOC vs.\ LTO, ARC vs.\ OON). The last three columns
-give the corresponding per-dataset label (``---'' if not annotated).
-The dataset-specific abbreviation appearing in the last three columns is:
+(POC vs.\ STO, FOC vs.\ LTO, ARC vs.\ OON). Columns 4--6 give the
+corresponding per-dataset label (``---'' if not annotated); the last
+two columns report the number of sequences and frames in the
+annotating dataset that carry this attribute.
+The dataset-specific abbreviation appearing in columns 4--6 is:
 \textbf{BCL} = Background Cluster ($\geq 10$ frames carrying the SV248S
 frame-level INV flag).}
 \label{tab:unique_attributes}
@@ -99,33 +104,33 @@ frame-level INV flag).}
 \setlength{\tabcolsep}{4pt}
 \renewcommand{\arraystretch}{1.15}
 \resizebox{\textwidth}{!}{%
-\begin{tabular}{llp{7.4cm}ccc}
+\begin{tabular}{llp{6.6cm}cccrr}
 \toprule
-\textbf{Abbr.} & \textbf{Full Name} & \textbf{Definition} & \textbf{SatSOT} & \textbf{SV248S} & \textbf{OOTB} \\
+\textbf{Abbr.} & \textbf{Full Name} & \textbf{Definition} & \textbf{SatSOT} & \textbf{SV248S} & \textbf{OOTB} & \textbf{\#Seq} & \textbf{\#Frames} \\
 \midrule
-\multicolumn{6}{l}{\emph{Occlusion sub-types (kept separate due to incompatible annotation axes; see Table~\ref{tab:shared_attributes}, footnote 1)}} \\
-POC  & Partial Occlusion       & Target is partially (but not fully) occluded in the image plane                                                            & POC & ---          & PO  \\
-FOC  & Full Occlusion          & Target is fully occluded in the image plane                                                                                & FOC & ---          & FO  \\
-STO  & Short-Term Occlusion    & $\leq 50$ consecutive frames carry the OCC flag                                                                            & --- & STO          & --- \\
-LTO  & Long-Term Occlusion     & $>50$ consecutive frames carry the OCC flag                                                                                & --- & LTO          & --- \\
-CO   & Continuous Occlusion    & Two or more STO/LTO events occur within a single sequence                                                                  & --- & CO           & --- \\
+\multicolumn{8}{l}{\emph{Occlusion sub-types (kept separate due to incompatible annotation axes; see Table~\ref{tab:shared_attributes}, footnote 1)}} \\
+POC  & Partial Occlusion       & Target is partially (but not fully) occluded in the image plane                                                            & POC & ---          & PO  & 34 &  8{,}572  \\
+FOC  & Full Occlusion          & Target is fully occluded in the image plane                                                                                & FOC & ---          & FO  & 12 &  4{,}103  \\
+STO  & Short-Term Occlusion    & $\leq 50$ consecutive frames carry the OCC flag                                                                            & --- & STO          & --- & 79 & 52{,}597  \\
+LTO  & Long-Term Occlusion     & $>50$ consecutive frames carry the OCC flag                                                                                & --- & LTO          & ---     &  9 &  5{,}764  \\
+CO   & Continuous Occlusion    & Two or more STO/LTO events occur within a single sequence                                                                  & --- & CO           & ---     & 34 & 23{,}910  \\
 \midrule
-\multicolumn{6}{l}{\emph{Aspect-ratio attributes (kept separate: ARC is a temporal-change property, OON is a static-extremeness property)}} \\
-ARC  & Aspect Ratio Change     & Ratio of the current-frame bbox aspect ratio to the first-frame bbox aspect ratio is outside $[0.5, 2]$                    & ARC & ---          & --- \\
-OON  & Out-of-Normal           & The bounding-box aspect ratio itself is outside $[0.3, 3]$ in the sequence                                                 & --- & ---          & OON \\
+\multicolumn{8}{l}{\emph{Aspect-ratio attributes (kept separate: ARC is a temporal-change property, OON is a static-extremeness property)}} \\
+ARC  & Aspect Ratio Change     & Ratio of the current-frame bbox aspect ratio to the first-frame bbox aspect ratio is outside $[0.5, 2]$                    & ARC & ---          & ---     & 26 &  3{,}410  \\
+OON  & Out-of-Normal           & The bounding-box aspect ratio itself is outside $[0.3, 3]$ in the sequence                                                 & --- & ---          & OON     & 20 &  5{,}544  \\
 \midrule
-\multicolumn{6}{l}{\emph{Other dataset-unique attributes}} \\
-LQ   & Low Quality             & Image quality is low; target is hard to distinguish                                                                        & LQ  & ---          & --- \\
-TO   & Tiny Object             & At least one GT bbox has fewer than 25 pixels                                                                              & TO  & ---          & --- \\
-BJT  & Background Jitter       & Background jitter caused by satellite camera shaking                                                                       & BJT & ---          & --- \\
-BCH  & Background Change       & Background has noticeable changes in color or texture along the sequence                                                   & --- & BCH          & --- \\
-ND   & Natural Disturbance     & Target appearance affected by smog, sand, or clouds                                                                        & --- & ND           & --- \\
-IBG  & Indistinguishable Bg.$^{3}$ & Target disappears without occluder (too similar to surroundings) for $\geq 10$ frames                                  & --- & BCL$^{3}$    & --- \\
-SM   & Slow Motion             & Target moves slowly ($< 2.2$ pps in SV248S)                                                                                & --- & SM           & --- \\
-LT   & Less Textures           & Target has poor texture information, causing discrimination difficulty                                                     & --- & ---          & LT  \\
-MB   & Motion Blur             & Target region is blurred due to object or platform motion                                                                  & --- & ---          & MB  \\
-IM   & Isotropic Motion        & Nearby objects move with similar magnitude and direction                                                                   & --- & ---          & IM  \\
-AM   & Anisotropic Motion      & Nearby objects move with similar magnitude but opposite direction                                                          & --- & ---          & AM  \\
+\multicolumn{8}{l}{\emph{Other dataset-unique attributes}} \\
+LQ   & Low Quality             & Image quality is low; target is hard to distinguish                                                                        & LQ  & ---          & ---     & 13 &  3{,}765  \\
+TO   & Tiny Object             & At least one GT bbox has fewer than 25 pixels                                                                              & TO  & ---          & ---     & 21 &  5{,}516  \\
+BJT  & Background Jitter       & Background jitter caused by satellite camera shaking                                                                       & BJT & ---          & ---     & 14 &  4{,}338  \\
+BCH  & Background Change       & Background has noticeable changes in color or texture along the sequence                                                   & --- & BCH          & ---     & 91 & 60{,}641  \\
+ND   & Natural Disturbance     & Target appearance affected by smog, sand, or clouds                                                                        & --- & ND           & ---     & 15 &  9{,}914  \\
+IBG  & Indistinguishable Bg.$^{3}$ & Target disappears without occluder (too similar to surroundings) for $\geq 10$ frames                                  & --- & BCL$^{3}$    & ---     & 76 & 50{,}206  \\
+SM   & Slow Motion             & Target moves slowly ($< 2.2$ pps in SV248S)                                                                                & --- & SM           & ---     & 58 & 36{,}275  \\
+LT   & Less Textures           & Target has poor texture information, causing discrimination difficulty                                                     & --- & ---          & LT      & 46 & 10{,}758  \\
+MB   & Motion Blur             & Target region is blurred due to object or platform motion                                                                  & --- & ---          & MB      & 45 & 11{,}913  \\
+IM   & Isotropic Motion        & Nearby objects move with similar magnitude and direction                                                                   & --- & ---          & IM      & 12 &  4{,}107  \\
+AM   & Anisotropic Motion      & Nearby objects move with similar magnitude but opposite direction                                                          & --- & ---          & AM      & 17 &  4{,}586  \\
 \bottomrule
 \end{tabular}
 }
