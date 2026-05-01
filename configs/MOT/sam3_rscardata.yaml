@@ -1,0 +1,35 @@
+# SAM3 open-vocabulary MOT on RsCarData (HiEUM's re-curated VISO car
+# subset, 7 test sequences @ 1024x1024). Used as the car-class half of
+# the "VISO with car replaced by RsCarData" combined evaluation; see
+# sam3_viso_no_car.yaml + run_sam3_raft_viso.sh.
+
+dataset: RsCarData
+dataset_root: /data/ESA_DLSTEM_2025/data/trafic/RsCarData
+
+class_map:
+  car: 0
+
+eval_mode: mot
+split: test
+img_size: null
+
+sam3_checkpoint_path: null
+apply_temporal_disambiguation: true
+
+tracker_type: text
+prompt_strategy: text
+
+clip_len: 32
+clip_stride: 1
+batch_size: 1
+num_workers: 0
+
+iou_thresh: 0.3
+score_thresh: 0.5
+max_wandb_images: 50
+
+dump_mot_format: true
+mot_dump_score_thresh: 0.0
+
+wandb_project: esa-dlstem
+wandb_entity: chengziwen693

@@ -1,33 +1,41 @@
 # Cross-dataset Faster R-CNN fine-tuning on satellite MOT detection.
 #
-# Train union: LMOD + SAT-MTB + VISO + SDM-Car + AIR-MOT.
-# Validation/test: pooled across all 5 datasets during training; per-dataset
+# Train union: LMOD + SAT-MTB + RsCarData + VISO(plane/ship/train only) +
+# SDM-Car + AIR-MOT. RsCarData (HiEUM's re-annotated VISO car subset)
+# replaces VISO's noisy car split.
+# Validation/test: pooled across all datasets during training; per-dataset
 # breakdown produced by `eval_fasterrcnn_satmot.py` after training.
 #
 # Class taxonomy (4 global classes, FasterRCNN labels 1..4, 0=background):
-#   plane=1, car=2, ship=3, train=4
-# Both spellings (`plane` and `airplane`) alias to the same global id so
-# SAT-MTB and AIR-MOT (which use `airplane`) work without per-dataset shims.
+#   airplane=1, car=2, ship=3, train=4
+# Datasets that emit raw `plane` (VISO, LMOD) declare `plane → 1` in their
+# own class_map kwarg via `per_dataset_kwargs`; the global taxonomy uses
+# the single canonical name `airplane`.
 
 # ----- Dataset roots ------------------------------------------------------
 datasets:
-  LMOD:    /data/ESA_DLSTEM_2025/data/trafic/LMOD
-  SAT-MTB: /data/ESA_DLSTEM_2025/data/trafic/SAT-MTB
-  VISO:    /data/ESA_DLSTEM_2025/data/trafic/VISO
-  SDM-Car: /data/ESA_DLSTEM_2025/data/trafic/SDM-Car
-  AIR-MOT: /data/ESA_DLSTEM_2025/data/trafic/AIR-MOT-100
+  LMOD:      /data/ESA_DLSTEM_2025/data/trafic/LMOD
+  SAT-MTB:   /data/ESA_DLSTEM_2025/data/trafic/SAT-MTB
+  VISO:      /data/ESA_DLSTEM_2025/data/trafic/VISO
+  RsCarData: /data/ESA_DLSTEM_2025/data/trafic/RsCarData
+  SDM-Car:   /data/ESA_DLSTEM_2025/data/trafic/SDM-Car
+  AIR-MOT:   /data/ESA_DLSTEM_2025/data/trafic/AIR-MOT-100
 
-# SAT-MTB-only: load MOT-format annotations (so its `car` rows come through;
-# the HBB/OBB XMLs do not have `car`). Other datasets don't accept `task`.
 per_dataset_kwargs:
+  # SAT-MTB: load MOT-format annotations so `car` rows come through
+  # (HBB/OBB XMLs don't carry `car`).
   SAT-MTB:
     task: mot
+  # VISO: drop the car subset — replaced by RsCarData (HiEUM's re-annotation).
+  VISO:
+    categories: [plane, ship, train]
 
 # Class map: raw category name → FasterRCNN label (0 reserved for background).
-# `airplane` → 1 aliases SAT-MTB / AIR-MOT to the same id as VISO/LMOD's `plane`.
+# `plane` and `airplane` are merged into a single class (id=1): VISO/LMOD
+# emit `plane`, SAT-MTB/AIR-MOT emit `airplane`, both resolve to one class.
 class_map:
-  plane:    1
   airplane: 1
+  plane:    1
   car:      2
   ship:     3
   train:    4

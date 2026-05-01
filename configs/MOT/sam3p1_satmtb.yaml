@@ -1,6 +1,7 @@
 # SAM3 open-vocabulary MOT on SAT-MTB.
 # No GT boxes are ever passed to the model — SAM3's text-prompted detector
 # discovers instances per frame. Track IDs reset at each clip boundary.
+# Model version: SAM 3.1 (multiplex). See sam3_<ds>.yaml for the SAM 3 baseline.
 
 dataset: SAT-MTB
 dataset_root: /data/ESA_DLSTEM_2025/data/trafic/SAT-MTB
@@ -41,3 +42,5 @@ mot_dump_score_thresh: 0.0
 
 wandb_project: esa-dlstem
 wandb_entity: chengziwen693
+
+model_version: sam3.1

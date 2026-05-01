@@ -3,6 +3,7 @@
 # discovers instances per frame. Track IDs are NOT preserved across clips
 # (video_tracker_module.py skips carry-over for prompt_strategy=text), so
 # expect IDF1 / IDsw to degrade at clip_len=32.
+# Model version: SAM 3.1 (multiplex). See sam3_<ds>.yaml for the SAM 3 baseline.
 
 dataset: AIR-MOT
 dataset_root: /data/ESA_DLSTEM_2025/data/trafic/AIR-MOT-100
@@ -38,3 +39,5 @@ mot_dump_score_thresh: 0.0
 
 wandb_project: esa-dlstem
 wandb_entity: chengziwen693
+
+model_version: sam3.1

@@ -17,13 +17,14 @@ import lightning as L
 import yaml
 from lightning.pytorch.loggers import WandbLogger
 
-from models import SAM3Tracker, SAM3TextTracker
+from models import SAM3Tracker, SAM3TextTracker, SAM31TextTracker
 from lightning_modules import (
     SAM2DataModule,
     SAM2DataModuleConfig,
     VideoTrackerEvaluationModule,
     SAM2VisualizationCallback,
     SAM2SOTEvalCallback,
+    MOTFormatDumpCallback,
 )
 from transforms import build_eval_transform
 
@@ -46,9 +47,23 @@ def main():
     prompt_strategy = cfg.get("prompt_strategy", "first_frame")
     prompt_interval = cfg.get("prompt_interval", 10)
 
-    run_name = f"sam3_{prompt_strategy}_{dataset_name.lower()}"
+    # The benchmark slug used in the run dir name. Defaults to the
+    # dataset_name lowercased, but configs that share a dataset class
+    # (e.g. VISO with `categories: [plane, ship, train]`) can override
+    # via `run_name_suffix` so compute_hota can tell the variants apart.
+    bench_slug = cfg.get("run_name_suffix", dataset_name.lower())
+    # ``model_version`` controls which SAM3 release is loaded. Default
+    # "sam3" preserves prior behaviour; "sam3.1" routes to the multiplex
+    # tracker. The model-version prefix lands in the run-dir name so
+    # compute_hota.py picks up base-vs-multiplex as distinct trackers.
+    model_version = str(cfg.get("model_version", "sam3")).lower()
+    if model_version in ("sam3.1", "sam31", "sam3p1"):
+        run_prefix = "sam3p1"
+    else:
+        run_prefix = "sam3"
+    run_name = f"{run_prefix}_{prompt_strategy}_{bench_slug}"
     if prompt_strategy == "every_n":
-        run_name = f"sam3_every{prompt_interval}_{dataset_name.lower()}"
+        run_name = f"{run_prefix}_every{prompt_interval}_{bench_slug}"
 
     exp_root = os.environ.get("EXPERIMENT_ROOT", "/work/ziwen/experiments")
     experiment_dir = f"{exp_root}/{run_name}_{datetime.now():%Y%m%d_%H%M%S}"
@@ -77,18 +92,40 @@ def main():
 
     # --- Model ---
     tracker_type = cfg.get("tracker_type", "box")
+    is_sam31 = run_prefix == "sam3p1"
     if tracker_type == "text":
         # Class names ordered by their integer id, so label assignment is stable
         class_names_ordered = [
             name for name, _ in sorted(class_map.items(), key=lambda kv: kv[1])
         ]
-        tracker = SAM3TextTracker(
-            class_names=class_names_ordered,
-            label_to_id=class_map,
-            checkpoint_path=cfg.get("sam3_checkpoint_path"),
-            apply_temporal_disambiguation=cfg.get("apply_temporal_disambiguation", True),
-        )
+        if is_sam31:
+            tracker = SAM31TextTracker(
+                class_names=class_names_ordered,
+                label_to_id=class_map,
+                checkpoint_path=cfg.get("sam3_checkpoint_path"),
+                max_num_objects=cfg.get("sam31_max_num_objects", 16),
+                multiplex_count=cfg.get("sam31_multiplex_count", 16),
+                compile=cfg.get("sam31_compile", False),
+                # FA3 / real RoPE require flash_attn_interface to be
+                # installed; default off so the multiplex predictor falls
+                # back to PyTorch SDPA.
+                use_fa3=cfg.get("sam31_use_fa3", False),
+                use_rope_real=cfg.get("sam31_use_rope_real", False),
+                apply_temporal_disambiguation=cfg.get("apply_temporal_disambiguation", True),
+            )
+        else:
+            tracker = SAM3TextTracker(
+                class_names=class_names_ordered,
+                label_to_id=class_map,
+                checkpoint_path=cfg.get("sam3_checkpoint_path"),
+                apply_temporal_disambiguation=cfg.get("apply_temporal_disambiguation", True),
+            )
     else:
+        if is_sam31:
+            raise NotImplementedError(
+                "SAM 3.1 box-prompt MOT is not wired yet — only the text path "
+                "(tracker_type=text) is supported. Use sam3 for box-prompt SOT."
+            )
         tracker = SAM3Tracker(
             checkpoint_path=cfg.get("sam3_checkpoint_path"),
             apply_temporal_disambiguation=cfg.get("apply_temporal_disambiguation", True),
@@ -131,6 +168,17 @@ def main():
                 class_names=class_names,
                 output_dir=experiment_dir,
                 score_thresh=cfg.get("score_thresh", 0.5),
+            )
+        )
+
+    # Dump per-video MOTChallenge text files when requested. Required as
+    # the upstream stage of the RAFT static-tracklet filter + HOTA eval
+    # pipeline (compute_hota.py reads <run_dir>/mot_format/<seq>.txt).
+    if cfg.get("dump_mot_format", False) and not sot_mode:
+        callbacks.append(
+            MOTFormatDumpCallback(
+                output_dir=experiment_dir,
+                score_thresh=cfg.get("mot_dump_score_thresh", 0.0),
             )
         )
 

@@ -5,6 +5,8 @@
 
 dataset: SDM-Car
 dataset_root: /data/ESA_DLSTEM_2025/data/trafic/SDM-Car
+# Normalize slug for compute_hota.py regex (dataset.lower() = "sdm-car").
+run_name_suffix: sdmcar
 class_map:
   car: 0
 
@@ -26,6 +28,10 @@ num_workers: 0
 iou_thresh: 0.3
 score_thresh: 0.5
 max_wandb_images: 50
+
+# Emit per-video MOTChallenge text files for HOTA + RAFT filtering.
+dump_mot_format: true
+mot_dump_score_thresh: 0.0
 
 wandb_project: esa-dlstem
 wandb_entity: chengziwen693

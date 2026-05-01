@@ -134,10 +134,10 @@ def main():
         log_model=False,
     )
 
-    # FasterRCNN class id → name (1-indexed; 0=background)
-    class_names = {v: k for k, v in cfg["class_map"].items() if k != "airplane"}
-    # Drop the alias entry; both `plane` and `airplane` alias to id=1, but for
-    # display we keep just `plane`.
+    # FasterRCNN class id → name (1-indexed; 0=background).
+    # `plane` and `airplane` both alias to id=1; keep `airplane` as the
+    # canonical display name and drop the `plane` alias.
+    class_names = {v: k for k, v in cfg["class_map"].items() if k != "plane"}
 
     callbacks = [
         ModelCheckpoint(

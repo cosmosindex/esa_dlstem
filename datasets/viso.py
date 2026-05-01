@@ -83,8 +83,19 @@ class VISODataset(BaseVideoDataset):
         **kwargs:  Forwarded to :class:`BaseVideoDataset`.
     """
 
-    def __init__(self, root: str | Path, split: str = "train", **kwargs):
+    def __init__(
+        self,
+        root: str | Path,
+        split: str = "train",
+        categories: tuple[str, ...] | list[str] | None = None,
+        **kwargs,
+    ):
         self._ann_cache: dict[str, dict[int, list[dict]]] = {}
+        # Optional whitelist of top-level VISO categories to load
+        # (subset of {"car", "plane", "ship", "train"}). When None, all
+        # categories are indexed. Used to drop VISO's car subset when it
+        # is replaced by RsCarData in cross-dataset training.
+        self._categories = tuple(categories) if categories is not None else _CATEGORIES
         super().__init__(root=root, split=split, **kwargs)
 
     # ------------------------------------------------------------------
@@ -94,7 +105,7 @@ class VISODataset(BaseVideoDataset):
     def _build_index(self) -> None:
         mot_dir = self.root / "mot"
 
-        for cat in _CATEGORIES:
+        for cat in self._categories:
             cat_dir = mot_dir / cat
             if not cat_dir.is_dir():
                 continue

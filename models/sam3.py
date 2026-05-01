@@ -545,3 +545,244 @@ class SAM3TextTracker(nn.Module):
     @staticmethod
     def _empty_output() -> dict:
         return SAM3Tracker._empty_output()
+
+
+class SAM31TextTracker(nn.Module):
+    """
+    Text-prompted SAM 3.1 (multiplex) MOT wrapper.
+
+    Same surface as :class:`SAM3TextTracker` (init_video / add_prompts /
+    propagate / reset_state / set_text_prompt) so that
+    ``VideoTrackerEvaluationModule`` and downstream callbacks
+    (``MOTFormatDumpCallback``, RAFT filter) can be reused without
+    modification. Internally it drives the multiplex predictor via the
+    higher-level handle_request / handle_stream_request API exposed by
+    ``Sam3MultiplexVideoPredictor``.
+
+    The per-frame output dict matches the one returned by SAM 3 base
+    (``boxes`` xyxy, ``obb``, ``labels``, ``scores``, ``track_ids``),
+    so no eval-side change is needed when swapping versions.
+
+    Args:
+        class_names: Ordered list of text prompts (one per class). Used
+            as a fallback when no per-clip dominant class is provided.
+        label_to_id: Map from raw class name → integer label id, used to
+            populate the ``labels`` field of each per-frame output dict.
+        checkpoint_path: Optional local checkpoint path; if None the
+            model is downloaded from `facebook/sam3.1` on Hugging Face.
+        max_num_objects: SAM 3.1 multiplex bucket size (default 16).
+        compile: Forward to `build_sam3_predictor`. Off by default since
+            torch.compile compilation can take minutes per first run.
+    """
+
+    def __init__(
+        self,
+        class_names: list[str],
+        label_to_id: dict[str, int],
+        checkpoint_path: str | None = None,
+        max_num_objects: int = 16,
+        multiplex_count: int = 16,
+        compile: bool = False,
+        use_fa3: bool = False,
+        use_rope_real: bool = False,
+        apply_temporal_disambiguation: bool = True,  # accepted for cfg parity; multiplex always on
+    ):
+        super().__init__()
+        self.class_names = list(class_names)
+        self.label_to_id = dict(label_to_id)
+        self.checkpoint_path = checkpoint_path
+        self.max_num_objects = max_num_objects
+        self.multiplex_count = multiplex_count
+        self.compile = compile
+        self.use_fa3 = use_fa3
+        self.use_rope_real = use_rope_real
+
+        self.predictor = self._build_predictor()
+
+        self._tmp_dir: str | None = None
+        self._video_h: int | None = None
+        self._video_w: int | None = None
+        self._num_frames: int = 0
+        self._session_id: str | None = None
+        self._current_text: str | None = None
+
+    def set_text_prompt(self, text: str | None):
+        self._current_text = text if text else None
+
+    def _build_predictor(self):
+        SAM3Tracker._ensure_pkg_resources_shim()
+        from sam3.model_builder import build_sam3_predictor
+
+        # FA3 is gated behind `flash_attn_interface`, which we do not have
+        # installed (and for which there is no prebuilt wheel for our
+        # cu12 + torch combo). Force it off so the multiplex predictor
+        # falls back to PyTorch SDPA. ``use_rope_real`` only matters for
+        # torch.compile compatibility; with compile=False we can leave it
+        # off too.
+        return build_sam3_predictor(
+            checkpoint_path=self.checkpoint_path,
+            version="sam3.1",
+            compile=self.compile,
+            max_num_objects=self.max_num_objects,
+            multiplex_count=self.multiplex_count,
+            use_fa3=self.use_fa3,
+            use_rope_real=self.use_rope_real,
+        )
+
+    # ------------------------------------------------------------------
+    # Stateful video-level API
+    # ------------------------------------------------------------------
+
+    def init_video(self, frames: list[np.ndarray]):
+        # Close any leftover session before starting a new one
+        self.reset_state()
+
+        self._tmp_dir = tempfile.mkdtemp(prefix="sam3p1txt_")
+        for i, f in enumerate(frames):
+            path = os.path.join(self._tmp_dir, f"{i:05d}.jpg")
+            cv2.imwrite(path, cv2.cvtColor(f, cv2.COLOR_RGB2BGR))
+
+        self._video_h, self._video_w = frames[0].shape[:2]
+        self._num_frames = len(frames)
+
+        resp = self.predictor.handle_request(
+            request=dict(
+                type="start_session",
+                resource_path=self._tmp_dir,
+            )
+        )
+        self._session_id = resp["session_id"]
+
+    def add_prompts(self, frame_idx, boxes, labels=None, obj_ids=None):
+        """No-op — SAM 3.1 text mode injects prompts inside ``propagate``."""
+        return
+
+    def propagate(self) -> list[dict]:
+        if self._session_id is None or self._num_frames == 0:
+            return [self._empty_output() for _ in range(self._num_frames)]
+
+        W, H = self._video_w, self._video_h
+        frame_accum: dict[int, list[dict]] = {i: [] for i in range(self._num_frames)}
+
+        if self._current_text is not None:
+            prompts_to_run = [self._current_text]
+        else:
+            prompts_to_run = self.class_names
+
+        next_global_id = 1
+        for class_name in prompts_to_run:
+            label_int = self.label_to_id.get(class_name, 0)
+
+            # Reset between text prompts (per the SAM 3.1 example notebook —
+            # otherwise add_prompt accumulates with the previous text).
+            self.predictor.handle_request(
+                request=dict(type="reset_session", session_id=self._session_id)
+            )
+
+            self.predictor.handle_request(
+                request=dict(
+                    type="add_prompt",
+                    session_id=self._session_id,
+                    frame_index=0,
+                    text=class_name,
+                )
+            )
+
+            start_offset = next_global_id
+            max_local_oid = -1
+
+            # propagation_direction="forward" — text prompt is at frame 0,
+            # we don't need backward.
+            #
+            # SAM 3.1 multiplex raises
+            #   RuntimeError("No points are provided; please add points first")
+            # mid-clip when its inner SAM2-style tracker tries to propagate
+            # but the outer detector found zero matching objects on every
+            # conditioning frame so far. AirMOT in particular triggers this
+            # on clips where the open-vocab detector misses every airplane.
+            # We catch and break: any frames already yielded are kept,
+            # the rest fall back to _empty_output() at assembly time.
+            try:
+                for response in self.predictor.handle_stream_request(
+                    request=dict(
+                        type="propagate_in_video",
+                        session_id=self._session_id,
+                        propagation_direction="forward",
+                    )
+                ):
+                    frame_idx = response["frame_index"]
+                    out = response["outputs"]
+                    obj_ids = out["out_obj_ids"]            # (N,) np int64
+                    probs = out["out_probs"]                # (N,) np float
+                    boxes_xywh = out["out_boxes_xywh"]      # (N, 4) normalized xywh
+                    masks = out["out_binary_masks"]         # (N, H, W) bool
+
+                    for i in range(len(obj_ids)):
+                        mask_2d = masks[i]
+                        if not mask_2d.any():
+                            continue
+                        x, y, w, h = [float(v) for v in boxes_xywh[i]]
+                        x1, y1 = x * W, y * H
+                        x2, y2 = x1 + w * W, y1 + h * H
+
+                        obb_8 = mask_to_obb(mask_2d)
+                        if obb_8 is None:
+                            continue
+
+                        local_oid = int(obj_ids[i])
+                        max_local_oid = max(max_local_oid, local_oid)
+
+                        frame_accum[int(frame_idx)].append({
+                            "box": np.array([x1, y1, x2, y2], dtype=np.float32),
+                            "obb": obb_8,
+                            "score": float(probs[i]),
+                            "label": label_int,
+                            "track_id": local_oid + start_offset,
+                        })
+            except RuntimeError as exc:
+                # Most common cause: outer detector found no matching
+                # objects on any conditioning frame, so the inner
+                # SAM2-style tracker has nothing to propagate. Drop the
+                # rest of this clip's predictions for the current text
+                # prompt; per-frame outputs already in `frame_accum`
+                # are kept, unprocessed frames fall through to empty.
+                print(f"[SAM31TextTracker] propagate aborted for prompt "
+                      f"{class_name!r}: {exc}")
+
+            if max_local_oid >= 0:
+                next_global_id += max_local_oid + 1
+
+        out_list = []
+        for i in range(self._num_frames):
+            objs = frame_accum[i]
+            if not objs:
+                out_list.append(self._empty_output())
+                continue
+            out_list.append({
+                "boxes":     torch.from_numpy(np.stack([o["box"] for o in objs])),
+                "obb":       torch.from_numpy(np.stack([o["obb"] for o in objs])),
+                "labels":    torch.tensor([o["label"] for o in objs], dtype=torch.long),
+                "scores":    torch.tensor([o["score"] for o in objs], dtype=torch.float32),
+                "track_ids": torch.tensor([o["track_id"] for o in objs], dtype=torch.long),
+            })
+        return out_list
+
+    def reset_state(self):
+        if self._session_id is not None:
+            try:
+                self.predictor.handle_request(
+                    request=dict(type="close_session", session_id=self._session_id)
+                )
+            except Exception:
+                pass
+            self._session_id = None
+        self._num_frames = 0
+        if self._tmp_dir is not None:
+            import shutil
+            shutil.rmtree(self._tmp_dir, ignore_errors=True)
+            self._tmp_dir = None
+        self._current_text = None
+
+    @staticmethod
+    def _empty_output() -> dict:
+        return SAM3Tracker._empty_output()

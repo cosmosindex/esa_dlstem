@@ -84,20 +84,50 @@ class FasterRCNNDetector(nn.Module):
         if max_size is not None:
             rpn_kwargs["max_size"] = max_size
 
+        # If we override the RPN anchor generator with a different
+        # anchors-per-location count, torchvision's strict load of the
+        # pretrained RPN head (cls_logits / bbox_pred) fails with a
+        # shape mismatch. Build with weights=None and load the COCO
+        # state_dict ourselves with strict=False so backbone + FPN +
+        # box-roi-pool weights still transfer; the mismatched RPN head
+        # and box predictor get freshly initialised (which is what we
+        # want for fine-tuning anyway).
+        custom_rpn = "rpn_anchor_generator" in rpn_kwargs
+
         if use_v2:
-            weights = FasterRCNN_ResNet50_FPN_V2_Weights.DEFAULT if pretrained else None
+            weights_enum = FasterRCNN_ResNet50_FPN_V2_Weights.DEFAULT if pretrained else None
             self.model = fasterrcnn_resnet50_fpn_v2(
-                weights=weights,
+                weights=None if custom_rpn else weights_enum,
                 trainable_backbone_layers=trainable_backbone_layers,
                 **rpn_kwargs,
             )
         else:
-            weights = FasterRCNN_ResNet50_FPN_Weights.DEFAULT if pretrained else None
+            weights_enum = FasterRCNN_ResNet50_FPN_Weights.DEFAULT if pretrained else None
             self.model = fasterrcnn_resnet50_fpn(
-                weights=weights,
+                weights=None if custom_rpn else weights_enum,
                 trainable_backbone_layers=trainable_backbone_layers,
                 **rpn_kwargs,
             )
+
+        if pretrained and custom_rpn:
+            sd = weights_enum.get_state_dict(progress=True, check_hash=True)
+            # torch's load_state_dict(strict=False) tolerates *missing* /
+            # *extra* keys but still rejects *shape mismatches*. The RPN
+            # head's cls_logits / bbox_pred change shape when we change
+            # anchors-per-location, so drop those four keys explicitly
+            # — they get re-initialised from scratch and trained.
+            shape_mismatch_keys = [
+                k for k, v in sd.items()
+                if k in self.model.state_dict()
+                and v.shape != self.model.state_dict()[k].shape
+            ]
+            for k in shape_mismatch_keys:
+                del sd[k]
+            missing, unexpected = self.model.load_state_dict(sd, strict=False)
+            print(f"[FasterRCNN] pretrained load: dropped {len(shape_mismatch_keys)} "
+                  f"shape-mismatched keys ({shape_mismatch_keys}); "
+                  f"strict=False added {len(missing)} missing, "
+                  f"{len(unexpected)} unexpected")
 
         # Override post-processing thresholds
         self.model.roi_heads.score_thresh = score_thresh

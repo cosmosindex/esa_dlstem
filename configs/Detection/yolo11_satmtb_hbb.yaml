@@ -1,0 +1,67 @@
+# YOLOv11 trained on SAT-MTB **HBB detection** annotations.
+# Apple-to-apple companion to fasterrcnn_satmtb_hbb.yaml — same data
+# (SAT-MTB det/HBB only), same 3-class taxonomy, same input resolution.
+# Difference vs fasterrcnn version:
+#   - YOLO labels are 0-indexed (no background).
+#   - YOLO trains via ultralytics; relies on its own anchor-free head, so
+#     no anchor pyramid override is needed. Letterbox + mosaic come from
+#     ultralytics; the bbox-stats-based scale tuning we did for FRCNN is
+#     handled implicitly by YOLO's multi-scale FPN head.
+#
+# Run with:
+#   python training_scripts/train_yolo_satmtb_hbb.py \
+#       --config configs/Detection/yolo11_satmtb_hbb.yaml
+
+# ----- Dataset roots ------------------------------------------------------
+datasets:
+  SAT-MTB: /data/ESA_DLSTEM_2025/data/trafic/SAT-MTB
+
+per_dataset_kwargs:
+  SAT-MTB:
+    task: det_hbb            # XML HBB labels (all instances, static + moving)
+
+# ----- Class map (0-indexed for YOLO; no background) ----------------------
+class_map:
+  airplane: 0
+  ship:     1
+  train:    2
+
+num_classes: 3
+
+# ----- Model --------------------------------------------------------------
+# yolo11l = "large" (~25 M params). Match scale with FasterRCNN-R50-FPN.
+# Switch to yolo11x for the largest variant or yolo11m for a smaller fit.
+model_name: /work/ziwen/checkpoints/yolo11l.pt
+conf_thresh: 0.05
+iou_thresh: 0.5
+img_size: 1024              # match FasterRCNN min_size for fair comparison
+
+# ----- Training transform -------------------------------------------------
+# YOLO uses ultralytics' built-in augmentation pipeline (mosaic / mixup /
+# copy-paste / random affine). We rely on the project's
+# build_train_transform / build_eval_transform for the dataloader-side
+# preprocessing only.
+
+# ----- Lightning training -------------------------------------------------
+batch_size: 8                # yolo11l + 1024² fits in ~14 GiB at bs=8
+num_workers: 0               # NUM_WORKERS=0 (project rule)
+max_epochs: 50
+lr: 1.0e-3
+weight_decay: 5.0e-4
+warmup_epochs: 5
+lr_scheduler: cosine
+precision: 16-mixed
+gradient_clip_val: 10.0
+
+# ----- Run / logging ------------------------------------------------------
+run_name: yolo11l_satmtb_hbb
+experiment_root: /work/ziwen/experiments
+wandb_project: esa-dlstem
+wandb_entity: chengziwen693
+visualization_max_wandb_images: 50
+visualization_score_thresh: 0.5
+visualization_iou_thresh: 0.5
+
+monitor_metric: val/mAP
+monitor_mode: max
+patience: 10

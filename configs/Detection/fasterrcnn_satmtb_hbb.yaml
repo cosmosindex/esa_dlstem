@@ -1,0 +1,109 @@
+# Faster R-CNN trained on SAT-MTB **HBB detection** annotations only.
+#
+# Why a separate config from fasterrcnn_satmot.yaml: that one trains on a
+# union of 5 datasets where every label comes from MOT annotations, which
+# only cover *moving* objects. SAT-MTB is the only dataset in the project
+# that ships dense per-frame detection ground truth (`det/HBB/*.xml`) for
+# *all* instances — static and moving. Training a detector that recognises
+# parked planes / docked ships requires this denser annotation.
+#
+# SAT-MTB det_hbb only carries the **3 coarse classes** {airplane, ship,
+# train}. The `car` class has no HBB XMLs (per docs/bbox_stats — and per
+# the SAT-MTB MOT-protocol memo: car detection labels live exclusively in
+# the MOT CSV). So this config is a 3-class detector. If you need a car
+# detector too, train a separate one on RsCarData / SAT-MTB MOT.
+#
+# Splits (from analyze_satmtb_bbox.py): 84 train + 18 val + 40 test seqs;
+# 18.9k / 4.2k / 9.9k frames; 297k boxes total. ~40% are small (<32²),
+# dominated by ships; airplanes are mid-sized; trains are huge.
+#
+# Run with:
+#   python training_scripts/train_fasterrcnn_satmot.py \
+#       --config configs/Detection/fasterrcnn_satmtb_hbb.yaml
+
+# ----- Dataset roots ------------------------------------------------------
+datasets:
+  SAT-MTB: /data/ESA_DLSTEM_2025/data/trafic/SAT-MTB
+
+per_dataset_kwargs:
+  SAT-MTB:
+    task: det_hbb            # XML HBB labels (all instances, static + moving)
+
+# ----- Class map ----------------------------------------------------------
+# Reflects what det_hbb XMLs actually carry (no `car`).
+class_map:
+  airplane: 1
+  ship:     2
+  train:    3
+
+num_classes: 4               # 3 foreground + 1 background
+
+# ----- Model --------------------------------------------------------------
+use_v2: false                # see fasterrcnn_satmot.yaml for the v1/v2 note
+pretrained: true
+trainable_backbone_layers: 3
+score_thresh: 0.05
+nms_thresh: 0.5
+detections_per_img: 300
+
+# SAT-MTB det_hbb-tuned anchor pyramid (tighter than the cross-dataset
+# satmot one, which had a [4,8] bottom level for ~5 px cars). SAT-MTB
+# det_hbb has no `car`; the smallest class is ship (avg side 17-30 px,
+# min ~3 px outlier), the largest is train (max 304x202 px). See
+# docs/bbox_stats/bbox_stats_report_satmtb.md → "Task: det_hbb".
+#
+# Each level = FPN stride × {2, 4} (standard FPN convention):
+#   P2 stride 4  → [8, 16]      tiny ship outliers
+#   P3 stride 8  → [24, 48]     ship avg + small airplane
+#   P4 stride 16 → [64, 96]     airplane avg (46²) + ship max
+#   P5 stride 32 → [128, 192]   big airplane + medium train
+#   P6 stride 64 → [256, 384]   train (covers max 304×202)
+anchor_sizes:
+  - [8, 16]
+  - [24, 48]
+  - [64, 96]
+  - [128, 192]
+  - [256, 384]
+anchor_aspect_ratios:
+  - [0.5, 1.0, 2.0]
+  - [0.5, 1.0, 2.0]
+  - [0.5, 1.0, 2.0]
+  - [0.5, 1.0, 2.0]
+  - [0.5, 1.0, 2.0]
+
+# Relaxed RPN/box thresholds for small-object recall.
+rpn_fg_iou_thresh: 0.5
+rpn_bg_iou_thresh: 0.2
+box_fg_iou_thresh: 0.4
+box_bg_iou_thresh: 0.3
+rpn_pre_nms_top_n_train: 4000
+rpn_post_nms_top_n_train: 2000
+
+min_size: 1024
+max_size: 1333
+
+# ----- Training transform -------------------------------------------------
+train_crop_size: 1024
+
+# ----- Lightning training -------------------------------------------------
+batch_size: 4
+num_workers: 0
+max_epochs: 30
+lr: 5.0e-4
+weight_decay: 1.0e-4
+warmup_epochs: 3
+lr_scheduler: cosine
+precision: 16-mixed
+
+# ----- Run / logging ------------------------------------------------------
+run_name: fasterrcnn_satmtb_hbb
+experiment_root: /work/ziwen/experiments
+wandb_project: esa-dlstem
+wandb_entity: chengziwen693
+visualization_max_wandb_images: 50
+visualization_score_thresh: 0.5
+visualization_iou_thresh: 0.5
+
+monitor_metric: val/mAP
+monitor_mode: max
+patience: 8
