@@ -283,6 +283,7 @@ against the GT under OBB IoU, whereas HBB-producing trackers (SiamRPN++, OSTrack
 We use the largest publicly released variant of each tracker without any satellite-domain fine-tuning: SiamRPN++ with a ResNet-50 backbone (layer 2--4 fusion, depthwise cross-correlation);
 OSTrack with a ViT-B backbone (MAE-pretrained, 384$^2$ search region, candidate elimination); ODTrack with the ViT-L baseline; LoRAT with a DINOv2 ViT-g/14 backbone and 378$^2$ search region;
 SAM~2 with the Hiera-L encoder (SAM~2.1 weights); SAMURAI reusing the same SAM~2.1 Hiera-L weights augmented by a Kalman motion model for re-prompting; and SAM~3 with the official release and temporal disambiguation enabled.
+For each tracker, we adopt the strongest variant available in its official public release.
 
 \section{Experiment results}
 \subsection{Performance overview}
