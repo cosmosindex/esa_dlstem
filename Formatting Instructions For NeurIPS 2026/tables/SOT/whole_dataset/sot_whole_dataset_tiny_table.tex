@@ -1,0 +1,32 @@
+% Requires: \usepackage{booktabs, multirow, array}
+\begin{table}[t]
+\centering
+\caption{Single Object Tracking (SOT) results on the \emph{tiny-object} subset of SatSOT, SV248S, and OOTB.
+A sequence is classified as tiny if its median GT equivalent side length ($\sqrt{\text{area}}$) across annotated frames is below 8 px (median area $< 64$\,px$^2$).
+Tiny-subset sizes: SatSOT 25\,/\,105 (23.8\%), SV248S 207\,/\,248 (83.5\%), OOTB 16\,/\,110 (14.5\%).
+We report Success Rate (SR), Normalized Precision (NPR), and P@5 (fraction of frames with CLE $<5$\,px) as the primary precision metric for sub-8-px targets, all aggregated \emph{per-sequence} (each sequence contributes one curve, equal-weight mean across sequences).
+\textbf{Bold} indicates the best result and \underline{underline} indicates the second best within each column.}
+\label{tab:sot_results_tiny}
+\setlength{\tabcolsep}{4pt}
+\renewcommand{\arraystretch}{1.15}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{l l ccc ccc ccc}
+\toprule
+\multirow{2}{*}{\textbf{Method}} & \multirow{2}{*}{\textbf{Venue}}
+ & \multicolumn{3}{c}{\textbf{SatSOT (tiny)}}
+ & \multicolumn{3}{c}{\textbf{SV248S (tiny)}}
+ & \multicolumn{3}{c}{\textbf{OOTB (tiny)}} \\
+\cmidrule(lr){3-5} \cmidrule(lr){6-8} \cmidrule(lr){9-11}
+ & & SR & NPR & P@5 & SR & NPR & P@5 & SR & NPR & P@5 \\
+\midrule
+SiamRPN++~\cite{li2019siamrpn++}   & CVPR 2019  & 0.149             & 0.179             & 0.347             & 0.105             & 0.108             & 0.258             & 0.204             & 0.306             & 0.485             \\
+OSTrack-384~\cite{ye2022joint}     & ECCV 2022  & 0.138             & 0.143             & 0.336             & 0.116             & 0.127             & 0.283             & 0.164             & 0.222             & 0.350             \\
+ODTrack~\cite{zheng2024odtrack}    & AAAI 2024  & 0.156             & 0.171             & \underline{0.387} & 0.121             & 0.112             & 0.326             & 0.200             & 0.290             & 0.489             \\
+LoRAT-g378~\cite{lin2024tracking}  & ECCV 2024  & \underline{0.253} & \underline{0.286} & 0.368             & \textbf{0.350}    & \textbf{0.403}    & \underline{0.485} & 0.255             & 0.326             & 0.432             \\
+SAM 2~\cite{ravi2024sam}           & ICCV 2024  & 0.199             & 0.204             & 0.282             & 0.187             & 0.209             & 0.317             & 0.340             & 0.453             & 0.643             \\
+SAMURAI~\cite{yang2026samurai}     & TIP 2026   & 0.203             & 0.212             & 0.299             & 0.199             & 0.221             & 0.342             & \underline{0.354} & \underline{0.463} & \underline{0.662} \\
+SAM 3~\cite{carion2026sam3}        & ICLR 2026  & \textbf{0.324}    & \textbf{0.380}    & \textbf{0.566}    & \underline{0.281} & \underline{0.337} & \textbf{0.543}    & \textbf{0.398}    & \textbf{0.527}    & \textbf{0.786}    \\
+\bottomrule
+\end{tabular}
+}
+\end{table}
