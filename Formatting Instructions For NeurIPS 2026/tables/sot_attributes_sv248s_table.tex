@@ -1,0 +1,41 @@
+% Requires: \usepackage{booktabs, multirow, array, graphicx}
+\begin{table*}[t]
+\centering
+\caption{Per-attribute Single Object Tracking (SOT) results on \textbf{SV248S},
+broken down by the 11 sequence attributes defined in the benchmark.
+We report Success Rate (SR), Normalized Precision (NPR), and Precision (PR)
+for each tracker. \textbf{Bold} indicates the best result and
+\underline{underline} indicates the second best within each row and metric.}
+\label{tab:sot_attributes_sv248s}
+\setlength{\tabcolsep}{3pt}
+\renewcommand{\arraystretch}{1.15}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{c l ccc ccc ccc ccc ccc ccc ccc}
+\toprule
+\multirow{2}{*}{\textbf{Attr.}} & \multirow{2}{*}{\textbf{Description}}
+ & \multicolumn{3}{c}{\textbf{SiamRPN++}~\cite{li2019siamrpn++}}
+ & \multicolumn{3}{c}{\textbf{OSTrack-384}~\cite{ye2022joint}}
+ & \multicolumn{3}{c}{\textbf{ODTrack}~\cite{zheng2024odtrack}}
+ & \multicolumn{3}{c}{\textbf{LoRAT-g378}~\cite{lin2024tracking}}
+ & \multicolumn{3}{c}{\textbf{SAM 2}~\cite{ravi2024sam}}
+ & \multicolumn{3}{c}{\textbf{SAMURAI}~\cite{yang2024samurai}}
+ & \multicolumn{3}{c}{\textbf{SAM 3}~\cite{carion2025sam}} \\
+\cmidrule(lr){3-5} \cmidrule(lr){6-8} \cmidrule(lr){9-11} \cmidrule(lr){12-14}
+\cmidrule(lr){15-17} \cmidrule(lr){18-20} \cmidrule(lr){21-23}
+ & & SR & NPR & PR & SR & NPR & PR & SR & NPR & PR & SR & NPR & PR
+     & SR & NPR & PR & SR & NPR & PR & SR & NPR & PR \\
+\midrule
+BCH & Background Change       & 0.281 & 0.316 & 0.445 & 0.402 & 0.499 & 0.688 & 0.362 & 0.426 & 0.596 & \textbf{0.535} & \textbf{0.611} & \underline{0.689} & 0.364 & 0.421 & 0.520 & 0.262 & 0.258 & 0.330 & \underline{0.500} & \underline{0.580} & \textbf{0.723} \\
+BCL & Background Cluster      & 0.090 & 0.063 & 0.258 & 0.201 & \underline{0.298} & \underline{0.495} & 0.141 & 0.151 & 0.359 & \textbf{0.360} & \textbf{0.469} & \textbf{0.558} & 0.141 & 0.266 & 0.350 & 0.057 & 0.014 & 0.039 & \underline{0.237} & 0.272 & 0.492 \\
+CO  & Continuous Occlusion    & 0.075 & 0.050 & 0.123 & 0.082 & 0.047 & 0.130 & 0.089 & 0.042 & \underline{0.181} & \underline{0.107} & \underline{0.071} & 0.086 & 0.069 & 0.039 & 0.062 & 0.053 & 0.008 & 0.016 & \textbf{0.154} & \textbf{0.147} & \textbf{0.258} \\
+DS  & Dense Similarity        & 0.144 & 0.136 & 0.405 & 0.227 & 0.264 & 0.434 & 0.187 & 0.195 & 0.519 & \textbf{0.431} & \textbf{0.514} & \underline{0.620} & 0.210 & 0.246 & 0.342 & 0.143 & 0.120 & 0.155 & \underline{0.349} & \underline{0.396} & \textbf{0.670} \\
+IPR & In-Plane Rotation       & 0.162 & 0.160 & 0.364 & 0.234 & 0.313 & 0.525 & 0.213 & 0.248 & 0.500 & \textbf{0.421} & \textbf{0.485} & \underline{0.573} & 0.216 & 0.255 & 0.323 & 0.138 & 0.112 & 0.141 & \underline{0.344} & \underline{0.417} & \textbf{0.628} \\
+IV  & Illumination Variation  & 0.087 & 0.066 & 0.331 & 0.103 & 0.133 & 0.220 & 0.156 & 0.188 & \underline{0.546} & \textbf{0.367} & \textbf{0.424} & 0.505 & 0.092 & 0.108 & 0.155 & 0.054 & 0.010 & 0.032 & \underline{0.272} & \underline{0.323} & \textbf{0.630} \\
+LTO & Long-Term Occlusion     & 0.725 & 0.851 & 0.884 & 0.763 & 0.883 & 0.910 & 0.699 & 0.835 & 0.872 & \underline{0.804} & 0.890 & 0.917 & 0.768 & \underline{0.909} & \underline{0.931} & 0.775 & 0.907 & 0.929 & \textbf{0.823} & \textbf{0.917} & \textbf{0.937} \\
+ND  & Natural Disturbance     & 0.098 & 0.029 & 0.608 & 0.088 & 0.052 & 0.341 & 0.097 & 0.071 & \underline{0.702} & \textbf{0.589} & \textbf{0.771} & \textbf{0.878} & \underline{0.253} & \underline{0.317} & 0.457 & 0.048 & 0.000 & 0.016 & 0.212 & 0.302 & 0.677 \\
+SM  & Slow Motion             & 0.086 & 0.057 & 0.417 & 0.075 & 0.036 & 0.185 & 0.098 & 0.063 & \underline{0.494} & \textbf{0.338} & \textbf{0.406} & \textbf{0.516} & 0.151 & 0.151 & 0.310 & 0.058 & 0.015 & 0.069 & \underline{0.160} & \underline{0.187} & 0.490 \\
+STO & Short-Term Occlusion    & 0.117 & 0.100 & 0.314 & 0.094 & 0.072 & 0.209 & 0.156 & 0.133 & \underline{0.336} & \textbf{0.188} & \underline{0.192} & 0.260 & 0.106 & 0.087 & 0.140 & 0.058 & 0.014 & 0.043 & \underline{0.173} & \textbf{0.201} & \textbf{0.372} \\
+\bottomrule
+\end{tabular}%
+}
+\end{table*}

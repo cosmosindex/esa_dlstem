@@ -1,0 +1,64 @@
+% =====================================================================
+% Unified Sequence Attribute Table across SatSOT, SV248S, and OOTB
+% Requires: \usepackage{booktabs}, \usepackage{array}, \usepackage{makecell}
+% Optional (recommended for two-column layouts): \usepackage{adjustbox}
+% =====================================================================
+
+\begin{table*}[t]
+\centering
+\caption{Unified sequence-attribute taxonomy across SatSOT, SV248S, and OOTB.
+Rows list the unified attributes; the last three columns indicate the
+corresponding per-dataset label (``---'' if the attribute is not annotated
+in that dataset). Dataset-specific abbreviations appearing in the last
+three columns are:
+\textbf{STO} = Short-Term Occlusion,
+\textbf{LTO} = Long-Term Occlusion,
+\textbf{BCL} = Background Cluster ($\geq 10$ frames with the INV flag),
+\textbf{IPR} = In-Plane Rotation,
+\textbf{DS} = Dense Similarity,
+\textbf{PO} = Partial Occlusion,
+\textbf{FO} = Full Occlusion,
+\textbf{SA} = Similar Appearance,
+\textbf{OON} = Out-of-Normal (bounding-box aspect ratio outside $[0.3, 3]$).}
+\label{tab:unified_attributes}
+\small
+\setlength{\tabcolsep}{4pt}
+\renewcommand{\arraystretch}{1.15}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{llp{7.4cm}ccc}
+\toprule
+\textbf{Abbr.} & \textbf{Full Name} & \textbf{Definition} & \textbf{SatSOT} & \textbf{SV248S} & \textbf{OOTB} \\
+\midrule
+BC   & Background Clutter         & Background has similar appearance (texture/color) to the target & BC  & --- & BC  \\
+BCH  & Background Change          & Background has noticeable changes in color or texture along the sequence & --- & BCH & --- \\
+IV   & Illumination Variation     & Illumination around the target changes significantly & IV  & IV  & IV  \\
+LQ   & Low Quality                & Image quality is low; target is hard to distinguish & LQ  & --- & --- \\
+LT   & Less Textures              & Target has poor texture information, causing discrimination difficulty & --- & --- & LT  \\
+MB   & Motion Blur                & Target region is blurred due to object or platform motion & --- & --- & MB  \\
+ND   & Natural Disturbance        & Target appearance affected by smog, sand, or clouds & --- & ND  & --- \\
+ROT  & Rotation (in-plane)        & Target rotates in the image plane ($\geq 30^{\circ}$ for SV248S) & ROT & IPR & IPR \\
+POC  & Partial Occlusion$^{1}$    & Target is partially occluded & POC & STO$^{1}$ & PO  \\
+FOC  & Full Occlusion$^{1}$       & Target is fully occluded    & FOC & LTO$^{1}$ & FO  \\
+CO   & Continuous Occlusion       & Occlusion events occur twice or more in a sequence & --- & CO  & --- \\
+INV  & Invisible$^{2}$            & Target disappears without occluder (too similar to surroundings) & --- & BCL$^{2}$ & --- \\
+TO   & Tiny Object                & At least one GT bbox has fewer than 25 pixels & TO  & --- & --- \\
+SOB  & Similar Object             & Nearby objects of similar shape/type/appearance & SOB & DS  & SA  \\
+IM   & Isotropic Motion           & Nearby objects move with similar magnitude and direction & --- & --- & IM  \\
+AM   & Anisotropic Motion         & Nearby objects move with similar magnitude but opposite direction & --- & --- & AM  \\
+SM   & Slow Motion                & Target moves slowly ($<2.2$ pps in SV248S) & --- & SM  & --- \\
+BJT  & Background Jitter          & Background jitter from satellite camera shaking & BJT & --- & --- \\
+ARC  & Aspect Ratio Change        & Aspect ratio of bbox changes beyond a threshold (SatSOT: $[0.5, 2]$; OOTB OON: $[0.3, 3]$) & ARC & --- & OON \\
+DEF  & Deformation                & Non-rigid object deformation & DEF & --- & DEF \\
+\bottomrule
+\end{tabular}
+}
+\vspace{2pt}
+\begin{flushleft}\footnotesize
+$^{1}$ SV248S defines STO / LTO \emph{temporally} ($\leq 50$ vs. $>50$ consecutive OCC frames),
+whereas SatSOT and OOTB define partial/full occlusion \emph{spatially}. The mapping
+POC $\approx$ STO and FOC $\approx$ LTO is therefore an approximation.\\
+$^{2}$ SV248S BCL is derived from $\geq 10$ frames carrying the INV (Invisible) flag;
+it is semantically closest to ``target indistinguishable from background'' and is kept
+as a separate unified label rather than merged into BC or FOC.
+\end{flushleft}
+\end{table*}

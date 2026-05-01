@@ -1,0 +1,140 @@
+% =====================================================================
+% Split Sequence Attribute Tables across SatSOT, SV248S, and OOTB
+% Requires: \usepackage{booktabs}, \usepackage{array}, \usepackage{makecell}
+% Optional (recommended for two-column layouts): \usepackage{adjustbox}
+%
+% Revision notes (w.r.t. original tables):
+%   1. Occlusion-related attributes (POC/FOC in SatSOT, STO/LTO/CO in
+%      SV248S, PO/FO in OOTB) are consolidated into a single unified
+%      OCC row in Table 1, because SV248S defines occlusion along a
+%      *temporal* axis (short- vs. long-term) whereas SatSOT and OOTB
+%      define it along a *spatial* axis (partial vs. full). The two
+%      axes are not comparable at the sequence-attribute level, so we
+%      evaluate any-occlusion as the only safely shared label.
+%   2. ARC and OON are separated into two distinct rows in Table 2
+%      (unique attributes) because ARC measures *temporal change* of
+%      aspect ratio while OON measures *static extremeness* of the
+%      aspect ratio -- they probe different tracker capabilities.
+%   3. The unified abbreviation for SV248S BCL is renamed from "INV"
+%      to "IBG" (Indistinguishable from Background) to avoid confusion
+%      with the SV248S *frame-level* INV flag, of which BCL is the
+%      *sequence-level* aggregation.
+%   4. ARC definition now reflects the SatSOT specification: the ratio
+%      of the current-frame bbox aspect ratio to the first-frame bbox
+%      aspect ratio is outside [0.5, 2].
+% =====================================================================
+
+
+% ---------------------------------------------------------------------
+% Table 1: Shared attributes (annotated in at least two datasets)
+% ---------------------------------------------------------------------
+\begin{table*}[t]
+\centering
+\caption{Shared sequence attributes across SatSOT, SV248S, and OOTB.
+Rows list attributes that are annotated in at least two of the three
+datasets. The last three columns give the corresponding per-dataset
+label (``---'' if not annotated).
+Dataset-specific abbreviations appearing in the last three columns are:
+\textbf{IPR} = In-Plane Rotation,
+\textbf{DS} = Dense Similarity,
+\textbf{PO} = Partial Occlusion,
+\textbf{FO} = Full Occlusion,
+\textbf{STO} = Short-Term Occlusion,
+\textbf{LTO} = Long-Term Occlusion,
+\textbf{CO} = Continuous Occlusion,
+\textbf{SA} = Similar Appearance.}
+\label{tab:shared_attributes}
+\small
+\setlength{\tabcolsep}{4pt}
+\renewcommand{\arraystretch}{1.15}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{llp{7.4cm}ccc}
+\toprule
+\textbf{Abbr.} & \textbf{Full Name} & \textbf{Definition} & \textbf{SatSOT} & \textbf{SV248S} & \textbf{OOTB} \\
+\midrule
+BC   & Background Clutter       & Background has similar appearance (texture/color) to the target                                       & BC  & ---                        & BC  \\
+IV   & Illumination Variation   & Illumination around the target changes significantly                                                  & IV  & IV                         & IV  \\
+ROT  & Rotation (in-plane)      & Target rotates in the image plane ($\geq 30^{\circ}$ for SV248S)                                      & ROT & IPR                        & IPR \\
+OCC  & Occlusion$^{1}$          & Target is occluded by scene structures (any degree, any duration)                                     & POC $\cup$ FOC & STO $\cup$ LTO $\cup$ CO & PO $\cup$ FO  \\
+SOB  & Similar Object           & Nearby objects share shape/type/appearance with the target ($\leq 2.5\times$ object size for SV248S)  & SOB & DS$^{2}$                   & SA  \\
+DEF  & Deformation              & Non-rigid object deformation                                                                          & DEF & ---                        & DEF \\
+\bottomrule
+\end{tabular}
+}
+\vspace{2pt}
+\begin{flushleft}\footnotesize
+$^{1}$ The three datasets annotate occlusion along incompatible axes:
+SatSOT and OOTB split it \emph{spatially} into partial vs. full, while
+SV248S splits it \emph{temporally} into short-term ($\leq 50$
+consecutive OCC frames), long-term ($>50$ consecutive OCC frames), and
+continuous (two or more STO/LTO events in one sequence). We therefore
+unify them into a single any-occlusion label and treat spatial-degree
+and temporal-length evaluations as dataset-unique (Table~\ref{tab:unique_attributes}).
+\\
+$^{2}$ SV248S DS requires the distractor to be within $2.5\times$ the
+target's bounding-box diagonal, whereas SatSOT SOB and OOTB SA do not
+specify a spatial threshold. The mapping is therefore conceptual, not
+definitional.
+\end{flushleft}
+\end{table*}
+
+
+% ---------------------------------------------------------------------
+% Table 2: Dataset-unique attributes (annotated in exactly one dataset,
+% or split by incompatible definitions that cannot be safely merged)
+% ---------------------------------------------------------------------
+\begin{table*}[t]
+\centering
+\caption{Dataset-unique sequence attributes across SatSOT, SV248S, and OOTB.
+Rows list attributes that are annotated in exactly one of the three
+datasets, or that are nominally related across datasets but whose
+definitions are incompatible enough that merging would be misleading
+(POC vs.\ STO, FOC vs.\ LTO, ARC vs.\ OON). The last three columns
+give the corresponding per-dataset label (``---'' if not annotated).
+The dataset-specific abbreviation appearing in the last three columns is:
+\textbf{BCL} = Background Cluster ($\geq 10$ frames carrying the SV248S
+frame-level INV flag).}
+\label{tab:unique_attributes}
+\small
+\setlength{\tabcolsep}{4pt}
+\renewcommand{\arraystretch}{1.15}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{llp{7.4cm}ccc}
+\toprule
+\textbf{Abbr.} & \textbf{Full Name} & \textbf{Definition} & \textbf{SatSOT} & \textbf{SV248S} & \textbf{OOTB} \\
+\midrule
+\multicolumn{6}{l}{\emph{Occlusion sub-types (kept separate due to incompatible annotation axes; see Table~\ref{tab:shared_attributes}, footnote 1)}} \\
+POC  & Partial Occlusion       & Target is partially (but not fully) occluded in the image plane                                                            & POC & ---          & PO  \\
+FOC  & Full Occlusion          & Target is fully occluded in the image plane                                                                                & FOC & ---          & FO  \\
+STO  & Short-Term Occlusion    & $\leq 50$ consecutive frames carry the OCC flag                                                                            & --- & STO          & --- \\
+LTO  & Long-Term Occlusion     & $>50$ consecutive frames carry the OCC flag                                                                                & --- & LTO          & --- \\
+CO   & Continuous Occlusion    & Two or more STO/LTO events occur within a single sequence                                                                  & --- & CO           & --- \\
+\midrule
+\multicolumn{6}{l}{\emph{Aspect-ratio attributes (kept separate: ARC is a temporal-change property, OON is a static-extremeness property)}} \\
+ARC  & Aspect Ratio Change     & Ratio of the current-frame bbox aspect ratio to the first-frame bbox aspect ratio is outside $[0.5, 2]$                    & ARC & ---          & --- \\
+OON  & Out-of-Normal           & The bounding-box aspect ratio itself is outside $[0.3, 3]$ in the sequence                                                 & --- & ---          & OON \\
+\midrule
+\multicolumn{6}{l}{\emph{Other dataset-unique attributes}} \\
+LQ   & Low Quality             & Image quality is low; target is hard to distinguish                                                                        & LQ  & ---          & --- \\
+TO   & Tiny Object             & At least one GT bbox has fewer than 25 pixels                                                                              & TO  & ---          & --- \\
+BJT  & Background Jitter       & Background jitter caused by satellite camera shaking                                                                       & BJT & ---          & --- \\
+BCH  & Background Change       & Background has noticeable changes in color or texture along the sequence                                                   & --- & BCH          & --- \\
+ND   & Natural Disturbance     & Target appearance affected by smog, sand, or clouds                                                                        & --- & ND           & --- \\
+IBG  & Indistinguishable Bg.$^{3}$ & Target disappears without occluder (too similar to surroundings) for $\geq 10$ frames                                  & --- & BCL$^{3}$    & --- \\
+SM   & Slow Motion             & Target moves slowly ($< 2.2$ pps in SV248S)                                                                                & --- & SM           & --- \\
+LT   & Less Textures           & Target has poor texture information, causing discrimination difficulty                                                     & --- & ---          & LT  \\
+MB   & Motion Blur             & Target region is blurred due to object or platform motion                                                                  & --- & ---          & MB  \\
+IM   & Isotropic Motion        & Nearby objects move with similar magnitude and direction                                                                   & --- & ---          & IM  \\
+AM   & Anisotropic Motion      & Nearby objects move with similar magnitude but opposite direction                                                          & --- & ---          & AM  \\
+\bottomrule
+\end{tabular}
+}
+\vspace{2pt}
+\begin{flushleft}\footnotesize
+$^{3}$ In SV248S, INV is defined at the \emph{frame} level (a target is
+invisible without an occluder) and BCL is its \emph{sequence}-level
+aggregation. We use the unified label IBG (Indistinguishable from
+Background) to avoid conflating the frame flag with the sequence
+attribute.
+\end{flushleft}
+\end{table*}

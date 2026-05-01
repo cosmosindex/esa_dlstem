@@ -1,0 +1,26 @@
+% Requires: \usepackage{booktabs, multirow}
+\begin{table}[t]
+\centering
+\caption{Summary of existing spaceborne video datasets used in this work. TODO: add column \# of frames, \# of labels, \% of small objects, FPS, and the TIR data}
+\label{tab:spaceborne_video_datasets}
+\setlength{\tabcolsep}{4pt}
+\renewcommand{\arraystretch}{1.15}
+\small
+\begin{tabular}{l l l r l}
+\toprule
+\textbf{Dataset} & \textbf{Satellite / Sensor} & \textbf{Modality} & \textbf{\#Seq} & \textbf{Venue / Year} \\
+\midrule
+\multicolumn{5}{l}{\textit{Single Object Tracking (SOT)}} \\
+SatSOT~\cite{satSOT2022}              & Jilin-1                      & VNIR & 105 & TGRS 2022  \\
+SV248S~\cite{Li2022SV248S}            & Jilin-1                      & VNIR & 248 & GRSM 2022  \\
+OOTB~\cite{CHEN2024212ootb}           & Jilin-1, SkySat, ISS            & VNIR & 110 & ISPRS 2024 \\
+\midrule
+\multicolumn{5}{l}{\textit{Multiple Object Tracking (MOT)}} \\
+AIR-MOT~\cite{He2022TGraM}            & Jilin-1                      & VNIR &  10 & TGRS 2022  \\
+VISO~\cite{yin2021viso}               & Jilin-1                      & VNIR &  47 & TGRS 2022  \\
+SAT-MTB~\cite{Li2023SATMTB}           & Jilin-1                      & VNIR & 249 & TGRS 2023  \\
+RsCarData~\cite{Xiao2024HiEUM}        & Jilin-1                      & VNIR &  77 & TPAMI 2024 \\
+SDM-Car~\cite{Zhang2024SDMCar}        & Luojia 3-01                  & VNIR &  99 & GRSL 2024  \\
+\bottomrule
+\end{tabular}
+\end{table}

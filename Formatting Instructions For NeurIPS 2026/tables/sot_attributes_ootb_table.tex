@@ -1,0 +1,46 @@
+% Requires: \usepackage{booktabs, multirow, array, graphicx}
+\begin{table*}[t]
+\centering
+\caption{Per-attribute Single Object Tracking (SOT) results on \textbf{OOTB},
+broken down by the sequence attributes defined in the benchmark.
+We report Success Rate (SR), Normalized Precision (NPR), and Precision (PR)
+for each tracker. \textbf{Bold} indicates the best result and
+\underline{underline} indicates the second best within each row and metric.
+$^{\dagger}$Under the adopted test split, the attributes \emph{Deformation}
+(DEF) and \emph{Out-of-Normal} (OON) share a single common test sequence
+and are therefore evaluated on identical data by construction; we merge
+them into one row.}
+\label{tab:sot_attributes_ootb}
+\setlength{\tabcolsep}{3pt}
+\renewcommand{\arraystretch}{1.15}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{c l ccc ccc ccc ccc ccc ccc ccc}
+\toprule
+\multirow{2}{*}{\textbf{Attr.}} & \multirow{2}{*}{\textbf{Description}}
+ & \multicolumn{3}{c}{\textbf{SiamRPN++}~\cite{li2019siamrpn++}}
+ & \multicolumn{3}{c}{\textbf{OSTrack-384}~\cite{ye2022joint}}
+ & \multicolumn{3}{c}{\textbf{ODTrack}~\cite{zheng2024odtrack}}
+ & \multicolumn{3}{c}{\textbf{LoRAT-g378}~\cite{lin2024tracking}}
+ & \multicolumn{3}{c}{\textbf{SAM 2}~\cite{ravi2024sam}}
+ & \multicolumn{3}{c}{\textbf{SAMURAI}~\cite{yang2024samurai}}
+ & \multicolumn{3}{c}{\textbf{SAM 3}~\cite{carion2025sam}} \\
+\cmidrule(lr){3-5} \cmidrule(lr){6-8} \cmidrule(lr){9-11} \cmidrule(lr){12-14}
+\cmidrule(lr){15-17} \cmidrule(lr){18-20} \cmidrule(lr){21-23}
+ & & SR & NPR & PR & SR & NPR & PR & SR & NPR & PR & SR & NPR & PR
+     & SR & NPR & PR & SR & NPR & PR & SR & NPR & PR \\
+\midrule
+AM  & Anisotropic Motion       & 0.367 & 0.470 & 0.729 & 0.324 & 0.361 & 0.539 & \underline{0.414} & 0.469 & \underline{0.739} & 0.351 & 0.412 & 0.502 & 0.408 & \underline{0.504} & 0.606 & 0.407 & 0.501 & 0.599 & \textbf{0.492} & \textbf{0.630} & \textbf{0.779} \\
+BC  & Background Clutters      & 0.423 & 0.474 & 0.654 & \underline{0.571} & \underline{0.676} & \underline{0.786} & 0.504 & 0.572 & 0.687 & \textbf{0.586} & \textbf{0.732} & \textbf{0.795} & 0.421 & 0.552 & 0.653 & 0.358 & 0.461 & 0.540 & 0.448 & 0.617 & 0.705 \\
+DEF / OON$^{\dagger}$ & Deformation / Out-of-Normal & 0.123 & 0.153 & 0.054 & 0.642 & 0.838 & 0.643 & 0.533 & 0.841 & 0.649 & \textbf{0.741} & 0.913 & \textbf{0.862} & 0.718 & \underline{0.924} & \textbf{0.862} & \underline{0.719} & \textbf{0.925} & \underline{0.862} & 0.679 & 0.922 & 0.847 \\
+FO  & Full Occlusion           & 0.115 & 0.054 & 0.232 & \underline{0.251} & \underline{0.219} & \underline{0.498} & 0.059 & 0.012 & 0.034 & \textbf{0.303} & \textbf{0.363} & \textbf{0.521} & 0.098 & 0.040 & 0.157 & 0.099 & 0.043 & 0.163 & 0.106 & 0.083 & 0.192 \\
+IM  & Isotropic Motion         & 0.186 & 0.123 & 0.536 & 0.223 & 0.202 & 0.486 & 0.056 & 0.011 & 0.034 & 0.064 & 0.024 & 0.041 & 0.283 & \textbf{0.523} & \textbf{0.891} & \underline{0.308} & \underline{0.510} & \underline{0.888} & \textbf{0.374} & 0.376 & 0.859 \\
+IPR & In-Plane Rotation        & 0.490 & 0.632 & 0.727 & \underline{0.657} & 0.852 & 0.890 & 0.625 & 0.764 & 0.818 & \textbf{0.726} & \textbf{0.894} & 0.913 & 0.645 & 0.887 & \underline{0.913} & 0.591 & 0.875 & 0.909 & 0.602 & \underline{0.889} & \textbf{0.914} \\
+IV  & Illumination Variation   & 0.375 & 0.402 & 0.692 & 0.472 & 0.554 & 0.738 & 0.390 & 0.431 & 0.670 & \underline{0.489} & \underline{0.639} & 0.707 & 0.408 & 0.551 & \underline{0.740} & 0.298 & 0.352 & 0.485 & \textbf{0.519} & \textbf{0.700} & \textbf{0.860} \\
+LT  & Less Textures            & 0.267 & 0.268 & 0.552 & 0.421 & 0.464 & \underline{0.667} & 0.317 & 0.322 & 0.525 & \textbf{0.447} & \underline{0.572} & 0.659 & 0.347 & 0.438 & 0.623 & 0.253 & 0.267 & 0.404 & \underline{0.436} & \textbf{0.573} & \textbf{0.731} \\
+MB  & Motion Blur              & 0.431 & 0.454 & 0.692 & \textbf{0.613} & \underline{0.682} & \underline{0.799} & 0.564 & 0.590 & 0.788 & \underline{0.602} & \textbf{0.761} & \textbf{0.847} & 0.347 & 0.417 & 0.550 & 0.247 & 0.240 & 0.322 & 0.410 & 0.553 & 0.649 \\
+PO  & Partial Occlusion        & 0.359 & 0.417 & 0.755 & 0.392 & 0.438 & 0.729 & 0.332 & 0.368 & 0.545 & 0.221 & 0.240 & 0.298 & 0.492 & \textbf{0.696} & \textbf{0.928} & \underline{0.501} & \underline{0.690} & \underline{0.927} & \textbf{0.533} & 0.633 & 0.914 \\
+SA  & Similar Appearance       & 0.342 & 0.438 & 0.676 & 0.434 & 0.509 & 0.659 & 0.415 & 0.501 & 0.659 & 0.482 & 0.554 & 0.601 & \underline{0.482} & \underline{0.676} & \underline{0.793} & 0.431 & 0.660 & 0.784 & \textbf{0.498} & \textbf{0.698} & \textbf{0.855} \\
+\bottomrule
+\end{tabular}%
+}
+\end{table*}

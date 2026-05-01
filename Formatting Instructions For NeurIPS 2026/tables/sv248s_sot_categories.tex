@@ -1,0 +1,22 @@
+\begin{table*}[t]
+\centering
+\caption{Per-category SOT performance on SV248S. Best result per category and metric is in \textbf{bold}. SR is the primary metric.}
+\label{tab:sv248s_sot_categories}
+\setlength{\tabcolsep}{4pt}
+\renewcommand{\arraystretch}{1.1}
+\small
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{l|ccc|ccc|ccc|ccc|ccc|ccc|ccc}
+\toprule
+Category & \multicolumn{3}{c|}{SiamRPN++~\cite{li2019siamrpn++}} & \multicolumn{3}{c|}{OSTrack-384~\cite{ye2022joint}} & \multicolumn{3}{c|}{ODTrack~\cite{zheng2024odtrack}} & \multicolumn{3}{c|}{LoRAT-g378~\cite{lin2024tracking}} & \multicolumn{3}{c|}{SAM 2~\cite{ravi2024sam}} & \multicolumn{3}{c|}{SAMURAI~\cite{yang2024samurai}} & \multicolumn{3}{c}{SAM 3~\cite{carion2025sam}} \\
+\cmidrule(lr){2-4} \cmidrule(lr){5-7} \cmidrule(lr){8-10} \cmidrule(lr){11-13} \cmidrule(lr){14-16} \cmidrule(lr){17-19} \cmidrule(lr){20-22}
+ & SR & PR & NPR & SR & PR & NPR & SR & PR & NPR & SR & PR & NPR & SR & PR & NPR & SR & PR & NPR & SR & PR & NPR \\
+\midrule
+car & 0.089 & 0.346 & 0.062 & 0.130 & 0.330 & 0.168 & 0.133 & 0.469 & 0.144 & \textbf{0.376} & 0.573 & \textbf{0.462} & 0.163 & 0.317 & 0.209 & 0.054 & 0.036 & 0.009 & 0.255 & \textbf{0.581} & 0.298 \\
+car-large & 0.203 & 0.364 & 0.238 & 0.388 & 0.676 & 0.462 & 0.338 & 0.544 & 0.366 & 0.438 & 0.523 & 0.469 & 0.233 & 0.298 & 0.230 & 0.224 & 0.274 & 0.222 & \textbf{0.508} & \textbf{0.677} & \textbf{0.560} \\
+plane & 0.719 & 0.861 & 0.842 & 0.775 & 0.883 & 0.866 & 0.630 & 0.698 & 0.679 & 0.823 & 0.912 & 0.896 & 0.630 & 0.725 & 0.711 & 0.674 & 0.770 & 0.756 & \textbf{0.839} & \textbf{0.931} & \textbf{0.916} \\
+ship & \textbf{0.756} & \textbf{0.950} & \textbf{0.884} & 0.742 & 0.933 & 0.839 & 0.727 & 0.933 & 0.839 & 0.675 & 0.933 & 0.833 & 0.607 & 0.925 & 0.821 & 0.427 & 0.746 & 0.329 & 0.502 & 0.916 & 0.793 \\
+\bottomrule
+\end{tabular}%
+}
+\end{table*}
