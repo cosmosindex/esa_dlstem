@@ -1,26 +1,30 @@
 % Requires: \usepackage{booktabs, multirow}
 \begin{table}[t]
 \centering
-\caption{Summary of existing spaceborne video datasets used in this work. TODO: add column \# of frames, \# of labels, \% of small objects, FPS, and the TIR data}
+\caption{Summary of existing spaceborne video datasets used in this work.
+\textbf{\#Seq} is the number of video sequences as published.
+\textbf{\#Frames} and \textbf{\#Labels} are the totals of annotated frames and bounding-box annotations across all sequences (counted on the SOT or MOT subset, respectively, on disk).
+For SOT datasets, \textbf{Tiny\%} is the fraction of bounding-box annotations whose area is below $8\times8 = 64$~px$^2$, computed on the native annotation (AABB for SatSOT/SV248S, OBB for OOTB).
+For MOT datasets, \textbf{FPS} is the native acquisition frame rate of the source satellite videos.}
 \label{tab:spaceborne_video_datasets}
 \setlength{\tabcolsep}{4pt}
 \renewcommand{\arraystretch}{1.15}
 \small
-\begin{tabular}{l l l r l}
+\begin{tabular}{l l l r r r r r l}
 \toprule
-\textbf{Dataset} & \textbf{Satellite / Sensor} & \textbf{Modality} & \textbf{\#Seq} & \textbf{Venue / Year} \\
+\textbf{Dataset} & \textbf{Satellite / Sensor} & \textbf{Modality} & \textbf{\#Seq} & \textbf{\#Frames} & \textbf{\#Labels} & \textbf{Tiny\%} & \textbf{FPS} & \textbf{Venue / Year} \\
 \midrule
-\multicolumn{5}{l}{\textit{Single Object Tracking (SOT)}} \\
-SatSOT~\cite{satSOT2022}              & Jilin-1                      & VNIR & 105 & TGRS 2022  \\
-SV248S~\cite{Li2022SV248S}            & Jilin-1                      & VNIR & 248 & GRSM 2022  \\
-OOTB~\cite{CHEN2024212ootb}           & Jilin-1, SkySat, ISS            & VNIR & 110 & ISPRS 2024 \\
+\multicolumn{9}{l}{\textit{Single Object Tracking (SOT)}} \\
+SatSOT~\cite{satSOT2022}              & Jilin-1                      & VNIR & 105 &  27{,}664 &      27{,}061 & 26.2 & --- & TGRS 2022  \\
+SV248S~\cite{Li2022SV248S}            & Jilin-1                      & VNIR & 248 & 156{,}621 &     144{,}119 & 80.3 & --- & GRSM 2022  \\
+OOTB~\cite{CHEN2024212ootb}           & Jilin-1, SkySat, ISS         & VNIR & 110 &  29{,}890 &      29{,}890 & 13.7 & --- & ISPRS 2024 \\
 \midrule
-\multicolumn{5}{l}{\textit{Multiple Object Tracking (MOT)}} \\
-AIR-MOT~\cite{He2022TGraM}            & Jilin-1                      & VNIR &  10 & TGRS 2022  \\
-VISO~\cite{yin2021viso}               & Jilin-1                      & VNIR &  47 & TGRS 2022  \\
-SAT-MTB~\cite{Li2023SATMTB}           & Jilin-1                      & VNIR & 249 & TGRS 2023  \\
-RsCarData~\cite{Xiao2024HiEUM}        & Jilin-1                      & VNIR &  77 & TPAMI 2024 \\
-SDM-Car~\cite{Zhang2024SDMCar}        & Luojia 3-01                  & VNIR &  99 & GRSL 2024  \\
+\multicolumn{9}{l}{\textit{Multiple Object Tracking (MOT)}} \\
+AIR-MOT~\cite{He2022TGraM}            & Jilin-1                      & VNIR & 100 &  19{,}940 &     317{,}569 & --- & 10 & TGRS 2022  \\
+VISO~\cite{yin2021viso}               & Jilin-1                      & VNIR &  47 &  16{,}204 &     844{,}345 & --- & 10 & TGRS 2022  \\
+SAT-MTB~\cite{Li2023SATMTB}           & Jilin-1                      & VNIR & 249 &  48{,}390 &  1{,}118{,}584 & --- & 10 & TGRS 2023  \\
+RsCarData~\cite{Xiao2024HiEUM}        & Jilin-1                      & VNIR &  77 &  29{,}689 &     848{,}786 & --- & 10 & TPAMI 2024 \\
+SDM-Car~\cite{Zhang2024SDMCar}        & Luojia 3-01                  & VNIR &  99 &  16{,}423 &  1{,}522{,}577 & --- &  6 & GRSL 2024  \\
 \bottomrule
 \end{tabular}
 \end{table}
