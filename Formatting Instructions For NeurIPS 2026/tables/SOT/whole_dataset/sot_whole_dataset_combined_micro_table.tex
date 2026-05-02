@@ -1,0 +1,36 @@
+% Requires: \usepackage{booktabs, multirow, array}
+% MICRO-averaged (sequence-count weighted) variant of the combined SOT table.
+% Mean = (Σ_seq metric_seq) / total_seqs across SatSOT (105) + SV248S (248) + OOTB (110) = 463 seqs.
+% Tiny pool: SatSOT-tiny (25) + SV248S-tiny (207) + OOTB-tiny (16) = 248 seqs.
+\begin{table}[t]
+\centering
+\caption{Single Object Tracking (SOT) results on the proposed Space-Tracker-SOT benchmark, aggregated as a \emph{sequence-count weighted micro-mean} across the three constituent datasets: each sequence contributes equally regardless of its dataset of origin (whole-pool $n=463$ sequences; tiny-pool $n=248$). Because $54\%$ of whole-pool and $83\%$ of tiny-pool sequences come from SV248S, the small-target Jilin-1 regime dominates this aggregation; for an equal-weight per-dataset alternative see the macro table.
+SR is Success Rate, NPR is Normalized Precision over $\widetilde{\mathrm{CLE}} \in [0, 0.5]$, PR is the AUC of the precision plot over $\mathrm{CLE} \in [0, 50]$\,px, and P@5 is the fraction of frames with $\mathrm{CLE} < 5$\,px.
+\textbf{Bold} indicates the best result and \underline{underline} the second best within each column.
+Per-dataset breakdowns are deferred to Tab.~\ref{tab:sot_results_whole} and Tab.~\ref{tab:sot_results_tiny} in the supplementary material.}
+\label{tab:sot_results_micro}
+\setlength{\tabcolsep}{4pt}
+\renewcommand{\arraystretch}{1.15}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{l l ccc ccc}
+\toprule
+\multirow{2}{*}{\textbf{Method}} & \multirow{2}{*}{\textbf{Venue}}
+ & \multicolumn{3}{c}{\textbf{Space-Tracker-SOT}}
+ & \multicolumn{3}{c}{\textbf{Space-Tracker-SOT (tiny)}} \\
+\cmidrule(lr){3-5} \cmidrule(lr){6-8}
+ & & SR & NPR & PR & SR & NPR & P@5 \\
+\midrule
+SiamRPN++~\cite{li2019siamrpn++}\textsuperscript{\dag}   & CVPR 2019  & 0.226             & 0.284             & 0.530             & 0.116             & 0.128             & 0.281             \\
+OSTrack-384~\cite{ye2022joint}     & ECCV 2022  & 0.273             & 0.340             & 0.535             & 0.122             & 0.134             & 0.293             \\
+ODTrack~\cite{zheng2024odtrack}    & AAAI 2024  & 0.264             & 0.317             & 0.577             & 0.129             & 0.129             & 0.343             \\
+LoRAT-g378~\cite{lin2024tracking}  & ECCV 2024  & \underline{0.416} & \underline{0.506} & \underline{0.619} & \textbf{0.334}    & \textbf{0.387}    & \underline{0.470} \\
+SAM 2~\cite{ravi2024sam}           & ICCV 2024  & 0.322             & 0.394             & 0.524             & 0.198             & 0.224             & 0.335             \\
+SAMURAI~\cite{yang2026samurai}     & TIP 2026   & 0.329             & 0.398             & 0.551             & 0.209             & 0.235             & 0.359             \\
+SAM 3~\cite{carion2026sam3}        & ICLR 2026  & \textbf{0.416}    & \textbf{0.517}    & \textbf{0.718}    & \underline{0.293} & \underline{0.354} & \textbf{0.561}    \\
+\bottomrule
+\end{tabular}
+}
+\\[2pt]
+{\footnotesize \textsuperscript{\dag}~SiamRPN++ uses the publicly available R50-L234-DWXCorr architecture; the checkpoint we evaluate was trained with a community fork using non-default adjust widths $[128, 256, 512]$ rather than PySOT's official $[256, 256, 256]$.\\
+\textsuperscript{*}~SR$_{\text{whole}}$: SAM\,3 $=0.4160$ vs.\ LoRAT-g378 $=0.4157$; bold reflects the higher 4th-decimal value.}
+\end{table}
