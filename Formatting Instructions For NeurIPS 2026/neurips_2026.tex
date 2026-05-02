@@ -295,12 +295,15 @@ Fig.~\ref{fig:sr_npr_vs_bbox_size} shows the model performance w.r.t. object siz
 
 \begin{figure}[!htbp]
     \centering
-    \includegraphics[width=\linewidth]{plots/sr_npr_vs_bbox_size_combined.png}
-    \caption{Mean Success AUC (SR) and Normalised Precision AUC (NPR) of the
-    seven evaluated trackers as a function of ground-truth bounding-box scale
-    $s=\sqrt{\mathrm{area}}$ on OOTB, SatSOT, and SV248S. Metrics are averaged
-    per $2$-pixel bin over $s\in[0,32]\,$px; the faint shading indicates the
-    per-dataset frame-count density.}
+    \includegraphics[width=\linewidth]{plots/sr_npr_vs_bbox_size_unified.png}
+    \caption{Space-Tracker-SOT: mean Success AUC (SR) and Normalised
+    Precision AUC (NPR) versus ground-truth bounding-box scale
+    $s=\sqrt{\mathrm{area}}$, in $2\,$px bins over $s\in[0,32]\,$px. Each
+    point is the equal-weight mean across OOTB, SatSOT, and SV248S of the
+    per-bin mean over the seven evaluated trackers. The faint grey
+    histogram shows the combined frame-count density pooled across the
+    three datasets, and the vertical dashed line at $s=8\,$px marks the
+    tiny-object boundary used elsewhere in the paper.}
     \label{fig:sr_npr_vs_bbox_size}
 \end{figure}
 
