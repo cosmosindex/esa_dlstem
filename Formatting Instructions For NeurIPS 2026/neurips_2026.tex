@@ -287,14 +287,9 @@ For each tracker, we adopt the strongest variant available in its official publi
 
 \section{Experiment results}
 \subsection{Performance overview}
-Tab.~\ref{tab:sot_results} shows the overall performance of the selected algorithm on the benchmark dataset.
+Tab.~\ref{tab:sot_results} reports the overall performance of the seven evaluated trackers on the proposed Space-Tracker-SOT benchmark, summarised as the equal-weight macro-mean across the three constituent datasets (SatSOT, SV248S, OOTB). The third metric is presented as PR for the full benchmark and P@5 for the tiny-object subset, since CLE-based PR saturates at sub-8-px scale where P@5 is more discriminative. Per-dataset breakdowns and the tiny-subset definition are deferred to Tab.~\ref{tab:sot_results_whole} and Tab.~\ref{tab:sot_results_tiny} in the supplementary material.
 
-\input{tables/SOT/whole_dataset/sot_whole_dataset_overall_table.tex}
-
-
-Tab.~\ref{tab:sot_results_tiny} shows the performance of the selected algorithms on the tiny-object subset of each benchmark dataset.
-
-\input{tables/SOT/whole_dataset/sot_whole_dataset_tiny_table}   % tiny-object subset
+\input{tables/SOT/whole_dataset/sot_whole_dataset_combined_table.tex}
 
 Fig.~\ref{fig:sr_npr_vs_bbox_size} shows the model performance w.r.t. object size. As we can see from the figure, the overall performance of all the algorithms degrades gradually as the object size decreases. The performance metric has a sudden drop at object size 2-4 pixels, indicating that most of the current algorithms are not directly applicable for small object detection and tracking.
 
@@ -350,6 +345,12 @@ Do {\bf not} include this section in the anonymized submission, only in the fina
 
 \section{Technical appendices and supplementary material}
 
+\subsection{Per-dataset SOT results}
+Tab.~\ref{tab:sot_results_whole} and Tab.~\ref{tab:sot_results_tiny} provide the per-dataset breakdown that underlies the macro-of-macro means in Tab.~\ref{tab:sot_results}.
+
+\input{tables/SOT/whole_dataset/sot_whole_dataset_overall_table.tex}
+
+\input{tables/SOT/whole_dataset/sot_whole_dataset_tiny_table}   % tiny-object subset
 
 \input{tables/SOT/unified_attributes_table}
 
