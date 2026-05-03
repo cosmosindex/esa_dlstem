@@ -722,6 +722,21 @@ Tab.~\ref{tab:sot_results}.
 \input{tables/SOT/whole_dataset/split_attributes_table}
 
 
+\subsection{Per-attribute performance on tiny frames (micro-averaged)}
+Tab.~\ref{tab:sot_attributes_tiny} reports per-tracker SR / PR / P@5 restricted
+to \emph{tiny} frames (per-frame GT $\sqrt{\mathrm{area}} < 8$\,px), in
+contrast to the whole-size, per-sequence aggregation used in
+Tab.~\ref{tab:sot_attributes}. Because the tiny predicate is frame-level and
+many sequences contain only a handful of qualifying frames, we use \emph{micro}
+averaging (pool tiny frames within each (dataset, attribute) group, then take
+arithmetic mean of those micro rates across annotating datasets for unified
+attributes). DEF, ARC, and OON contain no tiny frames in any annotating
+dataset and are listed as ``---''. Occlusion sub-types are shown in
+Tab.~\ref{tab:sot_attributes_tiny_occlusion}.
+
+\input{tables/SOT/whole_dataset/sot_attributes_table_tiny}
+
+
 \subsection{Performance analysis w.r.t. object attributes}
 The model performance w.r.t to different object attributes on the dataset SV248S
 is shown in Tab.~\ref{tab:sot_attributes_sv248s}. We can conclude the following
