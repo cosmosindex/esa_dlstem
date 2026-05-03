@@ -646,7 +646,7 @@ tracking.
 %\input{tables/sv248s_sot_categories}
 
 \subsection{Performance under unified sequence attributes}
-Tab.~\ref{tab:sot_unified_attributes} reports per-tracker SR / NPR / PR under
+Tab.~\ref{tab:sot_attributes} reports per-tracker SR / NPR / PR under
 our unified attribute taxonomy (BC, IV, ROT, OCC, SOB, DEF). Each unified
 attribute consolidates the corresponding native labels of every dataset that
 annotates it (e.g.\ OCC = SatSOT \{POC, FOC\} $\cup$ SV248S \{STO, LTO, CO\}
@@ -655,7 +655,7 @@ reported in the supplementary. Per-(dataset, attribute) numbers are first
 computed with per-sequence aggregation (PR over CLE $\in [0, 50]$ px) and then
 arithmetic-mean across the datasets that annotate the attribute.
 
-\input{tables/SOT/whole_dataset/sot_unified_attributes_table}
+\input{tables/SOT/whole_dataset/sot_attributes_table}
 
 \subsection{Qualitative comparison}
 
@@ -793,17 +793,6 @@ findings.
     motion blur still benefits from in-domain supervision.
 \end{itemize}
   \input{tables/sot_attributes_ootb_table}
-
-
-\subsection{Performance under dataset-unique sequence attributes}
-Tab.~\ref{tab:sot_unique_attributes} reports per-tracker SR / NPR / PR for the
-18 dataset-unique sequence attributes catalogued in
-Tab.~\ref{tab:unique_attributes}. Because each unique attribute is annotated in
-exactly one of SatSOT / SV248S / OOTB, no cross-dataset averaging applies;
-numbers are per-sequence aggregates over the sequences in the annotating dataset
-that carry the attribute (PR over CLE $\in [0, 50]$ px).
-
-\input{tables/SOT/whole_dataset/sot_unique_attributes_table}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

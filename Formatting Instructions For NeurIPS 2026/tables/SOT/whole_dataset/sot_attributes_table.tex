@@ -1,0 +1,91 @@
+% Requires: \usepackage{booktabs, multirow, array, graphicx}
+\begin{table*}[t]
+\centering
+\caption{SOT performance on the attributes available in Space-tracker-SOT.
+We report per-sequence SR / NPR / PR (per-sequence aggregation; PR over CLE $\in [0, 50]$ px).
+\emph{Unified attributes} consolidate the per-dataset native labels across SatSOT, SV248S, and OOTB (e.g.\ \textbf{OCC} = SatSOT \{POC, FOC\} $\cup$ SV248S \{STO, LTO, CO\} $\cup$ OOTB \{PO, FO\}); we first compute per-(dataset, attribute) means and then arithmetic-mean across the datasets that annotate the attribute (BC and DEF: 2 datasets; IV, ROT, OCC, SOB: 3 datasets).
+\emph{Dataset-unique attributes} are annotated in exactly one of SatSOT / SV248S / OOTB, indicated next to the abbreviation; numbers are computed on the sequences in the annotating dataset that carry the attribute.
+Occlusion sub-types of OCC are reported separately in Tab.~\ref{tab:sot_occlusion_subtypes}.
+\textbf{Bold} = best, \underline{underline} = second best, applied per row and per metric.}
+\label{tab:sot_attributes}
+\setlength{\tabcolsep}{3pt}
+\renewcommand{\arraystretch}{1.15}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{l ccc ccc ccc ccc ccc ccc ccc}
+\toprule
+\multirow{2}{*}{\textbf{Attr.}}
+ & \multicolumn{3}{c}{\textbf{SiamRPN++}~\cite{li2019siamrpn++}}
+ & \multicolumn{3}{c}{\textbf{OSTrack-384}~\cite{ye2022joint}}
+ & \multicolumn{3}{c}{\textbf{ODTrack}~\cite{zheng2024odtrack}}
+ & \multicolumn{3}{c}{\textbf{LoRAT-g378}~\cite{lin2024tracking}}
+ & \multicolumn{3}{c}{\textbf{SAM 2}~\cite{ravi2024sam}}
+ & \multicolumn{3}{c}{\textbf{SAMURAI}~\cite{yang2026samurai}}
+ & \multicolumn{3}{c}{\textbf{SAM 3}~\cite{carion2026sam3}} \\
+\cmidrule(lr){2-4} \cmidrule(lr){5-7} \cmidrule(lr){8-10} \cmidrule(lr){11-13}
+\cmidrule(lr){14-16} \cmidrule(lr){17-19} \cmidrule(lr){20-22}
+ & SR & NPR & PR & SR & NPR & PR & SR & NPR & PR & SR & NPR & PR
+   & SR & NPR & PR & SR & NPR & PR & SR & NPR & PR \\
+\midrule
+\multicolumn{22}{l}{\emph{Unified attributes (across SatSOT / SV248S / OOTB)}} \\
+BC  & 0.277             & 0.380             & 0.545             & 0.362             & 0.481             & 0.613             & 0.353             & 0.457             & 0.628             & \underline{0.448} & \underline{0.576} & \underline{0.642} & 0.383             & 0.490             & 0.589             & 0.375             & 0.472             & 0.582             & \textbf{0.466}    & \textbf{0.600}    & \textbf{0.725}    \\
+IV  & 0.306             & 0.379             & 0.561             & 0.349             & 0.414             & 0.582             & 0.320             & 0.378             & 0.579             & \underline{0.464} & \underline{0.543} & \underline{0.638} & 0.332             & 0.387             & 0.494             & 0.338             & 0.390             & 0.516             & \textbf{0.477}    & \textbf{0.572}    & \textbf{0.732}    \\
+ROT & 0.247             & 0.322             & 0.523             & 0.288             & 0.374             & 0.542             & 0.286             & 0.362             & 0.580             & \underline{0.413} & \underline{0.531} & \underline{0.624} & 0.333             & 0.416             & 0.514             & 0.339             & 0.419             & 0.538             & \textbf{0.444}    & \textbf{0.563}    & \textbf{0.724}    \\
+OCC & 0.226             & 0.297             & 0.482             & 0.234             & 0.300             & 0.442             & 0.252             & 0.315             & \underline{0.486} & 0.286             & 0.344             & 0.417             & 0.277             & 0.331             & 0.413             & \underline{0.289} & \underline{0.344} & 0.450             & \textbf{0.364}    & \textbf{0.446}    & \textbf{0.584}    \\
+SOB & 0.204             & 0.262             & 0.520             & 0.242             & 0.308             & 0.509             & 0.245             & 0.308             & 0.565             & \underline{0.367} & \underline{0.457} & \underline{0.568} & 0.295             & 0.363             & 0.501             & 0.297             & 0.359             & 0.514             & \textbf{0.399}    & \textbf{0.502}    & \textbf{0.709}    \\
+DEF & 0.327             & 0.482             & 0.387             & 0.451             & 0.665             & 0.554             & 0.420             & 0.629             & 0.519             & \underline{0.531} & \underline{0.729} & \underline{0.615} & 0.509             & 0.662             & 0.562             & 0.465             & 0.594             & 0.493             & \textbf{0.568}    & \textbf{0.739}    & \textbf{0.646}    \\
+\midrule
+\multicolumn{22}{l}{\emph{Aspect-ratio attributes (dataset-unique)}} \\
+ARC \tiny(SatSOT) & 0.314             & 0.461             & 0.340             & 0.503             & 0.597             & 0.503             & 0.503             & 0.605             & 0.492             & \textbf{0.644}    & \textbf{0.750}    & \textbf{0.670}    & 0.533             & 0.624             & 0.545             & 0.522             & 0.610             & 0.532             & \underline{0.615} & \underline{0.712} & \underline{0.642} \\
+OON \tiny(OOTB)   & 0.231             & 0.422             & 0.484             & 0.404             & 0.644             & 0.679             & 0.390             & 0.625             & 0.678             & 0.464             & \underline{0.729} & \underline{0.773} & \underline{0.529} & 0.705             & 0.733             & 0.521             & 0.687             & 0.720             & \textbf{0.558}    & \textbf{0.776}    & \textbf{0.823}    \\
+\midrule
+\multicolumn{22}{l}{\emph{Other dataset-unique attributes}} \\
+LQ  \tiny(SatSOT) & 0.266             & 0.308             & 0.668             & 0.236             & 0.289             & 0.522             & 0.249             & 0.272             & 0.576             & 0.267             & 0.343             & 0.454             & 0.398             & 0.509             & \underline{0.679} & \underline{0.401} & \underline{0.511} & 0.670             & \textbf{0.497}    & \textbf{0.620}    & \textbf{0.870}    \\
+TO  \tiny(SatSOT) & 0.129             & 0.137             & 0.405             & 0.124             & 0.136             & 0.336             & 0.141             & 0.162             & \underline{0.422} & \underline{0.224} & \underline{0.246} & 0.341             & 0.142             & 0.131             & 0.289             & 0.146             & 0.140             & 0.335             & \textbf{0.271}    & \textbf{0.307}    & \textbf{0.567}    \\
+BJT \tiny(SatSOT) & 0.355             & \underline{0.439} & \underline{0.678} & 0.361             & 0.419             & 0.619             & 0.291             & 0.341             & 0.595             & \underline{0.388} & 0.429             & 0.505             & 0.360             & 0.405             & 0.530             & 0.341             & 0.379             & 0.542             & \textbf{0.424}    & \textbf{0.490}    & \textbf{0.721}    \\
+BCH \tiny(SV248S) & 0.136             & 0.136             & 0.399             & 0.187             & 0.205             & 0.446             & 0.175             & 0.176             & 0.458             & \textbf{0.372}    & \textbf{0.423}    & \underline{0.547} & 0.255             & 0.282             & 0.437             & 0.267             & 0.292             & 0.475             & \underline{0.355} & \underline{0.421} & \textbf{0.641}    \\
+ND  \tiny(SV248S) & 0.101             & 0.095             & 0.420             & 0.151             & 0.158             & 0.424             & 0.117             & 0.105             & 0.435             & \textbf{0.316}    & \textbf{0.364}    & \underline{0.506} & 0.198             & 0.202             & 0.325             & 0.224             & 0.229             & 0.454             & \underline{0.230} & \underline{0.275} & \textbf{0.540}    \\
+IBG \tiny(SV248S) & 0.098             & 0.102             & 0.387             & 0.125             & 0.134             & 0.377             & 0.115             & 0.104             & 0.413             & \textbf{0.330}    & \textbf{0.380}    & \underline{0.516} & 0.172             & 0.199             & 0.358             & 0.177             & 0.203             & 0.391             & \underline{0.241} & \underline{0.287} & \textbf{0.538}    \\
+SM  \tiny(SV248S) & 0.131             & 0.143             & 0.486             & 0.134             & 0.132             & 0.393             & 0.128             & 0.122             & 0.480             & \textbf{0.358}    & \textbf{0.409}    & \underline{0.554} & 0.224             & 0.269             & 0.453             & 0.233             & 0.273             & 0.533             & \underline{0.268} & \underline{0.329} & \textbf{0.616}    \\
+LT  \tiny(OOTB)   & 0.220             & 0.311             & 0.582             & 0.322             & 0.459             & 0.705             & 0.283             & 0.394             & 0.665             & 0.385             & 0.530             & 0.669             & \underline{0.393} & \underline{0.530} & \underline{0.726} & 0.371             & 0.482             & 0.680             & \textbf{0.438}    & \textbf{0.596}    & \textbf{0.791}    \\
+MB  \tiny(OOTB)   & 0.322             & 0.416             & 0.634             & 0.443             & 0.591             & 0.779             & 0.399             & 0.525             & 0.760             & \textbf{0.518}    & \underline{0.689} & \underline{0.803} & 0.419             & 0.594             & 0.742             & 0.420             & 0.574             & 0.725             & \underline{0.510} & \textbf{0.723}    & \textbf{0.868}    \\
+IM  \tiny(OOTB)   & 0.270             & 0.382             & 0.717             & 0.337             & 0.504             & 0.720             & 0.364             & 0.544             & \underline{0.778} & 0.386             & 0.559             & 0.705             & 0.399             & 0.535             & 0.668             & \underline{0.431} & \underline{0.589} & 0.733             & \textbf{0.510}    & \textbf{0.671}    & \textbf{0.844}    \\
+AM  \tiny(OOTB)   & 0.248             & 0.401             & 0.649             & 0.338             & 0.545             & \underline{0.759} & 0.310             & 0.466             & 0.711             & 0.342             & 0.509             & 0.600             & \underline{0.416} & \underline{0.585} & 0.697             & 0.393             & 0.525             & 0.627             & \textbf{0.491}    & \textbf{0.659}    & \textbf{0.789}    \\
+\bottomrule
+\end{tabular}%
+}
+\end{table*}
+
+\begin{table*}[t]
+\centering
+\caption{SOT performance on the occlusion sub-types of the unified \textbf{OCC} attribute (Tab.~\ref{tab:sot_attributes}).
+The five sub-types are dataset-unique: SatSOT distinguishes partial / full occlusion (POC, FOC), and SV248S distinguishes short-term / long-term / continuous occlusion (STO, LTO, CO); the annotating dataset is indicated next to the abbreviation.
+We report per-sequence SR / NPR / PR (per-sequence aggregation; PR over CLE $\in [0, 50]$ px) on the sequences in the annotating dataset that carry the sub-type.
+\textbf{Bold} = best, \underline{underline} = second best, applied per row and per metric.}
+\label{tab:sot_occlusion_subtypes}
+\setlength{\tabcolsep}{3pt}
+\renewcommand{\arraystretch}{1.15}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{l ccc ccc ccc ccc ccc ccc ccc}
+\toprule
+\multirow{2}{*}{\textbf{Attr.}}
+ & \multicolumn{3}{c}{\textbf{SiamRPN++}~\cite{li2019siamrpn++}}
+ & \multicolumn{3}{c}{\textbf{OSTrack-384}~\cite{ye2022joint}}
+ & \multicolumn{3}{c}{\textbf{ODTrack}~\cite{zheng2024odtrack}}
+ & \multicolumn{3}{c}{\textbf{LoRAT-g378}~\cite{lin2024tracking}}
+ & \multicolumn{3}{c}{\textbf{SAM 2}~\cite{ravi2024sam}}
+ & \multicolumn{3}{c}{\textbf{SAMURAI}~\cite{yang2026samurai}}
+ & \multicolumn{3}{c}{\textbf{SAM 3}~\cite{carion2026sam3}} \\
+\cmidrule(lr){2-4} \cmidrule(lr){5-7} \cmidrule(lr){8-10} \cmidrule(lr){11-13}
+\cmidrule(lr){14-16} \cmidrule(lr){17-19} \cmidrule(lr){20-22}
+ & SR & NPR & PR & SR & NPR & PR & SR & NPR & PR & SR & NPR & PR
+   & SR & NPR & PR & SR & NPR & PR & SR & NPR & PR \\
+\midrule
+POC \tiny(SatSOT) & 0.275             & 0.355             & 0.442             & 0.258             & 0.309             & 0.359             & 0.322             & 0.395             & \underline{0.484} & 0.309             & 0.356             & 0.359             & 0.293             & 0.350             & 0.379             & \underline{0.331} & \underline{0.400} & 0.467             & \textbf{0.406}    & \textbf{0.482}    & \textbf{0.573}    \\
+FOC \tiny(SatSOT) & 0.287             & 0.333             & 0.482             & 0.261             & 0.289             & 0.435             & 0.257             & 0.289             & \underline{0.502} & \underline{0.355} & \underline{0.410} & 0.491             & 0.253             & 0.277             & 0.349             & 0.280             & 0.307             & 0.418             & \textbf{0.380}    & \textbf{0.425}    & \textbf{0.595}    \\
+STO \tiny(SV248S) & 0.114             & 0.126             & \underline{0.357} & 0.113             & 0.099             & 0.291             & 0.117             & 0.089             & 0.329             & \underline{0.217} & \underline{0.226} & 0.337             & 0.146             & 0.140             & 0.254             & 0.171             & 0.171             & 0.315             & \textbf{0.261}    & \textbf{0.310}    & \textbf{0.504}    \\
+LTO \tiny(SV248S) & 0.173             & 0.196             & \underline{0.438} & 0.173             & 0.173             & 0.415             & 0.160             & 0.140             & 0.412             & \textbf{0.306}    & \textbf{0.328}    & \textbf{0.443}    & 0.192             & 0.201             & 0.331             & 0.203             & 0.215             & 0.384             & \underline{0.213} & \underline{0.224} & 0.432             \\
+CO  \tiny(SV248S) & 0.099             & 0.102             & 0.300             & 0.117             & 0.108             & 0.283             & 0.106             & 0.076             & 0.287             & \textbf{0.222}    & \underline{0.233} & \underline{0.321} & 0.138             & 0.127             & 0.218             & 0.143             & 0.135             & 0.245             & \underline{0.218} & \textbf{0.244}    & \textbf{0.401}    \\
+\bottomrule
+\end{tabular}%
+}
+\end{table*}
