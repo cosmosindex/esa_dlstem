@@ -33,7 +33,7 @@
 
 % After being accepted, the authors should add "final" behind the track to compile a camera-ready version.
 % 1. Main Track
-  \usepackage[main, final]{neurips_2026}
+  %\usepackage[main, final]{neurips_2026}
 % 2. Position Paper Track
 %  \usepackage[position, final]{neurips_2026}
 % 3. Evaluations & Datasets Track
@@ -115,22 +115,17 @@ CosmosIndex \\ Munich, Germany\\ }
 
 
 \begin{abstract}
-Remote sensing with spaceborne videos is a rapidly emerging field, yet the field
-is currently fragmented by disparate datasets that vary in quality, annotation
-style, and sensory focus. We introduce Space-tracker, a unified, large-scale,
-and multi-sensory benchmark dataset created through the strategic merging and
-curation of eight existing spaceborne and aerial datasets, such as SatSOT,
-SV248S, and OOTB. Space-tracker addresses the "paradigm gap" in remote sensing
-by providing a single point of access to multi-task annotations for object
-detection, single-object tracking, and multi-object tracking across multimodal
-video sequences (visible to near-inferad and thermal infared). Our main
-contribution lies in the unification of labels and attributes, where we have
-harmonized diverse formats into a consistent COCO-style framework and applied 12
-fine-grained attributes to classify challenges like tiny targets (often < 8
-pixels), non-stationary backgrounds, and motion blur. By benchmarking seven
-state-of-the-art models, including Geospatial Foundation Models, we provide the
-most comprehensive evaluation to date on the tracking of featureless, sub-pixel
-targets from space.
+Remote sensing with spaceborne videos is a rapidly emerging field, yet it is currently fragmented by disparate datasets that vary in quality, 
+annotation style, and sensory focus. We introduce Space-tracker, a unified, large-scale, and multi-sensory benchmark dataset created through 
+the strategic merging and curation of nine existing spaceborne and aerial datasets, such as SatSOT, SV248S, and OOTB. Space-tracker addresses 
+the ``paradigm gap'' in remote sensing by providing a single point of access to multi-task annotations for object detection, 
+single-object tracking, and multi-object tracking across multimodal video sequences, with spectrum ranging from visible/near-infrared 
+to thermal-infrared. Our main contribution lies in the unification of labels and attributes, where we have harmonized diverse formats 
+into a consistent COCO-style framework and applied 18 fine-grained attributes to classify challenges rarely seen in natural-video benchmarks, 
+such as tiny targets ($\sqrt{w \cdot h} < 8$ px, often featureless and near the sensor noise floor), non-stationary backgrounds induced by 
+platform ego-motion, long-duration occlusion, and severe motion blur from low-frame-rate high-velocity acquisition. By benchmarking seven 
+state-of-the-art single-object trackers and seven state-of-the-art multi-object trackers, including large Foundation Models, we provide the 
+most comprehensive evaluation to date on the tracking of featureless, sub-pixel targets from space.
 \end{abstract}
 
 
