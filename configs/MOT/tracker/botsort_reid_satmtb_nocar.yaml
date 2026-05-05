@@ -1,0 +1,21 @@
+# botsort_reid on satmtb_nocar (Space-Tracker-MOT non-car). FasterRCNN cached dets + FastReID feats, multi-class.
+# Driver: eval_tracker_multiclass_reid.py (per-class tracker instance with appearance feats).
+dataset: satmtb_nocar
+tracker: botsort_reid
+cache_dir: /data/ESA_DLSTEM_2025/experiments/Detection/fasterrcnn_satmtb_hbb_dets_with_feats_cache/satmtb_nocar
+score_floor: 0.10
+match_metric: centroid
+centroid_dist_thresh: 5.0
+iou_thresh: 0.5
+tracker_kwargs:
+  feat_dim: 2048
+  track_high_thresh: 0.30
+  track_low_thresh: 0.10
+  new_track_thresh: 0.35
+  track_buffer: 30
+  match_thresh: 0.5
+  proximity_thresh: 0.5
+  appearance_thresh: 0.25
+  cmc_method: none
+  mot20: false
+  frame_rate: 30

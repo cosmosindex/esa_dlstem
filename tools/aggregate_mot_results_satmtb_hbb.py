@@ -28,10 +28,12 @@ DEFAULT_OUT_DIR = Path(
 )
 
 TRACKER_META = [
-    ("sort",      "SORT",      "bewley2016sort",     "ICIP 2016"),
-    ("bytetrack", "ByteTrack", "zhang2022bytetrack", "ECCV 2022"),
-    ("ocsort",    "OC-SORT",   "cao2023ocsort",      "CVPR 2023"),
-    ("botsort",   "BoT-SORT",  "aharon2022botsort",  "arXiv 2022"),
+    ("sort",         "SORT",          "bewley2016sort",     "ICIP 2016"),
+    ("bytetrack",    "ByteTrack",     "zhang2022bytetrack", "ECCV 2022"),
+    ("ocsort",       "OC-SORT",       "cao2023ocsort",      "CVPR 2023"),
+    ("botsort",      "BoT-SORT",      "aharon2022botsort",  "arXiv 2022"),
+    ("botsort_reid", "BoT-SORT-ReID", "aharon2022botsort",  "arXiv 2022"),
+    ("tracktrack",   "TrackTrack",    "kim2025tracktrack",  "CVPR 2025"),
 ]
 
 DATASET_DISPLAY = {
@@ -106,20 +108,19 @@ def write_overall_table(per_tracker_agg: dict[str, dict], out_path: Path) -> Non
     }
 
     lines = []
-    lines.append(r"% Requires: \usepackage{booktabs, multirow, array}")
-    lines.append(r"\begin{table}[t]")
+    lines.append(r"% Requires: \usepackage{booktabs, multirow, array, subcaption}")
+    lines.append(r"% Rendered side-by-side with mot_overall_table.tex inside an outer \begin{table}.")
+    lines.append(r"\begin{subtable}[t]{0.49\linewidth}")
     lines.append(r"\centering")
-    lines.append(r"\caption{Multi-Object Tracking results on Space-Tracker-MOT~"
-                 r"(airplane / ship / train), pooled across SAT-MTB (test split), "
-                 r"VISO and AIR-MOT-100. Detections come from a Faster~R-CNN trained "
-                 r"on SAT-MTB det\_hbb (3-class HBB; held-out test split for SAT-MTB; "
-                 r"VISO and AIR-MOT-100 never seen at training). Trackers are run "
-                 r"per-class so identities cannot leak across categories. Rate metrics "
-                 r"are macro-averaged across (dataset $\times$ class), counts are "
-                 r"summed. \textbf{Bold} = best, \underline{underline} = second.}")
+    lines.append(r"\caption{Space-Tracker-MOT~(airplane / ship / train), pooled across "
+                 r"SAT-MTB (test split, held out from detector training), VISO and "
+                 r"AIR-MOT-100. Faster~R-CNN trained on SAT-MTB det\_hbb produces a "
+                 r"single shared 3-class detection cache; trackers run per class so "
+                 r"identities cannot leak across categories.}")
     lines.append(r"\label{tab:mot_results_satmtb_hbb}")
-    lines.append(r"\setlength{\tabcolsep}{4pt}")
-    lines.append(r"\renewcommand{\arraystretch}{1.15}")
+    lines.append(r"\setlength{\tabcolsep}{2.5pt}")
+    lines.append(r"\renewcommand{\arraystretch}{1.10}")
+    lines.append(r"\resizebox{\linewidth}{!}{%")
     lines.append(r"\begin{tabular}{l l ccccc ccc}")
     lines.append(r"\toprule")
     lines.append(r"\multirow{2}{*}{\textbf{Method}} & \multirow{2}{*}{\textbf{Venue}} "
@@ -143,8 +144,9 @@ def write_overall_table(per_tracker_agg: dict[str, dict], out_path: Path) -> Non
         lines.append(" & ".join(cells) + r" \\")
 
     lines.append(r"\bottomrule")
-    lines.append(r"\end{tabular}")
-    lines.append(r"\end{table}")
+    lines.append(r"\end{tabular}%")
+    lines.append(r"}")
+    lines.append(r"\end{subtable}")
     out_path.write_text("\n".join(lines) + "\n")
 
 

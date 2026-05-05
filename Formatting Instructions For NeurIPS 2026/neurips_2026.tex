@@ -909,11 +909,19 @@ leak across categories.
 %     俯视 + 大目标) 最接近. 可以作为 "where tracking already works"
 %     的 anchor point.
 %
-% (9) 表格里目前缺 BoT-SORT-ReID 和 TrackTrack —— 这俩需要单独的 FastReID
-%     特征 cache + multi-class 改造. 留作 future work / appendix entry,
-%     或者写一句 footnote 说 "appearance-based variants are deferred to
-%     supplementary because the SAT-MTB-trained FastReID would itself
-%     introduce a domain confound across VISO/AIR-MOT-100".
+% (9) BoT-SORT-ReID 和 TrackTrack (CVPR 2025) 都加进来了, 但都没拉开身位:
+%       BoT-SORT-ReID: HOTA 0.133, IDF1 0.104  (跟 BoT-SORT 0.150/0.126 比降了)
+%       TrackTrack:    HOTA 0.133, IDF1 0.108  (但 IDsw 最低 105, MOTA 第二高 -1.73)
+%     ReID 反而拖累 BoT-SORT 是 spaceborne 的特征贫乏问题: appearance feats
+%     在 sub-pixel 目标上不可信 (FastReID 用 MOT17 行人 weights, domain gap),
+%     强行用反而把 close-but-distinct 的 detection 错误绑成同一 ID, MT
+%     直接腰斩 (175 → 86). 注脚需要标 FastReID weights 是 MOT17 pedestrian
+%     而不是 spaceborne 数据 finetune 的 → domain confound.
+%     TrackTrack 拿到 best IDsw 但 MT 同样腰斩 —— 它的高 init_thr / match_thr
+%     设计偏 conservative, 在 cross-domain detection 上抛弃了大量 marginal
+%     detections, 跟 car 表里的同一 trade-off 一致. 写正文时可以做 "在
+%     spaceborne 域里, 默认 ReID feature 不可用, 简单 motion-only 反而稳"
+%     的 cross-table 论述 (跟 car 表里的 SORT 全胜呼应).
 %
 % (10) Per-class table 已生成在
 %      tables/MOT/mot_satmtb_hbb_per_dataset_table.tex, 可作 supplementary.
