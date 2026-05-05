@@ -72,6 +72,15 @@
 \usepackage{amsmath, amssymb}
 \usepackage{bbm}   % for \mathbbm{1} (indicator function)
 \usepackage{float} % provides [H] specifier to pin a float in place
+
+% --- Compact heading macros (used in lieu of \subsection / \subsubsection in
+% the main body to save vertical space; appendix still uses \subsection).
+% \taskhead  : outer task tier (e.g. "Single Object Tracking" / "MOT"),
+%              small-caps bold on its own line.
+% \subhead   : inner section tier (e.g. "Performance overview"), run-in bold.
+\newcommand{\taskhead}[1]{\par\medskip\noindent\textsc{\textbf{#1}}\par\nobreak\vspace{0.25\baselineskip}}
+\newcommand{\subhead}[1]{\noindent\textbf{#1.}}
+
 \title{Space-tracker: a curated benchmark dataset for small object detection and tracking from spaceborne videos}
 
 
@@ -643,7 +652,10 @@ disambiguation enabled. For each tracker, we adopt the strongest variant
 available in its official public release.
 
 \section{Experiment results}
-\noindent\textbf{Performance Overview.}
+
+\taskhead{Single Object Tracking}
+
+\subhead{Performance overview}
 \label{sec:exp_sot_overview}
 
 Following the selection rationale of Sec.~\ref{sec:model_selection},
@@ -706,13 +718,10 @@ algorithms degrades gradually as the object size decreases. The performance
 metric has a sudden drop at object size 2-4 pixels, indicating that most of the
 current algorithms are not directly applicable for small object detection and
 tracking.
-
-
-
 %\subsection{Performance by object class}
 %\input{tables/sv248s_sot_categories}
 
-\noindent\textbf{Performance under unified sequence attributes.}
+\subhead{Performance under unified sequence attributes}
 Tab.~\ref{tab:sot_attributes} reports per-tracker SR / NPR / PR under our
 unified attribute taxonomy (BC, IV, ROT, OCC, SOB, DEF). Each unified attribute
 consolidates the corresponding native labels of every dataset that annotates it
@@ -801,7 +810,24 @@ study. We expect future tracker design targeting spaceborne settings to
 treat these three regimes as primary evaluation slices rather than
 incidental stress tests.
 
-\noindent\textbf{Qualitative comparison.}
+\subhead{Qualitative comparison}
+
+\taskhead{Multi-Object Tracking}
+
+\subhead{Performance overview}
+\label{sec:exp_mot_overview}
+Tab.~\ref{tab:mot_results} reports six MOT trackers on
+Space-Tracker-MOT~(car), evaluated under the same HiEUM detector and the
+standard MOT-Challenge IoU$\geq$0.5 protocol so that all differences in the
+table reflect association quality rather than detection. We aggregate across
+RsCarData, SAT-MTB-car, and SDM-Car by macro-averaging the rate metrics
+(HOTA, DetA, AssA, MOTA, IDF1) and summing the count metrics (IDsw, MT, ML).
+
+\input{tables/MOT/mot_overall_table.tex}
+
+% TODO: discuss key findings — SORT-class associative simplicity wins over
+% appearance-based BoT-SORT in the tiny-object regime; TrackTrack achieves the
+% lowest IDsw and only positive MOTA but at the cost of recall.
 
 
 \section{Discussion}

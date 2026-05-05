@@ -1,0 +1,24 @@
+% Requires: \usepackage{booktabs, multirow, array}
+\begin{table}[t]
+\centering
+\caption{Per-dataset breakdown of MOT results underlying Tab.~\ref{tab:mot_results}. All trackers use the same HiEUM detections. \textbf{Bold} marks the best score, \underline{underline} the second best, within each (dataset, metric) cell.}
+\label{tab:mot_results_per_dataset}
+\setlength{\tabcolsep}{3pt}
+\renewcommand{\arraystretch}{1.10}
+\resizebox{\linewidth}{!}{
+\begin{tabular}{l cccccc cccccc cccccc}
+\toprule
+\multirow{2}{*}{\textbf{Method}} & \multicolumn{6}{c}{\textbf{RsCarData}} & \multicolumn{6}{c}{\textbf{SAT-MTB}} & \multicolumn{6}{c}{\textbf{SDM-Car}} \\
+\cmidrule(lr){2-7} \cmidrule(lr){8-13} \cmidrule(lr){14-19}
+ & HOTA & DetA & AssA & MOTA & IDF1 & IDsw $\downarrow$ & HOTA & DetA & AssA & MOTA & IDF1 & IDsw $\downarrow$ & HOTA & DetA & AssA & MOTA & IDF1 & IDsw $\downarrow$ \\
+\midrule
+SORT~\cite{bewley2016sort} & \textbf{0.402} & \textbf{0.405} & \underline{0.408} & \underline{0.169} & \textbf{0.480} & \underline{1,093} & \textbf{0.350} & 0.282 & \textbf{0.447} & -0.086 & \textbf{0.387} & \underline{1,512} & \underline{0.252} & 0.192 & \underline{0.337} & -0.399 & \underline{0.244} & \underline{1,656} \\
+ByteTrack~\cite{zhang2022bytetrack} & 0.011 & 0.026 & 0.006 & -0.016 & 0.006 & 4,332 & 0.024 & 0.070 & 0.010 & -0.044 & 0.011 & 20,576 & 0.016 & 0.043 & 0.008 & \textbf{-0.060} & 0.008 & 12,456 \\
+OC-SORT~\cite{cao2023ocsort} & 0.318 & \underline{0.394} & 0.263 & 0.154 & 0.374 & 2,349 & 0.278 & \underline{0.286} & 0.279 & \underline{-0.022} & \underline{0.309} & 3,673 & 0.211 & 0.199 & 0.227 & -0.286 & 0.204 & 3,105 \\
+BoT-SORT~\cite{aharon2022botsort} & 0.042 & 0.375 & 0.006 & -0.256 & 0.009 & 70,633 & 0.051 & 0.280 & 0.012 & -0.228 & 0.015 & 72,128 & 0.040 & 0.197 & 0.010 & -0.333 & 0.013 & 58,448 \\
+BoT-SORT-ReID~\cite{aharon2022botsort} & 0.233 & 0.380 & 0.147 & -0.101 & 0.188 & 45,591 & \underline{0.291} & \textbf{0.288} & \underline{0.307} & -0.059 & 0.288 & 24,647 & 0.225 & \underline{0.205} & 0.252 & -0.267 & 0.203 & 15,720 \\
+TrackTrack~\cite{kim2025tracktrack} & \underline{0.357} & 0.273 & \textbf{0.471} & \textbf{0.244} & \underline{0.479} & \textbf{148} & 0.098 & 0.033 & 0.294 & \textbf{0.014} & 0.073 & \textbf{32} & \textbf{0.281} & \textbf{0.212} & \textbf{0.375} & \underline{-0.112} & \textbf{0.294} & \textbf{486} \\
+\bottomrule
+\end{tabular}
+}
+\end{table}

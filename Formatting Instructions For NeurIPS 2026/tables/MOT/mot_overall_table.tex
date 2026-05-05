@@ -1,0 +1,22 @@
+% Requires: \usepackage{booktabs, multirow, array}
+\begin{table}[t]
+\centering
+\caption{Multi-Object Tracking (MOT) results on Space-Tracker-MOT~(car), averaged across the three constituent car-only MOT splits (RsCarData, SAT-MTB-car, SDM-Car). Detections are produced once by HiEUM~\cite{TODO_hieum} and shared across trackers; differences in the table therefore reflect association quality only. Rate metrics (HOTA, DetA, AssA, MOTA, IDF1) are macro-averaged across datasets; count metrics (IDsw, MT, ML) are summed. $\uparrow$ higher is better, $\downarrow$ lower is better. \textbf{Bold} marks the best score and \underline{underline} the second best in each column.}
+\label{tab:mot_results}
+\setlength{\tabcolsep}{4pt}
+\renewcommand{\arraystretch}{1.15}
+\begin{tabular}{l l ccccc ccc}
+\toprule
+\multirow{2}{*}{\textbf{Method}} & \multirow{2}{*}{\textbf{Venue}} & \multicolumn{5}{c}{\textbf{Rate metrics ($\uparrow$)}} & \multicolumn{3}{c}{\textbf{Count metrics}} \\
+\cmidrule(lr){3-7} \cmidrule(lr){8-10}
+& & HOTA & DetA & AssA & MOTA & IDF1 & IDsw $\downarrow$ & MT $\uparrow$ & ML $\downarrow$ \\
+\midrule
+SORT~\cite{bewley2016sort} & ICIP 2016 & \textbf{0.335} & \textbf{0.293} & \textbf{0.397} & -0.105 & \textbf{0.370} & \underline{4,261} & \textbf{841} & \textbf{2,380} \\
+ByteTrack~\cite{zhang2022bytetrack} & ECCV 2022 & 0.017 & 0.046 & 0.008 & \underline{-0.040} & 0.008 & 37,364 & 1 & 5,192 \\
+OC-SORT~\cite{cao2023ocsort} & CVPR 2023 & \underline{0.269} & \underline{0.293} & 0.257 & -0.051 & \underline{0.296} & 9,127 & \underline{684} & \underline{2,494} \\
+BoT-SORT~\cite{aharon2022botsort} & arXiv 2022 & 0.044 & 0.284 & 0.009 & -0.272 & 0.012 & 201,209 & 590 & 2,686 \\
+BoT-SORT-ReID~\cite{aharon2022botsort} & arXiv 2022 & 0.250 & 0.291 & 0.235 & -0.142 & 0.227 & 85,958 & 679 & 2,567 \\
+TrackTrack~\cite{kim2025tracktrack} & CVPR 2025 & 0.245 & 0.173 & \underline{0.380} & \textbf{0.049} & 0.282 & \textbf{666} & 284 & 4,018 \\
+\bottomrule
+\end{tabular}
+\end{table}
