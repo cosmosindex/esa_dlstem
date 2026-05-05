@@ -400,142 +400,149 @@ size--difficulty relationship.
 \noindent\textbf{Dataset Overview.}
 \label{sec:dataset_overview}
 
-Space-Tracker-SOT consolidates the three publicly available SOT
-benchmarks for spaceborne video --- SatSOT~\citep{satSOT2022},
-SV248S~\citep{Li2022SV248S}, and OOTB~\citep{CHEN2024212ootb} --- into a single
-unified benchmark of 463 sequences and 214{,}175 frames acquired by the Jilin-1,
-SkySat, and ISS platforms (Table~\ref{tab:spaceborne_video_datasets}). The three
-source datasets are complementary in scale, sensor, and labeling style: SatSOT
-and SV248S are acquired exclusively by Jilin-1 and annotated with axis-aligned
-boxes (with SV248S additionally providing tight polygon masks), while OOTB spans
-three platforms and uses oriented bounding boxes. Together they cover the four
-object categories that dominate practical spaceborne tracking --- car, ship,
-plane, and train --- across diverse urban, coastal, and airport scenes.
+Space-Tracker-SOT consolidates the three publicly available SOT benchmarks
+for spaceborne video, namely SatSOT~\citep{satSOT2022},
+SV248S~\citep{Li2022SV248S}, and OOTB~\citep{CHEN2024212ootb}, into a single
+unified benchmark of 463 sequences and 214{,}175 frames acquired by the
+Jilin-1, SkySat, and ISS platforms (Table~\ref{tab:spaceborne_video_datasets}).
+The three source datasets complement each other in scale, sensor, and
+labeling style. SatSOT and SV248S are acquired exclusively by Jilin-1 and
+annotated with axis-aligned boxes, with SV248S additionally providing tight
+polygon masks. OOTB spans three platforms and uses oriented bounding boxes.
+Taken together they cover the four object categories that dominate practical
+spaceborne tracking, namely car, ship, plane, and train, across diverse
+urban, coastal, and airport scenes.
 
 \noindent\textbf{Annotation density and absent-target frames.} For each SOT
 sequence the tracked target is single by construction, so the number of
-bounding-box labels is at most the number of frames. The gap between \#Frames
-and \#Labels in Table~\ref{tab:spaceborne_video_datasets} reflects frames in
-which the target is absent or fully occluded: SatSOT marks such frames as
-\texttt{none}, SV248S flags them with an invisibility state, and OOTB labels
-every frame so its \#Labels equals \#Frames. We preserve these conventions
-during integration rather than imputing missing boxes, so that long-term
-occlusion and out-of-view behavior remain faithfully recoverable downstream.
+bounding-box labels is at most the number of frames. The gap between
+\#Frames and \#Labels in Table~\ref{tab:spaceborne_video_datasets} reflects
+frames in which the target is absent or fully occluded. SatSOT marks such
+frames as \texttt{none}, SV248S flags them with an invisibility state, and
+OOTB labels every frame so its \#Labels equals \#Frames. We preserve these
+conventions during integration rather than imputing missing boxes, so that
+long-term occlusion and out-of-view behavior remain faithfully recoverable
+downstream.
 
-\noindent\textbf{Object scale.} A defining characteristic of spaceborne SOT is
-the prevalence of extremely small targets. We define an annotation as a
-\emph{tiny object} when the square root of its bounding-box area falls below $8$
-pixels (equivalently, area $<64$\,px$^2$). Under this criterion, $63.1\%$ of all
-annotations in Space-Tracker-SOT are tiny, with SV248S alone contributing an
-$80.3\%$ tiny ratio. This is a regime in which appearance, texture, and shape
-cues that anchor most modern trackers effectively vanish --- a point we return
-to in the attribute discussion below.
+\noindent\textbf{Object scale.} A defining characteristic of spaceborne SOT
+is the prevalence of extremely small targets. We define an annotation as a
+\emph{tiny object} when the square root of its bounding-box area falls below
+$8$ pixels, equivalently when the area is below $64$\,px$^2$. Under this
+criterion, $63.1\%$ of all annotations in Space-Tracker-SOT are tiny, and
+SV248S alone contributes an $80.3\%$ tiny ratio. This is a regime in which
+appearance, texture, and shape cues that anchor most modern trackers
+effectively vanish, a point we return to in the attribute discussion below.
 
-\noindent\textbf{Frame rate.} Native acquisition rates range from 10 to 30~fps
-across the source platforms. We note one subtlety: SV248S is distributed at
-25~fps after video-frame-interpolation re-encoding from a native 10~fps signal,
-so its temporal statistics should be interpreted accordingly. We retain the
-as-distributed frame rate for evaluation to ensure reproducibility against prior
-work.
+\noindent\textbf{Frame rate.} Native acquisition rates range from 10 to
+30~fps across the source platforms. One subtlety is worth flagging: SV248S
+is distributed at 25~fps after video-frame-interpolation re-encoding from a
+native 10~fps signal, so its temporal statistics should be interpreted
+accordingly. We retain the as-distributed frame rate for evaluation to
+ensure reproducibility against prior work.
 
 \noindent\textbf{Toward a unified attribute taxonomy.} Each source benchmark
-ships its own sequence-level attribute set --- 11 in SatSOT, 10 in SV248S, and
-12 in OOTB --- with overlapping but inconsistent definitions (e.g., what counts
-as ``occlusion'' or ``background clutter'' varies across the three). To support
-consistent evaluation across the merged benchmark, we align these into a single
-taxonomy of 18 fine-grained attributes, retaining the discriminative power of
-each source while eliminating definitional conflicts. The resulting attribute
-set is not merely a relabeling: as we show next, several of these attributes
-describe failure modes whose severity in spaceborne video is qualitatively
-different from --- and in many cases not reducible to --- their natural-video
-namesakes.
+ships its own sequence-level attribute set, with 11 in SatSOT, 10 in SV248S,
+and 12 in OOTB, and the definitions overlap but are not consistent (what
+counts as ``occlusion'' or ``background clutter'' varies across the three).
+To support consistent evaluation across the merged benchmark, we align these
+into a single taxonomy of 18 fine-grained attributes, retaining the
+discriminative power of each source while eliminating definitional
+conflicts. The resulting attribute set is more than a relabeling. As we show
+next, several of these attributes describe failure modes whose severity in
+spaceborne video is qualitatively different from, and in many cases not
+reducible to, their natural-video namesakes.
 
 \input{tables/spaceborne_video_datasets_table.tex}
 
-\noindent\textbf{Attribute taxonomy.} Following the conventions established in
-SatSOT~\citep{satSOT2022}, SV248S~\citep{Li2022SV248S}, and
+\noindent\textbf{Attribute taxonomy.} Following the conventions established
+in SatSOT~\citep{satSOT2022}, SV248S~\citep{Li2022SV248S}, and
 OOTB~\citep{chen2024ootb}, we consolidate 18 fine-grained attributes that
-collectively characterize the challenges of single object tracking in spaceborne
-video. While many of these attributes share names with those in natural-video
+together characterize the challenges of single object tracking in spaceborne
+video. Many of these attributes share names with those in natural-video
 benchmarks such as OTB~\citep{wu2015otb}, LaSOT~\citep{fan2019lasot}, and
-TrackingNet~\citep{muller2018trackingnet}, the underlying phenomena differ
-substantially in both nature and severity. Below we discuss several attributes
-whose meanings have been quietly redefined by the satellite domain, and which
-expose failure modes that the broader tracking community has rarely examined.
+TrackingNet~\citep{muller2018trackingnet}, but the underlying phenomena
+differ substantially in both nature and severity. Below we discuss several
+attributes whose meanings have been quietly redefined by the satellite
+domain, and which expose failure modes that the broader tracking community
+has rarely examined.
 
 \noindent\textbf{Tiny Object (TO) is not a long-tail case but the default
-regime.} In OTB and UAV123, an object is considered ``low resolution'' below 400
-and 1000 pixels respectively; in LaSOT and TrackingNet the threshold is 1000
-pixels --- all measured by bounding-box area. In our benchmark, we adopt a
-definition better aligned with the spatial scale of satellite imagery: an object
-is considered tiny when the square root of its bounding-box area is below 8
-pixels (i.e., $\sqrt{\text{area}} < 8$). Under this criterion, a typical car
-occupies only a few dozen pixels in total area and roughly 4--8 pixels along its
-diagonal --- two to three orders of magnitude fewer usable pixels than under the
-LaSOT threshold. At this scale the object reduces to a handful of intensity
-values: shape, texture, and color cues that anchor most modern Siamese and
-Transformer trackers effectively vanish. Generic trackers benchmarked on natural
-video have rarely been stress-tested in this regime, and as our experiments show
-(Section~\ref{sec:experiments}), even SOTA trackers degrade sharply when
+regime.} In OTB and UAV123, an object is considered ``low resolution'' below
+400 and 1000 pixels respectively, and in LaSOT and TrackingNet the threshold
+is 1000 pixels, all measured by bounding-box area. In our benchmark we adopt
+a definition better aligned with the spatial scale of satellite imagery: an
+object is considered tiny when the square root of its bounding-box area is
+below 8 pixels ($\sqrt{\text{area}} < 8$). Under this criterion, a typical
+car occupies only a few dozen pixels in total area and roughly 4 to 8 pixels
+along its diagonal, which is two to three orders of magnitude fewer usable
+pixels than under the LaSOT threshold. At this scale the object reduces to
+a handful of intensity values, and the shape, texture, and color cues that
+anchor most modern Siamese and Transformer trackers effectively vanish.
+Generic trackers benchmarked on natural video have rarely been stress-tested
+in this regime, and as our experiments show
+(Section~\ref{sec:experiments}), even SOTA trackers degrade sharply once
 appearance features are no longer discriminative.
 
-\noindent\textbf{Similar Appearance (SA) and Dense Similarity (DS) operate under
-feature scarcity.} Natural-video benchmarks include similar-object distractors
---- e.g., a tracked person in a crowd --- but the distractors and the target
-still carry rich appearance cues that allow a learned embedding to separate
-them. In SV, a tracked vehicle is often visually indistinguishable from
-neighboring vehicles, lane markings, manhole covers, or even bright pixels on a
-zebra crossing, because \emph{all} such entities collapse to a few-pixel bright
-blob under the satellite GSD. SV248S formalizes this with the Background Cluster
-(BCL) attribute, defined as the target merging into its background for at least
-10 consecutive frames --- a phenomenon that has no clean counterpart in OTB or
-LaSOT, where ``background clutter'' assumes the object remains visually
-distinct. The CV community has generally treated distractor-aware tracking as an
+\noindent\textbf{Similar Appearance (SA) and Dense Similarity (DS) operate
+under feature scarcity.} Natural-video benchmarks include similar-object
+distractors, for example a tracked person in a crowd, but the distractors
+and the target still carry rich appearance cues that allow a learned
+embedding to separate them. In SV, a tracked vehicle is often visually
+indistinguishable from neighboring vehicles, lane markings, manhole covers,
+or even bright pixels on a zebra crossing, because \emph{all} such entities
+collapse to a few-pixel bright blob under the satellite GSD. SV248S
+formalizes this with its Background Cluster (BCL) attribute, defined as the
+target merging into its background for at least 10 consecutive frames. This
+phenomenon has no clean counterpart in OTB or LaSOT, where ``background
+clutter'' still assumes the object remains visually distinct. The CV
+community has generally treated distractor-aware tracking as an
 embedding-quality problem; under SV conditions it becomes an
 \emph{information-availability} problem, since the discriminative signal may
 simply not exist in the pixel data.
 
-\noindent\textbf{Isotropic Motion (IM) and Anisotropic Motion (AM) introduce a
-motion-cue ambiguity absent from natural-video tracking.} Because vehicles on
-the same road segment travel with near-identical speed and direction, motion
-features --- which are often used as a fallback when appearance fails --- also
-collapse: surrounding cars in IM scenarios provide nearly the same optical-flow
-signature as the target. AM is the inverse failure mode, where oncoming traffic
-produces strong but oppositely-signed flow that confuses motion-based
-association. These attributes were introduced by OOTB precisely because the
-standard ``appearance + motion'' complementarity assumed in natural-video
+\noindent\textbf{Isotropic Motion (IM) and Anisotropic Motion (AM) introduce
+a motion-cue ambiguity absent from natural-video tracking.} Vehicles on the
+same road segment travel with near-identical speed and direction, so motion
+features, which are often used as a fallback when appearance fails, also
+collapse: surrounding cars in IM scenarios provide nearly the same
+optical-flow signature as the target. AM is the inverse failure mode, where
+oncoming traffic produces strong but oppositely-signed flow that confuses
+motion-based association. OOTB introduced these attributes precisely because
+the standard appearance-plus-motion complementarity assumed in natural-video
 tracking does not hold under satellite imaging geometry.
 
-\noindent\textbf{Long-Term Occlusion (LTO) is structural, not incidental.} In
-OTB and LaSOT, occlusion is typically caused by transient obstacles (a passing
-pedestrian, a hand). In SV, occlusion is dominated by the urban built
-environment --- overpasses, building shadows, dense tree canopies --- and SV248S
-sets the LTO threshold at 50 consecutive occluded frames. The bird's-eye view
-means that re-identification after occlusion cannot rely on the rich appearance
-memory that natural-video re-detection trackers exploit; the tracker has only
-motion priors and a few-pixel template to work with.
+\noindent\textbf{Long-Term Occlusion (LTO) is structural, not incidental.}
+In OTB and LaSOT, occlusion is typically caused by transient obstacles such
+as a passing pedestrian or a hand. In SV, occlusion is dominated by the
+urban built environment, including overpasses, building shadows, and dense
+tree canopies, and SV248S sets the LTO threshold at 50 consecutive occluded
+frames. The bird's-eye view means that re-identification after occlusion
+cannot rely on the rich appearance memory that natural-video re-detection
+trackers exploit. The tracker has only motion priors and a few-pixel
+template to work with.
 
 \noindent\textbf{Out-of-Normal (OON) aspect ratio reflects a category bias
-absent from natural video.} Trains in SV routinely exhibit aspect ratios above
-10:1, far outside the $[0.3, 3]$ range typical of natural-video objects.
-Trackers trained on LaSOT or GOT-10k have effectively never seen such aspect
-ratios at training time, and HBB-based outputs become severely misaligned with
-object extent --- a problem invisible in benchmarks that assume roughly square
-or moderately elongated objects.
+absent from natural video.} Trains in SV routinely exhibit aspect ratios
+above 10:1, far outside the $[0.3, 3]$ range typical of natural-video
+objects. Trackers trained on LaSOT or GOT-10k have effectively never seen
+such aspect ratios at training time, and HBB-based outputs become severely
+misaligned with object extent, a problem invisible in benchmarks that
+assume roughly square or moderately elongated objects.
 
 \noindent\textbf{Natural Disturbance (ND) and Background Jitter (BJT) are
-imaging-geometry artifacts.} Cloud cover, atmospheric haze, and platform-induced
-inter-frame jitter are characteristic of spaceborne sensing and have no analog
-in handheld or UAV-mounted cameras. They affect entire frames globally rather
-than locally, violating the locality assumption built into most attention-based
-tracking heads.
+imaging-geometry artifacts.} Cloud cover, atmospheric haze, and
+platform-induced inter-frame jitter are characteristic of spaceborne
+sensing and have no analog in handheld or UAV-mounted cameras. They affect
+entire frames globally rather than locally, violating the locality
+assumption built into most attention-based tracking heads.
 
-\noindent\textbf{Summary.} Together these attributes show that SV tracking is
-not a ``harder version'' of natural-video tracking but a regime with
-qualitatively different failure modes. The community has built strong solutions
-for distractors, occlusion, and scale variation under the assumption that the
-target remains visually informative; SV systematically violates that assumption,
-and the 18 attributes in our benchmark are designed to expose exactly this gap.
+\noindent\textbf{Summary.} Taken together these attributes show that SV
+tracking is not just a harder version of natural-video tracking but a
+regime with qualitatively different failure modes. The community has built
+strong solutions for distractors, occlusion, and scale variation under the
+assumption that the target remains visually informative. SV systematically
+violates that assumption, and the 18 attributes in our benchmark are
+designed to expose exactly this gap.
 
 \section{Evaluation Protocol and Metrics}
 \noindent\textbf{Model selection.}
@@ -716,6 +723,83 @@ per-sequence aggregation (PR over CLE $\in [0, 50]$ px) and then arithmetic-mean
 across the datasets that annotate the attribute.
 
 \input{tables/SOT/whole_dataset/sot_attributes_table}
+
+\noindent\textbf{Illumination, clutter, and deformation are no longer the bottleneck.}
+The first cluster of unified attributes, IV, BC, and DEF, corresponds to
+perturbations that the natural-video tracking community has worked on for over
+a decade. On Tab.~\ref{tab:sot_attributes}, SAM 3 reaches SR of 0.477 on IV,
+0.466 on BC, and 0.568 on DEF, and the gap to the runner-up LoRAT-g378 is at
+most three SR points. Even SAM 2 and SAMURAI sit within five points of LoRAT.
+The ordering also holds on the tiny split (Tab.~\ref{tab:sot_attributes_tiny}):
+SR drops by 25 to 35\% on tiny BC and IV, but the per-tracker ranking remains
+stable. This suggests that web-scale visual pretraining now supplies features
+robust enough that local photometric perturbations and non-rigid deformation,
+which dominated the early SOT literature, are no longer where the difficulty
+lies at the scale of Space-Tracker-SOT. As a side note, DEF contains no tiny
+instances by construction, since non-rigid deformation is only perceptible on
+objects large enough to deform, which we take as a sanity check on the
+taxonomy.
+
+\noindent\textbf{Occlusion remains the central failure mode, and long-term
+occlusion overturns the foundation-model ranking.}
+OCC is the lowest-scoring unified attribute for every tracker we evaluated.
+SAM 3, which leads on every other unified attribute by a comfortable margin,
+drops to SR 0.364 under OCC, a 20-point fall from its DEF score. The
+breakdown by occlusion duration in Tab.~\ref{tab:sot_occlusion_subtypes} is
+where the picture becomes more interesting. On SatSOT POC and FOC, where
+occlusion lasts only a few frames, SAM 3 leads cleanly and the natural-video
+re-detection prior transfers without trouble. On the SV248S long-term and
+continuous sub-types (LTO, CO; threshold 50 frames), however, LoRAT-g378
+actually surpasses SAM 3 on SR, by 0.306 to 0.213 on LTO and 0.222 to 0.218
+on CO. The same pattern shows up on tiny frames
+(Tab.~\ref{tab:sot_attributes_tiny_occlusion}), with LoRAT leading tiny LTO
+at SR 0.254 against SAM 3's 0.142. Our reading is that the
+re-detect-by-segment paradigm at the core of SAM 3 starts to degrade once
+the target has been absent long enough for the segmentation prior to lose
+its grounding, while LoRAT's transformer correlation, despite being weaker
+overall, holds onto a more stable template across long gaps. Whether this
+reflects a fundamental limitation of segmentation-based re-detection or
+just an artifact of training-time occlusion distributions is, in our view,
+the most consequential open question that Space-Tracker-SOT can be used
+to study.
+
+\noindent\textbf{Motion-cue ambiguity collapses tracking on tiny objects.}
+The third diagnostic cluster, SOB, IM, and AM, targets the failure mode
+discussed in Sec.~\ref{sec:dataset_overview}: once appearance reduces to
+a few-pixel blob, the surrounding motion field is the only cue left, and
+that cue is itself ambiguous in spaceborne traffic scenes. On whole-data
+SOB the foundation-model ranking is preserved (SAM 3 0.399, LoRAT 0.367).
+But tiny IM is where the reasoning collapses most visibly. LoRAT-g378
+drops from SR 0.386 on the whole split to 0.074 on tiny, an 81\% loss,
+while ODTrack, which trailed badly almost everywhere else, holds 0.216
+on tiny IM and finishes second only to SAM 3 (0.308). This is the only
+attribute slice in our entire evaluation where ODTrack's temporal
+mechanism produces a clear win against a more strongly pretrained
+competitor. We read it as direct evidence that when target appearance is
+uninformative \emph{and} surrounding motion is locally homogeneous,
+appearance-only foundation models lose more than dedicated temporal
+models do. Conversely, on AM, where surrounding motion is locally
+heterogeneous (oncoming traffic), appearance and motion remain partly
+complementary and SAM 3 recovers, with tiny AM SR back at 0.490. It is
+also worth noting that motion blur (MB), historically a hard attribute
+on natural video, is handled comparatively well even at tiny scale (SAM 3
+0.383, LoRAT 0.262). The difficulty is no longer motion blur per se,
+but whether motion provides discriminative information.
+
+\noindent\textbf{Takeaway.}
+Three findings emerge from the attribute analysis. First, the historical
+priorities of the SOT literature, namely illumination, clutter, and
+deformation, have largely transferred from natural to satellite video and
+are not where the difficulty lies anymore. Second, occlusion remains the
+dominant failure mode, and within occlusion the natural-video re-detection
+paradigm that powers SAM 3 is overturned by simpler transformer
+correlation under long, continuous occlusion. Third, the combination of
+tiny scale and isotropic motion exposes a regime in which all
+foundation-model trackers have substantial headroom, and in which
+dedicated temporal modeling shows its only competitive advantage in our
+study. We expect future tracker design targeting spaceborne settings to
+treat these three regimes as primary evaluation slices rather than
+incidental stress tests.
 
 \noindent\textbf{Qualitative comparison.}
 
