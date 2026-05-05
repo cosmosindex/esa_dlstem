@@ -6,27 +6,29 @@
 \textbf{\#Frames} and \textbf{\#Labels} are the totals of annotated frames and bounding-box annotations across all sequences (counted on the SOT or MOT subset, respectively, on disk).
 For SOT datasets, each sequence tracks a single target so \#Labels~$\leq$~\#Frames; the gap arises from frames where the target is absent or fully occluded and is therefore not annotated with a bounding box (SatSOT marks these as \texttt{none}; SV248S marks them with state~$=$~1 / invisible; OOTB labels every frame, so \#Labels~$=$~\#Frames).
 For SOT datasets, \textbf{Tiny\%} is the fraction of bounding-box annotations whose area is below $8\times8 = 64$~px$^2$, computed on the native annotation (AABB for SatSOT/SV248S, OBB for OOTB).
-\textbf{FPS} is the native acquisition frame rate as stated in the source paper; multiple values denote mixed sources or sequence-level variation (SV248S is distributed at 25~fps after video-frame-interpolation re-encoding from a native 10~fps). TODO:TIR Data}
+\textbf{FPS} is the native acquisition frame rate as stated in the source paper; multiple values denote mixed sources or sequence-level variation (SV248S is distributed at 25~fps after video-frame-interpolation re-encoding from a native 10~fps).
+\textbf{\#Attr} is the number of sequence-level attributes defined by each SOT benchmark; for our Space-Tracker-SOT it is the size of the unified attribute taxonomy used to align SatSOT, SV248S, and OOTB. Attributes are not defined for the listed MOT datasets. TODO:TIR Data}
 \label{tab:spaceborne_video_datasets}
 \setlength{\tabcolsep}{4pt}
 \renewcommand{\arraystretch}{1.15}
 \small
 \resizebox{\textwidth}{!}{%
-\begin{tabular}{l l l r r r r r l}
+\begin{tabular}{l l l r r r r r r l}
 \toprule
-\textbf{Dataset} & \textbf{Satellite / Sensor} & \textbf{Modality} & \textbf{\#Seq} & \textbf{\#Frames} & \textbf{\#Labels} & \textbf{Tiny\%} & \textbf{FPS} & \textbf{Venue / Year} \\
+\textbf{Dataset} & \textbf{Satellite / Sensor} & \textbf{Modality} & \textbf{\#Seq} & \textbf{\#Frames} & \textbf{\#Labels} & \textbf{Tiny\%} & \textbf{FPS} & \textbf{\#Attr} & \textbf{Venue / Year} \\
 \midrule
-\multicolumn{9}{l}{\textit{Single Object Tracking (SOT)}} \\
-SatSOT~\cite{satSOT2022}              & Jilin-1                      & VNIR & 105 &  27{,}664 &      27{,}061 & 26.2 &  10\,/\,25 & TGRS 2022  \\
-SV248S~\cite{Li2022SV248S}            & Jilin-1                      & VNIR & 248 & 156{,}621 &     144{,}119 & 80.3 &  25 & GRSM 2022  \\
-OOTB~\cite{CHEN2024212ootb}           & Jilin-1, SkySat, ISS         & VNIR & 110 &  29{,}890 &      29{,}890 & 13.7 &  10--30 & ISPRS 2024 \\
+\multicolumn{10}{l}{\textit{Single Object Tracking (SOT)}} \\
+SatSOT~\cite{satSOT2022}              & Jilin-1                      & VNIR & 105 &  27{,}664 &      27{,}061 & 26.2 &  10\,/\,25 & 11 & TGRS 2022  \\
+SV248S~\cite{Li2022SV248S}            & Jilin-1                      & VNIR & 248 & 156{,}621 &     144{,}119 & 80.3 &  25 & 10 & GRSM 2022  \\
+OOTB~\cite{CHEN2024212ootb}           & Jilin-1, SkySat, ISS         & VNIR & 110 &  29{,}890 &      29{,}890 & 13.7 &  10--30 & 12 & ISPRS 2024 \\
+\textbf{Space-Tracker-SOT (Ours)}     & Jilin-1, SkySat, ISS         & VNIR & 463 & 214{,}175 &     201{,}070 & 63.1 &  10--30 & 18 & --- \\
 \midrule
-\multicolumn{9}{l}{\textit{Multiple Object Tracking (MOT)}} \\
-AIR-MOT~\cite{He2022TGraM}            & Jilin-1                      & VNIR & 100 &  19{,}940 &     317{,}569 & --- & 5--10 & TGRS 2022  \\
-VISO~\cite{yin2021viso}               & Jilin-1                      & VNIR &  47 &  16{,}204 &     844{,}345 & --- & 10 & TGRS 2022  \\
-SAT-MTB~\cite{Li2023SATMTB}           & Jilin-1                      & VNIR & 249 &  48{,}390 &  1{,}118{,}584 & --- & 10 & TGRS 2023  \\
-RsCarData~\cite{Xiao2024HiEUM}        & Jilin-1                      & VNIR &  77 &  29{,}689 &     848{,}786 & --- & 10 & TPAMI 2024 \\
-SDM-Car~\cite{Zhang2024SDMCar}        & Luojia 3-01                  & VNIR &  99 &  16{,}423 &  1{,}522{,}577 & --- &  6\,/\,8 & GRSL 2024  \\
+\multicolumn{10}{l}{\textit{Multiple Object Tracking (MOT)}} \\
+AIR-MOT~\cite{He2022TGraM}            & Jilin-1                      & VNIR & 100 &  19{,}940 &     317{,}569 & --- & 5--10 & --- & TGRS 2022  \\
+VISO~\cite{yin2021viso}               & Jilin-1                      & VNIR &  47 &  16{,}204 &     844{,}345 & --- & 10 & --- & TGRS 2022  \\
+SAT-MTB~\cite{Li2023SATMTB}           & Jilin-1                      & VNIR & 249 &  48{,}390 &  1{,}118{,}584 & --- & 10 & --- & TGRS 2023  \\
+RsCarData~\cite{Xiao2024HiEUM}        & Jilin-1                      & VNIR &  77 &  29{,}689 &     848{,}786 & --- & 10 & --- & TPAMI 2024 \\
+SDM-Car~\cite{Zhang2024SDMCar}        & Luojia 3-01                  & VNIR &  99 &  16{,}423 &  1{,}522{,}577 & --- &  6\,/\,8 & --- & GRSL 2024  \\
 \bottomrule
 \end{tabular}%
 }
