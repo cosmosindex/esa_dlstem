@@ -573,28 +573,20 @@ tracking, we explore the potential of transfer learning to overcome the extreme
 scarcity of labeled spaceborne data.
 
 \subsection{Evaluation metrics}
-\subsubsection{Single Object Tracking}
-\label{sec:metrics_sot}
- 
-We evaluate SOT trackers using four complementary metrics---\textbf{Success Rate
+
+\noindent\textbf{Single Object Tracking} We evaluate SOT trackers using four complementary metrics---\textbf{Success Rate
 (SR)}, \textbf{Normalized Precision (NPR)}, \textbf{Precision (PR)}, and
 \textbf{P@5}---chosen to align with the dominant convention in modern
-generic-vision SOT
-benchmarks~\citep{muller2018trackingnet,fan2019lasot,huang2021got10k} while
+generic-vision SOT benchmarks~\citep{muller2018trackingnet,fan2019lasot,huang2021got10k} while
 preserving the small-object diagnostic granularity required by satellite video.
- 
-\noindent\textbf{Tiny-object subset.} Given that small-object tracking is the
-defining challenge of satellite video, we additionally evaluate all trackers on
-a \emph{tiny-object subset} isolated by a sequence-level criterion: a sequence
-belongs to the subset if the median ground-truth equivalent side length
-$\sqrt{w_t^{\mathrm{gt}} \, h_t^{\mathrm{gt}}}$ across its annotated frames is
-below $8$~pixels, i.e., median area below $64$~px$^2$. The $8$-pixel cutoff is
-selected as the satellite-video analogue of COCO's small-object threshold
-($\sqrt{\mathrm{area}} < 32$~px)~\citep{lin2014coco}, scaled to reflect the
-substantially smaller target sizes characteristic of spaceborne imagery. On this
-subset we report SR, NPR, and P@5; PR is omitted because for sub-$8$-pixel
-targets the $[0, 50]$~px integration range is dominated by errors that exceed
-the target's full extent and consequently lacks discriminative meaning.
+Detailed metric definitions are in Appendix A.2.1. For overall performance we report SR, NPR,
+and PR, capturing IoU-based overlap, scale-normalized localization, and
+pixel-level center accuracy respectively. For the \emph{tiny-object subset}---%
+sequences with median GT side length $\sqrt{w_t^{\mathrm{gt}} h_t^{\mathrm{gt}}} < 8$~px
+(the satellite analogue of COCO's $32$~px small-object
+cutoff~\citep{lin2014coco})---we replace PR with P@5, since PR's $[0,50]$~px
+integration range loses discriminative meaning once typical errors exceed the
+target's full extent. Higher is better for all four metrics.
 
 \subsection{Experiment protocol}
 
