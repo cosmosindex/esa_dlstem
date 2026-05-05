@@ -146,7 +146,7 @@ featureless, sub-pixel targets from space.
 % missing testbed for CV motion methods in a domain they've never been tested
 % on"。
 \section{Introduction}
-\subsection{Motivation}
+\noindent\textbf{Motivation.}
 The rapid advancement of space technology has brought us to a new era of Earth
 observation, transitioning from static imagery to real-time dynamic monitoring.
 The emergence of high-resolution video satellite constellations—such as Jilin-1
@@ -174,9 +174,9 @@ the need to standardize these diverse streams into a single, high-precision
 benchmark that enables the community to tackle the unique geometric and
 radiometric challenges of the spaceborne domain under a unified protocol.
 
-\subsection{Contribution of this paper}
+\noindent\textbf{Contribution of this paper.}
 The primary contributions of this work are summarized as follows:
-\textbf{Construction of Space-tracker, a unified benchmark dataset}: We
+\noindent\textbf{Construction of Space-tracker, a unified benchmark dataset.} We
 introduce the largest and most diverse curated benchmark to date for spaceborne
 video analytics. By strategically merging and cleaning eight disparate
 datasets—including SatSOT, VISO, SV248S, OOTB, and BIRDSAI—we provide a single
@@ -184,7 +184,7 @@ point of access to over 1 million annotated instances. This unified repository
 addresses the extreme scarcity and fragmentation of high-quality spaceborne
 data, providing valuable resource for training robust geospatial models.
 
-\textbf{Harmonized Multi-Task and Multi-Sensory Annotations}: Unlike previous
+\noindent\textbf{Harmonized Multi-Task and Multi-Sensory Annotations.} Unlike previous
 benchmarks limited to single tasks or sensors, Space-tracker supports a
 multi-task framework encompassing object detection, single-object tracking
 (SOT), and multi-object tracking (MOT). We have harmonized all labels into a
@@ -193,7 +193,7 @@ merged datasets. Furthermore, we integrate multimodal sequences (VNIR and TIR),
 enabling researchers to develop trackers that generalize across visible and
 thermal spectra for all-weather monitoring
 
-\textbf{Comprehensive Benchmarking of seven SOTA Models}: We provide an
+\noindent\textbf{Comprehensive Benchmarking of seven SOTA Models.} We provide an
 extensive evaluation of the current state of the art, benchmarking XX backbone
 models and XX trackers across four major paradigms: traditional Discriminative
 Correlation Filters (DCF), deep Siamese networks, modern spatiotemporal
@@ -295,46 +295,46 @@ restricting their ability to evaluate model generalization.
 
 
 \section{Our Dataset}
-\subsection{Design principle}
+\noindent\textbf{Design principle.}
 The construction of Space-tracker is guided by the principle of multi-sensory
 and multi-platform diversity to overcome the limitations of existing
 single-source datasets. We strategically selected and merged XX disparate
 datasets, including SatSOT, VISO, SV248S, OOTB, and BIRDSAI, to provide a
 comprehensive view of aerospace analytics. Our key design principles are:
 
-\textbf{Diverse Sensor Integration}: The benchmark incorporates imagery from a
+\noindent\textbf{Diverse Sensor Integration.} The benchmark incorporates imagery from a
 wide range of constellations, including Jilin-1 (sub-meter RGB), SkySat, and the
 International Space Station (ISS).
 
-\textbf{Multimodal Modality}: Unlike existing benchmarks limited to visible
+\noindent\textbf{Multimodal Modality.} Unlike existing benchmarks limited to visible
 light, Space-tracker integrates multimodal sequences spanning both
 visible–near-infrared (VNIR) and thermal infrared (TIR) spectra.
 
-\textbf{Focus on the "Small Object" Problem}: Selection was prioritized for
+\noindent\textbf{Focus on the "Small Object" Problem.} Selection was prioritized for
 sequences where targets occupy fewer than 10 pixels, addressing the acute
 challenges of sub-pixel motion and limited spatial features in satellite video.
 
-\textbf{Background Complexity}: Sequences were chosen for their complex
+\noindent\textbf{Background Complexity.} Sequences were chosen for their complex
 background structures over multiple length scales, which can evolve at similar
 rates to the targets or cause frequent occlusions.
 
-\textbf{Geographic and Temporal Variety}: The dataset covers diverse global
+\noindent\textbf{Geographic and Temporal Variety.} The dataset covers diverse global
 regions (e.g., China, USA, Libya, Turkey) and varying temporal conditions, with
 frame rates ranging from 3 to 30 FPS.
     
 
 
-\subsection{Pre-processing workflow}
+\noindent\textbf{Pre-processing workflow.}
 
 To transform fragmented sources into a robust benchmark, we implemented a
 rigorous processing pipeline. This includes the follows steps.
 
-\textbf{Annotation Aggregation and Unification}: We harmonized disparate label
+\noindent\textbf{Annotation Aggregation and Unification.} We harmonized disparate label
 formats (XML, JSON, and simple coordinate files) into a consistent COCO-style
 classification and detection framework. All bounding box definitions were
 aligned to a unified coordinate convention and class indexing system.
 
-\textbf{Label Attribution Harmonization and Enrichment}: We harmonized these
+\noindent\textbf{Label Attribution Harmonization and Enrichment.} We harmonized these
 diverse systems into a single framework of 12 fine-grained attributes tailored
 to the specific challenges of spaceborne video analytics [Previous conversation
 history]. This involved mapping original labels—such as "Partial Occlusion" (PO)
@@ -348,12 +348,12 @@ evaluated under consistent definitions of difficulty.
 %to ensure the benchmark remains representative of typical downstream tasks
 %where data is scarce.
 
-\textbf{Manual Refinement}: We utilized an internally developed tool to manually
+\noindent\textbf{Manual Refinement.} We utilized an internally developed tool to manually
 correct misaligned targets or add labels for unannotated large objects (e.g.,
 cattle or specific vehicles), ensuring high-quality ground truth across all
 merged sources.
 
-\textbf{Object size regime definition}: In addition to the attributes introduced
+\noindent\textbf{Object size regime definition.} In addition to the attributes introduced
 above, we further define the notions of \emph{small object} and \emph{tiny
 object} based on the empirical behaviour of all evaluated trackers. A
 distinctive characteristic of remote-sensing datasets is that objects which
@@ -397,10 +397,10 @@ size--difficulty relationship.
     \label{fig:sr_npr_vs_bbox_size}
 \end{figure}
 
-\subsection{Dataset Overview}
+\noindent\textbf{Dataset Overview.}
 \label{sec:dataset_overview}
 
-\textbf{Space-Tracker-SOT} consolidates the three publicly available SOT
+Space-Tracker-SOT consolidates the three publicly available SOT
 benchmarks for spaceborne video --- SatSOT~\citep{satSOT2022},
 SV248S~\citep{Li2022SV248S}, and OOTB~\citep{CHEN2024212ootb} --- into a single
 unified benchmark of 463 sequences and 214{,}175 frames acquired by the Jilin-1,
@@ -538,7 +538,7 @@ target remains visually informative; SV systematically violates that assumption,
 and the 18 attributes in our benchmark are designed to expose exactly this gap.
 
 \section{Evaluation Protocol and Metrics}
-\subsection{Model selection}
+\noindent\textbf{Model selection.}
 To establish a robust performance baseline for Space-tracker, we adopt a
 selection logic that includes diverse methodology lines. Our goal is to evaluate
 how different architectural evolutions, ranging from classical supervised
@@ -547,7 +547,7 @@ constraints of tiny and even featureless targets in spaceborne video. We
 categorize our benchmarked methods into three primary methodological
 trajectories:
 
-\textbf{Region Proposal and Detection-Based Tracking}: We select representative
+\noindent\textbf{Region Proposal and Detection-Based Tracking.} We select representative
 models from the early deep learning era that established the foundation for
 supervised tracking. This includes two-stage baselines like Faster R-CNN and
 paradigms like Tracktor, which leverage region proposal networks (RPN) to
@@ -555,7 +555,7 @@ identify targets and subsequently associate them across frames. These models
 serve as a classical reference for understanding the performance of explicit,
 frame-by-frame supervised detection in satellite imagery.
 
-\textbf{Spatiotemporal Fusion Models}: To address the limitations of independent
+\noindent\textbf{Spatiotemporal Fusion Models.} To address the limitations of independent
 frame processing, we select architectures that explicitly model the time
 dimension. This line includes spatiotemporal Transformers (e.g., HRLT, TATrans)
 and joint detection and tracking (JDT) frameworks that couple appearance and
@@ -564,7 +564,7 @@ STAR, which integrates deep temporal features and physical motion priors (e.g.,
 Kalman filters) to maintain identity consistency during long-term occlusions in
 non-stationary backgrounds.
 
-\textbf{Large Geospatial and Vision Foundation Models}: Reflecting the most
+\noindent\textbf{Large Geospatial and Vision Foundation Models.} Reflecting the most
 recent paradigm shift, we evaluate large-scale foundation models such as SAM 2
 and DINO v3. These models are selected for their robust zero-shot generalization
 and ability to leverage high-quality feature representations learned from vast
@@ -572,11 +572,10 @@ amounts of unlabeled data. By evaluating prompt-driven video segmentation and
 tracking, we explore the potential of transfer learning to overcome the extreme
 scarcity of labeled spaceborne data.
 
-\subsection{Evaluation metrics}
+\noindent\textbf{Evaluation metrics.}
 
-\noindent\textbf{Single Object Tracking} We evaluate SOT trackers using four complementary metrics---\textbf{Success Rate
-(SR)}, \textbf{Normalized Precision (NPR)}, \textbf{Precision (PR)}, and
-\textbf{P@5}---chosen to align with the dominant convention in modern
+\noindent\textbf{Single Object Tracking.} We evaluate SOT trackers using four complementary metrics---Success Rate (SR), Normalized Precision (NPR), Precision (PR), and
+P@5---chosen to align with the dominant convention in modern
 generic-vision SOT benchmarks~\citep{muller2018trackingnet,fan2019lasot,huang2021got10k} while
 preserving the small-object diagnostic granularity required by satellite video.
 Detailed metric definitions are in Appendix A.2.1. For overall performance we report SR, NPR,
@@ -588,9 +587,9 @@ cutoff~\citep{lin2014coco})---we replace PR with P@5, since PR's $[0,50]$~px
 integration range loses discriminative meaning once typical errors exceed the
 target's full extent. Higher is better for all four metrics.
 
-\subsection{Experiment protocol}
+\noindent\textbf{Experiment protocol.}
 
-\subsubsection{Single Object Tracking}
+\noindent\textbf{Single Object Tracking.}
 
 % \noindent\textbf{Inference protocol.}
 \noindent\textbf{Inference protocol.} All trackers are evaluated under a strict
@@ -636,7 +635,7 @@ disambiguation enabled. For each tracker, we adopt the strongest variant
 available in its official public release.
 
 \section{Experiment results}
-\subsection{Performance Overview}
+\noindent\textbf{Performance Overview.}
 \label{sec:exp_sot_overview}
 
 Following the selection rationale of Sec.~\ref{sec:model_selection},
@@ -705,7 +704,7 @@ tracking.
 %\subsection{Performance by object class}
 %\input{tables/sv248s_sot_categories}
 
-\subsection{Performance under unified sequence attributes}
+\noindent\textbf{Performance under unified sequence attributes.}
 Tab.~\ref{tab:sot_attributes} reports per-tracker SR / NPR / PR under our
 unified attribute taxonomy (BC, IV, ROT, OCC, SOB, DEF). Each unified attribute
 consolidates the corresponding native labels of every dataset that annotates it
@@ -717,7 +716,7 @@ across the datasets that annotate the attribute.
 
 \input{tables/SOT/whole_dataset/sot_attributes_table}
 
-\subsection{Qualitative comparison}
+\noindent\textbf{Qualitative comparison.}
 
 
 \section{Discussion}
@@ -767,7 +766,7 @@ to automatically hide this section in the anonymized submission.
 \appendix
 
 \section{Technical appendices and supplementary material}
-\subsection{Dataset Overview}
+\noindent\textbf{Dataset Overview.}
 The eight datasets that make up Space-tracker span a wide range of frame
 resolutions, reflecting the heterogeneity of the underlying spaceborne and
 aerial sources. SOT crops are highly heterogeneous: SatSOT and OOTB cover roughly
@@ -791,11 +790,11 @@ iso-megapixel curves for reference.
 \end{figure}
 
 
-\subsection{Evaluation Metrics}
+\noindent\textbf{Evaluation Metrics.}
 \label{sec:appendix_eval_metrics}
 % TODO: define the SOT/MOT metrics used in the main paper -- SR / PR / NPR / P@5,
 % MOTA / IDF1 / HOTA / AssA / DetA, and the macro-of-macro aggregation scheme.
-\subsubsection{Single Object Tracking}
+\noindent\textbf{Single Object Tracking.}
 Let $\{B_t^{\mathrm{pred}}\}_{t=1}^{T}$ and $\{B_t^{\mathrm{gt}}\}_{t=1}^{T}$
 denote the predicted and ground-truth bounding boxes for a sequence of length
 $T$, and let $\mathrm{IoU}_t$ and $\mathrm{CLE}_t = \lVert c_t^{\mathrm{pred}} -
@@ -884,7 +883,7 @@ reporting; per-dataset results remain the primary unit of comparison. P@5 is not
 aggregated across datasets, as its interpretation is pixel-scale dependent.
 
 
-\subsection{Per-dataset SOT results}
+\noindent\textbf{Per-dataset SOT results.}
 Tab.~\ref{tab:sot_results_whole} and Tab.~\ref{tab:sot_results_tiny} provide the
 per-dataset breakdown that underlies the macro-of-macro means in
 Tab.~\ref{tab:sot_results}.
@@ -898,7 +897,7 @@ Tab.~\ref{tab:sot_results}.
 \input{tables/SOT/whole_dataset/split_attributes_table}
 
 
-\subsection{Per-attribute performance on tiny frames (micro-averaged)}
+\noindent\textbf{Per-attribute performance on tiny frames (micro-averaged).}
 Tab.~\ref{tab:sot_attributes_tiny} reports per-tracker SR / PR / P@5 restricted
 to \emph{tiny} frames (per-frame GT $\sqrt{\mathrm{area}} < 8$\,px), in contrast
 to the whole-size, per-sequence aggregation used in
@@ -913,7 +912,7 @@ Tab.~\ref{tab:sot_attributes_tiny_occlusion}.
 \input{tables/SOT/whole_dataset/sot_attributes_table_tiny}
 
 
-\subsection{Performance analysis w.r.t. object attributes}
+\noindent\textbf{Performance analysis w.r.t. object attributes.}
 The model performance w.r.t to different object attributes on the dataset SV248S
 is shown in Tab.~\ref{tab:sot_attributes_sv248s}. We can conclude the following
 findings.
