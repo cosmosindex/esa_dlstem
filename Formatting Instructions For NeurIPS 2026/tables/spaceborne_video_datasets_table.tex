@@ -1,13 +1,17 @@
 % Requires: \usepackage{booktabs, multirow}
 \begin{table}[H]
 \centering
-\caption{Summary of existing spaceborne video datasets used in this work.
-\textbf{\#Seq} is the number of video sequences as published.
-\textbf{\#Frames} and \textbf{\#Labels} are the totals of annotated frames and bounding-box annotations across all sequences (counted on the SOT or MOT subset, respectively, on disk).
-For SOT datasets, each sequence tracks a single target so \#Labels~$\leq$~\#Frames; the gap arises from frames where the target is absent or fully occluded and is therefore not annotated with a bounding box (SatSOT marks these as \texttt{none}; SV248S marks them with state~$=$~1 / invisible; OOTB labels every frame, so \#Labels~$=$~\#Frames).
-For SOT datasets, \textbf{Tiny\%} is the fraction of bounding-box annotations whose area is below $8\times8 = 64$~px$^2$, computed on the native annotation (AABB for SatSOT/SV248S, OBB for OOTB).
-\textbf{FPS} is the native acquisition frame rate as stated in the source paper; multiple values denote mixed sources or sequence-level variation (SV248S is distributed at 25~fps after video-frame-interpolation re-encoding from a native 10~fps).
-\textbf{\#Attr} is the number of sequence-level attributes defined by each SOT benchmark; for our Space-Tracker-SOT it is the size of the unified attribute taxonomy used to align SatSOT, SV248S, and OOTB. Attributes are not defined for the listed MOT datasets. TODO:TIR Data}
+% \caption{Summary of existing spaceborne video datasets used in this work.
+\caption{Overview of spaceborne video tracking datasets. The upper block lists existing SOT benchmarks integrated into our \textbf{Space-Tracker-SOT}; the lower block lists MOT datasets referenced in this work. \textbf{Tiny\%} reports the fraction of SOT bounding boxes with area below $64$\,px$^2$. \textbf{\#Attr} counts sequence-level attributes.
+\textbf{\#Seq} / \textbf{\#Frames} / \textbf{\#Labels} report sequences, annotated frames, and bounding-box annotations on the SOT or MOT subset on disk.
+\textbf{FPS} is the native acquisition frame rate.
+for Space-Tracker-SOT this is the size of the unified taxonomy that aligns the three source benchmarks. Attributes are not defined for the listed MOT datasets.}
+% \textbf{\#Seq} is the number of video sequences as published.
+% \textbf{\#Frames} and \textbf{\#Labels} are the totals of annotated frames and bounding-box annotations across all sequences (counted on the SOT or MOT subset, respectively, on disk).
+% For SOT datasets, each sequence tracks a single target so \#Labels~$\leq$~\#Frames; the gap arises from frames where the target is absent or fully occluded and is therefore not annotated with a bounding box (SatSOT marks these as \texttt{none}; SV248S marks them with state~$=$~1 / invisible; OOTB labels every frame, so \#Labels~$=$~\#Frames).
+% For SOT datasets, \textbf{Tiny\%} is the fraction of bounding-box annotations whose area is below $8\times8 = 64$~px$^2$, computed on the native annotation (AABB for SatSOT/SV248S, OBB for OOTB).
+% \textbf{FPS} is the native acquisition frame rate as stated in the source paper; multiple values denote mixed sources or sequence-level variation (SV248S is distributed at 25~fps after video-frame-interpolation re-encoding from a native 10~fps).
+% \textbf{\#Attr} is the number of sequence-level attributes defined by each SOT benchmark; for our Space-Tracker-SOT it is the size of the unified attribute taxonomy used to align SatSOT, SV248S, and OOTB. Attributes are not defined for the listed MOT datasets. TODO:TIR Data}
 \label{tab:spaceborne_video_datasets}
 \setlength{\tabcolsep}{4pt}
 \renewcommand{\arraystretch}{1.15}

@@ -397,13 +397,60 @@ size--difficulty relationship.
     \label{fig:sr_npr_vs_bbox_size}
 \end{figure}
 
-\subsection{Dataset overview}
-Tab.~\ref{tab:spaceborne_video_datasets} shows the dataset selected in this
-work. The table also includes the sensor specifications, data modality, the
-number of
-\input{tables/spaceborne_video_datasets_table}
+\subsection{Dataset Overview}
+\label{sec:dataset_overview}
 
-% ... [前面介绍数据集组成、规模、采集来源等内容] ...
+\textbf{Space-Tracker-SOT} consolidates the three publicly available SOT
+benchmarks for spaceborne video --- SatSOT~\citep{satSOT2022},
+SV248S~\citep{Li2022SV248S}, and OOTB~\citep{CHEN2024212ootb} --- into a single
+unified benchmark of 463 sequences and 214{,}175 frames acquired by the Jilin-1,
+SkySat, and ISS platforms (Table~\ref{tab:spaceborne_video_datasets}). The three
+source datasets are complementary in scale, sensor, and labeling style: SatSOT
+and SV248S are acquired exclusively by Jilin-1 and annotated with axis-aligned
+boxes (with SV248S additionally providing tight polygon masks), while OOTB spans
+three platforms and uses oriented bounding boxes. Together they cover the four
+object categories that dominate practical spaceborne tracking --- car, ship,
+plane, and train --- across diverse urban, coastal, and airport scenes.
+
+\noindent\textbf{Annotation density and absent-target frames.} For each SOT
+sequence the tracked target is single by construction, so the number of
+bounding-box labels is at most the number of frames. The gap between \#Frames
+and \#Labels in Table~\ref{tab:spaceborne_video_datasets} reflects frames in
+which the target is absent or fully occluded: SatSOT marks such frames as
+\texttt{none}, SV248S flags them with an invisibility state, and OOTB labels
+every frame so its \#Labels equals \#Frames. We preserve these conventions
+during integration rather than imputing missing boxes, so that long-term
+occlusion and out-of-view behavior remain faithfully recoverable downstream.
+
+\noindent\textbf{Object scale.} A defining characteristic of spaceborne SOT is
+the prevalence of extremely small targets. We define an annotation as a
+\emph{tiny object} when the square root of its bounding-box area falls below $8$
+pixels (equivalently, area $<64$\,px$^2$). Under this criterion, $63.1\%$ of all
+annotations in Space-Tracker-SOT are tiny, with SV248S alone contributing an
+$80.3\%$ tiny ratio. This is a regime in which appearance, texture, and shape
+cues that anchor most modern trackers effectively vanish --- a point we return
+to in the attribute discussion below.
+
+\noindent\textbf{Frame rate.} Native acquisition rates range from 10 to 30~fps
+across the source platforms. We note one subtlety: SV248S is distributed at
+25~fps after video-frame-interpolation re-encoding from a native 10~fps signal,
+so its temporal statistics should be interpreted accordingly. We retain the
+as-distributed frame rate for evaluation to ensure reproducibility against prior
+work.
+
+\noindent\textbf{Toward a unified attribute taxonomy.} Each source benchmark
+ships its own sequence-level attribute set --- 11 in SatSOT, 10 in SV248S, and
+12 in OOTB --- with overlapping but inconsistent definitions (e.g., what counts
+as ``occlusion'' or ``background clutter'' varies across the three). To support
+consistent evaluation across the merged benchmark, we align these into a single
+taxonomy of 18 fine-grained attributes, retaining the discriminative power of
+each source while eliminating definitional conflicts. The resulting attribute
+set is not merely a relabeling: as we show next, several of these attributes
+describe failure modes whose severity in spaceborne video is qualitatively
+different from --- and in many cases not reducible to --- their natural-video
+namesakes.
+
+\input{tables/spaceborne_video_datasets_table.tex}
 
 \noindent\textbf{Attribute taxonomy.} Following the conventions established in
 SatSOT~\citep{satSOT2022}, SV248S~\citep{Li2022SV248S}, and
