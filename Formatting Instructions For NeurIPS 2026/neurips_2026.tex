@@ -174,8 +174,34 @@ the need to standardize these diverse streams into a single, high-precision
 benchmark that enables the community to tackle the unique geometric and
 radiometric challenges of the spaceborne domain under a unified protocol.
 
+\subsection{Contribution of this paper}
+The primary contributions of this work are summarized as follows:
+\textbf{Construction of Space-tracker, a unified benchmark dataset}: We
+introduce the largest and most diverse curated benchmark to date for spaceborne
+video analytics. By strategically merging and cleaning eight disparate
+datasets—including SatSOT, VISO, SV248S, OOTB, and BIRDSAI—we provide a single
+point of access to over 1 million annotated instances. This unified repository
+addresses the extreme scarcity and fragmentation of high-quality spaceborne
+data, providing valuable resource for training robust geospatial models.
 
-\subsection{Related work}
+\textbf{Harmonized Multi-Task and Multi-Sensory Annotations}: Unlike previous
+benchmarks limited to single tasks or sensors, Space-tracker supports a
+multi-task framework encompassing object detection, single-object tracking
+(SOT), and multi-object tracking (MOT). We have harmonized all labels into a
+consistent COCO-style format and unified the attribute tagging system across the
+merged datasets. Furthermore, we integrate multimodal sequences (VNIR and TIR),
+enabling researchers to develop trackers that generalize across visible and
+thermal spectra for all-weather monitoring
+
+\textbf{Comprehensive Benchmarking of seven SOTA Models}: We provide an
+extensive evaluation of the current state of the art, benchmarking XX backbone
+models and XX trackers across four major paradigms: traditional Discriminative
+Correlation Filters (DCF), deep Siamese networks, modern spatiotemporal
+Transformers, and Geospatial Foundation Models like SAM2. Our analysis offers
+new insights into how these architectures handle small objects and long-term
+occlusions in non-stationary backgrounds.
+
+
 \section{Related Work}
 
 \noindent\textbf{Generic Visual Object Tracking.}
@@ -265,32 +291,7 @@ which are critical for accurately localizing objects with arbitrary orientations
 in aerial views; and (4) limited diversity: existing datasets cover a limited
 range of scenarios, object categories, motion patterns, and imaging conditions,
 restricting their ability to evaluate model generalization.
-\subsection{Contribution of this paper}
-The primary contributions of this work are summarized as follows:
-\textbf{Construction of Space-tracker, a unified benchmark dataset}: We
-introduce the largest and most diverse curated benchmark to date for spaceborne
-video analytics. By strategically merging and cleaning eight disparate
-datasets—including SatSOT, VISO, SV248S, OOTB, and BIRDSAI—we provide a single
-point of access to over 1 million annotated instances. This unified repository
-addresses the extreme scarcity and fragmentation of high-quality spaceborne
-data, providing valuable resource for training robust geospatial models.
 
-\textbf{Harmonized Multi-Task and Multi-Sensory Annotations}: Unlike previous
-benchmarks limited to single tasks or sensors, Space-tracker supports a
-multi-task framework encompassing object detection, single-object tracking
-(SOT), and multi-object tracking (MOT). We have harmonized all labels into a
-consistent COCO-style format and unified the attribute tagging system across the
-merged datasets. Furthermore, we integrate multimodal sequences (VNIR and TIR),
-enabling researchers to develop trackers that generalize across visible and
-thermal spectra for all-weather monitoring
-
-\textbf{Comprehensive Benchmarking of seven SOTA Models}: We provide an
-extensive evaluation of the current state of the art, benchmarking XX backbone
-models and XX trackers across four major paradigms: traditional Discriminative
-Correlation Filters (DCF), deep Siamese networks, modern spatiotemporal
-Transformers, and Geospatial Foundation Models like SAM2. Our analysis offers
-new insights into how these architectures handle small objects and long-term
-occlusions in non-stationary backgrounds.
 
 
 \section{Our Dataset}
