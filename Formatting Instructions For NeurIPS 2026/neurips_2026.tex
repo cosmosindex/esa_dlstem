@@ -539,6 +539,7 @@ and the 18 attributes in our benchmark are designed to expose exactly this gap.
 
 \section{Evaluation Protocol and Metrics}
 \noindent\textbf{Model selection.}
+\label{sec:model_selection}
 To establish a robust performance baseline for Space-tracker, we adopt a
 selection logic that includes diverse methodology lines. Our goal is to evaluate
 how different architectural evolutions, ranging from classical supervised
@@ -642,7 +643,7 @@ Following the selection rationale of Sec.~\ref{sec:model_selection},
 Tab.~\ref{tab:sot_results} reports the seven SOT methods on Space-Tracker-SOT
 and on its tiny-object subset (median GT $\sqrt{\mathrm{area}} < 8$\,px), each
 aggregated across SatSOT, SV248S, and OOTB via the macro-of-macro protocol of
-Sec.~\ref{sec:eval_metrics}. We deliberately replace PR with P@5 in the tiny
+Appendix~\ref{sec:appendix_eval_metrics}. We deliberately replace PR with P@5 in the tiny
 column: when targets occupy fewer than a hundred pixels, the CLE-based PR curve
 over $[0,50]$\,px saturates and ceases to separate trackers, whereas the strict
 5-pixel criterion exposes the sub-pixel localisation gap that matters for
