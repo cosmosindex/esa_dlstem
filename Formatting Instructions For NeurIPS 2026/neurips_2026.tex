@@ -766,7 +766,7 @@ to automatically hide this section in the anonymized submission.
 \appendix
 
 \section{Technical appendices and supplementary material}
-\noindent\textbf{Dataset Overview.}
+\subsection{Dataset Overview}
 The eight datasets that make up Space-tracker span a wide range of frame
 resolutions, reflecting the heterogeneity of the underlying spaceborne and
 aerial sources. SOT crops are highly heterogeneous: SatSOT and OOTB cover roughly
@@ -790,11 +790,11 @@ iso-megapixel curves for reference.
 \end{figure}
 
 
-\noindent\textbf{Evaluation Metrics.}
+\subsection{Evaluation Metrics}
 \label{sec:appendix_eval_metrics}
 % TODO: define the SOT/MOT metrics used in the main paper -- SR / PR / NPR / P@5,
 % MOTA / IDF1 / HOTA / AssA / DetA, and the macro-of-macro aggregation scheme.
-\noindent\textbf{Single Object Tracking.}
+\subsubsection{Single Object Tracking}
 Let $\{B_t^{\mathrm{pred}}\}_{t=1}^{T}$ and $\{B_t^{\mathrm{gt}}\}_{t=1}^{T}$
 denote the predicted and ground-truth bounding boxes for a sequence of length
 $T$, and let $\mathrm{IoU}_t$ and $\mathrm{CLE}_t = \lVert c_t^{\mathrm{pred}} -
@@ -883,7 +883,7 @@ reporting; per-dataset results remain the primary unit of comparison. P@5 is not
 aggregated across datasets, as its interpretation is pixel-scale dependent.
 
 
-\noindent\textbf{Per-dataset SOT results.}
+\subsection{Per-dataset SOT results}
 Tab.~\ref{tab:sot_results_whole} and Tab.~\ref{tab:sot_results_tiny} provide the
 per-dataset breakdown that underlies the macro-of-macro means in
 Tab.~\ref{tab:sot_results}.
@@ -897,7 +897,7 @@ Tab.~\ref{tab:sot_results}.
 \input{tables/SOT/whole_dataset/split_attributes_table}
 
 
-\noindent\textbf{Per-attribute performance on tiny frames (micro-averaged).}
+\subsection{Per-attribute performance on tiny frames (micro-averaged)}
 Tab.~\ref{tab:sot_attributes_tiny} reports per-tracker SR / PR / P@5 restricted
 to \emph{tiny} frames (per-frame GT $\sqrt{\mathrm{area}} < 8$\,px), in contrast
 to the whole-size, per-sequence aggregation used in
@@ -912,7 +912,7 @@ Tab.~\ref{tab:sot_attributes_tiny_occlusion}.
 \input{tables/SOT/whole_dataset/sot_attributes_table_tiny}
 
 
-\noindent\textbf{Performance analysis w.r.t. object attributes.}
+\subsection{Performance analysis w.r.t. object attributes}
 The model performance w.r.t to different object attributes on the dataset SV248S
 is shown in Tab.~\ref{tab:sot_attributes_sv248s}. We can conclude the following
 findings.
