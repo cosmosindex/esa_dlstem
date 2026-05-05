@@ -145,7 +145,8 @@ def main():
             monitor=cfg.get("monitor_metric", "val/mAP"),
             mode=cfg.get("monitor_mode", "max"),
             save_top_k=1,
-            filename="best-{epoch}-{val_mAP:.3f}",
+            filename="best-epoch={epoch}-val_mAP={val/mAP:.3f}",
+            auto_insert_metric_name=False,
         ),
         EarlyStopping(
             monitor=cfg.get("monitor_metric", "val/mAP"),
