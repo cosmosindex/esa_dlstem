@@ -1,0 +1,15 @@
+# BYTETRACK on airmot (Space-Tracker-MOT non-car). FasterRCNN cached dets, multi-class.
+# Driver: eval_tracker_multiclass.py (per-class tracker instance).
+dataset: airmot
+tracker: bytetrack
+cache_dir: /data/ESA_DLSTEM_2025/experiments/Detection/fasterrcnn_satmtb_hbb_dets_cache/airmot
+score_floor: 0.10
+match_metric: centroid
+centroid_dist_thresh: 5.0
+iou_thresh: 0.5
+tracker_kwargs:
+  track_thresh: 0.30
+  track_buffer: 30
+  match_thresh: 0.5
+  mot20: false
+  frame_rate: 30

@@ -1,0 +1,20 @@
+% Requires: \usepackage{booktabs, multirow, array}
+\begin{table}[t]
+\centering
+\caption{Multi-Object Tracking results on Space-Tracker-MOT~(airplane / ship / train), pooled across SAT-MTB (test split), VISO and AIR-MOT-100. Detections come from a Faster~R-CNN trained on SAT-MTB det\_hbb (3-class HBB; held-out test split for SAT-MTB; VISO and AIR-MOT-100 never seen at training). Trackers are run per-class so identities cannot leak across categories. Rate metrics are macro-averaged across (dataset $\times$ class), counts are summed. \textbf{Bold} = best, \underline{underline} = second.}
+\label{tab:mot_results_satmtb_hbb}
+\setlength{\tabcolsep}{4pt}
+\renewcommand{\arraystretch}{1.15}
+\begin{tabular}{l l ccccc ccc}
+\toprule
+\multirow{2}{*}{\textbf{Method}} & \multirow{2}{*}{\textbf{Venue}} & \multicolumn{5}{c}{\textbf{Rate metrics ($\uparrow$)}} & \multicolumn{3}{c}{\textbf{Count metrics}} \\
+\cmidrule(lr){3-7} \cmidrule(lr){8-10}
+& & HOTA & DetA & AssA & MOTA & IDF1 & IDsw $\downarrow$ & MT $\uparrow$ & ML $\downarrow$ \\
+\midrule
+SORT~\cite{bewley2016sort} & ICIP 2016 & 0.145 & 0.071 & \underline{0.400} & -2.659 & 0.122 & \underline{197} & \textbf{178} & \textbf{1,119} \\
+ByteTrack~\cite{zhang2022bytetrack} & ECCV 2022 & \textbf{0.160} & \textbf{0.092} & \textbf{0.401} & \textbf{-1.534} & \textbf{0.142} & 406 & 172 & 1,122 \\
+OC-SORT~\cite{cao2023ocsort} & CVPR 2023 & 0.148 & 0.076 & 0.400 & -2.306 & \underline{0.129} & \textbf{191} & 174 & \underline{1,119} \\
+BoT-SORT~\cite{aharon2022botsort} & arXiv 2022 & \underline{0.150} & \underline{0.078} & 0.397 & \underline{-2.226} & 0.126 & 907 & \underline{175} & 1,120 \\
+\bottomrule
+\end{tabular}
+\end{table}

@@ -816,18 +816,96 @@ incidental stress tests.
 
 \subhead{Performance overview}
 \label{sec:exp_mot_overview}
-Tab.~\ref{tab:mot_results} reports six MOT trackers on
-Space-Tracker-MOT~(car), evaluated under the same HiEUM detector and the
-standard MOT-Challenge IoU$\geq$0.5 protocol so that all differences in the
-table reflect association quality rather than detection. We aggregate across
-RsCarData, SAT-MTB-car, and SDM-Car by macro-averaging the rate metrics
-(HOTA, DetA, AssA, MOTA, IDF1) and summing the count metrics (IDsw, MT, ML).
+Space-Tracker-MOT is split by class regime into a \emph{car} half and an
+\emph{airplane / ship / train} half: cars are the only category for which a
+dedicated small-object detector (HiEUM~\cite{TODO_hieum}) exists in the
+literature, while the larger categories share the SAT-MTB \texttt{det\_hbb}
+training distribution and admit a single 3-class Faster~R-CNN. We therefore
+report the two halves under a common protocol—shared detector across
+trackers, MOT-Challenge IoU$\geq 0.5$, rate metrics macro-averaged across
+the constituent splits and count metrics summed—but in two separate tables
+so the detector is held constant within each.
+
+Tab.~\ref{tab:mot_results} (left) reports six MOT trackers on
+Space-Tracker-MOT~(car), pooled across RsCarData, SAT-MTB-car, and SDM-Car,
+all driven by the same HiEUM detection cache. Tab.~\ref{tab:mot_results_satmtb_hbb}
+(right) reports four MOT trackers on Space-Tracker-MOT~(airplane / ship /
+train), pooled across SAT-MTB (test split, held out from detector training),
+VISO, and AIR-MOT-100, all driven by the Faster~R-CNN detector trained on
+SAT-MTB \texttt{det\_hbb}; trackers are run per class so identities cannot
+leak across categories.
 
 \input{tables/MOT/mot_overall_table.tex}
+\input{tables/MOT/mot_satmtb_hbb_overall_table.tex}
 
-% TODO: discuss key findings — SORT-class associative simplicity wins over
-% appearance-based BoT-SORT in the tiny-object regime; TrackTrack achieves the
-% lowest IDsw and only positive MOTA but at the cost of recall.
+% --------------------------------------------------------------------------
+% 写论文时需要 weave 进去的 discussion 点（中文 notes，写正文时再翻译/精修）：
+%
+% --- Space-Tracker-MOT (car), Tab.~\ref{tab:mot_results} -------------------
+%
+% (1) SORT (2016) 全表 5/8 项最佳，比 BoT-SORT/ByteTrack 等更新的 tracker
+%     都强 —— 这是论文 narrative 的关键点之一: "post-2016 的 MOT 进展在
+%     spaceborne small-object 场景里不 transfer"。可以跟 SOT 部分关于
+%     "natural-video SOT progress doesn't transfer" 的发现 mirror 起来。
+%
+% (2) BoT-SORT 的 IDsw=201,209 / ByteTrack 的 IDsw=37,364 数量级异常 ——
+%     根因是 score_floor=0.25 在 HiEUM 的 score 分布下太激进, 大量 ghost
+%     track explosion. 可以加 footnote 说明协议 (score_floor 0.25 across
+%     all 6 trackers for fair comparison)，避免读者误以为是 BoT-SORT 本身
+%     不行.
+%
+% (3) TrackTrack (CVPR 2025) 拿到唯一正 MOTA (0.049) + 最低 IDsw (666),
+%     但 MT/ML 最差 —— 它的 high-precision/low-recall trade-off 导致只
+%     track 高置信度目标。这点说明在 spaceborne setting 下 "保守" 比
+%     "激进" 重要: 一个 false track 的代价 (IDsw blowup) 远大于 missed
+%     track. 可以引到 application 层面 (downstream geospatial use 不容忍
+%     ID confusion).
+%
+% (4) Space-Tracker-MOT (car) = RsCarData + SAT-MTB-car + SDM-Car. SAM3 是
+%     现成 zero-shot 候选但被刻意排除在主表 —— 它跟 supervised tracker
+%     不在一个 fair-comparison 桶里. 可以在附录单出 SAM3 的对照表 (我之前
+%     写过 mot_per_dataset_table 仅含 6 trackers).
+%
+% --- Space-Tracker-MOT (airplane/ship/train), Tab.~\ref{tab:mot_results_satmtb_hbb} -
+%
+% (5) ByteTrack 全面领先 (HOTA/DetA/MOTA/IDF1 都最高), 跟 car 场景 SORT
+%     全胜形成鲜明对比 —— 这背后是 detector 不同: FasterRCNN 输出的 score
+%     分布比 HiEUM 更可靠 (HiEUM score 偏 binary), ByteTrack 的两段阈值
+%     (track_thresh=0.30 + 低分 rescue) 可以利用 FasterRCNN 的中间分数
+%     做 association recovery; HiEUM 上低分 rescue 等于无效, 反而退化成
+%     SORT.
+%
+% (6) Per-dataset 差距巨大:
+%       AIR-MOT-100 airplane: ByteTrack HOTA 0.494  (best subset)
+%       SAT-MTB     airplane: ByteTrack HOTA 0.254  (cross-domain hit)
+%       VISO        ship/train: HOTA <= 0.01        (统计噪声 + 极小目标)
+%     说明 detector 的 in-domain vs cross-domain gap 在这套 benchmark 里
+%     被结构性放大. 可以做成一段 "tracker performance is detector-bound,
+%     not association-bound" 的论述, 跟 (5) 互补.
+%
+% (7) MOTA 全负 (-1.5 ~ -2.7 across trackers) —— 因为 IoU>=0.5 协议下,
+%     FasterRCNN 检出率低 → FN 占大头, MOTA = 1 - (FP+FN+IDsw)/GT 直接
+%     跌成负数. 这跟 car 表里 (大部分 negative MOTA) 是一致的, 不是 bug,
+%     是 spaceborne small-object regime 的固有特性. 写正文时可以用 HOTA
+%     作 primary metric 的论据 (HOTA 把 detection 和 association 解耦,
+%     不会被 detector 牵着走).
+%
+% (8) AIR-MOT-100 airplane: MT=128/189 (~68%) for ByteTrack —— 这是整个
+%     non-car 评估里 tracker 表现最好的细分, 也跟训练分布 (SAT-MTB 飞机
+%     俯视 + 大目标) 最接近. 可以作为 "where tracking already works"
+%     的 anchor point.
+%
+% (9) 表格里目前缺 BoT-SORT-ReID 和 TrackTrack —— 这俩需要单独的 FastReID
+%     特征 cache + multi-class 改造. 留作 future work / appendix entry,
+%     或者写一句 footnote 说 "appearance-based variants are deferred to
+%     supplementary because the SAT-MTB-trained FastReID would itself
+%     introduce a domain confound across VISO/AIR-MOT-100".
+%
+% (10) Per-class table 已生成在
+%      tables/MOT/mot_satmtb_hbb_per_dataset_table.tex, 可作 supplementary.
+%      train 类 sequences 极少 (SAT-MTB 3 + VISO 1 = 4), 主表数字会被
+%      统计噪声主导, 应该提到 caption 里.
+% --------------------------------------------------------------------------
 
 
 \section{Discussion}

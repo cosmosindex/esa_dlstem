@@ -1,0 +1,18 @@
+# OCSORT on viso_nocar (Space-Tracker-MOT non-car). FasterRCNN cached dets, multi-class.
+# Driver: eval_tracker_multiclass.py (per-class tracker instance).
+dataset: viso_nocar
+tracker: ocsort
+cache_dir: /data/ESA_DLSTEM_2025/experiments/Detection/fasterrcnn_satmtb_hbb_dets_cache/viso_nocar
+score_floor: 0.0
+match_metric: centroid
+centroid_dist_thresh: 5.0
+iou_thresh: 0.5
+tracker_kwargs:
+  det_thresh: 0.30
+  max_age: 30
+  min_hits: 1
+  iou_threshold: 0.1
+  delta_t: 3
+  asso_func: iou
+  inertia: 0.2
+  use_byte: false
