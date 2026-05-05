@@ -72,6 +72,7 @@
 \usepackage{amsmath, amssymb}
 \usepackage{bbm}   % for \mathbbm{1} (indicator function)
 \usepackage{float} % provides [H] specifier to pin a float in place
+\usepackage{subcaption} % side-by-side subtables (e.g. MOT car / non-car)
 
 % --- Compact heading macros (used in lieu of \subsection / \subsubsection in
 % the main body to save vertical space; appendix still uses \subsection).
@@ -835,8 +836,21 @@ VISO, and AIR-MOT-100, all driven by the Faster~R-CNN detector trained on
 SAT-MTB \texttt{det\_hbb}; trackers are run per class so identities cannot
 leak across categories.
 
-\input{tables/MOT/mot_overall_table.tex}
-\input{tables/MOT/mot_satmtb_hbb_overall_table.tex}
+\begin{table}[t]
+  \centering
+  \caption{Multi-Object Tracking results on Space-Tracker-MOT, split by detector
+  family. \textbf{(\subref{tab:mot_results})} car-only half driven by HiEUM
+  detections; \textbf{(\subref{tab:mot_results_satmtb_hbb})} airplane / ship /
+  train half driven by a shared Faster~R-CNN. Rate metrics
+  (HOTA, DetA, AssA, MOTA, IDF1) are macro-averaged across the constituent
+  splits; count metrics (IDsw, MT, ML) are summed. $\uparrow$~higher is better,
+  $\downarrow$~lower is better. \textbf{Bold} = best, \underline{underline} =
+  second best within each column of each subtable.}
+  \label{tab:mot_results_combined}
+  \input{tables/MOT/mot_overall_table.tex}
+  \hfill
+  \input{tables/MOT/mot_satmtb_hbb_overall_table.tex}
+\end{table}
 
 % --------------------------------------------------------------------------
 % 写论文时需要 weave 进去的 discussion 点（中文 notes，写正文时再翻译/精修）：

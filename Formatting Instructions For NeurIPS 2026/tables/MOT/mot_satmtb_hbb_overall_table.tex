@@ -1,10 +1,12 @@
-% Requires: \usepackage{booktabs, multirow, array}
-\begin{table}[t]
+% Requires: \usepackage{booktabs, multirow, array, subcaption}
+% Rendered side-by-side with mot_overall_table.tex inside an outer \begin{table}.
+\begin{subtable}[t]{0.49\linewidth}
 \centering
-\caption{Multi-Object Tracking results on Space-Tracker-MOT~(airplane / ship / train), pooled across SAT-MTB (test split), VISO and AIR-MOT-100. Detections come from a Faster~R-CNN trained on SAT-MTB det\_hbb (3-class HBB; held-out test split for SAT-MTB; VISO and AIR-MOT-100 never seen at training). Trackers are run per-class so identities cannot leak across categories. Rate metrics are macro-averaged across (dataset $\times$ class), counts are summed. \textbf{Bold} = best, \underline{underline} = second.}
+\caption{Space-Tracker-MOT~(airplane / ship / train), pooled across SAT-MTB (test split, held out from detector training), VISO and AIR-MOT-100. Faster~R-CNN trained on SAT-MTB det\_hbb produces a single shared 3-class detection cache; trackers run per class so identities cannot leak across categories.}
 \label{tab:mot_results_satmtb_hbb}
-\setlength{\tabcolsep}{4pt}
-\renewcommand{\arraystretch}{1.15}
+\setlength{\tabcolsep}{2.5pt}
+\renewcommand{\arraystretch}{1.10}
+\resizebox{\linewidth}{!}{%
 \begin{tabular}{l l ccccc ccc}
 \toprule
 \multirow{2}{*}{\textbf{Method}} & \multirow{2}{*}{\textbf{Venue}} & \multicolumn{5}{c}{\textbf{Rate metrics ($\uparrow$)}} & \multicolumn{3}{c}{\textbf{Count metrics}} \\
@@ -16,5 +18,6 @@ ByteTrack~\cite{zhang2022bytetrack} & ECCV 2022 & \textbf{0.160} & \textbf{0.092
 OC-SORT~\cite{cao2023ocsort} & CVPR 2023 & 0.148 & 0.076 & 0.400 & -2.306 & \underline{0.129} & \textbf{191} & 174 & \underline{1,119} \\
 BoT-SORT~\cite{aharon2022botsort} & arXiv 2022 & \underline{0.150} & \underline{0.078} & 0.397 & \underline{-2.226} & 0.126 & 907 & \underline{175} & 1,120 \\
 \bottomrule
-\end{tabular}
-\end{table}
+\end{tabular}%
+}
+\end{subtable}

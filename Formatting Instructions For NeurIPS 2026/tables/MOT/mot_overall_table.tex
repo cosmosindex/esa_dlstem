@@ -1,10 +1,11 @@
-% Requires: \usepackage{booktabs, multirow, array}
-\begin{table}[H]
+% Requires: \usepackage{booktabs, multirow, array, subcaption}
+% Rendered side-by-side with mot_satmtb_hbb_overall_table.tex inside an outer \begin{table}.
+\begin{subtable}[t]{0.49\linewidth}
 \centering
-\caption{Multi-Object Tracking (MOT) results on Space-Tracker-MOT~(car), averaged across the three constituent car-only MOT splits (RsCarData, SAT-MTB-car, SDM-Car). Detections are produced once by HiEUM~\cite{Xiao2024HiEUM} and shared across trackers; differences in the table therefore reflect association quality only. Rate metrics (HOTA, DetA, AssA, MOTA, IDF1) are macro-averaged across datasets; count metrics (IDsw, MT, ML) are summed. $\uparrow$ higher is better, $\downarrow$ lower is better. \textbf{Bold} marks the best score and \underline{underline} the second best in each column.}
+\caption{Space-Tracker-MOT~(car), pooled across RsCarData, SAT-MTB-car and SDM-Car. Detections come from a shared HiEUM~\cite{Xiao2024HiEUM} cache so differences reflect association quality only.}
 \label{tab:mot_results}
-\setlength{\tabcolsep}{4pt}
-\renewcommand{\arraystretch}{1.15}
+\setlength{\tabcolsep}{2.5pt}
+\renewcommand{\arraystretch}{1.10}
 \resizebox{\linewidth}{!}{%
 \begin{tabular}{l l ccccc ccc}
 \toprule
@@ -21,4 +22,4 @@ TrackTrack~\cite{kim2025tracktrack} & CVPR 2025 & 0.245 & 0.173 & \underline{0.3
 \bottomrule
 \end{tabular}%
 }
-\end{table}
+\end{subtable}
