@@ -306,62 +306,42 @@ restricting their ability to evaluate model generalization.
 
 \section{Our Dataset}
 \noindent\textbf{Design principle.}
-The construction of Space-tracker is guided by the principle of multi-sensory
-and multi-platform diversity to overcome the limitations of existing
-single-source datasets. We strategically selected and merged XX disparate
-datasets, including SatSOT, VISO, SV248S, OOTB, and BIRDSAI, to provide a
-comprehensive view of aerospace analytics. Our key design principles are:
+Space-tracker is constructed under the principle of multi-sensory and
+multi-platform diversity. To overcome the limitation of single-source
+benchmarks, we integrate XX heterogeneous datasets, including SatSOT, VISO,
+SV248S, OOTB, and BIRDSAI, into a unified benchmark for aerospace analytics.
+The dataset covers imagery from multiple platforms and constellations,
+including Jilin-1 sub-meter RGB, SkySat, and the International Space Station
+(ISS), and spans both visible--near-infrared (VNIR) and thermal infrared
+(TIR) modalities.
 
-\noindent\textbf{Diverse Sensor Integration.} The benchmark incorporates imagery from a
-wide range of constellations, including Jilin-1 (sub-meter RGB), SkySat, and the
-International Space Station (ISS).
-
-\noindent\textbf{Multimodal Modality.} Unlike existing benchmarks limited to visible
-light, Space-tracker integrates multimodal sequences spanning both
-visible–near-infrared (VNIR) and thermal infrared (TIR) spectra.
-
-\noindent\textbf{Focus on the "Small Object" Problem.} Selection was prioritized for
-sequences where targets occupy fewer than 10 pixels, addressing the acute
-challenges of sub-pixel motion and limited spatial features in satellite video.
-
-\noindent\textbf{Background Complexity.} Sequences were chosen for their complex
-background structures over multiple length scales, which can evolve at similar
-rates to the targets or cause frequent occlusions.
-
-\noindent\textbf{Geographic and Temporal Variety.} The dataset covers diverse global
-regions (e.g., China, USA, Libya, Turkey) and varying temporal conditions, with
-frame rates ranging from 3 to 30 FPS.
-    
-
+Space-tracker focuses on tracking small objects in complex aerospace scenes.
+We prioritize sequences in which targets occupy fewer than 10 pixels, where
+limited spatial evidence, sub-pixel motion, and weak appearance cues pose
+substantial challenges to tracking. The selected sequences also contain
+complex background structures over multiple spatial scales. These backgrounds
+may evolve at rates similar to the targets, introduce distractors, or cause
+frequent occlusions. The dataset further covers diverse geographic regions,
+including China, the United States, Libya, and Turkey, and varied temporal
+conditions, with frame rates ranging from 3 to 30 FPS.
 
 \noindent\textbf{Pre-processing workflow.}
+We convert fragmented sources into a consistent benchmark using a unified
+preprocessing pipeline. First, annotations from XML, JSON, and
+coordinate-only files are aggregated and converted into a COCO-style
+classification and detection format. Bounding boxes are aligned to a shared
+coordinate convention, and class identifiers are unified across datasets to
+support consistent training and evaluation.
 
-To transform fragmented sources into a robust benchmark, we implemented a
-rigorous processing pipeline. This includes the follows steps.
-
-\noindent\textbf{Annotation Aggregation and Unification.} We harmonized disparate label
-formats (XML, JSON, and simple coordinate files) into a consistent COCO-style
-classification and detection framework. All bounding box definitions were
-aligned to a unified coordinate convention and class indexing system.
-
-\noindent\textbf{Label Attribution Harmonization and Enrichment.} We harmonized these
-diverse systems into a single framework of 12 fine-grained attributes tailored
-to the specific challenges of spaceborne video analytics [Previous conversation
-history]. This involved mapping original labels—such as "Partial Occlusion" (PO)
-and "Full Occlusion" (FO)—into a unified convention to ensure that trackers are
-evaluated under consistent definitions of difficulty.
-
-%>>TODO: did we do subsampling?<<
-%Data Cleaning and Subsampling: All videos were decomposed into individual
-%image frames to ensure a consistent data structure. Following the "scaling
-%law" for robust training, we subsampled large datasets (exceeding XX samples)
-%to ensure the benchmark remains representative of typical downstream tasks
-%where data is scarce.
-
-\noindent\textbf{Manual Refinement.} We utilized an internally developed tool to manually
-correct misaligned targets or add labels for unannotated large objects (e.g.,
-cattle or specific vehicles), ensuring high-quality ground truth across all
-merged sources.
+We further harmonize source-specific difficulty labels into a unified set of
+18 fine-grained attributes tailored to spaceborne video analytics. For
+example, original labels such as partial occlusion (PO) and full occlusion
+(FO) are mapped into a common convention, enabling trackers to be evaluated
+under consistent definitions of difficulty. Finally, we manually inspect and
+refine the annotations using an internally developed tool. This step
+corrects misaligned targets and adds labels for previously unannotated large
+objects, such as cattle and specific vehicles, ensuring high-quality ground
+truth across all merged sources.
 
 \noindent\textbf{Object size regime definition.} In addition to the attributes introduced
 above, we further define the notions of \emph{small object} and \emph{tiny
@@ -590,14 +570,17 @@ amounts of unlabeled data. By evaluating prompt-driven video segmentation and
 tracking, we explore the potential of transfer learning to overcome the extreme
 scarcity of labeled spaceborne data.
 
-\noindent\textbf{Evaluation metrics.}
+\noindent\textbf{Evaluation Metrics.}
 
-\noindent\textbf{Single Object Tracking.} We evaluate SOT trackers using four complementary metrics---Success Rate (SR), Normalized Precision (NPR), Precision (PR), and
-P@5---chosen to align with the dominant convention in modern
-generic-vision SOT benchmarks~\citep{muller2018trackingnet,fan2019lasot,huang2021got10k} while
-preserving the small-object diagnostic granularity required by satellite video.
-Detailed metric definitions are in Appendix A.2.1. For overall performance we report SR, NPR,
-and PR, capturing IoU-based overlap, scale-normalized localization, and
+\noindent\textbf{Single Object Tracking.}
+We evaluate SOT trackers using four complementary metrics---Success Rate
+(SR), Normalized Precision (NPR), Precision (PR), and P@5---chosen to align
+with the dominant convention in modern generic-vision SOT
+benchmarks~\citep{muller2018trackingnet,fan2019lasot,huang2021got10k} while
+preserving the small-object diagnostic granularity required by satellite
+video. Detailed metric definitions are in Appendix A.2.1. For overall
+performance we report SR, NPR, and PR, capturing IoU-based overlap,
+scale-normalized localization, and
 pixel-level center accuracy respectively. For the \emph{tiny-object subset}---%
 sequences with median GT side length $\sqrt{w_t^{\mathrm{gt}} h_t^{\mathrm{gt}}} < 8$~px
 (the satellite analogue of COCO's $32$~px small-object
@@ -605,6 +588,46 @@ cutoff~\citep{lin2014coco})---we replace PR with P@5, since PR's $[0,50]$~px
 integration range loses discriminative meaning once typical errors exceed the
 target's full extent. Higher is better for all four metrics.
 
+\noindent\textbf{Object Detection.} We evaluate detectors using mean Average
+Precision at IoU threshold $0.5$ ($\mathrm{mAP}_{50}$) as our primary ranking
+metric, complemented by class-agnostic $\mathrm{AP}_{\text{overall}}$ and
+operating-point Precision (P), Recall (R), and F1 at a fixed score threshold
+of $0.5$. We deliberately adopt single-threshold $\mathrm{mAP}_{50}$ rather than 
+the COCO-style $\mathrm{mAP}_{[.5:.95]}$ aggregate~\citep{lin2014coco}, since targets in
+spaceborne video are typically smaller than $20\times 20$ pixels, where
+strict IoU thresholds ($\geq 0.75$) tend to reflect sub-pixel localization
+noise rather than genuine detector capability; single-threshold
+$\mathrm{mAP}_{50}$ is also the prevailing convention in spaceborne
+small-object detection~\citep{yin2022satmtb,he2022airmot}.
+$\mathrm{AP}_{\text{overall}}$ merges predictions from all classes into a
+single foreground category before constructing the PR curve, isolating
+localization quality from the long-tailed class distribution typical of
+satellite video. P, R, and F1 at a fixed threshold reveal
+deployment-relevant behavior, such as over-confident false positives in
+cluttered backgrounds and missed dim or sub-pixel targets, which
+threshold-averaged AP tends to obscure. Higher is better for all five
+metrics.
+% Detailed metric definitions are in Appendix A.2.2.
+
+\noindent\textbf{Multi-Object Tracking.} We evaluate MOT performance using a
+combination of HOTA-family, CLEAR-family, and Identity-family metrics
+computed under the standard MOTChallenge protocol at IoU $\geq 0.5$ via the
+TrackEval toolkit~\citep{luiten2021hota,bernardin2008clear,ristani2016idf1}.
+Detailed metric definitions are in Appendix A.2.3. As our primary ranking
+metric we adopt HOTA, defined as the geometric mean of Detection Accuracy
+(DetA) and Association Accuracy (AssA), since it explicitly disentangles
+the two failure modes most relevant to spaceborne tracking: missed or
+spurious detections of small targets (captured by DetA), and broken or
+swapped trajectories under prolonged occlusion and inter-object
+indistinguishability (captured by AssA). We additionally report DetA, AssA,
+and Localization Accuracy (LocA) to enable diagnostic decomposition of
+HOTA. To preserve comparability with prior spaceborne MOT
+literature~\citep{yin2022satmtb,he2022airmot}, we also report the
+legacy CLEAR metrics MOTA, MOTP, and IDsw, together with the Identity-based
+IDF1 score, which complements HOTA by emphasizing long-range identity
+preservation under a globally optimal one-to-one matching between
+predicted and ground-truth tracks. Higher is better for all metrics
+except IDsw, where lower is better.
 \noindent\textbf{Experiment protocol.}
 
 \noindent\textbf{Single Object Tracking.}
@@ -829,12 +852,12 @@ so the detector is held constant within each.
 
 Tab.~\ref{tab:mot_results} (left) reports six MOT trackers on
 Space-Tracker-MOT~(car), pooled across RsCarData, SAT-MTB-car, and SDM-Car,
-all driven by the same HiEUM detection cache. Tab.~\ref{tab:mot_results_satmtb_hbb}
-(right) reports four MOT trackers on Space-Tracker-MOT~(airplane / ship /
-train), pooled across SAT-MTB (test split, held out from detector training),
-VISO, and AIR-MOT-100, all driven by the Faster~R-CNN detector trained on
-SAT-MTB \texttt{det\_hbb}; trackers are run per class so identities cannot
-leak across categories.
+all driven by the same HiEUM detection cache.
+Tab.~\ref{tab:mot_results_satmtb_hbb} (right) reports the same six trackers
+on Space-Tracker-MOT~(airplane / ship / train), pooled across SAT-MTB (test
+split, held out from detector training), VISO, and AIR-MOT-100, all driven
+by the Faster~R-CNN detector trained on SAT-MTB \texttt{det\_hbb}; trackers
+are run per class so identities cannot leak across categories.
 
 \begin{table}[t]
   \centering
@@ -929,12 +952,7 @@ leak across categories.
 %      统计噪声主导, 应该提到 caption 里.
 % --------------------------------------------------------------------------
 
-
-\section{Discussion}
-
-
-
-\section{Conclusion}
+\section{Conclusion and Discussion}
 We introduced Space-tracker, the first unified and curated "million-scale"
 benchmark dataset designed for the detection and tracking of small targets in
 spaceborne videos. By merging XX disparate datasets into a consistent COCO-style
@@ -1093,6 +1111,115 @@ datasets, following the spirit of TrackingNet / LaSOT / GOT-10k aggregate
 reporting; per-dataset results remain the primary unit of comparison. P@5 is not
 aggregated across datasets, as its interpretation is pixel-scale dependent.
 
+\subsubsection{Multi-Object Tracking Metrics}
+\label{app:mot_metrics}
+
+We evaluate MOT performance under the standard MOTChallenge
+protocol~\citep{milan2016mot16} with an IoU matching threshold of $0.5$.
+All metrics below are computed using the TrackEval
+toolkit~\citep{luiten2020trackeval} from a single tracker output file per
+sequence. We group the metrics into three families by their historical
+origin and the aspect of tracking quality they emphasize.
+
+\paragraph{HOTA family~\citep{luiten2021hota}.}
+The Higher-Order Tracking Accuracy (HOTA) metric was introduced to
+address the well-documented imbalance of CLEAR MOTA, which is dominated
+by detection errors and underweights association quality. HOTA explicitly
+factorizes tracking quality into a detection component and an association
+component, and aggregates the result across multiple localization
+thresholds.
+
+\begin{itemize}
+    \item \textbf{HOTA} is defined as the geometric mean of detection and
+    association accuracy, averaged over a range of localization
+    thresholds $\alpha \in \{0.05, 0.10, \ldots, 0.95\}$:
+    \begin{equation}
+        \mathrm{HOTA} = \frac{1}{19}\sum_{\alpha}
+        \sqrt{\mathrm{DetA}_{\alpha} \cdot \mathrm{AssA}_{\alpha}},
+        \quad \mathrm{HOTA} \in [0, 1].
+    \end{equation}
+    Geometric averaging penalizes trackers that excel along only one
+    axis (e.g., strong detector but frequent ID switches), which we find
+    informative for spaceborne settings where both small-object detection
+    and long-range association are simultaneously challenging.
+
+    \item \textbf{DetA} (Detection Accuracy) measures localization-level
+    detection quality at threshold $\alpha$:
+    \begin{equation}
+        \mathrm{DetA}_{\alpha} =
+        \frac{|\mathrm{TP}_{\alpha}|}{|\mathrm{TP}_{\alpha}| +
+        |\mathrm{FN}_{\alpha}| + |\mathrm{FP}_{\alpha}|}.
+    \end{equation}
+
+    \item \textbf{AssA} (Association Accuracy) measures identity
+    consistency by averaging, over all true-positive detections, the
+    Jaccard similarity between the predicted track and the matched
+    ground-truth track:
+    \begin{equation}
+        \mathrm{AssA}_{\alpha} = \frac{1}{|\mathrm{TP}_{\alpha}|}
+        \sum_{c \in \mathrm{TP}_{\alpha}}
+        \frac{|\mathrm{TPA}(c)|}{|\mathrm{TPA}(c)| + |\mathrm{FNA}(c)| +
+        |\mathrm{FPA}(c)|},
+    \end{equation}
+    where $\mathrm{TPA}/\mathrm{FNA}/\mathrm{FPA}$ denote true-positive,
+    false-negative, and false-positive associations relative to the
+    matched GT track of detection $c$.
+
+    \item \textbf{LocA} (Localization Accuracy) is the mean IoU over all
+    true-positive matches and isolates pure spatial localization quality
+    from detection and association errors.
+\end{itemize}
+
+\paragraph{CLEAR family~\citep{bernardin2008clear}.}
+We additionally report the classical CLEAR metrics to preserve direct
+comparability with prior spaceborne MOT
+benchmarks~\citep{yin2022satmtb,he2022airmot}, where CLEAR metrics remain
+the de facto reporting standard.
+
+\begin{itemize}
+    \item \textbf{MOTA} (Multi-Object Tracking Accuracy) aggregates all
+    three error types into a single score normalized by the number of
+    ground-truth boxes:
+    \begin{equation}
+        \mathrm{MOTA} = 1 -
+        \frac{\sum_{t}\bigl(\mathrm{FP}_{t} + \mathrm{FN}_{t} +
+        \mathrm{IDsw}_{t}\bigr)}{\sum_{t}|\mathrm{GT}_{t}|},
+        \quad \mathrm{MOTA} \in (-\infty, 1].
+    \end{equation}
+    MOTA can become negative when total errors exceed the number of GT
+    boxes, which is not unusual in dense small-object settings.
+
+    \item \textbf{MOTP} (Multi-Object Tracking Precision) is the average
+    IoU over all true-positive matches and is numerically close to LocA,
+    although the two differ slightly in their averaging conventions.
+
+    \item \textbf{IDsw} (Identity Switches) counts the total number of
+    times a ground-truth trajectory's matched predicted ID changes
+    between consecutive frames; lower is better.
+\end{itemize}
+
+\paragraph{Identity family~\citep{ristani2016idf1}.}
+\begin{itemize}
+    \item \textbf{IDF1} is the F1 score computed under a globally optimal
+    one-to-one matching between predicted and ground-truth identities,
+    solved as a bipartite assignment over the entire sequence:
+    \begin{equation}
+        \mathrm{IDF1} =
+        \frac{2 \cdot \mathrm{IDTP}}
+        {2 \cdot \mathrm{IDTP} + \mathrm{IDFP} + \mathrm{IDFN}},
+        \quad \mathrm{IDF1} \in [0, 1].
+    \end{equation}
+    Unlike AssA, which averages association quality locally per
+    true-positive detection, IDF1 evaluates identity preservation at the
+    \emph{trajectory} level and therefore complements AssA by being more
+    sensitive to long-range identity consistency.
+\end{itemize}
+
+For all metrics except IDsw higher values indicate better tracking
+performance. All metrics are class-agnostic by default; for multi-class
+datasets (e.g., AIR-MOT, SAT-MTB) we additionally report per-class HOTA,
+DetA, and AssA, computed by restricting both predictions and ground
+truth to the relevant class before evaluation.
 
 \subsection{Per-dataset SOT results}
 Tab.~\ref{tab:sot_results_whole} and Tab.~\ref{tab:sot_results_tiny} provide the
