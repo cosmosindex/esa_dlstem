@@ -1,3 +1,4 @@
+
 \documentclass{article}
 
 % if you need to pass options to natbib, use, e.g.:
@@ -551,170 +552,98 @@ setup are given in Appendix~\ref{appendix:mot-tbd}.
 
 \section{Experiment results}
 
-\taskhead{Single Object Tracking}
+\subsection{Single Object Tracking}
 
-\subhead{Performance overview}
-\label{sec:exp_sot_overview}
-
-Following the selection rationale of Sec.~\ref{sec:model_selection},
-Tab.~\ref{tab:sot_results} reports the seven SOT methods on Space-Tracker-SOT
-and on its tiny-object subset (median GT $\sqrt{\mathrm{area}} < 8$\,px), each
-aggregated across SatSOT, SV248S, and OOTB via the macro-of-macro protocol of
-Appendix~\ref{sec:appendix_eval_metrics}. We deliberately replace PR with P@5 in the tiny
-column: when targets occupy fewer than a hundred pixels, the CLE-based PR curve
-over $[0,50]$\,px saturates and ceases to separate trackers, whereas the strict
-5-pixel criterion exposes the sub-pixel localisation gap that matters for
-downstream geospatial use. Three observations follow.
-
-\noindent\textbf{Foundation-pretrained trackers dominate; the classical lineage
-is exhausted in this regime.} SAM 3 leads every column, LoRAT-g378 is second on
-five of six metrics, and the SAM-2 family (SAM 2, SAMURAI) clusters immediately
-behind. The Siamese baseline (SiamRPN++) and the spatiotemporal-fusion
-transformer trackers (OSTrack-384, ODTrack) trail consistently. Notably,
-ODTrack's spatiotemporal token propagation does not close the gap, indicating
-that template--search correlation in feature space is fundamentally
-information-starved when the target spans a handful of largely textureless
-pixels. Web-scale pretraining appears to supply a scale-agnostic visual prior
-that bespoke tracking heads cannot recover from satellite data alone.
-
-\noindent\textbf{Progress on natural-scene SOT does not transfer to the tiny
-regime.} The ranking is \emph{not} preserved between the two halves of
-Tab.~\ref{tab:sot_results}. OSTrack-384 (whole SR $0.320$) collapses to $0.139$
-on tiny, falling \emph{below} SiamRPN++ ($0.153$) on all three tiny metrics ---
-a tracker six years older. ODTrack, despite winning AAAI'24, is essentially tied
-with SiamRPN++ on tiny SR ($0.159$ vs.\ $0.153$). Such inversions are unusual on
-LaSOT or TrackingNet and constitute, in our view, the central diagnostic value
-of Space-Tracker-SOT: improvements measured on natural video do not
-automatically translate to spaceborne, sub-10-px targets, and may even regress.
-
-\noindent\textbf{Tiny localisation is the bottleneck across the board.} Every
-method loses between $26\%$ and $57\%$ of its whole-dataset SR when restricted
-to the tiny subset. Even the strongest model, SAM 3, drops from $0.453$ to
-$0.334$ in SR and reaches only $0.632$ in P@5 --- i.e., the best available
-tracker still mislocalises more than one in three frames by over five pixels.
-This headroom is the reason we release the tiny split as a first-class
-evaluation target rather than a stress test.
-
-\noindent\textbf{Takeaway.} The aim of this section is not to crown a winner. It
-is to provide the community with a concrete, reproducible, satellite-specific
-yardstick on which (i)~large-scale visual pretraining is rewarded, (ii)~progress
-measured purely on natural-scene SOT benchmarks is at best partially correlated
-with progress on spaceborne SOT, and (iii)~a sizeable accuracy gap, particularly
-under the sub-8-pixel regime, remains open. We hope subsequent tracker design
-will treat tiny, low-texture targets as a primary objective rather than a
-secondary stress test.
-
-Per-dataset breakdowns and the tiny-subset definition are deferred to
-Tab.~\ref{tab:sot_results_whole} and Tab.~\ref{tab:sot_results_tiny} in the
-supplementary material.
+\subhead{Overall performance}
+\label{sec:exp_sot_overall}
+On Space-Tracker-SOT, the seven trackers split into two clean tiers
+along whether they are built on top of a foundation model. SAM 3
+leads every column of Tab.~\ref{tab:sot_results}, LoRAT-g378 is
+second on five of six metrics, and the SAM 2 family (SAM 2, SAMURAI)
+clusters immediately behind. SiamRPN++ and the two natural-video
+transformer trackers (OSTrack-384, ODTrack) trail consistently, and
+ODTrack's spatiotemporal token propagation does not narrow the gap.
+When the target spans a handful of largely textureless pixels,
+template-search correlation in feature space is information-starved,
+and the scale of visual pretraining beats tracker design.
 
 \input{tables/SOT/whole_dataset/sot_whole_dataset_combined_table.tex}
 
-Fig.~\ref{fig:sr_npr_vs_bbox_size} shows the model performance w.r.t. object
-size. As we can see from the figure, the overall performance of all the
-algorithms degrades gradually as the object size decreases. The performance
-metric has a sudden drop at object size 2-4 pixels, indicating that most of the
-current algorithms are not directly applicable for small object detection and
-tracking.
-%\subsection{Performance by object class}
-%\input{tables/sv248s_sot_categories}
+\subhead{Performance by object size}
+\label{sec:exp_sot_size}
+The whole-dataset ranking does not survive the move to tiny targets
+(median $\sqrt{\mathrm{area}} < 8$\,px). Every tracker loses between
+$26\%$ and $57\%$ of its whole-dataset SR, and the largest drops
+fall on the natural-video transformer trackers. OSTrack-384
+collapses from SR $0.320$ to $0.139$, finishing below SiamRPN++
+($0.153$) on every tiny metric. ODTrack, despite winning AAAI 2024,
+is statistically tied with SiamRPN++ on tiny SR ($0.159$ vs.
+$0.153$). Even SAM 3 reaches only P@5 $0.632$, meaning the strongest
+tracker still mislocalises more than one in three frames by over
+five pixels. Inversions of this kind are unusual on LaSOT or
+TrackingNet, and they are the diagnostic point we want this split
+to make: progress measured on natural-scene SOT does not
+automatically transfer to the sub-8-pixel regime and can regress.
+The tiny split is therefore released as a first-class evaluation
+target rather than a stress test.
+
+Fig.~\ref{fig:sr_npr_vs_bbox_size} shows the same trend
+continuously, with a sharp drop between two and four pixels below
+which current trackers are not directly applicable.
 
 \subhead{Performance under unified sequence attributes}
-% 讲一个small和一个attribute OCC.
-% SAM3虽然整体最好，但是某些模型在某些场景更有优势。
-Tab.~\ref{tab:sot_attributes} reports per-tracker SR / NPR / PR under our
-unified attribute taxonomy (BC, IV, ROT, OCC, SOB, DEF). Each unified attribute
-consolidates the corresponding native labels of every dataset that annotates it
-(e.g.\ OCC = SatSOT \{POC, FOC\} $\cup$ SV248S \{STO, LTO, CO\} $\cup$ OOTB
-\{PO, FO\}); the full mapping and the dataset-unique residue are reported in the
-supplementary. Per-(dataset, attribute) numbers are first computed with
-per-sequence aggregation (PR over CLE $\in [0, 50]$ px) and then arithmetic-mean
-across the datasets that annotate the attribute.
+\label{sec:exp_sot_attributes}
+Tab.~\ref{tab:sot_attributes} reports per-tracker SR / NPR / PR
+under our unified attribute taxonomy (BC, IV, ROT, OCC, SOB, DEF).
+Each unified attribute consolidates the corresponding native labels
+of every dataset that annotates it; the full mapping is reported in
+the supplementary. Three findings emerge that the global ranking of
+Tab.~\ref{tab:sot_results} hides.
 
-\input{tables/SOT/whole_dataset/sot_attributes_table}
+\minihead{Classical perturbations are no longer the
+bottleneck.}
+On IV, BC, and DEF, SAM 3 reaches SR $0.477$, $0.466$, and $0.568$,
+and the gap to LoRAT-g378 is at most three SR points. These are the
+perturbations the natural-video tracking community has worked on for
+over a decade, and web-scale pretraining apparently carries the
+gains cleanly across to satellite frames.
 
-\noindent\textbf{Illumination, clutter, and deformation are no longer the bottleneck.}
-The first cluster of unified attributes, IV, BC, and DEF, corresponds to
-perturbations that the natural-video tracking community has worked on for over
-a decade. On Tab.~\ref{tab:sot_attributes}, SAM 3 reaches SR of 0.477 on IV,
-0.466 on BC, and 0.568 on DEF, and the gap to the runner-up LoRAT-g378 is at
-most three SR points. Even SAM 2 and SAMURAI sit within five points of LoRAT.
-The ordering also holds on the tiny split (Tab.~\ref{tab:sot_attributes_tiny}):
-SR drops by 25 to 35\% on tiny BC and IV, but the per-tracker ranking remains
-stable. This suggests that web-scale visual pretraining now supplies features
-robust enough that local photometric perturbations and non-rigid deformation,
-which dominated the early SOT literature, are no longer where the difficulty
-lies at the scale of Space-Tracker-SOT. As a side note, DEF contains no tiny
-instances by construction, since non-rigid deformation is only perceptible on
-objects large enough to deform, which we take as a sanity check on the
-taxonomy.
+\minihead{Long occlusion overturns the SAM 3 ranking.}
+OCC is the lowest-scoring unified attribute for every tracker, and
+SAM 3 drops 20 SR points from its DEF score on it. The duration
+breakdown in Tab.~\ref{tab:sot_occlusion_subtypes} is the more
+telling cut. On the short SatSOT sub-types (POC, FOC), SAM 3 leads
+cleanly. On the SV248S long-term and continuous sub-types (LTO, CO;
+threshold 50 frames), LoRAT-g378 actually surpasses SAM 3 on SR,
+$0.306$ vs.\ $0.213$ on LTO and $0.222$ vs.\ $0.218$ on CO, and the
+same pattern shows up on tiny frames. The likely mechanism is that
+SAM 3's re-detect-by-segment design degrades once the target has
+been absent long enough for the segmentation prior to lose its
+grounding, while LoRAT's transformer correlation holds onto a more
+stable template across long gaps.
 
-\noindent\textbf{Occlusion remains the central failure mode, and long-term
-occlusion overturns the foundation-model ranking.}
-OCC is the lowest-scoring unified attribute for every tracker we evaluated.
-SAM 3, which leads on every other unified attribute by a comfortable margin,
-drops to SR 0.364 under OCC, a 20-point fall from its DEF score. The
-breakdown by occlusion duration in Tab.~\ref{tab:sot_occlusion_subtypes} is
-where the picture becomes more interesting. On SatSOT POC and FOC, where
-occlusion lasts only a few frames, SAM 3 leads cleanly and the natural-video
-re-detection prior transfers without trouble. On the SV248S long-term and
-continuous sub-types (LTO, CO; threshold 50 frames), however, LoRAT-g378
-actually surpasses SAM 3 on SR, by 0.306 to 0.213 on LTO and 0.222 to 0.218
-on CO. The same pattern shows up on tiny frames
-(Tab.~\ref{tab:sot_attributes_tiny_occlusion}), with LoRAT leading tiny LTO
-at SR 0.254 against SAM 3's 0.142. Our reading is that the
-re-detect-by-segment paradigm at the core of SAM 3 starts to degrade once
-the target has been absent long enough for the segmentation prior to lose
-its grounding, while LoRAT's transformer correlation, despite being weaker
-overall, holds onto a more stable template across long gaps. Whether this
-reflects a fundamental limitation of segmentation-based re-detection or
-just an artifact of training-time occlusion distributions is, in our view,
-the most consequential open question that Space-Tracker-SOT can be used
-to study.
-
-\noindent\textbf{Motion-cue ambiguity collapses tracking on tiny objects.}
-The third diagnostic cluster, SOB, IM, and AM, targets the failure mode
-discussed in Sec.~\ref{sec:dataset_overview}: once appearance reduces to
-a few-pixel blob, the surrounding motion field is the only cue left, and
-that cue is itself ambiguous in spaceborne traffic scenes. On whole-data
-SOB the foundation-model ranking is preserved (SAM 3 0.399, LoRAT 0.367).
-But tiny IM is where the reasoning collapses most visibly. LoRAT-g378
-drops from SR 0.386 on the whole split to 0.074 on tiny, an 81\% loss,
-while ODTrack, which trailed badly almost everywhere else, holds 0.216
-on tiny IM and finishes second only to SAM 3 (0.308). This is the only
-attribute slice in our entire evaluation where ODTrack's temporal
-mechanism produces a clear win against a more strongly pretrained
-competitor. We read it as direct evidence that when target appearance is
-uninformative \emph{and} surrounding motion is locally homogeneous,
+\minihead{Tiny scale plus isotropic motion is where dedicated
+temporal modeling earns its only win.}
+Once appearance reduces to a few-pixel blob, surrounding motion is
+the only cue left, and on tiny IM that cue is locally homogeneous.
+LoRAT-g378 collapses from whole SR $0.386$ to $0.074$, an $81\%$
+loss, while ODTrack, which trails almost everywhere else, holds
+$0.216$ and finishes second only to SAM 3 ($0.308$). On tiny AM,
+where surrounding motion is heterogeneous, SAM 3 recovers to SR
+$0.490$. This is the only slice in our evaluation where
 appearance-only foundation models lose more than dedicated temporal
-models do. Conversely, on AM, where surrounding motion is locally
-heterogeneous (oncoming traffic), appearance and motion remain partly
-complementary and SAM 3 recovers, with tiny AM SR back at 0.490. It is
-also worth noting that motion blur (MB), historically a hard attribute
-on natural video, is handled comparatively well even at tiny scale (SAM 3
-0.383, LoRAT 0.262). The difficulty is no longer motion blur per se,
-but whether motion provides discriminative information.
+models do.
 
-\noindent\textbf{Takeaway.}
-Three findings emerge from the attribute analysis. First, the historical
-priorities of the SOT literature, namely illumination, clutter, and
-deformation, have largely transferred from natural to satellite video and
-are not where the difficulty lies anymore. Second, occlusion remains the
-dominant failure mode, and within occlusion the natural-video re-detection
-paradigm that powers SAM 3 is overturned by simpler transformer
-correlation under long, continuous occlusion. Third, the combination of
-tiny scale and isotropic motion exposes a regime in which all
-foundation-model trackers have substantial headroom, and in which
-dedicated temporal modeling shows its only competitive advantage in our
-study. We expect future tracker design targeting spaceborne settings to
-treat these three regimes as primary evaluation slices rather than
-incidental stress tests.
+Read together, the three findings reframe SOT difficulty in the
+spaceborne regime: classical perturbations are essentially solved,
+long occlusion and tiny-plus-isotropic motion are not, and which
+tracker to pick depends on which slice you care about.
 
 \subhead{Qualitative comparison}
 
-\taskhead{Multi-Object Tracking}
+\subhead{Multi-Object Tracking}
 
-\subhead{Overall performance}
+\minihead{Overall performance}
 \label{sec:exp_mot_overall}
 The most striking result in Tab.~\ref{tab:mot_results_combined} is that
 SORT, the oldest tracker we evaluate, is also the strongest on the car
@@ -733,12 +662,12 @@ at the other extreme: it raises its initialisation thresholds enough
 to be the only method with positive MOTA ($0.049$) and the lowest
 IDsw ($666$), at the cost of the worst MT and ML in the panel.
 
-The lesson mirrors what we report for SOT in Sec.~\ref{sec:exp_sot_overview}.
+The lesson mirrors what we report for SOT in Sec.~\ref{sec:exp_sot_overall}.
 Progress on natural-video MOT since 2016 has not transferred to
 spaceborne data, and a Kalman filter with IoU matching is the right
 point of departure for new methods on this benchmark.
 
-\subhead{Performance by object size}
+\minihead{Performance by object size}
 \label{sec:exp_mot_size}
 The car split and the larger-class split produce opposite rankings,
 and the contrast is what we want the reader to take away. On cars
@@ -1149,7 +1078,13 @@ Tab.~\ref{tab:sot_results}.
 \input{tables/SOT/whole_dataset/split_attributes_table}
 
 
-\subsection{Per-attribute performance on tiny frames (micro-averaged)}
+\subsection{Per-attribute performance (whole datasets and tiny frames)}
+Tab.~\ref{tab:sot_attributes} reports per-tracker SR / NPR / PR under our
+unified attribute taxonomy on the whole datasets, with the occlusion
+duration sub-type breakdown shown in Tab.~\ref{tab:sot_occlusion_subtypes}.
+
+\input{tables/SOT/whole_dataset/sot_attributes_table}
+
 Tab.~\ref{tab:sot_attributes_tiny} reports per-tracker SR / PR / P@5 restricted
 to \emph{tiny} frames (per-frame GT $\sqrt{\mathrm{area}} < 8$\,px), in contrast
 to the whole-size, per-sequence aggregation used in
