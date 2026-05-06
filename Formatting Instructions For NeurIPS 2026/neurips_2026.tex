@@ -268,6 +268,8 @@ restricting their ability to evaluate model generalization.
 
 
 \section{Our Dataset}
+% For Sirui,说到这里，我们就不得不提在我们的数据集中object detection只在SAT-MTB上的部分sequences上支持，而且只有ship, plane, train被标注。这一点你要在这部分提到，后面我会说到这一点。而且你要说清楚这个object detection是包含静态物体的标注，其他数据集都有MOT标注，但是标注的都是场景中的动态物体，没有标注静态物体。
+\label{sec:dataset_overview}
 \noindent\textbf{Design principle.}
 Space-tracker is constructed under multiple main principles:  1) Multi-modality: The dataset covers imagery from multiple platforms and constellations,
 including Jilin-1 sub-meter RGB, SkySat, and the International Space Station
@@ -315,8 +317,10 @@ In this work, we focus on Space-tracker-SOT, which consolidates three publicly a
 \label{sec:model_selection}
 To establish a robust performance baseline for Space-tracker, we adopt a
 selection logic that includes several main methodology lines. Our goal is to evaluate
-how different architectural evolutions, ranging from classical supervised pipelines to modern self-supervised foundation models, handle the unique constraints of small and even featureless targets in spaceborne video. We categorize our benchmarked methods into three primary methodological
-trajectories:
+how different architectural evolutions, ranging from classical supervised pipelines to 
+modern self-supervised foundation models, handle the unique constraints of small and even 
+featureless targets in spaceborne video. We categorize our benchmarked methods into 
+three primary methodological trajectories:
 
 \noindent\textbf{Region Proposal and Detection-Based Tracking.} We select representative
 models from the early deep learning era that established the foundation for
@@ -344,62 +348,96 @@ tracking, we explore the potential of transfer learning to overcome the extreme
 scarcity of labeled spaceborne data.
 \end{comment}
 \section{Evaluation Protocol and Metrics}
-\subhead{Model Selection}
+%\noindent\textbf{Model Selection.}
+\subsection{Model Selection}
 \label{sec:model_selection}
-To build a meaningful baseline on Space-tracker, we deliberately spread our
-choices across several methodological lines rather than pick only the most
-recent state of the art. What we want to see is how architectural progress,
-from classical supervised pipelines through to modern self-supervised
-foundation models, copes with the unusual demands of spaceborne video,
-where targets are often only a handful of pixels wide and frequently lack
-any discriminative texture. We organize the benchmarked methods into three
-trajectories.
+We organize our model selection by task. In the SOT setting the model is
+given the target template in the first frame and only has to follow it, so
+the comparison can focus purely on tracking quality. In the MOT setting
+nothing is given for free: the tracker has to first decide what to track,
+which means the choice of detector and the choice of associator are both
+part of the design. The two settings call for different selection logic
+and we cover them separately.
 
-\minihead{Classical supervised detection and tracking-by-detection}
-We begin with representatives of the early deep learning era that shaped
-supervised detection and tracking. Faster R-CNN is kept as the canonical
-two-stage detector precisely because it is so widely understood; it tells
-us what an explicit RPN-based pipeline still buys on satellite data. For
-SOT, SiamRPN++ plays the parallel role of classical anchor on the Siamese
-side. On the MOT side we follow the same logic with the SORT family.
-SORT, ByteTrack, OC-SORT, BoT-SORT and BoT-SORT-ReID are
-tracking-by-detection associators built on Kalman filtering and the
-Hungarian algorithm, where each successor layers one targeted fix on top
-of its predecessor, whether that is recovering low-confidence boxes,
-observation-centric state updates, camera motion compensation, or
-appearance ReID. Together these models form a clean classical reading
-against which the rest of the table can be interpreted.
+\noindent\textbf{Single Object Tracking.}
+For SOT we deliberately spread our choices across several methodological
+lines rather than pick only the most recent state of the art. What we want
+to see is how architectural progress, from classical supervised pipelines
+through to modern foundation models, copes with the unusual demands of
+spaceborne video, where targets are often only a handful of pixels wide
+and frequently lack any discriminative texture. We organize the
+benchmarked methods into three trajectories.
 
-\minihead{Transformer-based and domain-adapted models}
-The second group reflects what happened once Transformers took over
-tracking and detection. We benchmark OSTrack-384, ODTrack and LoRAT-g378
-as three different answers to the same question: how to exploit temporal
-information and large-scale pretraining without breaking the latency
-budget that tracking demands. On the detection side, HiEUM is included as
-a remote sensing native model. It was designed with the statistics of
-overhead imagery in mind, and it lets us quantify how much a
-domain-specific design choice still matters in the era of general-purpose
-architectures. For MOT, TrackTrack stands in for the more recent learned
-direction that goes beyond the SORT recipe, which gives us a way to read
-the gap between a strong modern tracker and the classical association
-pipeline on satellite data.
+\textit{Classical Siamese tracking.} SiamRPN++ is kept as the canonical
+Siamese baseline that established correlation-based tracking and has been
+the reference point for most papers that came after. It gives us a clean
+classical reading against which the rest of the table can be interpreted.
 
-\minihead{Vision and vision-language foundation models}
-The last group reflects the recent paradigm shift toward large foundation
-models with strong zero-shot generalization. We evaluate the SAM 2,
-SAMURAI and SAM 3 family on our benchmark, which lets us probe whether
+\textit{Transformer-based trackers.} We benchmark OSTrack-384, ODTrack
+and LoRAT-g378 as three different answers to the same question: how to
+exploit temporal information and large-scale pretraining without breaking
+the latency budget that tracking demands.
+
+\textit{Vision foundation models.} SAM 2, SAMURAI and SAM 3 reflect the
+recent paradigm shift toward large foundation models with strong
+zero-shot generalization. Benchmarking them lets us probe whether
 features learned from massive natural image and video corpora actually
-carry over to targets that are only a few pixels across. Grounding DINO
-extends the same question to detection by adding language grounding, so
-we can ask whether open-vocabulary, text-conditioned detectors are now
-competitive with specialist models on satellite imagery. This group is
-where we expect both the most interesting failure modes and the clearest
-signal on whether transfer learning can offset the chronic scarcity of
-labeled spaceborne data.
+carry over to targets that are only a few pixels across.
 
-\subhead{Evaluation Metrics}
+\noindent\textbf{Two-stage Multi-Object Tracking.}
+For MOT we deliberately restrict the benchmark to two-stage
+tracking-by-detection pipelines rather than end-to-end MOT models, and we
+want to spell out the reason here so it does not look like an arbitrary
+choice. The end-to-end MOT direction, in which a single model jointly
+detects, classifies and associates objects across frames, is promising
+but remains essentially absent for spaceborne video. Strong recent
+candidates such as MASA, which adapts SAM into an any-category tracker,
+or MOTIP, which formulates MOT as in-context ID prediction without any
+heuristic association and is currently SOTA on several natural-video
+benchmarks, are all trained on natural-image and natural-video data.
+When we run them on satellite footage without fine-tuning, they fail at
+the very first step: they cannot reliably detect the objects of interest
+in our scenes, let alone track and classify them. We observed the same
+pattern with text-promptable foundation models. Grounding DINO
+essentially fails across every satellite sequence we tried when asked to
+localize the target categories, and SAM 3 only produces sensible masks
+on the larger objects, with no way to tell static structures apart from
+the moving instances we actually care about, which rules it out as a MOT
+baseline. The lack of a credible end-to-end model for this regime is in
+fact one of the motivations behind releasing Space-tracker; we hope the
+dataset will make it easier for future work to train such models. For
+the present benchmark, however, two-stage MOT is the only setting in
+which we can give every method a fair chance, so that is what we focus
+on.
+
+A two-stage MOT pipeline needs a detector to feed it. As noted in
+Section~3, only a subset of our sequences carries object-detection
+annotations, and even there the labels only cover the \textit{ship},
+\textit{plane} and \textit{train} categories. For the small moving
+targets that typically appear as bare light spots in satellite imagery
+and characterize the \textit{car} category (below roughly eight pixels
+wide), the current SOTA detector is HiEUM, which we adopt directly. For
+the remaining categories we train an in-house detector on the
+object-detection training split of Space-tracker and run inference on
+the held-out video sequences to produce the per-frame detections that
+feed into the tracker. Both routes share the same downstream interface,
+which keeps the comparison between trackers clean.
+
+On top of these detections we evaluate two generations of trackers. The
+first is the SORT family. SORT, ByteTrack, OC-SORT, BoT-SORT and
+BoT-SORT-ReID are all tracking-by-detection associators built on Kalman
+filtering and the Hungarian algorithm, where each successor layers one
+targeted fix on top of its predecessor, whether that is recovering
+low-confidence boxes, observation-centric state updates, camera motion
+compensation, or appearance ReID. They form the classical reading. The
+second generation is represented by TrackTrack, a more recent learned
+tracker that goes beyond the SORT recipe and lets us measure how much of
+the gap between classical association and modern learning-based
+association actually transfers to satellite data.
+
+\subsection{Evaluation Metrics}
 % 每一个精简到2-3句话
-\minihead{Single Object Tracking}
+\subhead{Single Object Tracking}
 We evaluate SOT trackers using four complementary metrics---Success Rate
 (SR), Normalized Precision (NPR), Precision (PR), and P@5---chosen to align
 with the dominant convention in modern generic-vision SOT
@@ -415,7 +453,7 @@ cutoff~\citep{lin2014coco})---we replace PR with P@5, since PR's $[0,50]$~px
 integration range loses discriminative meaning once typical errors exceed the
 target's full extent. Higher is better for all four metrics.
 
-\minihead{Object Detection} We evaluate detectors using mean Average
+\subhead{Object Detection} We evaluate detectors using mean Average
 Precision at IoU threshold $0.5$ ($\mathrm{mAP}_{50}$) as our primary ranking
 metric, complemented by class-agnostic $\mathrm{AP}_{\text{overall}}$ and
 operating-point Precision (P), Recall (R), and F1 at a fixed score threshold
@@ -436,7 +474,7 @@ threshold-averaged AP tends to obscure. Higher is better for all five
 metrics.
 % Detailed metric definitions are in Appendix A.2.2.
 
-\minihead{Multi-Object Tracking} We evaluate MOT performance using a
+\subhead{Multi-Object Tracking} We evaluate MOT performance using a
 combination of HOTA-family, CLEAR-family, and Identity-family metrics
 computed under the standard MOTChallenge protocol at IoU $\geq 0.5$ via the
 TrackEval toolkit~\citep{luiten2021hota,bernardin2008clear,ristani2016idf1}.
@@ -456,9 +494,9 @@ preservation under a globally optimal one-to-one matching between
 predicted and ground-truth tracks. Higher is better for all metrics
 except IDsw, where lower is better.
 
-\subhead{Experiment protocol}
+\subsection{Experiment protocol}
 %
-\minihead{Single Object Tracking}
+\subhead{Single Object Tracking}
 
 \minihead{Inference protocol} All trackers are evaluated under a strict
 one-shot protocol: the ground-truth bounding box is injected only at frame 0 of
@@ -503,7 +541,7 @@ disambiguation enabled. For each tracker, we adopt the strongest variant
 available in its official public release.
 
 \minihead{Object detection}
-We train a Faster R-CNN~\cite{faster_rcnn} (ResNet-50\,+\,FPN, ImageNet-pretrained) 
+We train a Faster R-CNN~\citep{ren2015fasterrcnn} (ResNet-50\,+\,FPN, ImageNet-pretrained)
 end-to-end on the SAT-MTB train split for the three foreground classes (\emph{airplane}, \emph{ship}, \emph{train}). 
 Because spaceborne targets span a far narrower size range than natural-image objects (e.g., ships average $17$--$30$\,px on a side), 
 we retune two components that are normally left at their COCO defaults: 
@@ -512,9 +550,9 @@ and (ii) the \emph{RPN and box-head matching thresholds}, which we relax from th
 recovering small-object recall that is otherwise lost to anchor under-coverage. Models are validated every epoch on a held-out $18$-sequence val split, 
 and the best checkpoint is selected by val mAP$_{50}$ with patience-$8$ early stopping; 
 the $40$-sequence test split is strictly held out throughout development. 
-For HiEUM~\cite{hieum} we evaluate the authors' released RsCarData-trained checkpoint off-the-shelf, 
+For HiEUM~\citep{Xiao2024HiEUM} we evaluate the authors' released RsCarData-trained checkpoint off-the-shelf,
 without any cross-dataset fine-tuning, in order to probe out-of-domain generalization of a video-native detector.
-The resulting per-frame detections are additionally cached and reused as the shared input to all two-stage MOT trackers in \S\ref{sec:mot}. 
+The resulting per-frame detections are additionally cached and reused as the shared input to all two-stage MOT trackers in \S\ref{sec:exp_mot_overview}.
 Full training and inference details are deferred to Appendix~\ref{app:protocol_det}.
 
 \section{Experiment results}
@@ -1065,7 +1103,8 @@ datasets (e.g., AIR-MOT, SAT-MTB) we additionally report per-class HOTA,
 DetA, and AssA, computed by restricting both predictions and ground
 truth to the relevant class before evaluation.
 
-\subsection{Object detection}
+\subsection{Object detection protocol}
+\label{app:protocol_det}
 \minihead{Faster R-CNN}
 We use the \texttt{torchvision} \texttt{fasterrcnn\_resnet50\_fpn} (V1) implementation with three trainable backbone stages and a $C{=}4$ classification head (3 foreground + background). The FPN anchor pyramid is set to sizes $\{8,16\},\{24,48\},\{64,96\},\{128,192\},\{256,384\}$ with aspect ratios $\{0.5,1,2\}$, and matching thresholds are relaxed to $\tau^{\text{rpn}}_{\text{fg/bg}}{=}0.5/0.2$ and $\tau^{\text{box}}_{\text{fg/bg}}{=}0.4/0.3$. RPN proposals are capped at $4000/2000$ pre/post-NMS during training. Inputs are resized by \texttt{GeneralizedRCNNTransform} to short side $1024$, long side $\le 1333$. The augmentation pipeline is $\texttt{PadIfNeeded}(1024)\!\to\!\texttt{RandomCrop}(1024)\!\to\!\text{HFlip}(p{=}0.5)\!\to\!\text{VFlip}(p{=}0.2)\!\to\!\texttt{RandomBrightnessContrast}(\pm 15\%, p{=}0.3)$, with bounding-box \emph{min\_visibility}$\,=\,0.1$. Optimization uses AdamW (lr $5{\times}10^{-4}$, weight decay $10^{-4}$), $3$-epoch linear warm-up followed by cosine annealing for up to $30$ epochs, batch size $4$, and $16$-bit mixed precision. At inference we use \emph{score\_thresh}$\,{=}\,0.05$, \emph{nms\_thresh}$\,{=}\,0.5$, and at most $300$ detections per image; for the MOT detection cache the long-side cap is raised to $2304$\,px to preserve native-resolution recall.
 
