@@ -598,7 +598,7 @@ spaceborne video are typically smaller than $20\times 20$ pixels, where
 strict IoU thresholds ($\geq 0.75$) tend to reflect sub-pixel localization
 noise rather than genuine detector capability; single-threshold
 $\mathrm{mAP}_{50}$ is also the prevailing convention in spaceborne
-small-object detection~\citep{yin2022satmtb,he2022airmot}.
+small-object detection~\citep{Li2023SATMTB,He2022TGraM}.
 $\mathrm{AP}_{\text{overall}}$ merges predictions from all classes into a
 single foreground category before constructing the PR curve, isolating
 localization quality from the long-tailed class distribution typical of
@@ -622,7 +622,7 @@ swapped trajectories under prolonged occlusion and inter-object
 indistinguishability (captured by AssA). We additionally report DetA, AssA,
 and Localization Accuracy (LocA) to enable diagnostic decomposition of
 HOTA. To preserve comparability with prior spaceborne MOT
-literature~\citep{yin2022satmtb,he2022airmot}, we also report the
+literature~\citep{Li2023SATMTB,He2022TGraM}, we also report the
 legacy CLEAR metrics MOTA, MOTP, and IDsw, together with the Identity-based
 IDF1 score, which complements HOTA by emphasizing long-range identity
 preservation under a globally optimal one-to-one matching between
@@ -842,7 +842,7 @@ incidental stress tests.
 \label{sec:exp_mot_overview}
 Space-Tracker-MOT is split by class regime into a \emph{car} half and an
 \emph{airplane / ship / train} half: cars are the only category for which a
-dedicated small-object detector (HiEUM~\cite{TODO_hieum}) exists in the
+dedicated small-object detector (HiEUM~\citep{Xiao2024HiEUM}) exists in the
 literature, while the larger categories share the SAT-MTB \texttt{det\_hbb}
 training distribution and admit a single 3-class Faster~R-CNN. We therefore
 report the two halves under a common protocol—shared detector across
@@ -1173,7 +1173,7 @@ thresholds.
 \paragraph{CLEAR family~\citep{bernardin2008clear}.}
 We additionally report the classical CLEAR metrics to preserve direct
 comparability with prior spaceborne MOT
-benchmarks~\citep{yin2022satmtb,he2022airmot}, where CLEAR metrics remain
+benchmarks~\citep{Li2023SATMTB,He2022TGraM}, where CLEAR metrics remain
 the de facto reporting standard.
 
 \begin{itemize}
