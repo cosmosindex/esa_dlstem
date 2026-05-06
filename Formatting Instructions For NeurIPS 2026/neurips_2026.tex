@@ -502,6 +502,21 @@ motion model for re-prompting; and SAM~3 with the official release and temporal
 disambiguation enabled. For each tracker, we adopt the strongest variant
 available in its official public release.
 
+\minihead{Object detection}
+We train a Faster R-CNN~\cite{faster_rcnn} (ResNet-50\,+\,FPN, ImageNet-pretrained) 
+end-to-end on the SAT-MTB train split for the three foreground classes (\emph{airplane}, \emph{ship}, \emph{train}). 
+Because spaceborne targets span a far narrower size range than natural-image objects (e.g., ships average $17$--$30$\,px on a side), 
+we retune two components that are normally left at their COCO defaults: 
+(i) the FPN \emph{anchor pyramid}, whose per-level sizes and aspect ratios we tighten to match the empirical bounding-box statistics of SAT-MTB, 
+and (ii) the \emph{RPN and box-head matching thresholds}, which we relax from the standard $0.7/0.3$ and $0.5/0.5$ to be more permissive on positives, 
+recovering small-object recall that is otherwise lost to anchor under-coverage. Models are validated every epoch on a held-out $18$-sequence val split, 
+and the best checkpoint is selected by val mAP$_{50}$ with patience-$8$ early stopping; 
+the $40$-sequence test split is strictly held out throughout development. 
+For HiEUM~\cite{hieum} we evaluate the authors' released RsCarData-trained checkpoint off-the-shelf, 
+without any cross-dataset fine-tuning, in order to probe out-of-domain generalization of a video-native detector.
+The resulting per-frame detections are additionally cached and reused as the shared input to all two-stage MOT trackers in \S\ref{sec:mot}. 
+Full training and inference details are deferred to Appendix~\ref{app:protocol_det}.
+
 \section{Experiment results}
 
 \taskhead{Single Object Tracking}
@@ -1049,6 +1064,13 @@ performance. All metrics are class-agnostic by default; for multi-class
 datasets (e.g., AIR-MOT, SAT-MTB) we additionally report per-class HOTA,
 DetA, and AssA, computed by restricting both predictions and ground
 truth to the relevant class before evaluation.
+
+\subsection{Object detection}
+\minihead{Faster R-CNN}
+We use the \texttt{torchvision} \texttt{fasterrcnn\_resnet50\_fpn} (V1) implementation with three trainable backbone stages and a $C{=}4$ classification head (3 foreground + background). The FPN anchor pyramid is set to sizes $\{8,16\},\{24,48\},\{64,96\},\{128,192\},\{256,384\}$ with aspect ratios $\{0.5,1,2\}$, and matching thresholds are relaxed to $\tau^{\text{rpn}}_{\text{fg/bg}}{=}0.5/0.2$ and $\tau^{\text{box}}_{\text{fg/bg}}{=}0.4/0.3$. RPN proposals are capped at $4000/2000$ pre/post-NMS during training. Inputs are resized by \texttt{GeneralizedRCNNTransform} to short side $1024$, long side $\le 1333$. The augmentation pipeline is $\texttt{PadIfNeeded}(1024)\!\to\!\texttt{RandomCrop}(1024)\!\to\!\text{HFlip}(p{=}0.5)\!\to\!\text{VFlip}(p{=}0.2)\!\to\!\texttt{RandomBrightnessContrast}(\pm 15\%, p{=}0.3)$, with bounding-box \emph{min\_visibility}$\,=\,0.1$. Optimization uses AdamW (lr $5{\times}10^{-4}$, weight decay $10^{-4}$), $3$-epoch linear warm-up followed by cosine annealing for up to $30$ epochs, batch size $4$, and $16$-bit mixed precision. At inference we use \emph{score\_thresh}$\,{=}\,0.05$, \emph{nms\_thresh}$\,{=}\,0.5$, and at most $300$ detections per image; for the MOT detection cache the long-side cap is raised to $2304$\,px to preserve native-resolution recall.
+
+\minihead{HiEUM}
+We use the authors' released checkpoint \texttt{model\_best.pth} trained on RsCarData; no cross-dataset fine-tuning is performed. The architectural hyperparameters are baked into the checkpoint and held fixed at $L{=}3$ transformer layers, clip length $T{=}20$, input size $1024{\times}1024$. Clips are sampled with stride $1$ and batch size $1$. Detection caching uses \emph{score\_thresh}$\,{=}\,0.05$, NMS IoU $0.1$, and at most $128$ detections per frame. Following the original protocol, matches are scored by centroid Euclidean distance with a $5$\,px threshold; the reported best-F1 number is obtained by sweeping the score threshold over $\{0.10, 0.15, 0.20, 0.25, 0.30, 0.32, 0.34, 0.35\}$.
 
 \subsection{Per-dataset SOT results}
 Tab.~\ref{tab:sot_results_whole} and Tab.~\ref{tab:sot_results_tiny} provide the
