@@ -1,0 +1,376 @@
+{
+  "@context": {
+    "@language": "en",
+    "@vocab": "https://schema.org/",
+    "citeAs": "cr:citeAs",
+    "column": "cr:column",
+    "conformsTo": "dct:conformsTo",
+    "cr": "http://mlcommons.org/croissant/",
+    "rai": "http://mlcommons.org/croissant/RAI/",
+    "data": {
+      "@id": "cr:data",
+      "@type": "@json"
+    },
+    "dataType": {
+      "@id": "cr:dataType",
+      "@type": "@vocab"
+    },
+    "dct": "http://purl.org/dc/terms/",
+    "equivalentProperty": {
+      "@id": "cr:equivalentProperty",
+      "@type": "@vocab"
+    },
+    "examples": {
+      "@id": "cr:examples",
+      "@type": "@json"
+    },
+    "extract": "cr:extract",
+    "field": "cr:field",
+    "fileProperty": "cr:fileProperty",
+    "fileObject": "cr:fileObject",
+    "fileSet": "cr:fileSet",
+    "format": "cr:format",
+    "includes": "cr:includes",
+    "isLiveDataset": "cr:isLiveDataset",
+    "jsonPath": "cr:jsonPath",
+    "key": "cr:key",
+    "md5": "cr:md5",
+    "parentField": "cr:parentField",
+    "path": "cr:path",
+    "recordSet": "cr:recordSet",
+    "references": "cr:references",
+    "regex": "cr:regex",
+    "repeated": "cr:repeated",
+    "replace": "cr:replace",
+    "samplingRate": {
+      "@id": "cr:samplingRate",
+      "@type": "@vocab"
+    },
+    "sc": "https://schema.org/",
+    "separator": "cr:separator",
+    "source": "cr:source",
+    "subField": "cr:subField",
+    "transform": "cr:transform"
+  },
+  "@type": "sc:Dataset",
+  "name": "Space-Tracker",
+  "description": "Space-Tracker is a unified evaluation suite for spaceborne video object tracking. It bundles (i) Space-Tracker-SOT, a unified single-object-tracking benchmark across SatSOT, SV248S, and OOTB (463 sequences, 214,175 frames, 201,070 bounding-box annotations) under a 6-attribute unified taxonomy (BC, IV, ROT, OCC, SOB, DEF) and a per-sequence aggregation protocol (SR / NPR / PR / P@5; PR over CLE in [0,50] px, NPR over normalised CLE in [0,0.5]), and (ii) a multi-object-tracking evaluation suite over five existing benchmarks — AIR-MOT, VISO, SAT-MTB, RsCarData, and SDM-Car — used in this work for cross-dataset MOT comparison. The Space-Tracker artifact ships only manifest files, evaluation code, and metric implementations. Raw imagery and ground-truth annotations are NOT redistributed; users must obtain each upstream dataset directly under its original license.",
+  "conformsTo": "http://mlcommons.org/croissant/1.0",
+  "license": "https://creativecommons.org/licenses/by/4.0/",
+  "url": "https://github.com/cosmosindex/esa_dlstem",
+  "version": "1.0",
+  "datePublished": "2026-05-07",
+  "citeAs": "@inproceedings{spacetracker2026,\n  title  = {Space-Tracker: A Unified Spaceborne Video Tracking Benchmark},\n  author = {Anonymous Authors},\n  booktitle = {Advances in Neural Information Processing Systems (NeurIPS) Datasets and Benchmarks Track},\n  year   = {2026},\n  note   = {Under review; final BibTeX to be inserted at camera-ready}\n}",
+  "creator": [
+    {
+      "@type": "Person",
+      "name": "Anonymous Authors (NeurIPS 2026 double-blind submission)"
+    }
+  ],
+  "publisher": {
+    "@type": "Organization",
+    "name": "Anonymous (to be filled at camera-ready)"
+  },
+  "keywords": [
+    "object tracking",
+    "single object tracking",
+    "multi-object tracking",
+    "satellite video",
+    "spaceborne video",
+    "remote sensing",
+    "benchmark",
+    "small object tracking"
+  ],
+  "isBasedOn": [
+    {
+      "@type": "sc:Dataset",
+      "name": "SatSOT",
+      "description": "Single-object-tracking dataset from Jilin-1 satellite video. 105 sequences, 27,664 frames, 27,061 annotated bounding boxes, 4 categories (car / plane / ship / train), 11 native attributes. Frames where the target is absent or fully occluded are marked 'none'. Used as one of three SOT source benchmarks unified by Space-Tracker-SOT.",
+      "url": "https://ieeexplore.ieee.org/document/9672083",
+      "license": "https://example.org/unspecified-research-only",
+      "creditText": "License not declared by upstream; use is research-only by convention. Authors should be contacted for redistribution permission.",
+      "citation": "Zhao, M. et al. SatSOT: A Benchmark Dataset for Satellite Video Single Object Tracking. IEEE TGRS, 2022. DOI: 10.1109/TGRS.2022.3140809"
+    },
+    {
+      "@type": "sc:Dataset",
+      "name": "SV248S",
+      "description": "Single-object-tracking dataset from Jilin-1 satellite video (0.92 m GSD, 25 FPS re-encoded via VFI from native 10 FPS). 248 sequences from 6 source videos, 156,621 frames, 144,119 annotated bounding boxes, 4 classes (car / car-large / plane / ship), 10 native attributes. Frames with state==1 (invisible) are excluded from box counts. Used as one of three SOT source benchmarks unified by Space-Tracker-SOT.",
+      "url": "https://github.com/xdai-dlgvv/SV248S",
+      "license": "https://example.org/unspecified-non-commercial",
+      "creditText": "Non-commercial use only (exact CC variant not declared by upstream).",
+      "citation": "Li, S. et al. SV248S: A Benchmark for Satellite Video Single Object Tracking. IEEE Geoscience and Remote Sensing Magazine, 2022."
+    },
+    {
+      "@type": "sc:Dataset",
+      "name": "OOTB",
+      "description": "Single-object-tracking dataset with oriented bounding-box (OBB) annotations from multiple satellite platforms (Jilin-1, SkySat, ISS). 110 sequences, 29,890 frames, 29,890 annotated boxes (every frame is labeled), 4 categories, 12 native attributes. Used as one of three SOT source benchmarks unified by Space-Tracker-SOT.",
+      "url": "https://github.com/YZCU/OOTB",
+      "license": "https://example.org/unspecified-research-only",
+      "creditText": "License not declared by upstream; access is application-based via Baidu Cloud / Google Drive. Authors should be contacted for redistribution permission.",
+      "citation": "Chen, Y. et al. OOTB: A New Benchmark for Object Tracking in Satellite Video with Oriented Bounding Boxes. ISPRS Journal of Photogrammetry and Remote Sensing, 2024. DOI: 10.1016/j.isprsjprs.2024.03.013"
+    },
+    {
+      "@type": "sc:Dataset",
+      "name": "AIR-MOT",
+      "description": "Multi-object-tracking dataset from Jilin-1 satellite video (extended 100-sequence release). 100 sequences (69 usable; 31 with empty annotations excluded), 19,940 frames, 317,569 box annotations, 2 classes (airplane / car). Used in this work as one MOT evaluation benchmark.",
+      "url": "https://github.com/HeQibin/TGraM",
+      "license": "https://example.org/unspecified-research-only",
+      "creditText": "License not declared by upstream; use is research-only by convention. Contact heqibin@aircas.ac.cn for redistribution permission.",
+      "citation": "He, Q. et al. TGraM: Multi-Object Tracking in Aerial Imagery via Temporal Graph Matching. IEEE TGRS, 2022."
+    },
+    {
+      "@type": "sc:Dataset",
+      "name": "VISO (SatVideoDT)",
+      "description": "Satellite video detection and tracking dataset from Jilin-1 satellite. 47 sequences (used in this work; 100-sequence release), 16,204 frames, 844,345 box annotations, 4 categories (car / plane / ship / train). RsCarData is a re-curated subset of this dataset's car category.",
+      "url": "https://github.com/QingyongHu/VISO",
+      "license": "https://creativecommons.org/licenses/by-nc-sa/4.0/",
+      "creditText": "CC BY-NC-SA 4.0. Non-commercial only; ShareAlike clause propagates to derivatives. Data authorized by Changguang Satellite Technology Co., Ltd.",
+      "citation": "Yin, Q. et al. Detecting and Tracking Small and Dense Moving Objects in Satellite Videos: A Benchmark. IEEE TGRS, 2022. DOI: 10.1109/TGRS.2021.3130436"
+    },
+    {
+      "@type": "sc:Dataset",
+      "name": "SAT-MTB",
+      "description": "Multi-task spaceborne video benchmark from Jilin-1 satellite supporting detection, MOT, and segmentation. 249 sequences, 48,390 frames, 1,118,584 box annotations, 4 coarse categories (airplane / car / ship / train) with 12 fine-grained subcategories. Annotation availability varies by category (car has MOT only).",
+      "url": "https://zenodo.org/records/15253996",
+      "license": "https://example.org/unspecified-research-only",
+      "creditText": "Marked 'Open' on Zenodo but no specific license selected. Use is research-only by convention. Contact CAS authors for redistribution permission.",
+      "citation": "Li, S. et al. SAT-MTB: A Multi-Task Benchmark for Object Detection and Tracking in Satellite Videos. IEEE TGRS, 2023. DOI: 10.1109/TGRS.2023.3278075"
+    },
+    {
+      "@type": "sc:Dataset",
+      "name": "RsCarData",
+      "description": "Vehicle subset of VISO re-annotated by the HiEUM paper with MOT-format track IDs. 77 sequences, 29,689 frames, 848,786 box annotations, single class (car). 70 train sequences at 512x512 plus 7 test sequences at 1024x1024. Used in this work as one MOT evaluation benchmark.",
+      "url": "https://ieeexplore.ieee.org/document/10535178",
+      "license": "https://creativecommons.org/licenses/by-nc-sa/4.0/",
+      "creditText": "Inherits VISO's CC BY-NC-SA 4.0 license. Re-annotation released alongside the HiEUM paper.",
+      "citation": "Xiao, Y. et al. HiEUM: Hierarchical End-to-End Multi-Object Tracking via Unified Modeling for Satellite Video. IEEE TPAMI, 2024. DOI: 10.1109/TPAMI.2024.3409824"
+    },
+    {
+      "@type": "sc:Dataset",
+      "name": "SDM-Car",
+      "description": "Small and dim moving vehicle MOT benchmark from Luojia 3-01 satellite (0.75 m GSD). 99 sequences, 16,423 frames, 1,522,577 box annotations, single class (car). 1920x1080 AVI video files. Used in this work as one MOT evaluation benchmark.",
+      "url": "https://github.com/TanedaM/SDM-Car",
+      "license": "https://example.org/unspecified-research-only",
+      "creditText": "License not declared by upstream; use is research-only by convention. Contact paper authors for redistribution permission.",
+      "citation": "Zhang, X. et al. SDM-Car: A Dataset for Small and Dim Moving Vehicle Detection and Tracking in Satellite Video. IEEE GRSL, 2024. DOI: 10.1109/LGRS.2024.3493249"
+    }
+  ],
+  "rai:dataCollection": "Space-Tracker does not collect any new raw imagery. The artifact is a manifest layer over eight existing spaceborne video datasets. The three SOT source datasets unified into Space-Tracker-SOT (SatSOT, SV248S, OOTB) and the five MOT datasets used for evaluation (AIR-MOT, VISO, SAT-MTB, RsCarData, SDM-Car) were each collected by their respective authors from publicly distributed or commercially authorized satellite video sources. Most sequences originate from the Jilin-1 commercial small-satellite constellation (operated by Changguang Satellite Technology Co., Ltd.); OOTB additionally includes sequences from SkySat and the International Space Station; SDM-Car uses Luojia 3-01. This work contributes only (a) the unified manifest indexing existing sequences, (b) the unified attribute taxonomy, (c) the per-sequence aggregation protocol, and (d) splits / evaluation configurations for the MOT side.",
+  "rai:dataCollectionType": "Derived from existing publicly available datasets",
+  "rai:dataCollectionTimeframe": "Source datasets published 2022-2024; this manifest assembled in 2026.",
+  "rai:dataAnnotationProtocol": "All bounding-box and sequence-level attribute labels are inherited verbatim from the upstream datasets. This work introduces only (1) a unified attribute mapping that consolidates the 11 / 10 / 12 native SOT attribute taxonomies into 6 unified attributes (BC, IV, ROT, OCC, SOB, DEF), (2) a per-sequence 'tiny' flag computed automatically as median sqrt(GT area) < 8 px, and (3) train/val/test split files (80/10/10 stratified by category, seed=42) for the MOT datasets that lack official splits. No human box re-annotation was performed.",
+  "rai:dataPreprocessingProtocol": "None. The manifest stores relative paths to upstream files; per-frame loading and decoding happens in the user's runtime via the space_tracker.data module. For SV248S, frames flagged as state==1 (invisible) are filtered from the visible-frame iterator; for SatSOT, frames marked 'none' are filtered. No imagery transformation is applied.",
+  "rai:dataReleaseMaintenancePlan": "Maintained by the paper authors via the GitHub repository at https://github.com/cosmosindex/esa_dlstem. Issues and questions can be filed against that repository. Manifest version is tracked under semantic versioning; breaking schema changes will trigger a major-version bump. The paper authors commit to fixing manifest correctness bugs (e.g. incorrect path mappings, attribute mis-labels) within best-effort timelines; no SLA is implied. The artifact is static — no automatic update mechanism is foreseen unless a new source dataset is integrated.",
+  "rai:dataUseCases": "Intended use cases: (1) cross-dataset evaluation of single-object trackers under a shared attribute taxonomy and a single per-sequence aggregation protocol; (2) tiny-object SOT studies (248 of 463 sequences are tiny by the median-sqrt-area criterion); (3) MOT evaluation under a consistent metric definition across five spaceborne MOT benchmarks. Out-of-scope uses: training a tracker on the manifest alone (it contains no imagery); commercial deployment without the upstream license clearances; surveillance applications targeting individuals (the imagery resolution does not support this, see personalSensitiveInformation).",
+  "rai:dataBiases": "Known biases: (1) Sensor / platform bias — the overwhelming majority of sequences come from the Jilin-1 commercial satellite constellation, which limits sensor diversity (most sequences share the same GSD range, panchromatic/RGB band configuration, and along-track motion characteristics). (2) Geographic bias — sequence locations are dominated by regions covered by Jilin-1's tasking schedule; some areas of the world are heavily over-represented while others are absent. (3) Class imbalance — vehicles ('car') dominate the SOT pool (especially SV248S, where >90% of sequences are car / car-large) and the MOT pool. Plane, ship, and train are under-represented; rare attributes (DEF in particular) appear in only 22 sequences total. (4) Tiny-object skew — 63.1% of SOT bounding boxes have area below 64 px^2; results on this benchmark do not generalise to ground-camera or drone-camera tracking distributions. (5) Annotation conventions vary by upstream dataset (AABB vs OBB, occlusion-handling conventions, frame-state semantics); the unified taxonomy collapses these but cannot fully neutralise per-dataset annotator behaviour.",
+  "rai:dataLimitations": "Known limitations: (1) The manifest does not redistribute raw imagery or ground-truth annotations; users must independently obtain each upstream dataset under its original license (see the isBasedOn block above for license status per source). (2) Most upstream datasets do not declare an explicit license; we treat them as research-only by convention but explicit redistribution permission has not been obtained from all original authors. VISO and the VISO-derived RsCarData are confirmed CC BY-NC-SA 4.0; SV248S is confirmed non-commercial with the exact CC variant unspecified. (3) The 6-attribute unified taxonomy is a many-to-one mapping over the source datasets' native attribute lexicons. The mapping involves judgement calls (e.g. whether to merge OOTB's PO and FO with SatSOT's POC/FOC under unified OCC) and may not satisfy researchers who require strict attribute-level fidelity. (4) The 'tiny' flag uses an 8 px sqrt-area threshold, chosen to align with the paper's headline split; alternative thresholds may produce different population statistics. (5) The MOT side is an evaluation suite, not a unified dataset — splits and metrics are harmonised but no cross-dataset MOT manifest analogous to space_tracker.json is shipped.",
+  "rai:personalSensitiveInformation": "None. The imagery resolution (>=0.75 m GSD) does not allow identification of individuals; vehicles are visible but not licence-plate-readable. No PII annotations are provided. No demographic, biometric, or behavioural information is associated with any sequence. The manifest does, however, include geographic information by virtue of identifying which satellite acquisition each sequence belongs to; users redistributing derivative analyses should consider whether revealing acquisition timestamps or locations could have downstream implications for the imaged sites (e.g. critical infrastructure)."
+,
+  "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "manifest",
+      "name": "space_tracker.json",
+      "description": "Unified Space-Tracker-SOT manifest: 463 sequences across SatSOT, SV248S, OOTB, with native + unified attribute labels, sequence-level scale statistics, and the tiny flag. ~212 KB plain JSON; safe to commit and diff.",
+      "contentUrl": "https://raw.githubusercontent.com/cosmosindex/esa_dlstem/main/space_tracker/space_tracker.json",
+      "encodingFormat": "application/json",
+      "sha256": "0d4d5408e11d573e9a10959d1c9e9b76cda2bde3182642b5e90cd811cdf62e98",
+      "contentSize": "217165 B"
+    }
+  ],
+  "recordSet": [
+    {
+      "@type": "cr:RecordSet",
+      "@id": "sequences",
+      "name": "sequences",
+      "description": "One record per Space-Tracker-SOT sequence (463 in total). All paths are relative to the user-provided dataset root for each upstream benchmark.",
+      "key": {
+        "@id": "sequences/id"
+      },
+      "field": [
+        {
+          "@type": "cr:Field",
+          "@id": "sequences/id",
+          "name": "id",
+          "description": "Globally unique sequence identifier of the form '<dataset>/<video_id>' (e.g. 'ootb/car_1', 'satsot/00001', 'sv248s/01/000000').",
+          "dataType": "sc:Text",
+          "source": {
+            "fileObject": {
+              "@id": "manifest"
+            },
+            "extract": {
+              "jsonPath": "$.sequences[*].id"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "sequences/dataset",
+          "name": "dataset",
+          "description": "Source dataset key, one of: 'ootb', 'satsot', 'sv248s'.",
+          "dataType": "sc:Text",
+          "source": {
+            "fileObject": {
+              "@id": "manifest"
+            },
+            "extract": {
+              "jsonPath": "$.sequences[*].dataset"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "sequences/video_id",
+          "name": "video_id",
+          "description": "Per-dataset sequence identifier as used in the upstream release.",
+          "dataType": "sc:Text",
+          "source": {
+            "fileObject": {
+              "@id": "manifest"
+            },
+            "extract": {
+              "jsonPath": "$.sequences[*].video_id"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "sequences/category",
+          "name": "category",
+          "description": "Object category of the tracked target (one of: car, plane, ship, train, car-large).",
+          "dataType": "sc:Text",
+          "source": {
+            "fileObject": {
+              "@id": "manifest"
+            },
+            "extract": {
+              "jsonPath": "$.sequences[*].category"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "sequences/n_frames",
+          "name": "n_frames",
+          "description": "Number of frames in the sequence (including frames where the target may be absent or invisible).",
+          "dataType": "sc:Integer",
+          "source": {
+            "fileObject": {
+              "@id": "manifest"
+            },
+            "extract": {
+              "jsonPath": "$.sequences[*].n_frames"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "sequences/image_dir",
+          "name": "image_dir",
+          "description": "Relative path (under the upstream dataset root) to the directory containing the per-frame imagery.",
+          "dataType": "sc:Text",
+          "source": {
+            "fileObject": {
+              "@id": "manifest"
+            },
+            "extract": {
+              "jsonPath": "$.sequences[*].image_dir"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "sequences/gt_path",
+          "name": "gt_path",
+          "description": "Relative path (under the upstream dataset root) to the ground-truth annotation file.",
+          "dataType": "sc:Text",
+          "source": {
+            "fileObject": {
+              "@id": "manifest"
+            },
+            "extract": {
+              "jsonPath": "$.sequences[*].gt_path"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "sequences/gt_format",
+          "name": "gt_format",
+          "description": "Encoding of the ground-truth file. One of: 'obb_8pt' (OOTB; 8 corner coordinates per row), 'xywh_with_none' (SatSOT; xywh per row, frames with absent target marked 'none'), 'xywh_with_state' (SV248S; xywh per row plus a sibling state file flagging visibility).",
+          "dataType": "sc:Text",
+          "source": {
+            "fileObject": {
+              "@id": "manifest"
+            },
+            "extract": {
+              "jsonPath": "$.sequences[*].gt_format"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "sequences/native_attrs",
+          "name": "native_attrs",
+          "description": "List of native (per-dataset) sequence-level attribute codes as defined by the upstream benchmark.",
+          "dataType": "sc:Text",
+          "repeated": true,
+          "source": {
+            "fileObject": {
+              "@id": "manifest"
+            },
+            "extract": {
+              "jsonPath": "$.sequences[*].native_attrs"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "sequences/unified_attrs",
+          "name": "unified_attrs",
+          "description": "Subset of the 6 unified attributes that apply to this sequence: BC (Background Clutter), IV (Illumination Variation), ROT (Rotation), OCC (Occlusion), SOB (Similar Object), DEF (Deformation). Mapping from native attributes is documented in the manifest's unified_attributes block.",
+          "dataType": "sc:Text",
+          "repeated": true,
+          "source": {
+            "fileObject": {
+              "@id": "manifest"
+            },
+            "extract": {
+              "jsonPath": "$.sequences[*].unified_attrs"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "sequences/median_sqrt_area_px",
+          "name": "median_sqrt_area_px",
+          "description": "Median of sqrt(GT bounding-box area in pixels) over the sequence. Used to define the tiny flag.",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "manifest"
+            },
+            "extract": {
+              "jsonPath": "$.sequences[*].median_sqrt_area_px"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "sequences/tiny",
+          "name": "tiny",
+          "description": "Tiny-target flag: true iff median_sqrt_area_px < 8.0 px.",
+          "dataType": "sc:Boolean",
+          "source": {
+            "fileObject": {
+              "@id": "manifest"
+            },
+            "extract": {
+              "jsonPath": "$.sequences[*].tiny"
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
