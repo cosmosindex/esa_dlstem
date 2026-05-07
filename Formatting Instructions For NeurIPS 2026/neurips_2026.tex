@@ -274,10 +274,23 @@ We unified the small object attribute across all the dataset by defining it by t
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=\linewidth]{plots/sr_npr_vs_bbox_size_unified.png}
-    \caption{Mean Success AUC (SR) and Normalised
-    Precision AUC (NPR) versus the square root of the bounding box area $s=\sqrt{\mathrm{area}}$ over Space-tracker SOT dataset. Each point is the equal-weight mean across OOTB, SatSOT, and SV248S of the  per-bin mean over the seven evaluated trackers. The faint grey     histogram shows the combined frame-count density pooled across the     three datasets, and the vertical dashed line at $s=8\,$px marks the  small-object boundary used elsewhere in the paper.}
-    \label{fig:sr_npr_vs_bbox_size}
+    \begin{subfigure}[t]{0.49\linewidth}
+        \centering
+        \includegraphics[width=\linewidth]{plots/sr_npr_vs_bbox_size_unified.png}
+        \caption{SOT performance versus object scale.}
+        \label{fig:sr_npr_vs_bbox_size}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[t]{0.49\linewidth}
+        \centering
+        \includegraphics[width=\linewidth]{plots/mot_bbox_size_scatter.png}
+        \caption{MOT bounding-box width versus height by class.}
+        \label{fig:mot_bbox_size_scatter}
+    \end{subfigure}
+    \caption{Empirical justification for the $s=8\,$px small-object boundary used in Space-tracker.
+    \textbf{(a)} Mean Success AUC (SR) and Normalised Precision AUC (NPR) versus $s=\sqrt{\mathrm{area}}$ on the Space-tracker SOT split. Each point is the equal-weight mean across OOTB, SatSOT, and SV248S of the per-bin mean over the seven evaluated trackers; the faint grey histogram shows the combined frame-count density pooled across the three datasets, and the vertical dashed line at $s=8\,$px marks the small-object boundary used elsewhere in the paper.
+    \textbf{(b)} Width--height scatter of bounding boxes pooled across the five Space-tracker MOT datasets (AIR-MOT, VISO, RsCarData, SDM-Car, SAT-MTB), colored by object class. Up to $3{,}000$ points are subsampled per class to balance visual density; the legend reports the true per-class totals. Dashed lines and the shaded corner mark the same $s=8\,$px boundary, showing that the bulk of \emph{Car} annotations falls in the small-object regime, while \emph{Airplane}, \emph{Ship}, and \emph{Train} populate progressively larger scales.}
+    \label{fig:bbox_size_analysis}
 \end{figure}
 
 \begin{comment}
