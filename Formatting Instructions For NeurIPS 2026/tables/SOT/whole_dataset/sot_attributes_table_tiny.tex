@@ -2,7 +2,7 @@
 % Requires: \usepackage{booktabs, multirow, array, graphicx}
 \begin{table*}[t]
 \centering
-\caption{SOT performance on \emph{tiny} frames (per-frame GT $\sqrt{\mathrm{area}} < 8$\,px) for the attributes available in Space-tracker-SOT. Metrics are \emph{micro}-averaged over all qualifying tiny frames within each (dataset, attribute) group: SR is the AUC over IoU thresholds in $[0, 1]$, PR is the AUC over CLE thresholds in $[0, 50]$\,px, and P@5 is the fraction of tiny frames with CLE $\leq 5$\,px. For \emph{unified} attributes (BC / IV / ROT / OCC / SOB / DEF) we additionally arithmetic-mean these per-(dataset, attribute) micro rates across the annotating datasets (BC and DEF: 2 datasets; IV / ROT / OCC / SOB: 3 datasets); for dataset-unique attributes the (single) annotating dataset is shown next to the abbreviation. DEF, ARC, and OON contain no tiny frames in any annotating dataset and are reported as ``---''. Occlusion sub-types of OCC are reported separately in Tab.~\ref{tab:sot_attributes_tiny_occlusion}. \textbf{Bold} = best, \underline{underline} = second best, applied per row and per metric. Methodologically distinct from Tab.~\ref{tab:sot_attributes}, which uses per-sequence aggregation over the full size range.}
+\caption{SOT performance on \emph{tiny} frames (per-frame GT $\sqrt{\mathrm{area}} < 8$\,px) for the attributes available in Space-tracker-SOT. Metrics are \emph{micro}-averaged over all qualifying tiny frames pooled across every dataset that annotates the attribute: SR is the AUC over IoU thresholds in $[0, 1]$, PR is the AUC over CLE thresholds in $[0, 50]$\,px, and P@5 is the fraction of tiny frames with CLE $\leq 5$\,px. For \emph{unified} attributes (BC / IV / ROT / OCC / SOB / DEF) we first compute per-(dataset, attribute) micro rates and then arithmetic-mean across the annotating datasets (BC and DEF: 2 datasets; IV / ROT / OCC / SOB: 3 datasets), preserving cross-dataset balance. Dataset-unique rows (ARC / OON / LQ / TO / BJT / BCH / ND / IBG / SM / LT / MB / IM / AM) are computed on the single annotating dataset, shown next to the abbreviation. Rows with no tiny frames in any annotating dataset are reported as ``---''. Occlusion sub-types of OCC are reported separately in Tab.~\ref{tab:sot_attributes_tiny_occlusion}. \textbf{Bold} = best, \underline{underline} = second best, applied per row and per metric. Methodologically distinct from Tab.~\ref{tab:sot_attributes}, which uses per-sequence aggregation over the full size range.}
 \label{tab:sot_attributes_tiny}
 \setlength{\tabcolsep}{3pt}
 \renewcommand{\arraystretch}{1.15}
@@ -36,6 +36,7 @@ OON \tiny(OOTB) & --- & --- & --- & --- & --- & --- & --- & --- & --- & --- & --
 \midrule
 \multicolumn{22}{l}{\emph{Other dataset-unique attributes}} \\
 LQ \tiny(SatSOT) & 0.196 & 0.682 & 0.565 & 0.141 & 0.444 & 0.400 & 0.165 & 0.539 & 0.460 & 0.324 & 0.465 & 0.466 & \underline{0.447} & \underline{0.730} & \underline{0.696} & 0.445 & 0.710 & 0.695 & \textbf{0.500} & \textbf{0.905} & \textbf{0.916} \\
+TO \tiny(SatSOT) & 0.127 & 0.408 & 0.286 & 0.126 & 0.361 & 0.321 & 0.137 & \underline{0.421} & \underline{0.350} & \underline{0.226} & 0.346 & 0.311 & 0.159 & 0.303 & 0.232 & 0.164 & 0.359 & 0.261 & \textbf{0.283} & \textbf{0.585} & \textbf{0.518} \\
 BJT \tiny(SatSOT) & 0.193 & \underline{0.613} & 0.533 & 0.173 & 0.549 & 0.466 & 0.164 & 0.538 & 0.445 & 0.257 & 0.333 & 0.324 & \underline{0.372} & 0.553 & 0.544 & 0.371 & 0.592 & \underline{0.548} & \textbf{0.417} & \textbf{0.711} & \textbf{0.694} \\
 BCH \tiny(SV248S) & 0.091 & 0.338 & 0.199 & 0.109 & 0.339 & 0.253 & 0.109 & 0.372 & 0.272 & \textbf{0.310} & \underline{0.462} & \underline{0.427} & 0.190 & 0.356 & 0.308 & 0.205 & 0.400 & 0.340 & \underline{0.276} & \textbf{0.558} & \textbf{0.506} \\
 ND \tiny(SV248S) & 0.087 & 0.402 & 0.194 & 0.096 & 0.329 & 0.226 & 0.086 & 0.392 & 0.245 & \textbf{0.278} & \underline{0.451} & \textbf{0.375} & 0.134 & 0.239 & 0.204 & \underline{0.169} & 0.395 & 0.310 & 0.156 & \textbf{0.453} & \underline{0.354} \\
@@ -52,7 +53,7 @@ AM \tiny(OOTB) & 0.206 & 0.684 & 0.527 & 0.241 & 0.656 & 0.557 & 0.300 & \underl
 
 \begin{table*}[t]
 \centering
-\caption{Tiny-frame SOT performance on the occlusion sub-types of the unified \textbf{OCC} attribute (Tab.~\ref{tab:sot_attributes_tiny}). Metrics are \emph{micro}-averaged over all tiny frames in the annotating dataset (sqrt(area) $< 8$\,px); see Tab.~\ref{tab:sot_attributes_tiny} caption for definitions of SR, PR, P@5. \textbf{Bold} = best, \underline{underline} = second best, applied per row and per metric.}
+\caption{Tiny-frame SOT performance on the occlusion sub-types of the unified \textbf{OCC} attribute (Tab.~\ref{tab:sot_attributes_tiny}). POC pools SatSOT POC with OOTB PO; FOC pools SatSOT FOC with OOTB FO (mirroring the OCC unification in Tab.~\ref{tab:sot_attributes_tiny}); STO / LTO / CO are annotated only by SV248S (temporal axis, no spatial-axis counterpart in the other two datasets). Metrics are \emph{micro}-averaged over all tiny frames (sqrt(area) $< 8$\,px) pooled across every annotating dataset; see Tab.~\ref{tab:sot_attributes_tiny} caption for definitions of SR, PR, P@5. \textbf{Bold} = best, \underline{underline} = second best, applied per row and per metric.}
 \label{tab:sot_attributes_tiny_occlusion}
 \setlength{\tabcolsep}{3pt}
 \renewcommand{\arraystretch}{1.15}
@@ -72,8 +73,8 @@ AM \tiny(OOTB) & 0.206 & 0.684 & 0.527 & 0.241 & 0.656 & 0.557 & 0.300 & \underl
  & SR & PR & P@5 & SR & PR & P@5 & SR & PR & P@5 & SR & PR & P@5
    & SR & PR & P@5 & SR & PR & P@5 & SR & PR & P@5 \\
 \midrule
-POC \tiny(SatSOT) & 0.112 & 0.293 & 0.208 & 0.113 & 0.262 & 0.240 & 0.112 & \underline{0.301} & 0.223 & \underline{0.140} & 0.177 & 0.159 & 0.132 & 0.210 & 0.193 & 0.138 & 0.297 & \underline{0.246} & \textbf{0.220} & \textbf{0.488} & \textbf{0.402} \\
-FOC \tiny(SatSOT) & 0.127 & 0.371 & 0.293 & 0.139 & 0.380 & 0.353 & 0.170 & 0.474 & 0.432 & \textbf{0.314} & \underline{0.497} & \textbf{0.489} & 0.161 & 0.202 & 0.189 & 0.175 & 0.277 & 0.217 & \underline{0.299} & \textbf{0.515} & \underline{0.475} \\
+POC & 0.137 & 0.380 & 0.280 & 0.146 & 0.343 & 0.320 & 0.148 & 0.397 & 0.310 & 0.154 & 0.201 & 0.179 & 0.189 & 0.329 & 0.319 & \underline{0.194} & \underline{0.401} & \underline{0.364} & \textbf{0.270} & \textbf{0.561} & \textbf{0.483} \\
+FOC & 0.120 & 0.333 & 0.254 & 0.138 & 0.340 & 0.316 & 0.156 & \underline{0.406} & 0.365 & \textbf{0.290} & 0.406 & \textbf{0.401} & 0.177 & 0.219 & 0.213 & 0.187 & 0.266 & 0.231 & \underline{0.261} & \textbf{0.415} & \underline{0.392} \\
 STO \tiny(SV248S) & 0.098 & \underline{0.342} & 0.231 & 0.093 & 0.275 & 0.187 & 0.093 & 0.300 & 0.187 & \underline{0.212} & 0.329 & \underline{0.268} & 0.129 & 0.235 & 0.182 & 0.145 & 0.288 & 0.222 & \textbf{0.234} & \textbf{0.477} & \textbf{0.428} \\
 LTO \tiny(SV248S) & 0.106 & \textbf{0.382} & \underline{0.253} & 0.105 & 0.363 & 0.234 & 0.089 & 0.338 & 0.190 & \textbf{0.254} & \underline{0.372} & \textbf{0.323} & 0.116 & 0.229 & 0.186 & 0.132 & 0.292 & 0.236 & \underline{0.142} & 0.351 & 0.247 \\
 CO \tiny(SV248S) & 0.091 & 0.285 & 0.195 & 0.094 & 0.253 & 0.182 & 0.089 & 0.262 & 0.173 & \textbf{0.206} & \underline{0.296} & \underline{0.256} & 0.116 & 0.187 & 0.153 & 0.122 & 0.214 & 0.170 & \underline{0.199} & \textbf{0.380} & \textbf{0.343} \\

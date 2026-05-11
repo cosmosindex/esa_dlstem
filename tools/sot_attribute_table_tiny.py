@@ -67,29 +67,31 @@ UNIFIED_ATTR_MAP: dict[str, dict[str, list[str]]] = {
 ATTR_ORDER = ["BC", "IV", "ROT", "OCC", "SOB", "DEF"]
 DATASET_ORDER = ["satsot", "sv248s", "ootb"]
 
-# (display label, dataset, native attr names) for non-occlusion uniques + occlusion sub-types
-UNIQUE_ATTRS: list[tuple[str, str, list[str]]] = [
-    ("ARC", "satsot", ["ARC"]),
-    ("OON", "ootb",   ["OON"]),
-    ("LQ",  "satsot", ["LQ"]),
-    ("TO",  "satsot", ["TO"]),
-    ("BJT", "satsot", ["BJT"]),
-    ("BCH", "sv248s", ["BCH"]),
-    ("ND",  "sv248s", ["ND"]),
-    ("IBG", "sv248s", ["BCL"]),
-    ("SM",  "sv248s", ["SM"]),
-    ("LT",  "ootb",   ["LT"]),
-    ("MB",  "ootb",   ["MB"]),
-    ("IM",  "ootb",   ["IM"]),
-    ("AM",  "ootb",   ["AM"]),
+# (display label, {dataset: [native attr names]}) for non-shared taxonomy
+# rows + occlusion sub-types. POC/FOC pool SatSOT+OOTB (mirrors the OCC
+# unification in the shared block); every other entry is single-dataset.
+UNIQUE_ATTRS: list[tuple[str, dict[str, list[str]]]] = [
+    ("ARC", {"satsot": ["ARC"]}),
+    ("OON", {"ootb":   ["OON"]}),
+    ("LQ",  {"satsot": ["LQ"]}),
+    ("TO",  {"satsot": ["TO"]}),
+    ("BJT", {"satsot": ["BJT"]}),
+    ("BCH", {"sv248s": ["BCH"]}),
+    ("ND",  {"sv248s": ["ND"]}),
+    ("IBG", {"sv248s": ["BCL"]}),
+    ("SM",  {"sv248s": ["SM"]}),
+    ("LT",  {"ootb":   ["LT"]}),
+    ("MB",  {"ootb":   ["MB"]}),
+    ("IM",  {"ootb":   ["IM"]}),
+    ("AM",  {"ootb":   ["AM"]}),
 ]
 
-OCCLUSION_SUBTYPES: list[tuple[str, str, list[str]]] = [
-    ("POC", "satsot", ["POC"]),
-    ("FOC", "satsot", ["FOC"]),
-    ("STO", "sv248s", ["STO"]),
-    ("LTO", "sv248s", ["LTO"]),
-    ("CO",  "sv248s", ["CO"]),
+OCCLUSION_SUBTYPES: list[tuple[str, dict[str, list[str]]]] = [
+    ("POC", {"satsot": ["POC"], "ootb": ["PO"]}),
+    ("FOC", {"satsot": ["FOC"], "ootb": ["FO"]}),
+    ("STO", {"sv248s": ["STO"]}),
+    ("LTO", {"sv248s": ["LTO"]}),
+    ("CO",  {"sv248s": ["CO"]}),
 ]
 
 DATASET_ROOTS = {
@@ -343,8 +345,9 @@ def main():
             attr_video_sets[(ds, attr)] = videos_with_natives(
                 seq_attrs[ds], UNIFIED_ATTR_MAP[attr][ds],
             )
-    for label, ds, natives in UNIQUE_ATTRS + OCCLUSION_SUBTYPES:
-        attr_video_sets[(ds, label)] = videos_with_natives(seq_attrs[ds], natives)
+    for label, ds_natives in UNIQUE_ATTRS + OCCLUSION_SUBTYPES:
+        for ds, natives in ds_natives.items():
+            attr_video_sets[(ds, label)] = videos_with_natives(seq_attrs[ds], natives)
 
     # All labels we care about (we output one micro stat per (tracker, dataset, label) where applicable).
     all_labels: list[tuple[str, str]] = []
@@ -352,17 +355,15 @@ def main():
         for ds in DATASET_ORDER:
             if UNIFIED_ATTR_MAP[attr][ds]:
                 all_labels.append((ds, attr))
-    for label, ds, _ in UNIQUE_ATTRS + OCCLUSION_SUBTYPES:
-        all_labels.append((ds, label))
+    for label, ds_natives in UNIQUE_ATTRS + OCCLUSION_SUBTYPES:
+        for ds in ds_natives:
+            all_labels.append((ds, label))
 
     print("[3/5] aggregating tiny-frame micro stats per (tracker, dataset, attribute)")
     runs = discover_runs(root)
 
-    # tracker × (dataset, label) -> stats dict
-    per_dataset_rows: list[dict] = []
-    # tracker × attr (unified) -> list of dicts (one per annotating dataset)
-    per_attr_dataset_metrics: dict[str, dict[str, list[dict]]] = defaultdict(lambda: defaultdict(list))
-
+    # Cache per-(tracker, dataset) tiny-frame grouping by video_id.
+    tiny_by_tracker_ds: dict[tuple[str, str], dict[str, list[dict]]] = {}
     for tracker, ds, run_dir in runs:
         with open(run_dir / "per_image_metrics.json") as f:
             frames = json.load(f)
@@ -382,14 +383,23 @@ def main():
                 continue
             recs = fr.get("sot_records") or []
             by_seq_tiny[vid].extend(recs)
+        tiny_by_tracker_ds[(tracker, ds)] = dict(by_seq_tiny)
 
+    trackers = sorted({t for t, _ in tiny_by_tracker_ds.keys()})
+
+    # tracker × (dataset, label) -> stats dict (per-dataset breakdown, kept for diagnostics)
+    per_dataset_rows: list[dict] = []
+    # tracker × attr (unified) -> list of dicts (one per annotating dataset, for arithmetic-mean)
+    per_attr_dataset_metrics: dict[str, dict[str, list[dict]]] = defaultdict(lambda: defaultdict(list))
+
+    for (tracker, ds), by_seq_tiny in tiny_by_tracker_ds.items():
         # Iterate every (label, dataset) where label applies to this dataset.
         labels_for_ds: list[str] = []
         for attr in ATTR_ORDER:
             if UNIFIED_ATTR_MAP[attr][ds]:
                 labels_for_ds.append(attr)
-        for label, attr_ds, _ in UNIQUE_ATTRS + OCCLUSION_SUBTYPES:
-            if attr_ds == ds:
+        for label, ds_natives in UNIQUE_ATTRS + OCCLUSION_SUBTYPES:
+            if ds in ds_natives:
                 labels_for_ds.append(label)
 
         for label in labels_for_ds:
@@ -418,6 +428,35 @@ def main():
                     "n_tiny_frames": stats["n_frames"],
                 })
 
+    # Cross-dataset tiny-frame pooling for non-unified taxonomy rows
+    # (POC/FOC pool SatSOT+OOTB; STO/LTO/CO and other dataset-unique rows
+    # have a single annotating dataset so the "pool" is a no-op).
+    pooled_rows: list[dict] = []
+    for tracker in trackers:
+        for label, ds_natives in UNIQUE_ATTRS + OCCLUSION_SUBTYPES:
+            picked_records: list[dict] = []
+            n_seq_with_tiny = 0
+            for ds in ds_natives:
+                by_seq_tiny = tiny_by_tracker_ds.get((tracker, ds), {})
+                vids = attr_video_sets[(ds, label)]
+                for v in vids:
+                    if v in by_seq_tiny:
+                        picked_records.extend(by_seq_tiny[v])
+                        n_seq_with_tiny += 1
+            stats = _micro_stats(picked_records)
+            if not stats["n_frames"]:
+                continue
+            pooled_rows.append({
+                "tracker":        tracker,
+                "attribute":      label,
+                "datasets":       "|".join(sorted(ds_natives.keys())),
+                "n_seq_with_tiny": n_seq_with_tiny,
+                "n_tiny_frames":   stats["n_frames"],
+                "SR":  round(stats["SR"], 4),
+                "PR":  round(stats["PR"], 4),
+                "P5":  round(stats["P5"], 4),
+            })
+
     print("[4/5] averaging unified-attribute rates across annotating datasets")
     unified_rows: list[dict] = []
     for tracker in sorted(per_attr_dataset_metrics.keys()):
@@ -436,18 +475,18 @@ def main():
                 "P5":  round(float(np.mean([m["P5"] for m in ds_metrics])), 4),
             })
 
-    # Unique attribute & occlusion subtype rows: directly from per_dataset_rows (one dataset each).
-    unique_rows: list[dict] = []
-    for r in per_dataset_rows:
-        if r["attribute"] in {l for l, _, _ in UNIQUE_ATTRS + OCCLUSION_SUBTYPES}:
-            if r["n_tiny_frames"]:
-                unique_rows.append({
-                    "tracker":      r["tracker"],
-                    "attribute":    r["attribute"],
-                    "dataset":      r["dataset"],
-                    "n_tiny_frames": r["n_tiny_frames"],
-                    "SR":  r["SR"], "PR":  r["PR"], "P5":  r["P5"],
-                })
+    # Unique attribute & occlusion subtype rows: use the pooled-across-datasets
+    # rates (POC/FOC pool SatSOT+OOTB; others are single-dataset = no-op pool).
+    unique_rows: list[dict] = [
+        {
+            "tracker":       r["tracker"],
+            "attribute":     r["attribute"],
+            "datasets":      r["datasets"],
+            "n_tiny_frames": r["n_tiny_frames"],
+            "SR":  r["SR"], "PR":  r["PR"], "P5":  r["P5"],
+        }
+        for r in pooled_rows
+    ]
 
     print("[5/5] writing CSVs")
     per_dataset_rows.sort(key=lambda r: (r["tracker"], r["attribute"], r["dataset"]))
@@ -508,7 +547,12 @@ TRACKER_DISPLAY = {
     "sam3":    (r"\textbf{SAM 3}~\cite{carion2026sam3}",           "SAM 3"),
 }
 
-# (label, tag-on-row-or-empty, source: "unified" or ("unique", dataset))
+# (label, source).
+# - source == "" → look up in unified_rows (BC/IV/ROT/OCC/SOB/DEF).
+# - source is a string of "|" separated dataset codes → look up in unique_rows.
+#   Single-dataset rows render the dataset tag next to the abbreviation in the
+#   LaTeX table; pooled rows (POC/FOC) leave the tag off because the row is
+#   now defined across all annotating datasets.
 MAIN_ROWS_UNIFIED = [
     ("BC",  ""),
     ("IV",  ""),
@@ -534,9 +578,11 @@ MAIN_ROWS_OTHER = [
     ("IM",  "ootb"),
     ("AM",  "ootb"),
 ]
+# POC/FOC pool SatSOT+OOTB → empty dataset tag, row label printed without
+# "(SatSOT)" suffix. STO/LTO/CO remain SV248S-only.
 OCC_ROWS = [
-    ("POC", "satsot"),
-    ("FOC", "satsot"),
+    ("POC", "ootb|satsot"),
+    ("FOC", "ootb|satsot"),
     ("STO", "sv248s"),
     ("LTO", "sv248s"),
     ("CO",  "sv248s"),
@@ -558,19 +604,23 @@ def _fmt_cell(val: float | None, is_best: bool, is_second: bool) -> str:
 
 def _row_values(label: str, source: str, unified_rows: list[dict],
                 unique_rows: list[dict]) -> dict[str, dict[str, float | None]]:
-    """tracker → {SR, PR, P5} or None values, for the requested attribute row."""
+    """tracker → {SR, PR, P5} or None values, for the requested attribute row.
+
+    ``source == ""``  → match unified_rows by label.
+    Other ``source`` → match unique_rows by (label, datasets), where the
+    ``datasets`` field is the pipe-joined sorted list of annotating dataset
+    codes from the pooled-row builder (e.g. "ootb|satsot" for POC/FOC,
+    "satsot" for LQ, "sv248s" for STO).
+    """
     out: dict[str, dict[str, float | None]] = {}
     if source == "":
-        # unified attribute
         for r in unified_rows:
             if r["attribute"] == label:
                 out[r["tracker"]] = {"SR": r["SR"], "PR": r["PR"], "P5": r["P5"]}
     else:
-        # dataset-unique
         for r in unique_rows:
-            if r["attribute"] == label and r["dataset"] == source:
+            if r["attribute"] == label and r["datasets"] == source:
                 out[r["tracker"]] = {"SR": r["SR"], "PR": r["PR"], "P5": r["P5"]}
-    # fill missing trackers with None
     for tr in TRACKER_ORDER:
         out.setdefault(tr, {"SR": None, "PR": None, "P5": None})
     return out
@@ -595,7 +645,10 @@ def _format_row(label: str, source: str, unified_rows: list[dict],
             second = rank[metric][1:2]
             cells.append(_fmt_cell(v, tr in best, tr in second))
     label_cell = label
-    if source:
+    # Only print a dataset tag for genuinely single-dataset rows. Pooled
+    # rows (POC/FOC) carry a "|"-joined source like "ootb|satsot" and are
+    # printed without a per-row dataset suffix.
+    if source and "|" not in source:
         label_cell += r" \tiny(" + _DS_DISPLAY[source] + ")"
     return label_cell + " & " + " & ".join(cells) + r" \\"
 
@@ -638,12 +691,12 @@ def emit_latex(tex_path: Path, unified_rows: list[dict],
     main_caption = (
         "SOT performance on \\emph{tiny} frames (per-frame GT $\\sqrt{\\mathrm{area}} < 8$\\,px) "
         "for the attributes available in Space-tracker-SOT. "
-        "Metrics are \\emph{micro}-averaged over all qualifying tiny frames within each (dataset, attribute) group: "
+        "Metrics are \\emph{micro}-averaged over all qualifying tiny frames pooled across every dataset that annotates the attribute: "
         "SR is the AUC over IoU thresholds in $[0, 1]$, PR is the AUC over CLE thresholds in $[0, 50]$\\,px, "
         "and P@5 is the fraction of tiny frames with CLE $\\leq 5$\\,px. "
-        "For \\emph{unified} attributes (BC / IV / ROT / OCC / SOB / DEF) we additionally arithmetic-mean these per-(dataset, attribute) micro rates across the annotating datasets (BC and DEF: 2 datasets; IV / ROT / OCC / SOB: 3 datasets); "
-        "for dataset-unique attributes the (single) annotating dataset is shown next to the abbreviation. "
-        "DEF, ARC, and OON contain no tiny frames in any annotating dataset and are reported as ``---''. "
+        "For \\emph{unified} attributes (BC / IV / ROT / OCC / SOB / DEF) we first compute per-(dataset, attribute) micro rates and then arithmetic-mean across the annotating datasets (BC and DEF: 2 datasets; IV / ROT / OCC / SOB: 3 datasets), preserving cross-dataset balance. "
+        "Dataset-unique rows (ARC / OON / LQ / TO / BJT / BCH / ND / IBG / SM / LT / MB / IM / AM) are computed on the single annotating dataset, shown next to the abbreviation. "
+        "Rows with no tiny frames in any annotating dataset are reported as ``---''. "
         "Occlusion sub-types of OCC are reported separately in Tab.~\\ref{tab:sot_attributes_tiny_occlusion}. "
         "\\textbf{Bold} = best, \\underline{underline} = second best, applied per row and per metric. "
         "Methodologically distinct from Tab.~\\ref{tab:sot_attributes}, which uses per-sequence aggregation over the full size range."
@@ -651,7 +704,9 @@ def emit_latex(tex_path: Path, unified_rows: list[dict],
 
     occ_caption = (
         "Tiny-frame SOT performance on the occlusion sub-types of the unified \\textbf{OCC} attribute (Tab.~\\ref{tab:sot_attributes_tiny}). "
-        "Metrics are \\emph{micro}-averaged over all tiny frames in the annotating dataset (sqrt(area) $< 8$\\,px); see Tab.~\\ref{tab:sot_attributes_tiny} caption for definitions of SR, PR, P@5. "
+        "POC pools SatSOT POC with OOTB PO; FOC pools SatSOT FOC with OOTB FO (mirroring the OCC unification in Tab.~\\ref{tab:sot_attributes_tiny}); "
+        "STO / LTO / CO are annotated only by SV248S (temporal axis, no spatial-axis counterpart in the other two datasets). "
+        "Metrics are \\emph{micro}-averaged over all tiny frames (sqrt(area) $< 8$\\,px) pooled across every annotating dataset; see Tab.~\\ref{tab:sot_attributes_tiny} caption for definitions of SR, PR, P@5. "
         "\\textbf{Bold} = best, \\underline{underline} = second best, applied per row and per metric."
     )
 
