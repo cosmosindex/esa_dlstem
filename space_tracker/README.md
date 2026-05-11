@@ -4,7 +4,7 @@ A unified single-object-tracking (SOT) benchmark across **SatSOT**, **SV248S**, 
 
 This directory ships:
 
-- **`space_tracker.json`** — manifest cataloguing all 463 sequences (relative paths to imagery / GT, native + unified attribute labels, sequence-level scale stats, tiny flag). ~210 KB; safe to commit and diff.
+- **`space_tracker.json`** — manifest cataloguing all 463 sequences (relative paths to imagery / GT, native + unified + full-taxonomy attribute labels, sequence-level scale stats, tiny flag). ~260 KB; safe to commit and diff.
 - **`manifest.py`** — JSON loader + filtering API (`Manifest.filter(...)`).
 - **`data.py`** — per-frame loader bridging the manifest to on-disk imagery and GT for each of the three source datasets.
 - **`metrics.py`** — per-sequence SR / NPR / PR / P@5 (PR over CLE ∈ [0, 50] px; NPR over normalised CLE ∈ [0, 0.5]).
@@ -14,7 +14,12 @@ This directory ships:
 
 The manifest does **not** ship raw imagery or GT — readers are expected to download SatSOT, SV248S, and OOTB themselves under their original licenses, the same way LaSOT and GOT-10k handle it.
 
-Attribute taxonomy: 6 unified attributes (BC, IV, ROT, OCC, SOB, DEF) consolidate the per-dataset native labels (e.g. OCC = SatSOT \{POC, FOC\} ∪ SV248S \{STO, LTO, CO\} ∪ OOTB \{PO, FO\}). The full mapping is in `manifest['unified_attributes']`.
+Attribute taxonomy (two layers):
+
+1. **Unified attributes** (6 shared rows): `BC`, `IV`, `ROT`, `OCC`, `SOB`, `DEF`. These consolidate per-dataset native labels (e.g. OCC = SatSOT \{POC, FOC\} ∪ SV248S \{STO, LTO, CO\} ∪ OOTB \{PO, FO\}). Mapping lives in `manifest['unified_attributes']`; per-sequence labels are in `seq.unified_attrs`.
+2. **Full paper taxonomy** (23 rows total, mirrors `split_attributes_table.tex`): the 6 unified rows plus aspect-ratio (`ARC`, `OON`), 10 dataset-unique-other (`LQ`, `BJT`, `BCH`, `ND`, `IBG`, `SM`, `LT`, `MB`, `IM`, `AM`), and 5 occlusion sub-types (`POC`, `FOC`, `STO`, `LTO`, `CO`). Mapping lives in `manifest['attribute_taxonomy']`; per-sequence labels are in `seq.taxonomy_attrs`.
+
+The two layers are consistent: any sequence with an occlusion sub-type also carries `OCC` in its unified set, and the unified set is always a subset of the taxonomy set. Use `unified_attrs` for cross-dataset headline numbers; use `taxonomy_attrs` to drill down (e.g. OCC → POC vs. FOC vs. STO/LTO/CO).
 
 Aggregation: per-sequence — each sequence contributes one curve per metric, and the headline number is the equal-weight mean across sequences. This matches OTB / LaSOT / GOT-10k / TrackingNet / OOTB. Cross-dataset unified-attribute scores additionally arithmetic-mean across the datasets that annotate the attribute.
 
@@ -32,7 +37,7 @@ bench = Benchmark.load(
     },
 )
 
-# 1. Iterate over a slice (e.g. all tiny sequences with the OCC attribute).
+# 1a. Iterate over a slice (e.g. all tiny sequences with the OCC attribute).
 for seq in bench.filter(unified_attrs=["OCC"], tiny=True):
     for frame in bench.frames(seq):
         if not frame.visible:
@@ -41,6 +46,15 @@ for seq in bench.filter(unified_attrs=["OCC"], tiny=True):
         # frame.gt_box_xyxy — np.ndarray (4,) xyxy
         # frame.gt_obb_8pt  — np.ndarray (8,) corners (OOTB only)
         ...
+
+# 1b. Drill into a unified row using its sub-types (filter via taxonomy_attrs).
+for sub in bench.manifest.occlusion_subtypes():     # ["POC","FOC","STO","LTO","CO"]
+    seqs = bench.filter(taxonomy_attrs=[sub])
+    print(sub, "→", len(seqs), "sequences")
+
+# 1c. Filter by a dataset-unique paper-taxonomy attribute (e.g. SV248S IBG).
+for seq in bench.filter(taxonomy_attrs=["IBG"]):
+    ...
 
 # 2. Run a tracker and score it.
 def my_tracker(frames_iter, init_box):

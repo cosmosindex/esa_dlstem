@@ -43,26 +43,29 @@ SHARED_ATTR_MAP = {
 SHARED_ORDER = ["BC", "IV", "ROT", "OCC", "SOB", "DEF"]
 
 # Native (dataset-unique) attributes — used by Table 2.
-# (label as printed in the table, dataset, native attr names that it covers)
+# (label as printed in the table, {dataset: [native attr names]}). POC and
+# FOC are pooled across SatSOT (POC/FOC) and OOTB (PO/FO), mirroring the
+# OCC unification in the main attribute table; STO/LTO/CO stay SV248S-only
+# because no other dataset annotates the temporal axis.
 UNIQUE_ATTRS = [
-    ("POC", "satsot", ["POC"]),
-    ("FOC", "satsot", ["FOC"]),
-    ("STO", "sv248s", ["STO"]),
-    ("LTO", "sv248s", ["LTO"]),
-    ("CO",  "sv248s", ["CO"]),
-    ("ARC", "satsot", ["ARC"]),
-    ("OON", "ootb",   ["OON"]),
-    ("LQ",  "satsot", ["LQ"]),
-    ("TO",  "satsot", ["TO"]),
-    ("BJT", "satsot", ["BJT"]),
-    ("BCH", "sv248s", ["BCH"]),
-    ("ND",  "sv248s", ["ND"]),
-    ("IBG", "sv248s", ["BCL"]),   # IBG (renamed in our taxonomy) ≡ SV248S BCL
-    ("SM",  "sv248s", ["SM"]),
-    ("LT",  "ootb",   ["LT"]),
-    ("MB",  "ootb",   ["MB"]),
-    ("IM",  "ootb",   ["IM"]),
-    ("AM",  "ootb",   ["AM"]),
+    ("POC", {"satsot": ["POC"], "ootb": ["PO"]}),
+    ("FOC", {"satsot": ["FOC"], "ootb": ["FO"]}),
+    ("STO", {"sv248s": ["STO"]}),
+    ("LTO", {"sv248s": ["LTO"]}),
+    ("CO",  {"sv248s": ["CO"]}),
+    ("ARC", {"satsot": ["ARC"]}),
+    ("OON", {"ootb":   ["OON"]}),
+    ("LQ",  {"satsot": ["LQ"]}),
+    ("TO",  {"satsot": ["TO"]}),
+    ("BJT", {"satsot": ["BJT"]}),
+    ("BCH", {"sv248s": ["BCH"]}),
+    ("ND",  {"sv248s": ["ND"]}),
+    ("IBG", {"sv248s": ["BCL"]}),   # IBG (renamed in our taxonomy) ≡ SV248S BCL
+    ("SM",  {"sv248s": ["SM"]}),
+    ("LT",  {"ootb":   ["LT"]}),
+    ("MB",  {"ootb":   ["MB"]}),
+    ("IM",  {"ootb":   ["IM"]}),
+    ("AM",  {"ootb":   ["AM"]}),
 ]
 
 
@@ -142,22 +145,30 @@ def main():
               f"  OOTB {per_ds['ootb'][0]:3d}/{per_ds['ootb'][1]:6d}"
               f"  =>  {total_seq} seqs / {total_frames} frames")
 
-    print("\n[3/3] unique native attributes")
-    for label, ds_name, natives in UNIQUE_ATTRS:
-        n_seq, n_frames = attr_counts(seq_attrs[ds_name], frame_counts[ds_name], natives)
+    print("\n[3/3] unique native attributes (pooled across annotating datasets)")
+    for label, ds_natives in UNIQUE_ATTRS:
+        per_ds = {ds_name: (0, 0) for ds_name in ("satsot", "sv248s", "ootb")}
+        for ds_name, natives in ds_natives.items():
+            per_ds[ds_name] = attr_counts(
+                seq_attrs[ds_name], frame_counts[ds_name], natives,
+            )
+        total_seq    = sum(s for s, _ in per_ds.values())
+        total_frames = sum(f for _, f in per_ds.values())
         rows.append({
             "table": "unique",
             "attr":  label,
-            "satsot_seq":    n_seq    if ds_name == "satsot" else 0,
-            "satsot_frames": n_frames if ds_name == "satsot" else 0,
-            "sv248s_seq":    n_seq    if ds_name == "sv248s" else 0,
-            "sv248s_frames": n_frames if ds_name == "sv248s" else 0,
-            "ootb_seq":      n_seq    if ds_name == "ootb"   else 0,
-            "ootb_frames":   n_frames if ds_name == "ootb"   else 0,
-            "total_seq":     n_seq,
-            "total_frames":  n_frames,
+            "satsot_seq":    per_ds["satsot"][0], "satsot_frames": per_ds["satsot"][1],
+            "sv248s_seq":    per_ds["sv248s"][0], "sv248s_frames": per_ds["sv248s"][1],
+            "ootb_seq":      per_ds["ootb"][0],   "ootb_frames":   per_ds["ootb"][1],
+            "total_seq":     total_seq,
+            "total_frames":  total_frames,
         })
-        print(f"   {label:3s} ({ds_name:6s}): {n_seq:3d} seqs / {n_frames:6d} frames")
+        ds_names = ",".join(sorted(ds_natives.keys()))
+        print(f"   {label:3s} ({ds_names:14s}): "
+              f"SatSOT {per_ds['satsot'][0]:3d}/{per_ds['satsot'][1]:6d}"
+              f"  SV248S {per_ds['sv248s'][0]:3d}/{per_ds['sv248s'][1]:7d}"
+              f"  OOTB {per_ds['ootb'][0]:3d}/{per_ds['ootb'][1]:6d}"
+              f"  =>  {total_seq} seqs / {total_frames} frames")
 
     out = Path(args.out)
     out.parent.mkdir(parents=True, exist_ok=True)

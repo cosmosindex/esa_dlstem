@@ -1,5 +1,5 @@
 {
-  "version": "1.0",
+  "version": "1.1",
   "name": "space-tracker",
   "description": "Unified single-object-tracking benchmark across SatSOT, SV248S, and OOTB. Manifest indexes sequences and unified-attribute groupings; raw imagery and GT must be obtained from the original datasets per their license terms.",
   "evaluation": {
@@ -133,6 +133,388 @@
       }
     }
   },
+  "attribute_taxonomy": {
+    "description": "Full Space-tracker-SOT sequence-attribute taxonomy (paper table: split_attributes_table.tex). Four groups: shared (collapsed unified rows), aspect_ratio (dataset-unique), dataset_unique_other, and occlusion_subtypes (drill-down of the unified OCC row). Each per-sequence ``taxonomy_attrs`` field is the flat list of taxonomy names that sequence carries, derived from ``native_attrs`` via each attribute's ``datasets`` mapping.",
+    "groups": {
+      "shared": {
+        "description": "Attributes annotated in >= 2 of the 3 source datasets, collapsed into one unified row. Same 6 keys as ``unified_attributes``.",
+        "members": [
+          "BC",
+          "IV",
+          "ROT",
+          "OCC",
+          "SOB",
+          "DEF"
+        ]
+      },
+      "aspect_ratio": {
+        "description": "Dataset-unique aspect-ratio attributes. ARC measures temporal change of the aspect ratio (SatSOT); OON measures static extremeness of the aspect ratio (OOTB).",
+        "members": [
+          "ARC",
+          "OON"
+        ]
+      },
+      "dataset_unique_other": {
+        "description": "Other dataset-unique attributes (annotated by exactly one of the three datasets).",
+        "members": [
+          "LQ",
+          "BJT",
+          "BCH",
+          "ND",
+          "IBG",
+          "SM",
+          "LT",
+          "MB",
+          "IM",
+          "AM"
+        ]
+      },
+      "occlusion_subtypes": {
+        "description": "Sub-types of the unified OCC row. SatSOT/OOTB split occlusion spatially (partial vs. full); SV248S splits it temporally (short / long / continuous). The two axes are not comparable at the sequence-attribute level, so we report sub-types here rather than collapsing them.",
+        "axes": {
+          "spatial": [
+            "POC",
+            "FOC"
+          ],
+          "temporal": [
+            "STO",
+            "LTO",
+            "CO"
+          ]
+        },
+        "members": [
+          "POC",
+          "FOC",
+          "STO",
+          "LTO",
+          "CO"
+        ]
+      }
+    },
+    "attributes": {
+      "BC": {
+        "group": "shared",
+        "full_name": "Background Clutter",
+        "definition": "Background has similar appearance (texture/color) to the target.",
+        "datasets": {
+          "satsot": [
+            "BC"
+          ],
+          "sv248s": [],
+          "ootb": [
+            "BC"
+          ]
+        }
+      },
+      "IV": {
+        "group": "shared",
+        "full_name": "Illumination Variation",
+        "definition": "Illumination around the target changes significantly.",
+        "datasets": {
+          "satsot": [
+            "IV"
+          ],
+          "sv248s": [
+            "IV"
+          ],
+          "ootb": [
+            "IV"
+          ]
+        }
+      },
+      "ROT": {
+        "group": "shared",
+        "full_name": "Rotation (in-plane)",
+        "definition": "Target rotates in the image plane (>= 30\u00b0 for SV248S).",
+        "datasets": {
+          "satsot": [
+            "ROT"
+          ],
+          "sv248s": [
+            "IPR"
+          ],
+          "ootb": [
+            "IPR"
+          ]
+        }
+      },
+      "OCC": {
+        "group": "shared",
+        "full_name": "Occlusion (any kind)",
+        "definition": "Target is occluded by scene structures (any degree, any duration). Consolidates spatial (PO/FO/POC/FOC) and temporal (STO/LTO/CO) annotations across the three datasets.",
+        "datasets": {
+          "satsot": [
+            "POC",
+            "FOC"
+          ],
+          "sv248s": [
+            "STO",
+            "LTO",
+            "CO"
+          ],
+          "ootb": [
+            "PO",
+            "FO"
+          ]
+        },
+        "subtypes": [
+          "POC",
+          "FOC",
+          "STO",
+          "LTO",
+          "CO"
+        ]
+      },
+      "SOB": {
+        "group": "shared",
+        "full_name": "Similar Object",
+        "definition": "Nearby objects share shape / type / appearance with the target (\u2264 2.5x object size for SV248S).",
+        "datasets": {
+          "satsot": [
+            "SOB"
+          ],
+          "sv248s": [
+            "DS"
+          ],
+          "ootb": [
+            "SA"
+          ]
+        }
+      },
+      "DEF": {
+        "group": "shared",
+        "full_name": "Deformation",
+        "definition": "Non-rigid object deformation.",
+        "datasets": {
+          "satsot": [
+            "DEF"
+          ],
+          "sv248s": [],
+          "ootb": [
+            "DEF"
+          ]
+        }
+      },
+      "ARC": {
+        "group": "aspect_ratio",
+        "full_name": "Aspect Ratio Change",
+        "definition": "Ratio of the current-frame bbox aspect ratio to the first-frame bbox aspect ratio is outside [0.5, 2] (SatSOT spec).",
+        "datasets": {
+          "satsot": [
+            "ARC"
+          ],
+          "sv248s": [],
+          "ootb": []
+        }
+      },
+      "OON": {
+        "group": "aspect_ratio",
+        "full_name": "Out-of-Normal",
+        "definition": "The bounding-box aspect ratio itself is outside [0.3, 3] in the sequence.",
+        "datasets": {
+          "satsot": [],
+          "sv248s": [],
+          "ootb": [
+            "OON"
+          ]
+        }
+      },
+      "LQ": {
+        "group": "dataset_unique_other",
+        "full_name": "Low Quality",
+        "definition": "Image quality is low; target is hard to distinguish.",
+        "datasets": {
+          "satsot": [
+            "LQ"
+          ],
+          "sv248s": [],
+          "ootb": []
+        }
+      },
+      "BJT": {
+        "group": "dataset_unique_other",
+        "full_name": "Background Jitter",
+        "definition": "Background jitter caused by satellite camera shaking.",
+        "datasets": {
+          "satsot": [
+            "BJT"
+          ],
+          "sv248s": [],
+          "ootb": []
+        }
+      },
+      "BCH": {
+        "group": "dataset_unique_other",
+        "full_name": "Background Change",
+        "definition": "Background has noticeable changes in color or texture along the sequence.",
+        "datasets": {
+          "satsot": [],
+          "sv248s": [
+            "BCH"
+          ],
+          "ootb": []
+        }
+      },
+      "ND": {
+        "group": "dataset_unique_other",
+        "full_name": "Natural Disturbance",
+        "definition": "Target appearance affected by smog, sand, or clouds.",
+        "datasets": {
+          "satsot": [],
+          "sv248s": [
+            "ND"
+          ],
+          "ootb": []
+        }
+      },
+      "IBG": {
+        "group": "dataset_unique_other",
+        "full_name": "Indistinguishable from Background",
+        "definition": "Target disappears without occluder (too similar to surroundings) for >= 10 frames. Renamed from SV248S's BCL to avoid confusion with the frame-level INV flag of which BCL is the sequence-level aggregation.",
+        "datasets": {
+          "satsot": [],
+          "sv248s": [
+            "BCL"
+          ],
+          "ootb": []
+        }
+      },
+      "SM": {
+        "group": "dataset_unique_other",
+        "full_name": "Slow Motion",
+        "definition": "Target moves slowly (< 2.2 pps in SV248S).",
+        "datasets": {
+          "satsot": [],
+          "sv248s": [
+            "SM"
+          ],
+          "ootb": []
+        }
+      },
+      "LT": {
+        "group": "dataset_unique_other",
+        "full_name": "Less Textures",
+        "definition": "Target has poor texture information, causing discrimination difficulty.",
+        "datasets": {
+          "satsot": [],
+          "sv248s": [],
+          "ootb": [
+            "LT"
+          ]
+        }
+      },
+      "MB": {
+        "group": "dataset_unique_other",
+        "full_name": "Motion Blur",
+        "definition": "Target region is blurred due to object or platform motion.",
+        "datasets": {
+          "satsot": [],
+          "sv248s": [],
+          "ootb": [
+            "MB"
+          ]
+        }
+      },
+      "IM": {
+        "group": "dataset_unique_other",
+        "full_name": "Isotropic Motion",
+        "definition": "Nearby objects move with similar magnitude and direction.",
+        "datasets": {
+          "satsot": [],
+          "sv248s": [],
+          "ootb": [
+            "IM"
+          ]
+        }
+      },
+      "AM": {
+        "group": "dataset_unique_other",
+        "full_name": "Anisotropic Motion",
+        "definition": "Nearby objects move with similar magnitude but opposite direction.",
+        "datasets": {
+          "satsot": [],
+          "sv248s": [],
+          "ootb": [
+            "AM"
+          ]
+        }
+      },
+      "POC": {
+        "group": "occlusion_subtypes",
+        "parent": "OCC",
+        "axis": "spatial",
+        "full_name": "Partial Occlusion",
+        "definition": "Target is partially (but not fully) occluded in the image plane. Merges SatSOT's POC with OOTB's PO.",
+        "datasets": {
+          "satsot": [
+            "POC"
+          ],
+          "sv248s": [],
+          "ootb": [
+            "PO"
+          ]
+        }
+      },
+      "FOC": {
+        "group": "occlusion_subtypes",
+        "parent": "OCC",
+        "axis": "spatial",
+        "full_name": "Full Occlusion",
+        "definition": "Target is fully occluded in the image plane. Merges SatSOT's FOC with OOTB's FO.",
+        "datasets": {
+          "satsot": [
+            "FOC"
+          ],
+          "sv248s": [],
+          "ootb": [
+            "FO"
+          ]
+        }
+      },
+      "STO": {
+        "group": "occlusion_subtypes",
+        "parent": "OCC",
+        "axis": "temporal",
+        "full_name": "Short-Term Occlusion",
+        "definition": "<= 50 consecutive frames carry the OCC flag (SV248S spec).",
+        "datasets": {
+          "satsot": [],
+          "sv248s": [
+            "STO"
+          ],
+          "ootb": []
+        }
+      },
+      "LTO": {
+        "group": "occlusion_subtypes",
+        "parent": "OCC",
+        "axis": "temporal",
+        "full_name": "Long-Term Occlusion",
+        "definition": "> 50 consecutive frames carry the OCC flag (SV248S spec).",
+        "datasets": {
+          "satsot": [],
+          "sv248s": [
+            "LTO"
+          ],
+          "ootb": []
+        }
+      },
+      "CO": {
+        "group": "occlusion_subtypes",
+        "parent": "OCC",
+        "axis": "temporal",
+        "full_name": "Continuous Occlusion",
+        "definition": "Two or more STO/LTO events occur within a single sequence (SV248S spec).",
+        "datasets": {
+          "satsot": [],
+          "sv248s": [
+            "CO"
+          ],
+          "ootb": []
+        }
+      }
+    }
+  },
   "n_sequences": 463,
   "sequences": [
     {
@@ -155,6 +537,13 @@
         "BC",
         "ROT"
       ],
+      "taxonomy_attrs": [
+        "BC",
+        "ROT",
+        "OON",
+        "IM",
+        "AM"
+      ],
       "median_sqrt_area_px": 12.961,
       "tiny": false
     },
@@ -173,6 +562,11 @@
         "SA"
       ],
       "unified_attrs": [
+        "BC",
+        "ROT",
+        "SOB"
+      ],
+      "taxonomy_attrs": [
         "BC",
         "ROT",
         "SOB"
@@ -199,6 +593,11 @@
         "ROT",
         "SOB"
       ],
+      "taxonomy_attrs": [
+        "BC",
+        "ROT",
+        "SOB"
+      ],
       "median_sqrt_area_px": 9.165,
       "tiny": false
     },
@@ -219,6 +618,12 @@
       "unified_attrs": [
         "OCC",
         "SOB"
+      ],
+      "taxonomy_attrs": [
+        "OCC",
+        "SOB",
+        "AM",
+        "POC"
       ],
       "median_sqrt_area_px": 9.165,
       "tiny": false
@@ -242,6 +647,12 @@
         "BC",
         "ROT"
       ],
+      "taxonomy_attrs": [
+        "BC",
+        "ROT",
+        "LT",
+        "MB"
+      ],
       "median_sqrt_area_px": 9.165,
       "tiny": false
     },
@@ -259,6 +670,10 @@
         "SA"
       ],
       "unified_attrs": [
+        "ROT",
+        "SOB"
+      ],
+      "taxonomy_attrs": [
         "ROT",
         "SOB"
       ],
@@ -283,6 +698,11 @@
         "BC",
         "ROT"
       ],
+      "taxonomy_attrs": [
+        "BC",
+        "ROT",
+        "MB"
+      ],
       "median_sqrt_area_px": 10.15,
       "tiny": false
     },
@@ -305,6 +725,12 @@
         "ROT",
         "OCC"
       ],
+      "taxonomy_attrs": [
+        "IV",
+        "ROT",
+        "OCC",
+        "FOC"
+      ],
       "median_sqrt_area_px": 7.071,
       "tiny": true
     },
@@ -324,6 +750,11 @@
       "unified_attrs": [
         "OCC"
       ],
+      "taxonomy_attrs": [
+        "OCC",
+        "POC",
+        "FOC"
+      ],
       "median_sqrt_area_px": 12.699,
       "tiny": false
     },
@@ -342,6 +773,10 @@
       ],
       "unified_attrs": [
         "BC"
+      ],
+      "taxonomy_attrs": [
+        "BC",
+        "LT"
       ],
       "median_sqrt_area_px": 10.776,
       "tiny": false
@@ -363,6 +798,12 @@
       "unified_attrs": [
         "OCC",
         "SOB"
+      ],
+      "taxonomy_attrs": [
+        "OCC",
+        "SOB",
+        "OON",
+        "FOC"
       ],
       "median_sqrt_area_px": 10.019,
       "tiny": false
@@ -391,6 +832,16 @@
         "OCC",
         "SOB"
       ],
+      "taxonomy_attrs": [
+        "BC",
+        "ROT",
+        "OCC",
+        "SOB",
+        "OON",
+        "IM",
+        "AM",
+        "POC"
+      ],
       "median_sqrt_area_px": 15.811,
       "tiny": false
     },
@@ -413,6 +864,13 @@
         "BC",
         "OCC",
         "SOB"
+      ],
+      "taxonomy_attrs": [
+        "BC",
+        "OCC",
+        "SOB",
+        "OON",
+        "FOC"
       ],
       "median_sqrt_area_px": 12.684,
       "tiny": false
@@ -440,6 +898,16 @@
         "OCC",
         "SOB"
       ],
+      "taxonomy_attrs": [
+        "IV",
+        "OCC",
+        "SOB",
+        "OON",
+        "LT",
+        "IM",
+        "POC",
+        "FOC"
+      ],
       "median_sqrt_area_px": 14.422,
       "tiny": false
     },
@@ -464,6 +932,15 @@
         "IV",
         "OCC",
         "SOB"
+      ],
+      "taxonomy_attrs": [
+        "IV",
+        "OCC",
+        "SOB",
+        "LT",
+        "IM",
+        "POC",
+        "FOC"
       ],
       "median_sqrt_area_px": 10.198,
       "tiny": false
@@ -490,6 +967,14 @@
         "IV",
         "SOB"
       ],
+      "taxonomy_attrs": [
+        "BC",
+        "IV",
+        "SOB",
+        "LT",
+        "MB",
+        "IM"
+      ],
       "median_sqrt_area_px": 6.784,
       "tiny": true
     },
@@ -511,6 +996,11 @@
         "BC",
         "ROT"
       ],
+      "taxonomy_attrs": [
+        "BC",
+        "ROT",
+        "LT"
+      ],
       "median_sqrt_area_px": 10.546,
       "tiny": false
     },
@@ -529,6 +1019,10 @@
       ],
       "unified_attrs": [
         "ROT"
+      ],
+      "taxonomy_attrs": [
+        "ROT",
+        "LT"
       ],
       "median_sqrt_area_px": 7.529,
       "tiny": true
@@ -553,6 +1047,12 @@
         "ROT",
         "SOB"
       ],
+      "taxonomy_attrs": [
+        "BC",
+        "ROT",
+        "SOB",
+        "AM"
+      ],
       "median_sqrt_area_px": 9.977,
       "tiny": false
     },
@@ -571,6 +1071,10 @@
       ],
       "unified_attrs": [
         "IV"
+      ],
+      "taxonomy_attrs": [
+        "IV",
+        "MB"
       ],
       "median_sqrt_area_px": 20.149,
       "tiny": false
@@ -593,6 +1097,13 @@
       "unified_attrs": [
         "ROT",
         "OCC"
+      ],
+      "taxonomy_attrs": [
+        "ROT",
+        "OCC",
+        "OON",
+        "POC",
+        "FOC"
       ],
       "median_sqrt_area_px": 23.367,
       "tiny": false
@@ -619,6 +1130,15 @@
         "ROT",
         "OCC"
       ],
+      "taxonomy_attrs": [
+        "BC",
+        "ROT",
+        "OCC",
+        "OON",
+        "MB",
+        "IM",
+        "POC"
+      ],
       "median_sqrt_area_px": 11.904,
       "tiny": false
     },
@@ -642,6 +1162,13 @@
         "BC",
         "ROT",
         "SOB"
+      ],
+      "taxonomy_attrs": [
+        "BC",
+        "ROT",
+        "SOB",
+        "OON",
+        "AM"
       ],
       "median_sqrt_area_px": 8.832,
       "tiny": false
@@ -667,6 +1194,14 @@
         "BC",
         "ROT",
         "SOB"
+      ],
+      "taxonomy_attrs": [
+        "BC",
+        "ROT",
+        "SOB",
+        "LT",
+        "MB",
+        "AM"
       ],
       "median_sqrt_area_px": 10.531,
       "tiny": false
@@ -695,6 +1230,16 @@
         "OCC",
         "SOB"
       ],
+      "taxonomy_attrs": [
+        "BC",
+        "ROT",
+        "OCC",
+        "SOB",
+        "LT",
+        "MB",
+        "AM",
+        "POC"
+      ],
       "median_sqrt_area_px": 10.009,
       "tiny": false
     },
@@ -719,6 +1264,14 @@
         "OCC",
         "SOB"
       ],
+      "taxonomy_attrs": [
+        "BC",
+        "OCC",
+        "SOB",
+        "LT",
+        "AM",
+        "POC"
+      ],
       "median_sqrt_area_px": 8.76,
       "tiny": false
     },
@@ -738,6 +1291,12 @@
         "SA"
       ],
       "unified_attrs": [
+        "BC",
+        "IV",
+        "ROT",
+        "SOB"
+      ],
+      "taxonomy_attrs": [
         "BC",
         "IV",
         "ROT",
@@ -765,6 +1324,12 @@
         "BC",
         "IV"
       ],
+      "taxonomy_attrs": [
+        "BC",
+        "IV",
+        "LT",
+        "AM"
+      ],
       "median_sqrt_area_px": 8.778,
       "tiny": false
     },
@@ -791,6 +1356,14 @@
         "ROT",
         "SOB"
       ],
+      "taxonomy_attrs": [
+        "BC",
+        "IV",
+        "ROT",
+        "SOB",
+        "LT",
+        "IM"
+      ],
       "median_sqrt_area_px": 8.718,
       "tiny": false
     },
@@ -813,6 +1386,13 @@
       "unified_attrs": [
         "BC",
         "SOB"
+      ],
+      "taxonomy_attrs": [
+        "BC",
+        "SOB",
+        "LT",
+        "MB",
+        "AM"
       ],
       "median_sqrt_area_px": 6.481,
       "tiny": true
@@ -837,6 +1417,13 @@
         "BC",
         "SOB"
       ],
+      "taxonomy_attrs": [
+        "BC",
+        "SOB",
+        "LT",
+        "MB",
+        "AM"
+      ],
       "median_sqrt_area_px": 6.745,
       "tiny": true
     },
@@ -857,6 +1444,11 @@
       "unified_attrs": [
         "BC",
         "IV"
+      ],
+      "taxonomy_attrs": [
+        "BC",
+        "IV",
+        "LT"
       ],
       "median_sqrt_area_px": 6.392,
       "tiny": true
@@ -884,6 +1476,15 @@
         "OCC",
         "SOB"
       ],
+      "taxonomy_attrs": [
+        "BC",
+        "IV",
+        "OCC",
+        "SOB",
+        "LT",
+        "IM",
+        "POC"
+      ],
       "median_sqrt_area_px": 7.483,
       "tiny": true
     },
@@ -906,6 +1507,13 @@
         "IV",
         "OCC",
         "DEF"
+      ],
+      "taxonomy_attrs": [
+        "IV",
+        "OCC",
+        "DEF",
+        "IM",
+        "POC"
       ],
       "median_sqrt_area_px": 9.165,
       "tiny": false
@@ -931,6 +1539,14 @@
         "BC",
         "IV",
         "SOB"
+      ],
+      "taxonomy_attrs": [
+        "BC",
+        "IV",
+        "SOB",
+        "LT",
+        "MB",
+        "AM"
       ],
       "median_sqrt_area_px": 5.477,
       "tiny": true
@@ -959,6 +1575,16 @@
         "OCC",
         "SOB"
       ],
+      "taxonomy_attrs": [
+        "BC",
+        "IV",
+        "OCC",
+        "SOB",
+        "LT",
+        "MB",
+        "AM",
+        "POC"
+      ],
       "median_sqrt_area_px": 8.944,
       "tiny": false
     },
@@ -982,6 +1608,14 @@
         "IV",
         "OCC",
         "SOB"
+      ],
+      "taxonomy_attrs": [
+        "IV",
+        "OCC",
+        "SOB",
+        "LT",
+        "AM",
+        "POC"
       ],
       "median_sqrt_area_px": 6.928,
       "tiny": true
@@ -1008,6 +1642,14 @@
         "IV",
         "SOB"
       ],
+      "taxonomy_attrs": [
+        "BC",
+        "IV",
+        "SOB",
+        "LT",
+        "MB",
+        "AM"
+      ],
       "median_sqrt_area_px": 8.0,
       "tiny": false
     },
@@ -1031,6 +1673,12 @@
         "IV",
         "SOB"
       ],
+      "taxonomy_attrs": [
+        "BC",
+        "IV",
+        "SOB",
+        "LT"
+      ],
       "median_sqrt_area_px": 6.481,
       "tiny": true
     },
@@ -1051,6 +1699,11 @@
       "unified_attrs": [
         "BC",
         "IV"
+      ],
+      "taxonomy_attrs": [
+        "BC",
+        "IV",
+        "MB"
       ],
       "median_sqrt_area_px": 8.944,
       "tiny": false
@@ -1075,6 +1728,13 @@
         "OCC",
         "DEF"
       ],
+      "taxonomy_attrs": [
+        "ROT",
+        "OCC",
+        "DEF",
+        "AM",
+        "POC"
+      ],
       "median_sqrt_area_px": 9.899,
       "tiny": false
     },
@@ -1094,6 +1754,10 @@
       "unified_attrs": [
         "BC"
       ],
+      "taxonomy_attrs": [
+        "BC",
+        "IM"
+      ],
       "median_sqrt_area_px": 13.565,
       "tiny": false
     },
@@ -1112,6 +1776,11 @@
         "SA"
       ],
       "unified_attrs": [
+        "BC",
+        "ROT",
+        "SOB"
+      ],
+      "taxonomy_attrs": [
         "BC",
         "ROT",
         "SOB"
@@ -1136,6 +1805,11 @@
         "BC",
         "OCC"
       ],
+      "taxonomy_attrs": [
+        "BC",
+        "OCC",
+        "POC"
+      ],
       "median_sqrt_area_px": 10.583,
       "tiny": false
     },
@@ -1154,6 +1828,11 @@
         "IV"
       ],
       "unified_attrs": [
+        "BC",
+        "IV",
+        "ROT"
+      ],
+      "taxonomy_attrs": [
         "BC",
         "IV",
         "ROT"
@@ -1179,6 +1858,11 @@
         "IV",
         "ROT"
       ],
+      "taxonomy_attrs": [
+        "IV",
+        "ROT",
+        "MB"
+      ],
       "median_sqrt_area_px": 33.466,
       "tiny": false
     },
@@ -1196,6 +1880,10 @@
         "IV"
       ],
       "unified_attrs": [
+        "BC",
+        "IV"
+      ],
+      "taxonomy_attrs": [
         "BC",
         "IV"
       ],
@@ -1219,6 +1907,10 @@
         "IV",
         "SOB"
       ],
+      "taxonomy_attrs": [
+        "IV",
+        "SOB"
+      ],
       "median_sqrt_area_px": 42.708,
       "tiny": false
     },
@@ -1236,6 +1928,10 @@
         "IV"
       ],
       "unified_attrs": [
+        "IV",
+        "ROT"
+      ],
+      "taxonomy_attrs": [
         "IV",
         "ROT"
       ],
@@ -1259,6 +1955,10 @@
         "BC",
         "IV"
       ],
+      "taxonomy_attrs": [
+        "BC",
+        "IV"
+      ],
       "median_sqrt_area_px": 41.393,
       "tiny": false
     },
@@ -1278,6 +1978,11 @@
       ],
       "unified_attrs": [
         "BC"
+      ],
+      "taxonomy_attrs": [
+        "BC",
+        "LT",
+        "MB"
       ],
       "median_sqrt_area_px": 37.467,
       "tiny": false
@@ -1302,6 +2007,12 @@
         "IV",
         "SOB"
       ],
+      "taxonomy_attrs": [
+        "BC",
+        "IV",
+        "SOB",
+        "MB"
+      ],
       "median_sqrt_area_px": 38.377,
       "tiny": false
     },
@@ -1323,6 +2034,11 @@
         "BC",
         "SOB"
       ],
+      "taxonomy_attrs": [
+        "BC",
+        "SOB",
+        "MB"
+      ],
       "median_sqrt_area_px": 41.694,
       "tiny": false
     },
@@ -1341,6 +2057,10 @@
       ],
       "unified_attrs": [
         "IV"
+      ],
+      "taxonomy_attrs": [
+        "IV",
+        "MB"
       ],
       "median_sqrt_area_px": 44.475,
       "tiny": false
@@ -1362,6 +2082,10 @@
         "BC",
         "IV"
       ],
+      "taxonomy_attrs": [
+        "BC",
+        "IV"
+      ],
       "median_sqrt_area_px": 42.166,
       "tiny": false
     },
@@ -1379,6 +2103,10 @@
         "IV"
       ],
       "unified_attrs": [
+        "BC",
+        "IV"
+      ],
+      "taxonomy_attrs": [
         "BC",
         "IV"
       ],
@@ -1405,6 +2133,12 @@
         "ROT",
         "SOB"
       ],
+      "taxonomy_attrs": [
+        "IV",
+        "ROT",
+        "SOB",
+        "MB"
+      ],
       "median_sqrt_area_px": 48.291,
       "tiny": false
     },
@@ -1423,6 +2157,10 @@
       ],
       "unified_attrs": [
         "BC"
+      ],
+      "taxonomy_attrs": [
+        "BC",
+        "MB"
       ],
       "median_sqrt_area_px": 46.174,
       "tiny": false
@@ -1443,6 +2181,10 @@
       "unified_attrs": [
         "IV"
       ],
+      "taxonomy_attrs": [
+        "IV",
+        "MB"
+      ],
       "median_sqrt_area_px": 88.431,
       "tiny": false
     },
@@ -1460,6 +2202,10 @@
         "IPR"
       ],
       "unified_attrs": [
+        "ROT",
+        "DEF"
+      ],
+      "taxonomy_attrs": [
         "ROT",
         "DEF"
       ],
@@ -1486,6 +2232,12 @@
         "IV",
         "SOB"
       ],
+      "taxonomy_attrs": [
+        "BC",
+        "IV",
+        "SOB",
+        "MB"
+      ],
       "median_sqrt_area_px": 66.993,
       "tiny": false
     },
@@ -1503,6 +2255,10 @@
         "IV"
       ],
       "unified_attrs": [
+        "BC",
+        "IV"
+      ],
+      "taxonomy_attrs": [
         "BC",
         "IV"
       ],
@@ -1527,6 +2283,11 @@
         "BC",
         "IV"
       ],
+      "taxonomy_attrs": [
+        "BC",
+        "IV",
+        "MB"
+      ],
       "median_sqrt_area_px": 22.978,
       "tiny": false
     },
@@ -1548,6 +2309,11 @@
         "BC",
         "IV"
       ],
+      "taxonomy_attrs": [
+        "BC",
+        "IV",
+        "MB"
+      ],
       "median_sqrt_area_px": 34.496,
       "tiny": false
     },
@@ -1566,6 +2332,10 @@
       ],
       "unified_attrs": [
         "BC"
+      ],
+      "taxonomy_attrs": [
+        "BC",
+        "MB"
       ],
       "median_sqrt_area_px": 27.0,
       "tiny": false
@@ -1593,6 +2363,14 @@
         "SOB",
         "DEF"
       ],
+      "taxonomy_attrs": [
+        "BC",
+        "IV",
+        "SOB",
+        "DEF",
+        "LT",
+        "MB"
+      ],
       "median_sqrt_area_px": 30.741,
       "tiny": false
     },
@@ -1611,6 +2389,11 @@
         "SA"
       ],
       "unified_attrs": [
+        "IV",
+        "ROT",
+        "SOB"
+      ],
+      "taxonomy_attrs": [
         "IV",
         "ROT",
         "SOB"
@@ -1635,6 +2418,11 @@
       "unified_attrs": [
         "DEF"
       ],
+      "taxonomy_attrs": [
+        "DEF",
+        "LT",
+        "MB"
+      ],
       "median_sqrt_area_px": 31.464,
       "tiny": false
     },
@@ -1655,6 +2443,10 @@
         "BC",
         "ROT"
       ],
+      "taxonomy_attrs": [
+        "BC",
+        "ROT"
+      ],
       "median_sqrt_area_px": 26.833,
       "tiny": false
     },
@@ -1672,6 +2464,10 @@
         "IV"
       ],
       "unified_attrs": [
+        "IV",
+        "ROT"
+      ],
+      "taxonomy_attrs": [
         "IV",
         "ROT"
       ],
@@ -1697,6 +2493,11 @@
         "IV",
         "ROT"
       ],
+      "taxonomy_attrs": [
+        "BC",
+        "IV",
+        "ROT"
+      ],
       "median_sqrt_area_px": 15.556,
       "tiny": false
     },
@@ -1714,6 +2515,10 @@
         "IPR"
       ],
       "unified_attrs": [
+        "BC",
+        "ROT"
+      ],
+      "taxonomy_attrs": [
         "BC",
         "ROT"
       ],
@@ -1739,6 +2544,12 @@
         "SOB",
         "DEF"
       ],
+      "taxonomy_attrs": [
+        "SOB",
+        "DEF",
+        "OON",
+        "IM"
+      ],
       "median_sqrt_area_px": 16.022,
       "tiny": false
     },
@@ -1759,6 +2570,11 @@
       "unified_attrs": [
         "BC",
         "IV"
+      ],
+      "taxonomy_attrs": [
+        "BC",
+        "IV",
+        "MB"
       ],
       "median_sqrt_area_px": 12.668,
       "tiny": false
@@ -1781,6 +2597,11 @@
         "BC",
         "IV"
       ],
+      "taxonomy_attrs": [
+        "BC",
+        "IV",
+        "MB"
+      ],
       "median_sqrt_area_px": 23.324,
       "tiny": false
     },
@@ -1801,6 +2622,12 @@
       "unified_attrs": [
         "BC",
         "OCC"
+      ],
+      "taxonomy_attrs": [
+        "BC",
+        "OCC",
+        "LT",
+        "FOC"
       ],
       "median_sqrt_area_px": 8.376,
       "tiny": false
@@ -1829,6 +2656,15 @@
         "ROT",
         "SOB"
       ],
+      "taxonomy_attrs": [
+        "BC",
+        "IV",
+        "ROT",
+        "SOB",
+        "LT",
+        "MB",
+        "IM"
+      ],
       "median_sqrt_area_px": 13.677,
       "tiny": false
     },
@@ -1850,6 +2686,11 @@
         "BC",
         "IV"
       ],
+      "taxonomy_attrs": [
+        "BC",
+        "IV",
+        "LT"
+      ],
       "median_sqrt_area_px": 8.746,
       "tiny": false
     },
@@ -1868,6 +2709,10 @@
       ],
       "unified_attrs": [
         "BC"
+      ],
+      "taxonomy_attrs": [
+        "BC",
+        "MB"
       ],
       "median_sqrt_area_px": 10.497,
       "tiny": false
@@ -1890,6 +2735,11 @@
         "BC",
         "IV"
       ],
+      "taxonomy_attrs": [
+        "BC",
+        "IV",
+        "LT"
+      ],
       "median_sqrt_area_px": 7.579,
       "tiny": true
     },
@@ -1910,6 +2760,11 @@
       "unified_attrs": [
         "BC"
       ],
+      "taxonomy_attrs": [
+        "BC",
+        "LT",
+        "MB"
+      ],
       "median_sqrt_area_px": 6.606,
       "tiny": true
     },
@@ -1927,6 +2782,10 @@
         "IV"
       ],
       "unified_attrs": [
+        "BC",
+        "IV"
+      ],
+      "taxonomy_attrs": [
         "BC",
         "IV"
       ],
@@ -1949,6 +2808,11 @@
       ],
       "unified_attrs": [
         "IV"
+      ],
+      "taxonomy_attrs": [
+        "IV",
+        "LT",
+        "MB"
       ],
       "median_sqrt_area_px": 13.286,
       "tiny": false
@@ -1973,6 +2837,13 @@
         "BC",
         "IV",
         "SOB"
+      ],
+      "taxonomy_attrs": [
+        "BC",
+        "IV",
+        "SOB",
+        "LT",
+        "MB"
       ],
       "median_sqrt_area_px": 11.402,
       "tiny": false
@@ -2000,6 +2871,14 @@
         "ROT",
         "SOB"
       ],
+      "taxonomy_attrs": [
+        "BC",
+        "IV",
+        "ROT",
+        "SOB",
+        "LT",
+        "MB"
+      ],
       "median_sqrt_area_px": 11.402,
       "tiny": false
     },
@@ -2026,6 +2905,14 @@
         "ROT",
         "SOB"
       ],
+      "taxonomy_attrs": [
+        "BC",
+        "IV",
+        "ROT",
+        "SOB",
+        "LT",
+        "MB"
+      ],
       "median_sqrt_area_px": 10.954,
       "tiny": false
     },
@@ -2043,6 +2930,10 @@
         "IPR"
       ],
       "unified_attrs": [
+        "BC",
+        "ROT"
+      ],
+      "taxonomy_attrs": [
         "BC",
         "ROT"
       ],
@@ -2068,6 +2959,12 @@
         "BC",
         "IV"
       ],
+      "taxonomy_attrs": [
+        "BC",
+        "IV",
+        "LT",
+        "MB"
+      ],
       "median_sqrt_area_px": 7.746,
       "tiny": true
     },
@@ -2090,6 +2987,12 @@
         "BC",
         "IV"
       ],
+      "taxonomy_attrs": [
+        "BC",
+        "IV",
+        "LT",
+        "MB"
+      ],
       "median_sqrt_area_px": 7.746,
       "tiny": true
     },
@@ -2111,6 +3014,11 @@
         "BC",
         "IV"
       ],
+      "taxonomy_attrs": [
+        "BC",
+        "IV",
+        "LT"
+      ],
       "median_sqrt_area_px": 6.897,
       "tiny": true
     },
@@ -2128,6 +3036,10 @@
         "IV"
       ],
       "unified_attrs": [
+        "BC",
+        "IV"
+      ],
+      "taxonomy_attrs": [
         "BC",
         "IV"
       ],
@@ -2153,6 +3065,12 @@
         "BC",
         "IV"
       ],
+      "taxonomy_attrs": [
+        "BC",
+        "IV",
+        "LT",
+        "MB"
+      ],
       "median_sqrt_area_px": 8.832,
       "tiny": false
     },
@@ -2170,6 +3088,10 @@
         "IPR"
       ],
       "unified_attrs": [
+        "BC",
+        "ROT"
+      ],
+      "taxonomy_attrs": [
         "BC",
         "ROT"
       ],
@@ -2194,6 +3116,11 @@
         "BC",
         "IV"
       ],
+      "taxonomy_attrs": [
+        "BC",
+        "IV",
+        "LT"
+      ],
       "median_sqrt_area_px": 5.758,
       "tiny": true
     },
@@ -2216,6 +3143,12 @@
         "BC",
         "IV"
       ],
+      "taxonomy_attrs": [
+        "BC",
+        "IV",
+        "LT",
+        "MB"
+      ],
       "median_sqrt_area_px": 11.619,
       "tiny": false
     },
@@ -2234,6 +3167,10 @@
       ],
       "unified_attrs": [
         "BC"
+      ],
+      "taxonomy_attrs": [
+        "BC",
+        "LT"
       ],
       "median_sqrt_area_px": 20.149,
       "tiny": false
@@ -2256,6 +3193,11 @@
         "BC",
         "IV"
       ],
+      "taxonomy_attrs": [
+        "BC",
+        "IV",
+        "OON"
+      ],
       "median_sqrt_area_px": 24.238,
       "tiny": false
     },
@@ -2276,6 +3218,11 @@
       "unified_attrs": [
         "BC",
         "IV"
+      ],
+      "taxonomy_attrs": [
+        "BC",
+        "IV",
+        "MB"
       ],
       "median_sqrt_area_px": 21.024,
       "tiny": false
@@ -2300,6 +3247,12 @@
         "SOB",
         "DEF"
       ],
+      "taxonomy_attrs": [
+        "BC",
+        "SOB",
+        "DEF",
+        "OON"
+      ],
       "median_sqrt_area_px": 23.052,
       "tiny": false
     },
@@ -2320,6 +3273,11 @@
       "unified_attrs": [
         "BC",
         "IV"
+      ],
+      "taxonomy_attrs": [
+        "BC",
+        "IV",
+        "MB"
       ],
       "median_sqrt_area_px": 16.133,
       "tiny": false
@@ -2344,6 +3302,13 @@
         "IV",
         "ROT",
         "DEF"
+      ],
+      "taxonomy_attrs": [
+        "IV",
+        "ROT",
+        "DEF",
+        "OON",
+        "MB"
       ],
       "median_sqrt_area_px": 35.777,
       "tiny": false
@@ -2371,6 +3336,15 @@
         "ROT",
         "SOB",
         "DEF"
+      ],
+      "taxonomy_attrs": [
+        "BC",
+        "ROT",
+        "SOB",
+        "DEF",
+        "OON",
+        "LT",
+        "MB"
       ],
       "median_sqrt_area_px": 43.469,
       "tiny": false
@@ -2401,6 +3375,17 @@
         "SOB",
         "DEF"
       ],
+      "taxonomy_attrs": [
+        "BC",
+        "ROT",
+        "OCC",
+        "SOB",
+        "DEF",
+        "OON",
+        "LT",
+        "AM",
+        "POC"
+      ],
       "median_sqrt_area_px": 46.805,
       "tiny": false
     },
@@ -2423,6 +3408,12 @@
         "IV",
         "ROT",
         "DEF"
+      ],
+      "taxonomy_attrs": [
+        "IV",
+        "ROT",
+        "DEF",
+        "OON"
       ],
       "median_sqrt_area_px": 54.562,
       "tiny": false
@@ -2448,6 +3439,14 @@
         "BC",
         "IV",
         "SOB"
+      ],
+      "taxonomy_attrs": [
+        "BC",
+        "IV",
+        "SOB",
+        "OON",
+        "LT",
+        "MB"
       ],
       "median_sqrt_area_px": 33.07,
       "tiny": false
@@ -2475,6 +3474,15 @@
         "SOB",
         "DEF"
       ],
+      "taxonomy_attrs": [
+        "BC",
+        "OCC",
+        "SOB",
+        "DEF",
+        "OON",
+        "LT",
+        "POC"
+      ],
       "median_sqrt_area_px": 37.819,
       "tiny": false
     },
@@ -2493,6 +3501,11 @@
         "IV"
       ],
       "unified_attrs": [
+        "IV",
+        "ROT",
+        "DEF"
+      ],
+      "taxonomy_attrs": [
         "IV",
         "ROT",
         "DEF"
@@ -2520,6 +3533,12 @@
         "SOB",
         "DEF"
       ],
+      "taxonomy_attrs": [
+        "IV",
+        "SOB",
+        "DEF",
+        "OON"
+      ],
       "median_sqrt_area_px": 48.912,
       "tiny": false
     },
@@ -2545,6 +3564,14 @@
         "ROT",
         "SOB",
         "DEF"
+      ],
+      "taxonomy_attrs": [
+        "BC",
+        "ROT",
+        "SOB",
+        "DEF",
+        "OON",
+        "LT"
       ],
       "median_sqrt_area_px": 40.969,
       "tiny": false
@@ -2572,6 +3599,14 @@
         "SOB",
         "DEF"
       ],
+      "taxonomy_attrs": [
+        "BC",
+        "ROT",
+        "SOB",
+        "DEF",
+        "OON",
+        "LT"
+      ],
       "median_sqrt_area_px": 62.61,
       "tiny": false
     },
@@ -2592,6 +3627,11 @@
         "ROT",
         "OCC"
       ],
+      "taxonomy_attrs": [
+        "ROT",
+        "OCC",
+        "FOC"
+      ],
       "median_sqrt_area_px": 8.775,
       "tiny": false
     },
@@ -2610,6 +3650,10 @@
       ],
       "unified_attrs": [
         "ROT"
+      ],
+      "taxonomy_attrs": [
+        "ROT",
+        "LQ"
       ],
       "median_sqrt_area_px": 11.958,
       "tiny": false
@@ -2633,6 +3677,12 @@
         "BC",
         "SOB"
       ],
+      "taxonomy_attrs": [
+        "BC",
+        "SOB",
+        "LQ",
+        "BJT"
+      ],
       "median_sqrt_area_px": 11.489,
       "tiny": false
     },
@@ -2649,6 +3699,9 @@
         "ROT"
       ],
       "unified_attrs": [
+        "ROT"
+      ],
+      "taxonomy_attrs": [
         "ROT"
       ],
       "median_sqrt_area_px": 9.487,
@@ -2672,6 +3725,11 @@
         "BC",
         "ROT"
       ],
+      "taxonomy_attrs": [
+        "BC",
+        "ROT",
+        "LQ"
+      ],
       "median_sqrt_area_px": 9.487,
       "tiny": false
     },
@@ -2689,6 +3747,9 @@
         "TO"
       ],
       "unified_attrs": [],
+      "taxonomy_attrs": [
+        "LQ"
+      ],
       "median_sqrt_area_px": 6.481,
       "tiny": true
     },
@@ -2710,6 +3771,10 @@
         "BC",
         "ROT"
       ],
+      "taxonomy_attrs": [
+        "BC",
+        "ROT"
+      ],
       "median_sqrt_area_px": 6.0,
       "tiny": true
     },
@@ -2728,6 +3793,10 @@
         "TO"
       ],
       "unified_attrs": [
+        "BC",
+        "SOB"
+      ],
+      "taxonomy_attrs": [
         "BC",
         "SOB"
       ],
@@ -2756,6 +3825,13 @@
         "OCC",
         "SOB"
       ],
+      "taxonomy_attrs": [
+        "BC",
+        "ROT",
+        "OCC",
+        "SOB",
+        "FOC"
+      ],
       "median_sqrt_area_px": 7.483,
       "tiny": true
     },
@@ -2776,6 +3852,11 @@
       "unified_attrs": [
         "OCC"
       ],
+      "taxonomy_attrs": [
+        "OCC",
+        "BJT",
+        "POC"
+      ],
       "median_sqrt_area_px": 6.0,
       "tiny": true
     },
@@ -2794,6 +3875,10 @@
       "unified_attrs": [
         "OCC"
       ],
+      "taxonomy_attrs": [
+        "OCC",
+        "POC"
+      ],
       "median_sqrt_area_px": 13.416,
       "tiny": false
     },
@@ -2811,6 +3896,10 @@
       ],
       "unified_attrs": [
         "OCC"
+      ],
+      "taxonomy_attrs": [
+        "OCC",
+        "POC"
       ],
       "median_sqrt_area_px": 8.944,
       "tiny": false
@@ -2836,6 +3925,13 @@
         "OCC",
         "SOB"
       ],
+      "taxonomy_attrs": [
+        "ROT",
+        "OCC",
+        "SOB",
+        "POC",
+        "FOC"
+      ],
       "median_sqrt_area_px": 4.472,
       "tiny": true
     },
@@ -2854,6 +3950,10 @@
         "TO"
       ],
       "unified_attrs": [
+        "ROT",
+        "SOB"
+      ],
+      "taxonomy_attrs": [
         "ROT",
         "SOB"
       ],
@@ -2879,6 +3979,13 @@
         "OCC",
         "SOB"
       ],
+      "taxonomy_attrs": [
+        "OCC",
+        "SOB",
+        "BJT",
+        "POC",
+        "FOC"
+      ],
       "median_sqrt_area_px": 10.392,
       "tiny": false
     },
@@ -2897,6 +4004,11 @@
         "SOB"
       ],
       "unified_attrs": [
+        "BC",
+        "ROT",
+        "SOB"
+      ],
+      "taxonomy_attrs": [
         "BC",
         "ROT",
         "SOB"
@@ -2923,6 +4035,11 @@
         "ROT",
         "SOB"
       ],
+      "taxonomy_attrs": [
+        "BC",
+        "ROT",
+        "SOB"
+      ],
       "median_sqrt_area_px": 8.485,
       "tiny": false
     },
@@ -2941,6 +4058,10 @@
         "TO"
       ],
       "unified_attrs": [
+        "BC",
+        "SOB"
+      ],
+      "taxonomy_attrs": [
         "BC",
         "SOB"
       ],
@@ -2963,6 +4084,10 @@
       "unified_attrs": [
         "SOB"
       ],
+      "taxonomy_attrs": [
+        "SOB",
+        "LQ"
+      ],
       "median_sqrt_area_px": 9.95,
       "tiny": false
     },
@@ -2984,6 +4109,11 @@
         "BC",
         "ROT"
       ],
+      "taxonomy_attrs": [
+        "BC",
+        "ROT",
+        "LQ"
+      ],
       "median_sqrt_area_px": 10.583,
       "tiny": false
     },
@@ -2998,6 +4128,7 @@
       "gt_format": "xywh_with_none",
       "native_attrs": [],
       "unified_attrs": [],
+      "taxonomy_attrs": [],
       "median_sqrt_area_px": 15.969,
       "tiny": false
     },
@@ -3018,6 +4149,10 @@
         "ROT",
         "SOB"
       ],
+      "taxonomy_attrs": [
+        "ROT",
+        "SOB"
+      ],
       "median_sqrt_area_px": 6.0,
       "tiny": true
     },
@@ -3034,6 +4169,9 @@
         "ROT"
       ],
       "unified_attrs": [
+        "ROT"
+      ],
+      "taxonomy_attrs": [
         "ROT"
       ],
       "median_sqrt_area_px": 14.491,
@@ -3057,6 +4195,12 @@
         "ROT",
         "OCC"
       ],
+      "taxonomy_attrs": [
+        "ROT",
+        "OCC",
+        "POC",
+        "FOC"
+      ],
       "median_sqrt_area_px": 13.675,
       "tiny": false
     },
@@ -3073,6 +4217,9 @@
         "SOB"
       ],
       "unified_attrs": [
+        "SOB"
+      ],
+      "taxonomy_attrs": [
         "SOB"
       ],
       "median_sqrt_area_px": 9.95,
@@ -3094,6 +4241,10 @@
       ],
       "unified_attrs": [
         "IV"
+      ],
+      "taxonomy_attrs": [
+        "IV",
+        "BJT"
       ],
       "median_sqrt_area_px": 6.481,
       "tiny": true
@@ -3117,6 +4268,11 @@
         "BC",
         "ROT"
       ],
+      "taxonomy_attrs": [
+        "BC",
+        "ROT",
+        "LQ"
+      ],
       "median_sqrt_area_px": 6.481,
       "tiny": true
     },
@@ -3139,6 +4295,12 @@
         "BC",
         "OCC",
         "SOB"
+      ],
+      "taxonomy_attrs": [
+        "BC",
+        "OCC",
+        "SOB",
+        "POC"
       ],
       "median_sqrt_area_px": 4.95,
       "tiny": true
@@ -3164,6 +4326,13 @@
         "OCC",
         "SOB"
       ],
+      "taxonomy_attrs": [
+        "BC",
+        "OCC",
+        "SOB",
+        "BJT",
+        "POC"
+      ],
       "median_sqrt_area_px": 7.0,
       "tiny": true
     },
@@ -3186,6 +4355,11 @@
         "BC",
         "SOB"
       ],
+      "taxonomy_attrs": [
+        "BC",
+        "SOB",
+        "LQ"
+      ],
       "median_sqrt_area_px": 6.0,
       "tiny": true
     },
@@ -3206,6 +4380,11 @@
         "ROT",
         "OCC"
       ],
+      "taxonomy_attrs": [
+        "ROT",
+        "OCC",
+        "POC"
+      ],
       "median_sqrt_area_px": 13.748,
       "tiny": false
     },
@@ -3224,6 +4403,10 @@
       ],
       "unified_attrs": [
         "ROT"
+      ],
+      "taxonomy_attrs": [
+        "ROT",
+        "BJT"
       ],
       "median_sqrt_area_px": 10.954,
       "tiny": false
@@ -3244,6 +4427,11 @@
       "unified_attrs": [
         "OCC",
         "SOB"
+      ],
+      "taxonomy_attrs": [
+        "OCC",
+        "SOB",
+        "POC"
       ],
       "median_sqrt_area_px": 10.583,
       "tiny": false
@@ -3270,6 +4458,13 @@
         "OCC",
         "SOB"
       ],
+      "taxonomy_attrs": [
+        "BC",
+        "ROT",
+        "OCC",
+        "SOB",
+        "FOC"
+      ],
       "median_sqrt_area_px": 5.657,
       "tiny": true
     },
@@ -3293,6 +4488,12 @@
         "OCC",
         "SOB"
       ],
+      "taxonomy_attrs": [
+        "BC",
+        "OCC",
+        "SOB",
+        "POC"
+      ],
       "median_sqrt_area_px": 6.0,
       "tiny": true
     },
@@ -3311,6 +4512,10 @@
       ],
       "unified_attrs": [
         "ROT"
+      ],
+      "taxonomy_attrs": [
+        "ROT",
+        "BJT"
       ],
       "median_sqrt_area_px": 10.954,
       "tiny": false
@@ -3331,6 +4536,11 @@
       "unified_attrs": [
         "ROT",
         "OCC"
+      ],
+      "taxonomy_attrs": [
+        "ROT",
+        "OCC",
+        "POC"
       ],
       "median_sqrt_area_px": 12.227,
       "tiny": false
@@ -3355,6 +4565,12 @@
         "ROT",
         "OCC"
       ],
+      "taxonomy_attrs": [
+        "BC",
+        "ROT",
+        "OCC",
+        "POC"
+      ],
       "median_sqrt_area_px": 5.916,
       "tiny": true
     },
@@ -3371,6 +4587,9 @@
         "BC"
       ],
       "unified_attrs": [
+        "BC"
+      ],
+      "taxonomy_attrs": [
         "BC"
       ],
       "median_sqrt_area_px": 15.297,
@@ -3396,6 +4615,12 @@
         "ROT",
         "OCC"
       ],
+      "taxonomy_attrs": [
+        "BC",
+        "ROT",
+        "OCC",
+        "POC"
+      ],
       "median_sqrt_area_px": 5.916,
       "tiny": true
     },
@@ -3414,6 +4639,9 @@
       "unified_attrs": [
         "ROT"
       ],
+      "taxonomy_attrs": [
+        "ROT"
+      ],
       "median_sqrt_area_px": 12.49,
       "tiny": false
     },
@@ -3430,6 +4658,9 @@
         "ROT"
       ],
       "unified_attrs": [
+        "ROT"
+      ],
+      "taxonomy_attrs": [
         "ROT"
       ],
       "median_sqrt_area_px": 13.748,
@@ -3454,6 +4685,12 @@
         "OCC",
         "SOB"
       ],
+      "taxonomy_attrs": [
+        "ROT",
+        "OCC",
+        "SOB",
+        "POC"
+      ],
       "median_sqrt_area_px": 10.817,
       "tiny": false
     },
@@ -3471,6 +4708,10 @@
       ],
       "unified_attrs": [
         "OCC"
+      ],
+      "taxonomy_attrs": [
+        "OCC",
+        "POC"
       ],
       "median_sqrt_area_px": 15.427,
       "tiny": false
@@ -3496,6 +4737,13 @@
         "OCC",
         "SOB"
       ],
+      "taxonomy_attrs": [
+        "ROT",
+        "OCC",
+        "SOB",
+        "BJT",
+        "POC"
+      ],
       "median_sqrt_area_px": 8.0,
       "tiny": false
     },
@@ -3513,6 +4761,10 @@
         "ROT"
       ],
       "unified_attrs": [
+        "BC",
+        "ROT"
+      ],
+      "taxonomy_attrs": [
         "BC",
         "ROT"
       ],
@@ -3538,6 +4790,12 @@
         "ROT",
         "SOB"
       ],
+      "taxonomy_attrs": [
+        "ROT",
+        "SOB",
+        "LQ",
+        "BJT"
+      ],
       "median_sqrt_area_px": 6.0,
       "tiny": true
     },
@@ -3560,6 +4818,12 @@
         "OCC",
         "SOB"
       ],
+      "taxonomy_attrs": [
+        "ROT",
+        "OCC",
+        "SOB",
+        "POC"
+      ],
       "median_sqrt_area_px": 11.832,
       "tiny": false
     },
@@ -3576,6 +4840,9 @@
         "ROT"
       ],
       "unified_attrs": [
+        "ROT"
+      ],
+      "taxonomy_attrs": [
         "ROT"
       ],
       "median_sqrt_area_px": 5.292,
@@ -3603,6 +4870,14 @@
         "OCC",
         "SOB"
       ],
+      "taxonomy_attrs": [
+        "BC",
+        "ROT",
+        "OCC",
+        "SOB",
+        "LQ",
+        "POC"
+      ],
       "median_sqrt_area_px": 12.49,
       "tiny": false
     },
@@ -3625,6 +4900,12 @@
         "ROT",
         "OCC"
       ],
+      "taxonomy_attrs": [
+        "BC",
+        "ROT",
+        "OCC",
+        "POC"
+      ],
       "median_sqrt_area_px": 15.46,
       "tiny": false
     },
@@ -3643,6 +4924,10 @@
       "unified_attrs": [
         "OCC"
       ],
+      "taxonomy_attrs": [
+        "OCC",
+        "FOC"
+      ],
       "median_sqrt_area_px": 11.662,
       "tiny": false
     },
@@ -3660,6 +4945,9 @@
         "TO"
       ],
       "unified_attrs": [
+        "SOB"
+      ],
+      "taxonomy_attrs": [
         "SOB"
       ],
       "median_sqrt_area_px": 5.292,
@@ -3683,6 +4971,12 @@
         "BC",
         "OCC"
       ],
+      "taxonomy_attrs": [
+        "BC",
+        "OCC",
+        "BJT",
+        "POC"
+      ],
       "median_sqrt_area_px": 8.0,
       "tiny": false
     },
@@ -3700,6 +4994,10 @@
         "ROT"
       ],
       "unified_attrs": [
+        "BC",
+        "ROT"
+      ],
+      "taxonomy_attrs": [
         "BC",
         "ROT"
       ],
@@ -3724,6 +5022,11 @@
       "unified_attrs": [
         "ROT"
       ],
+      "taxonomy_attrs": [
+        "ROT",
+        "LQ",
+        "BJT"
+      ],
       "median_sqrt_area_px": 5.0,
       "tiny": true
     },
@@ -3742,6 +5045,11 @@
         "SOB"
       ],
       "unified_attrs": [
+        "BC",
+        "ROT",
+        "SOB"
+      ],
+      "taxonomy_attrs": [
         "BC",
         "ROT",
         "SOB"
@@ -3769,6 +5077,12 @@
         "ROT",
         "OCC"
       ],
+      "taxonomy_attrs": [
+        "BC",
+        "ROT",
+        "OCC",
+        "FOC"
+      ],
       "median_sqrt_area_px": 5.292,
       "tiny": true
     },
@@ -3785,6 +5099,9 @@
         "ROT"
       ],
       "unified_attrs": [
+        "ROT"
+      ],
+      "taxonomy_attrs": [
         "ROT"
       ],
       "median_sqrt_area_px": 13.266,
@@ -3807,6 +5124,11 @@
         "ROT",
         "OCC"
       ],
+      "taxonomy_attrs": [
+        "ROT",
+        "OCC",
+        "POC"
+      ],
       "median_sqrt_area_px": 13.0,
       "tiny": false
     },
@@ -3825,6 +5147,10 @@
       "unified_attrs": [
         "OCC"
       ],
+      "taxonomy_attrs": [
+        "OCC",
+        "FOC"
+      ],
       "median_sqrt_area_px": 12.369,
       "tiny": false
     },
@@ -3842,6 +5168,10 @@
       ],
       "unified_attrs": [
         "OCC"
+      ],
+      "taxonomy_attrs": [
+        "OCC",
+        "FOC"
       ],
       "median_sqrt_area_px": 15.716,
       "tiny": false
@@ -3863,6 +5193,11 @@
         "ROT",
         "OCC"
       ],
+      "taxonomy_attrs": [
+        "ROT",
+        "OCC",
+        "POC"
+      ],
       "median_sqrt_area_px": 14.142,
       "tiny": false
     },
@@ -3880,6 +5215,10 @@
         "ROT"
       ],
       "unified_attrs": [
+        "BC",
+        "ROT"
+      ],
+      "taxonomy_attrs": [
         "BC",
         "ROT"
       ],
@@ -3901,6 +5240,10 @@
       "unified_attrs": [
         "OCC"
       ],
+      "taxonomy_attrs": [
+        "OCC",
+        "FOC"
+      ],
       "median_sqrt_area_px": 17.292,
       "tiny": false
     },
@@ -3917,6 +5260,9 @@
         "LQ"
       ],
       "unified_attrs": [],
+      "taxonomy_attrs": [
+        "LQ"
+      ],
       "median_sqrt_area_px": 29.292,
       "tiny": false
     },
@@ -3937,6 +5283,10 @@
         "IV",
         "ROT"
       ],
+      "taxonomy_attrs": [
+        "IV",
+        "ROT"
+      ],
       "median_sqrt_area_px": 37.947,
       "tiny": false
     },
@@ -3951,6 +5301,7 @@
       "gt_format": "xywh_with_none",
       "native_attrs": [],
       "unified_attrs": [],
+      "taxonomy_attrs": [],
       "median_sqrt_area_px": 29.496,
       "tiny": false
     },
@@ -3967,6 +5318,9 @@
         "BJT"
       ],
       "unified_attrs": [],
+      "taxonomy_attrs": [
+        "BJT"
+      ],
       "median_sqrt_area_px": 40.423,
       "tiny": false
     },
@@ -3981,6 +5335,7 @@
       "gt_format": "xywh_with_none",
       "native_attrs": [],
       "unified_attrs": [],
+      "taxonomy_attrs": [],
       "median_sqrt_area_px": 22.978,
       "tiny": false
     },
@@ -3995,6 +5350,7 @@
       "gt_format": "xywh_with_none",
       "native_attrs": [],
       "unified_attrs": [],
+      "taxonomy_attrs": [],
       "median_sqrt_area_px": 18.974,
       "tiny": false
     },
@@ -4013,6 +5369,9 @@
       "unified_attrs": [
         "ROT"
       ],
+      "taxonomy_attrs": [
+        "ROT"
+      ],
       "median_sqrt_area_px": 67.0,
       "tiny": false
     },
@@ -4027,6 +5386,7 @@
       "gt_format": "xywh_with_none",
       "native_attrs": [],
       "unified_attrs": [],
+      "taxonomy_attrs": [],
       "median_sqrt_area_px": 58.327,
       "tiny": false
     },
@@ -4045,6 +5405,9 @@
       "unified_attrs": [
         "ROT"
       ],
+      "taxonomy_attrs": [
+        "ROT"
+      ],
       "median_sqrt_area_px": 41.809,
       "tiny": false
     },
@@ -4061,6 +5424,9 @@
         "LQ"
       ],
       "unified_attrs": [],
+      "taxonomy_attrs": [
+        "LQ"
+      ],
       "median_sqrt_area_px": 14.422,
       "tiny": false
     },
@@ -4080,6 +5446,11 @@
       "unified_attrs": [
         "OCC"
       ],
+      "taxonomy_attrs": [
+        "OCC",
+        "BJT",
+        "FOC"
+      ],
       "median_sqrt_area_px": 18.33,
       "tiny": false
     },
@@ -4094,6 +5465,7 @@
       "gt_format": "xywh_with_none",
       "native_attrs": [],
       "unified_attrs": [],
+      "taxonomy_attrs": [],
       "median_sqrt_area_px": 25.1,
       "tiny": false
     },
@@ -4110,6 +5482,9 @@
         "BJT"
       ],
       "unified_attrs": [],
+      "taxonomy_attrs": [
+        "BJT"
+      ],
       "median_sqrt_area_px": 22.627,
       "tiny": false
     },
@@ -4126,6 +5501,9 @@
         "ROT"
       ],
       "unified_attrs": [
+        "ROT"
+      ],
+      "taxonomy_attrs": [
         "ROT"
       ],
       "median_sqrt_area_px": 22.45,
@@ -4151,6 +5529,12 @@
         "ROT",
         "DEF"
       ],
+      "taxonomy_attrs": [
+        "BC",
+        "ROT",
+        "DEF",
+        "ARC"
+      ],
       "median_sqrt_area_px": 35.693,
       "tiny": false
     },
@@ -4174,6 +5558,13 @@
         "OCC",
         "DEF"
       ],
+      "taxonomy_attrs": [
+        "BC",
+        "OCC",
+        "DEF",
+        "ARC",
+        "POC"
+      ],
       "median_sqrt_area_px": 167.06,
       "tiny": false
     },
@@ -4192,6 +5583,10 @@
       ],
       "unified_attrs": [
         "BC"
+      ],
+      "taxonomy_attrs": [
+        "BC",
+        "ARC"
       ],
       "median_sqrt_area_px": 165.439,
       "tiny": false
@@ -4213,6 +5608,12 @@
       "unified_attrs": [
         "BC",
         "OCC"
+      ],
+      "taxonomy_attrs": [
+        "BC",
+        "OCC",
+        "ARC",
+        "POC"
       ],
       "median_sqrt_area_px": 78.336,
       "tiny": false
@@ -4239,6 +5640,14 @@
         "OCC",
         "SOB"
       ],
+      "taxonomy_attrs": [
+        "BC",
+        "ROT",
+        "OCC",
+        "SOB",
+        "ARC",
+        "POC"
+      ],
       "median_sqrt_area_px": 139.014,
       "tiny": false
     },
@@ -4262,6 +5671,13 @@
         "OCC",
         "DEF"
       ],
+      "taxonomy_attrs": [
+        "BC",
+        "OCC",
+        "DEF",
+        "ARC",
+        "POC"
+      ],
       "median_sqrt_area_px": 884.379,
       "tiny": false
     },
@@ -4278,6 +5694,9 @@
         "ARC"
       ],
       "unified_attrs": [],
+      "taxonomy_attrs": [
+        "ARC"
+      ],
       "median_sqrt_area_px": 73.678,
       "tiny": false
     },
@@ -4297,6 +5716,10 @@
       "unified_attrs": [
         "BC"
       ],
+      "taxonomy_attrs": [
+        "BC",
+        "ARC"
+      ],
       "median_sqrt_area_px": 27.659,
       "tiny": false
     },
@@ -4313,6 +5736,9 @@
         "ARC"
       ],
       "unified_attrs": [],
+      "taxonomy_attrs": [
+        "ARC"
+      ],
       "median_sqrt_area_px": 113.842,
       "tiny": false
     },
@@ -4329,6 +5755,9 @@
         "ARC"
       ],
       "unified_attrs": [],
+      "taxonomy_attrs": [
+        "ARC"
+      ],
       "median_sqrt_area_px": 98.519,
       "tiny": false
     },
@@ -4354,6 +5783,14 @@
         "OCC",
         "DEF"
       ],
+      "taxonomy_attrs": [
+        "BC",
+        "ROT",
+        "OCC",
+        "DEF",
+        "ARC",
+        "POC"
+      ],
       "median_sqrt_area_px": 268.531,
       "tiny": false
     },
@@ -4376,6 +5813,13 @@
         "BC",
         "ROT",
         "OCC"
+      ],
+      "taxonomy_attrs": [
+        "BC",
+        "ROT",
+        "OCC",
+        "ARC",
+        "POC"
       ],
       "median_sqrt_area_px": 59.59,
       "tiny": false
@@ -4400,6 +5844,13 @@
         "ROT",
         "OCC"
       ],
+      "taxonomy_attrs": [
+        "BC",
+        "ROT",
+        "OCC",
+        "ARC",
+        "POC"
+      ],
       "median_sqrt_area_px": 76.864,
       "tiny": false
     },
@@ -4421,6 +5872,12 @@
         "BC",
         "OCC"
       ],
+      "taxonomy_attrs": [
+        "BC",
+        "OCC",
+        "ARC",
+        "POC"
+      ],
       "median_sqrt_area_px": 39.243,
       "tiny": false
     },
@@ -4439,6 +5896,10 @@
       ],
       "unified_attrs": [
         "ROT"
+      ],
+      "taxonomy_attrs": [
+        "ROT",
+        "ARC"
       ],
       "median_sqrt_area_px": 71.931,
       "tiny": false
@@ -4460,6 +5921,11 @@
       "unified_attrs": [
         "BC",
         "ROT"
+      ],
+      "taxonomy_attrs": [
+        "BC",
+        "ROT",
+        "ARC"
       ],
       "median_sqrt_area_px": 39.535,
       "tiny": false
@@ -4484,6 +5950,12 @@
         "ROT",
         "DEF"
       ],
+      "taxonomy_attrs": [
+        "BC",
+        "ROT",
+        "DEF",
+        "ARC"
+      ],
       "median_sqrt_area_px": 78.125,
       "tiny": false
     },
@@ -4504,6 +5976,12 @@
       "unified_attrs": [
         "OCC",
         "DEF"
+      ],
+      "taxonomy_attrs": [
+        "OCC",
+        "DEF",
+        "ARC",
+        "POC"
       ],
       "median_sqrt_area_px": 77.73,
       "tiny": false
@@ -4526,6 +6004,11 @@
         "IV",
         "SOB"
       ],
+      "taxonomy_attrs": [
+        "IV",
+        "SOB",
+        "ARC"
+      ],
       "median_sqrt_area_px": 88.233,
       "tiny": false
     },
@@ -4542,6 +6025,9 @@
         "ARC"
       ],
       "unified_attrs": [],
+      "taxonomy_attrs": [
+        "ARC"
+      ],
       "median_sqrt_area_px": 39.585,
       "tiny": false
     },
@@ -4560,6 +6046,10 @@
       ],
       "unified_attrs": [
         "BC"
+      ],
+      "taxonomy_attrs": [
+        "BC",
+        "ARC"
       ],
       "median_sqrt_area_px": 35.496,
       "tiny": false
@@ -4582,6 +6072,11 @@
         "BC",
         "ROT"
       ],
+      "taxonomy_attrs": [
+        "BC",
+        "ROT",
+        "ARC"
+      ],
       "median_sqrt_area_px": 42.889,
       "tiny": false
     },
@@ -4600,6 +6095,10 @@
       ],
       "unified_attrs": [
         "BC"
+      ],
+      "taxonomy_attrs": [
+        "BC",
+        "ARC"
       ],
       "median_sqrt_area_px": 58.788,
       "tiny": false
@@ -4621,6 +6120,11 @@
       "unified_attrs": [
         "BC",
         "ROT"
+      ],
+      "taxonomy_attrs": [
+        "BC",
+        "ROT",
+        "ARC"
       ],
       "median_sqrt_area_px": 36.0,
       "tiny": false
@@ -4645,6 +6149,13 @@
         "ROT",
         "OCC"
       ],
+      "taxonomy_attrs": [
+        "BC",
+        "ROT",
+        "OCC",
+        "ARC",
+        "POC"
+      ],
       "median_sqrt_area_px": 77.311,
       "tiny": false
     },
@@ -4668,6 +6179,13 @@
         "ROT",
         "OCC"
       ],
+      "taxonomy_attrs": [
+        "BC",
+        "ROT",
+        "OCC",
+        "ARC",
+        "POC"
+      ],
       "median_sqrt_area_px": 34.271,
       "tiny": false
     },
@@ -4686,6 +6204,10 @@
       ],
       "unified_attrs": [
         "IV"
+      ],
+      "taxonomy_attrs": [
+        "IV",
+        "SM"
       ],
       "median_sqrt_area_px": 8.181,
       "tiny": false
@@ -4712,6 +6234,15 @@
         "OCC",
         "SOB"
       ],
+      "taxonomy_attrs": [
+        "IV",
+        "OCC",
+        "SOB",
+        "ND",
+        "IBG",
+        "SM",
+        "STO"
+      ],
       "median_sqrt_area_px": 4.295,
       "tiny": true
     },
@@ -4730,6 +6261,10 @@
       ],
       "unified_attrs": [
         "SOB"
+      ],
+      "taxonomy_attrs": [
+        "SOB",
+        "BCH"
       ],
       "median_sqrt_area_px": 5.176,
       "tiny": true
@@ -4751,6 +6286,10 @@
         "ROT",
         "SOB"
       ],
+      "taxonomy_attrs": [
+        "ROT",
+        "SOB"
+      ],
       "median_sqrt_area_px": 10.069,
       "tiny": false
     },
@@ -4768,6 +6307,10 @@
         "IPR"
       ],
       "unified_attrs": [
+        "ROT",
+        "SOB"
+      ],
+      "taxonomy_attrs": [
         "ROT",
         "SOB"
       ],
@@ -4795,6 +6338,14 @@
         "OCC",
         "SOB"
       ],
+      "taxonomy_attrs": [
+        "IV",
+        "OCC",
+        "SOB",
+        "BCH",
+        "STO",
+        "CO"
+      ],
       "median_sqrt_area_px": 5.05,
       "tiny": true
     },
@@ -4818,6 +6369,13 @@
         "IV",
         "SOB"
       ],
+      "taxonomy_attrs": [
+        "IV",
+        "SOB",
+        "ND",
+        "IBG",
+        "SM"
+      ],
       "median_sqrt_area_px": 4.298,
       "tiny": true
     },
@@ -4839,6 +6397,11 @@
         "IV",
         "SOB"
       ],
+      "taxonomy_attrs": [
+        "IV",
+        "SOB",
+        "SM"
+      ],
       "median_sqrt_area_px": 4.224,
       "tiny": true
     },
@@ -4859,6 +6422,11 @@
       "unified_attrs": [
         "IV",
         "SOB"
+      ],
+      "taxonomy_attrs": [
+        "IV",
+        "SOB",
+        "BCH"
       ],
       "median_sqrt_area_px": 4.271,
       "tiny": true
@@ -4882,6 +6450,12 @@
         "IV",
         "SOB"
       ],
+      "taxonomy_attrs": [
+        "IV",
+        "SOB",
+        "IBG",
+        "SM"
+      ],
       "median_sqrt_area_px": 4.427,
       "tiny": true
     },
@@ -4898,6 +6472,9 @@
         "DS"
       ],
       "unified_attrs": [
+        "SOB"
+      ],
+      "taxonomy_attrs": [
         "SOB"
       ],
       "median_sqrt_area_px": 4.896,
@@ -4922,6 +6499,12 @@
         "IV",
         "SOB"
       ],
+      "taxonomy_attrs": [
+        "IV",
+        "SOB",
+        "BCH",
+        "IBG"
+      ],
       "median_sqrt_area_px": 4.089,
       "tiny": true
     },
@@ -4939,6 +6522,10 @@
         "IV"
       ],
       "unified_attrs": [
+        "IV",
+        "SOB"
+      ],
+      "taxonomy_attrs": [
         "IV",
         "SOB"
       ],
@@ -4965,6 +6552,13 @@
         "OCC",
         "SOB"
       ],
+      "taxonomy_attrs": [
+        "IV",
+        "OCC",
+        "SOB",
+        "IBG",
+        "STO"
+      ],
       "median_sqrt_area_px": 4.844,
       "tiny": true
     },
@@ -4981,6 +6575,9 @@
         "SM"
       ],
       "unified_attrs": [],
+      "taxonomy_attrs": [
+        "SM"
+      ],
       "median_sqrt_area_px": 10.028,
       "tiny": false
     },
@@ -5006,6 +6603,14 @@
         "ROT",
         "SOB"
       ],
+      "taxonomy_attrs": [
+        "IV",
+        "ROT",
+        "SOB",
+        "BCH",
+        "IBG",
+        "SM"
+      ],
       "median_sqrt_area_px": 3.978,
       "tiny": true
     },
@@ -5028,6 +6633,13 @@
         "IV",
         "OCC"
       ],
+      "taxonomy_attrs": [
+        "IV",
+        "OCC",
+        "BCH",
+        "SM",
+        "STO"
+      ],
       "median_sqrt_area_px": 6.898,
       "tiny": true
     },
@@ -5047,6 +6659,11 @@
       "unified_attrs": [
         "OCC",
         "SOB"
+      ],
+      "taxonomy_attrs": [
+        "OCC",
+        "SOB",
+        "LTO"
       ],
       "median_sqrt_area_px": 8.59,
       "tiny": false
@@ -5068,6 +6685,11 @@
       "unified_attrs": [
         "IV"
       ],
+      "taxonomy_attrs": [
+        "IV",
+        "BCH",
+        "IBG"
+      ],
       "median_sqrt_area_px": 4.88,
       "tiny": true
     },
@@ -5088,6 +6710,11 @@
         "OCC",
         "SOB"
       ],
+      "taxonomy_attrs": [
+        "OCC",
+        "SOB",
+        "STO"
+      ],
       "median_sqrt_area_px": 5.45,
       "tiny": true
     },
@@ -5104,6 +6731,9 @@
         "DS"
       ],
       "unified_attrs": [
+        "SOB"
+      ],
+      "taxonomy_attrs": [
         "SOB"
       ],
       "median_sqrt_area_px": 9.606,
@@ -5126,6 +6756,10 @@
         "IV",
         "SOB"
       ],
+      "taxonomy_attrs": [
+        "IV",
+        "SOB"
+      ],
       "median_sqrt_area_px": 7.269,
       "tiny": true
     },
@@ -5145,6 +6779,10 @@
       "unified_attrs": [
         "SOB"
       ],
+      "taxonomy_attrs": [
+        "SOB",
+        "BCH"
+      ],
       "median_sqrt_area_px": 6.342,
       "tiny": true
     },
@@ -5162,6 +6800,10 @@
         "IV"
       ],
       "unified_attrs": [
+        "IV",
+        "SOB"
+      ],
+      "taxonomy_attrs": [
         "IV",
         "SOB"
       ],
@@ -5185,6 +6827,10 @@
         "IV",
         "SOB"
       ],
+      "taxonomy_attrs": [
+        "IV",
+        "SOB"
+      ],
       "median_sqrt_area_px": 4.652,
       "tiny": true
     },
@@ -5204,6 +6850,11 @@
       ],
       "unified_attrs": [
         "IV"
+      ],
+      "taxonomy_attrs": [
+        "IV",
+        "IBG",
+        "SM"
       ],
       "median_sqrt_area_px": 6.597,
       "tiny": true
@@ -5226,6 +6877,11 @@
         "IV",
         "ROT"
       ],
+      "taxonomy_attrs": [
+        "IV",
+        "ROT",
+        "SM"
+      ],
       "median_sqrt_area_px": 11.926,
       "tiny": false
     },
@@ -5245,6 +6901,11 @@
       ],
       "unified_attrs": [
         "IV"
+      ],
+      "taxonomy_attrs": [
+        "IV",
+        "BCH",
+        "IBG"
       ],
       "median_sqrt_area_px": 3.899,
       "tiny": true
@@ -5267,6 +6928,12 @@
       "unified_attrs": [
         "IV"
       ],
+      "taxonomy_attrs": [
+        "IV",
+        "BCH",
+        "IBG",
+        "SM"
+      ],
       "median_sqrt_area_px": 4.834,
       "tiny": true
     },
@@ -5283,6 +6950,9 @@
         "BCH"
       ],
       "unified_attrs": [],
+      "taxonomy_attrs": [
+        "BCH"
+      ],
       "median_sqrt_area_px": 14.875,
       "tiny": false
     },
@@ -5305,6 +6975,12 @@
         "IV",
         "ROT"
       ],
+      "taxonomy_attrs": [
+        "IV",
+        "ROT",
+        "BCH",
+        "IBG"
+      ],
       "median_sqrt_area_px": 3.723,
       "tiny": true
     },
@@ -5326,6 +7002,13 @@
       "unified_attrs": [
         "OCC",
         "SOB"
+      ],
+      "taxonomy_attrs": [
+        "OCC",
+        "SOB",
+        "BCH",
+        "STO",
+        "CO"
       ],
       "median_sqrt_area_px": 4.214,
       "tiny": true
@@ -5352,6 +7035,15 @@
         "ROT",
         "OCC"
       ],
+      "taxonomy_attrs": [
+        "IV",
+        "ROT",
+        "OCC",
+        "BCH",
+        "IBG",
+        "STO",
+        "CO"
+      ],
       "median_sqrt_area_px": 3.389,
       "tiny": true
     },
@@ -5372,6 +7064,12 @@
       ],
       "unified_attrs": [
         "SOB"
+      ],
+      "taxonomy_attrs": [
+        "SOB",
+        "BCH",
+        "IBG",
+        "SM"
       ],
       "median_sqrt_area_px": 3.899,
       "tiny": true
@@ -5394,6 +7092,12 @@
       "unified_attrs": [
         "SOB"
       ],
+      "taxonomy_attrs": [
+        "SOB",
+        "BCH",
+        "IBG",
+        "SM"
+      ],
       "median_sqrt_area_px": 4.099,
       "tiny": true
     },
@@ -5413,6 +7117,11 @@
       ],
       "unified_attrs": [
         "SOB"
+      ],
+      "taxonomy_attrs": [
+        "SOB",
+        "ND",
+        "SM"
       ],
       "median_sqrt_area_px": 3.899,
       "tiny": true
@@ -5434,6 +7143,12 @@
       "unified_attrs": [
         "IV",
         "OCC"
+      ],
+      "taxonomy_attrs": [
+        "IV",
+        "OCC",
+        "IBG",
+        "STO"
       ],
       "median_sqrt_area_px": 5.235,
       "tiny": true
@@ -5457,6 +7172,12 @@
         "ROT",
         "SOB"
       ],
+      "taxonomy_attrs": [
+        "ROT",
+        "SOB",
+        "IBG",
+        "SM"
+      ],
       "median_sqrt_area_px": 6.696,
       "tiny": true
     },
@@ -5474,6 +7195,10 @@
         "BCL"
       ],
       "unified_attrs": [],
+      "taxonomy_attrs": [
+        "BCH",
+        "IBG"
+      ],
       "median_sqrt_area_px": 7.659,
       "tiny": true
     },
@@ -5490,6 +7215,9 @@
         "SM"
       ],
       "unified_attrs": [],
+      "taxonomy_attrs": [
+        "SM"
+      ],
       "median_sqrt_area_px": 7.509,
       "tiny": true
     },
@@ -5509,6 +7237,11 @@
       ],
       "unified_attrs": [
         "SOB"
+      ],
+      "taxonomy_attrs": [
+        "SOB",
+        "BCH",
+        "SM"
       ],
       "median_sqrt_area_px": 3.699,
       "tiny": true
@@ -5534,6 +7267,14 @@
         "OCC",
         "SOB"
       ],
+      "taxonomy_attrs": [
+        "IV",
+        "OCC",
+        "SOB",
+        "IBG",
+        "SM",
+        "STO"
+      ],
       "median_sqrt_area_px": 4.95,
       "tiny": true
     },
@@ -5554,6 +7295,11 @@
       "unified_attrs": [
         "IV",
         "SOB"
+      ],
+      "taxonomy_attrs": [
+        "IV",
+        "SOB",
+        "SM"
       ],
       "median_sqrt_area_px": 5.081,
       "tiny": true
@@ -5581,6 +7327,15 @@
         "OCC",
         "SOB"
       ],
+      "taxonomy_attrs": [
+        "IV",
+        "ROT",
+        "OCC",
+        "SOB",
+        "BCH",
+        "SM",
+        "STO"
+      ],
       "median_sqrt_area_px": 3.2,
       "tiny": true
     },
@@ -5607,6 +7362,15 @@
         "OCC",
         "SOB"
       ],
+      "taxonomy_attrs": [
+        "IV",
+        "ROT",
+        "OCC",
+        "SOB",
+        "BCH",
+        "IBG",
+        "LTO"
+      ],
       "median_sqrt_area_px": 3.04,
       "tiny": true
     },
@@ -5625,6 +7389,10 @@
       ],
       "unified_attrs": [
         "SOB"
+      ],
+      "taxonomy_attrs": [
+        "SOB",
+        "SM"
       ],
       "median_sqrt_area_px": 4.415,
       "tiny": true
@@ -5649,6 +7417,13 @@
         "OCC",
         "SOB"
       ],
+      "taxonomy_attrs": [
+        "IV",
+        "OCC",
+        "SOB",
+        "BCH",
+        "LTO"
+      ],
       "median_sqrt_area_px": 5.629,
       "tiny": true
     },
@@ -5671,6 +7446,12 @@
         "ROT",
         "SOB"
       ],
+      "taxonomy_attrs": [
+        "ROT",
+        "SOB",
+        "BCH",
+        "IBG"
+      ],
       "median_sqrt_area_px": 5.05,
       "tiny": true
     },
@@ -5691,6 +7472,13 @@
       ],
       "unified_attrs": [
         "OCC"
+      ],
+      "taxonomy_attrs": [
+        "OCC",
+        "SM",
+        "STO",
+        "LTO",
+        "CO"
       ],
       "median_sqrt_area_px": 4.928,
       "tiny": true
@@ -5714,6 +7502,12 @@
         "ROT",
         "SOB"
       ],
+      "taxonomy_attrs": [
+        "ROT",
+        "SOB",
+        "ND",
+        "IBG"
+      ],
       "median_sqrt_area_px": 5.485,
       "tiny": true
     },
@@ -5734,6 +7528,11 @@
       "unified_attrs": [
         "ROT",
         "SOB"
+      ],
+      "taxonomy_attrs": [
+        "ROT",
+        "SOB",
+        "IBG"
       ],
       "median_sqrt_area_px": 6.347,
       "tiny": true
@@ -5756,6 +7555,12 @@
       "unified_attrs": [
         "ROT",
         "SOB"
+      ],
+      "taxonomy_attrs": [
+        "ROT",
+        "SOB",
+        "ND",
+        "IBG"
       ],
       "median_sqrt_area_px": 4.69,
       "tiny": true
@@ -5781,6 +7586,13 @@
         "ROT",
         "SOB"
       ],
+      "taxonomy_attrs": [
+        "IV",
+        "ROT",
+        "SOB",
+        "IBG",
+        "SM"
+      ],
       "median_sqrt_area_px": 4.669,
       "tiny": true
     },
@@ -5799,6 +7611,10 @@
       ],
       "unified_attrs": [
         "SOB"
+      ],
+      "taxonomy_attrs": [
+        "SOB",
+        "SM"
       ],
       "median_sqrt_area_px": 6.49,
       "tiny": true
@@ -5824,6 +7640,14 @@
         "OCC",
         "SOB"
       ],
+      "taxonomy_attrs": [
+        "IV",
+        "OCC",
+        "SOB",
+        "IBG",
+        "STO",
+        "CO"
+      ],
       "median_sqrt_area_px": 6.693,
       "tiny": true
     },
@@ -5844,6 +7668,11 @@
         "OCC",
         "SOB"
       ],
+      "taxonomy_attrs": [
+        "OCC",
+        "SOB",
+        "STO"
+      ],
       "median_sqrt_area_px": 7.45,
       "tiny": true
     },
@@ -5863,6 +7692,10 @@
       "unified_attrs": [
         "SOB"
       ],
+      "taxonomy_attrs": [
+        "SOB",
+        "IBG"
+      ],
       "median_sqrt_area_px": 7.212,
       "tiny": true
     },
@@ -5881,6 +7714,10 @@
       ],
       "unified_attrs": [
         "SOB"
+      ],
+      "taxonomy_attrs": [
+        "SOB",
+        "SM"
       ],
       "median_sqrt_area_px": 5.307,
       "tiny": true
@@ -5902,6 +7739,11 @@
       "unified_attrs": [
         "ROT",
         "SOB"
+      ],
+      "taxonomy_attrs": [
+        "ROT",
+        "SOB",
+        "IBG"
       ],
       "median_sqrt_area_px": 5.054,
       "tiny": true
@@ -5926,6 +7768,12 @@
         "ROT",
         "SOB"
       ],
+      "taxonomy_attrs": [
+        "IV",
+        "ROT",
+        "SOB",
+        "IBG"
+      ],
       "median_sqrt_area_px": 5.895,
       "tiny": true
     },
@@ -5946,6 +7794,11 @@
       "unified_attrs": [
         "ROT",
         "SOB"
+      ],
+      "taxonomy_attrs": [
+        "ROT",
+        "SOB",
+        "IBG"
       ],
       "median_sqrt_area_px": 6.002,
       "tiny": true
@@ -5972,6 +7825,15 @@
         "OCC",
         "SOB"
       ],
+      "taxonomy_attrs": [
+        "ROT",
+        "OCC",
+        "SOB",
+        "SM",
+        "STO",
+        "LTO",
+        "CO"
+      ],
       "median_sqrt_area_px": 3.969,
       "tiny": true
     },
@@ -5994,6 +7856,13 @@
         "ROT",
         "OCC",
         "SOB"
+      ],
+      "taxonomy_attrs": [
+        "ROT",
+        "OCC",
+        "SOB",
+        "BCH",
+        "STO"
       ],
       "median_sqrt_area_px": 7.486,
       "tiny": true
@@ -6018,6 +7887,13 @@
         "OCC",
         "SOB"
       ],
+      "taxonomy_attrs": [
+        "ROT",
+        "OCC",
+        "SOB",
+        "IBG",
+        "STO"
+      ],
       "median_sqrt_area_px": 4.096,
       "tiny": true
     },
@@ -6041,6 +7917,13 @@
         "OCC",
         "SOB"
       ],
+      "taxonomy_attrs": [
+        "ROT",
+        "OCC",
+        "SOB",
+        "STO",
+        "CO"
+      ],
       "median_sqrt_area_px": 4.35,
       "tiny": true
     },
@@ -6063,6 +7946,12 @@
         "ROT",
         "SOB"
       ],
+      "taxonomy_attrs": [
+        "ROT",
+        "SOB",
+        "IBG",
+        "SM"
+      ],
       "median_sqrt_area_px": 4.848,
       "tiny": true
     },
@@ -6083,6 +7972,11 @@
       "unified_attrs": [
         "ROT",
         "SOB"
+      ],
+      "taxonomy_attrs": [
+        "ROT",
+        "SOB",
+        "IBG"
       ],
       "median_sqrt_area_px": 6.909,
       "tiny": true
@@ -6108,6 +8002,13 @@
         "ROT",
         "SOB"
       ],
+      "taxonomy_attrs": [
+        "IV",
+        "ROT",
+        "SOB",
+        "IBG",
+        "SM"
+      ],
       "median_sqrt_area_px": 6.218,
       "tiny": true
     },
@@ -6131,6 +8032,12 @@
         "ROT",
         "SOB"
       ],
+      "taxonomy_attrs": [
+        "IV",
+        "ROT",
+        "SOB",
+        "IBG"
+      ],
       "median_sqrt_area_px": 6.538,
       "tiny": true
     },
@@ -6152,6 +8059,12 @@
       "unified_attrs": [
         "ROT",
         "SOB"
+      ],
+      "taxonomy_attrs": [
+        "ROT",
+        "SOB",
+        "BCH",
+        "IBG"
       ],
       "median_sqrt_area_px": 6.673,
       "tiny": true
@@ -6176,6 +8089,13 @@
         "ROT",
         "SOB"
       ],
+      "taxonomy_attrs": [
+        "ROT",
+        "SOB",
+        "BCH",
+        "IBG",
+        "SM"
+      ],
       "median_sqrt_area_px": 6.128,
       "tiny": true
     },
@@ -6196,6 +8116,11 @@
       "unified_attrs": [
         "ROT",
         "SOB"
+      ],
+      "taxonomy_attrs": [
+        "ROT",
+        "SOB",
+        "IBG"
       ],
       "median_sqrt_area_px": 6.235,
       "tiny": true
@@ -6219,6 +8144,12 @@
         "ROT",
         "SOB"
       ],
+      "taxonomy_attrs": [
+        "ROT",
+        "SOB",
+        "BCH",
+        "SM"
+      ],
       "median_sqrt_area_px": 6.023,
       "tiny": true
     },
@@ -6236,6 +8167,10 @@
         "SM"
       ],
       "unified_attrs": [],
+      "taxonomy_attrs": [
+        "IBG",
+        "SM"
+      ],
       "median_sqrt_area_px": 5.781,
       "tiny": true
     },
@@ -6253,6 +8188,10 @@
         "BCL"
       ],
       "unified_attrs": [],
+      "taxonomy_attrs": [
+        "BCH",
+        "IBG"
+      ],
       "median_sqrt_area_px": 5.724,
       "tiny": true
     },
@@ -6269,6 +8208,9 @@
         "DS"
       ],
       "unified_attrs": [
+        "SOB"
+      ],
+      "taxonomy_attrs": [
         "SOB"
       ],
       "median_sqrt_area_px": 6.091,
@@ -6293,6 +8235,12 @@
         "ROT",
         "SOB"
       ],
+      "taxonomy_attrs": [
+        "ROT",
+        "SOB",
+        "BCH",
+        "IBG"
+      ],
       "median_sqrt_area_px": 4.944,
       "tiny": true
     },
@@ -6310,6 +8258,10 @@
         "IPR"
       ],
       "unified_attrs": [
+        "ROT",
+        "SOB"
+      ],
+      "taxonomy_attrs": [
         "ROT",
         "SOB"
       ],
@@ -6334,6 +8286,11 @@
         "ROT",
         "SOB"
       ],
+      "taxonomy_attrs": [
+        "ROT",
+        "SOB",
+        "SM"
+      ],
       "median_sqrt_area_px": 6.597,
       "tiny": true
     },
@@ -6356,6 +8313,11 @@
         "ROT",
         "SOB"
       ],
+      "taxonomy_attrs": [
+        "IV",
+        "ROT",
+        "SOB"
+      ],
       "median_sqrt_area_px": 5.638,
       "tiny": true
     },
@@ -6373,6 +8335,10 @@
         "SM"
       ],
       "unified_attrs": [],
+      "taxonomy_attrs": [
+        "IBG",
+        "SM"
+      ],
       "median_sqrt_area_px": 5.309,
       "tiny": true
     },
@@ -6392,6 +8358,11 @@
       ],
       "unified_attrs": [
         "ROT"
+      ],
+      "taxonomy_attrs": [
+        "ROT",
+        "BCH",
+        "IBG"
       ],
       "median_sqrt_area_px": 5.146,
       "tiny": true
@@ -6417,6 +8388,13 @@
         "ROT",
         "SOB"
       ],
+      "taxonomy_attrs": [
+        "IV",
+        "ROT",
+        "SOB",
+        "IBG",
+        "SM"
+      ],
       "median_sqrt_area_px": 5.397,
       "tiny": true
     },
@@ -6436,6 +8414,10 @@
       "unified_attrs": [
         "SOB"
       ],
+      "taxonomy_attrs": [
+        "SOB",
+        "SM"
+      ],
       "median_sqrt_area_px": 4.751,
       "tiny": true
     },
@@ -6453,6 +8435,10 @@
         "IPR"
       ],
       "unified_attrs": [
+        "ROT",
+        "SOB"
+      ],
+      "taxonomy_attrs": [
         "ROT",
         "SOB"
       ],
@@ -6480,6 +8466,13 @@
         "ROT",
         "SOB"
       ],
+      "taxonomy_attrs": [
+        "IV",
+        "ROT",
+        "SOB",
+        "IBG",
+        "SM"
+      ],
       "median_sqrt_area_px": 5.344,
       "tiny": true
     },
@@ -6500,6 +8493,11 @@
       "unified_attrs": [
         "ROT",
         "SOB"
+      ],
+      "taxonomy_attrs": [
+        "ROT",
+        "SOB",
+        "BCH"
       ],
       "median_sqrt_area_px": 4.757,
       "tiny": true
@@ -6522,6 +8520,11 @@
         "ROT",
         "SOB"
       ],
+      "taxonomy_attrs": [
+        "ROT",
+        "SOB",
+        "IBG"
+      ],
       "median_sqrt_area_px": 5.358,
       "tiny": true
     },
@@ -6542,6 +8545,11 @@
       "unified_attrs": [
         "ROT",
         "SOB"
+      ],
+      "taxonomy_attrs": [
+        "ROT",
+        "SOB",
+        "IBG"
       ],
       "median_sqrt_area_px": 4.959,
       "tiny": true
@@ -6564,6 +8572,11 @@
         "ROT",
         "SOB"
       ],
+      "taxonomy_attrs": [
+        "ROT",
+        "SOB",
+        "ND"
+      ],
       "median_sqrt_area_px": 4.937,
       "tiny": true
     },
@@ -6582,6 +8595,10 @@
       ],
       "unified_attrs": [
         "SOB"
+      ],
+      "taxonomy_attrs": [
+        "SOB",
+        "BCH"
       ],
       "median_sqrt_area_px": 5.776,
       "tiny": true
@@ -6602,6 +8619,10 @@
       "unified_attrs": [
         "SOB"
       ],
+      "taxonomy_attrs": [
+        "SOB",
+        "BCH"
+      ],
       "median_sqrt_area_px": 9.95,
       "tiny": false
     },
@@ -6620,6 +8641,10 @@
       ],
       "unified_attrs": [
         "SOB"
+      ],
+      "taxonomy_attrs": [
+        "SOB",
+        "BCH"
       ],
       "median_sqrt_area_px": 9.433,
       "tiny": false
@@ -6641,6 +8666,11 @@
         "OCC",
         "SOB"
       ],
+      "taxonomy_attrs": [
+        "OCC",
+        "SOB",
+        "STO"
+      ],
       "median_sqrt_area_px": 9.03,
       "tiny": false
     },
@@ -6659,6 +8689,10 @@
       ],
       "unified_attrs": [
         "SOB"
+      ],
+      "taxonomy_attrs": [
+        "SOB",
+        "BCH"
       ],
       "median_sqrt_area_px": 11.173,
       "tiny": false
@@ -6679,6 +8713,10 @@
       "unified_attrs": [
         "SOB"
       ],
+      "taxonomy_attrs": [
+        "SOB",
+        "BCH"
+      ],
       "median_sqrt_area_px": 10.32,
       "tiny": false
     },
@@ -6696,6 +8734,10 @@
         "IPR"
       ],
       "unified_attrs": [
+        "ROT",
+        "SOB"
+      ],
+      "taxonomy_attrs": [
         "ROT",
         "SOB"
       ],
@@ -6721,6 +8763,12 @@
         "ROT",
         "SOB"
       ],
+      "taxonomy_attrs": [
+        "ROT",
+        "SOB",
+        "BCH",
+        "IBG"
+      ],
       "median_sqrt_area_px": 4.644,
       "tiny": true
     },
@@ -6740,6 +8788,11 @@
       ],
       "unified_attrs": [
         "SOB"
+      ],
+      "taxonomy_attrs": [
+        "SOB",
+        "BCH",
+        "ND"
       ],
       "median_sqrt_area_px": 9.533,
       "tiny": false
@@ -6764,6 +8817,14 @@
         "OCC",
         "SOB"
       ],
+      "taxonomy_attrs": [
+        "OCC",
+        "SOB",
+        "BCH",
+        "ND",
+        "IBG",
+        "STO"
+      ],
       "median_sqrt_area_px": 9.59,
       "tiny": false
     },
@@ -6785,6 +8846,12 @@
       "unified_attrs": [
         "SOB"
       ],
+      "taxonomy_attrs": [
+        "SOB",
+        "BCH",
+        "ND",
+        "IBG"
+      ],
       "median_sqrt_area_px": 6.781,
       "tiny": true
     },
@@ -6805,6 +8872,11 @@
       "unified_attrs": [
         "SOB"
       ],
+      "taxonomy_attrs": [
+        "SOB",
+        "BCH",
+        "IBG"
+      ],
       "median_sqrt_area_px": 7.505,
       "tiny": true
     },
@@ -6823,6 +8895,10 @@
       ],
       "unified_attrs": [
         "SOB"
+      ],
+      "taxonomy_attrs": [
+        "SOB",
+        "BCH"
       ],
       "median_sqrt_area_px": 10.92,
       "tiny": false
@@ -6843,6 +8919,10 @@
       "unified_attrs": [
         "SOB"
       ],
+      "taxonomy_attrs": [
+        "SOB",
+        "BCH"
+      ],
       "median_sqrt_area_px": 10.312,
       "tiny": false
     },
@@ -6861,6 +8941,10 @@
       ],
       "unified_attrs": [
         "SOB"
+      ],
+      "taxonomy_attrs": [
+        "SOB",
+        "BCH"
       ],
       "median_sqrt_area_px": 9.616,
       "tiny": false
@@ -6881,6 +8965,10 @@
       "unified_attrs": [
         "SOB"
       ],
+      "taxonomy_attrs": [
+        "SOB",
+        "BCH"
+      ],
       "median_sqrt_area_px": 4.327,
       "tiny": true
     },
@@ -6897,6 +8985,9 @@
         "DS"
       ],
       "unified_attrs": [
+        "SOB"
+      ],
+      "taxonomy_attrs": [
         "SOB"
       ],
       "median_sqrt_area_px": 5.886,
@@ -6919,6 +9010,11 @@
       "unified_attrs": [
         "SOB"
       ],
+      "taxonomy_attrs": [
+        "SOB",
+        "BCH",
+        "IBG"
+      ],
       "median_sqrt_area_px": 6.954,
       "tiny": true
     },
@@ -6937,6 +9033,10 @@
       ],
       "unified_attrs": [
         "SOB"
+      ],
+      "taxonomy_attrs": [
+        "SOB",
+        "BCH"
       ],
       "median_sqrt_area_px": 6.276,
       "tiny": true
@@ -6957,6 +9057,10 @@
       "unified_attrs": [
         "SOB"
       ],
+      "taxonomy_attrs": [
+        "SOB",
+        "BCH"
+      ],
       "median_sqrt_area_px": 9.454,
       "tiny": false
     },
@@ -6975,6 +9079,10 @@
       ],
       "unified_attrs": [
         "SOB"
+      ],
+      "taxonomy_attrs": [
+        "SOB",
+        "BCH"
       ],
       "median_sqrt_area_px": 9.198,
       "tiny": false
@@ -6995,6 +9103,10 @@
       "unified_attrs": [
         "SOB"
       ],
+      "taxonomy_attrs": [
+        "SOB",
+        "BCH"
+      ],
       "median_sqrt_area_px": 8.692,
       "tiny": false
     },
@@ -7013,6 +9125,10 @@
       ],
       "unified_attrs": [
         "SOB"
+      ],
+      "taxonomy_attrs": [
+        "SOB",
+        "BCH"
       ],
       "median_sqrt_area_px": 12.146,
       "tiny": false
@@ -7035,6 +9151,13 @@
       "unified_attrs": [
         "OCC",
         "SOB"
+      ],
+      "taxonomy_attrs": [
+        "OCC",
+        "SOB",
+        "BCH",
+        "IBG",
+        "STO"
       ],
       "median_sqrt_area_px": 5.667,
       "tiny": true
@@ -7060,6 +9183,14 @@
         "IV",
         "SOB"
       ],
+      "taxonomy_attrs": [
+        "IV",
+        "SOB",
+        "BCH",
+        "ND",
+        "IBG",
+        "SM"
+      ],
       "median_sqrt_area_px": 5.866,
       "tiny": true
     },
@@ -7083,6 +9214,14 @@
         "ROT",
         "OCC",
         "SOB"
+      ],
+      "taxonomy_attrs": [
+        "ROT",
+        "OCC",
+        "SOB",
+        "ND",
+        "SM",
+        "STO"
       ],
       "median_sqrt_area_px": 4.805,
       "tiny": true
@@ -7109,6 +9248,14 @@
         "OCC",
         "SOB"
       ],
+      "taxonomy_attrs": [
+        "IV",
+        "ROT",
+        "OCC",
+        "SOB",
+        "SM",
+        "STO"
+      ],
       "median_sqrt_area_px": 5.833,
       "tiny": true
     },
@@ -7132,6 +9279,12 @@
         "ROT",
         "SOB"
       ],
+      "taxonomy_attrs": [
+        "IV",
+        "ROT",
+        "SOB",
+        "SM"
+      ],
       "median_sqrt_area_px": 5.773,
       "tiny": true
     },
@@ -7153,6 +9306,11 @@
         "ROT",
         "SOB"
       ],
+      "taxonomy_attrs": [
+        "ROT",
+        "SOB",
+        "SM"
+      ],
       "median_sqrt_area_px": 11.38,
       "tiny": false
     },
@@ -7173,6 +9331,11 @@
       "unified_attrs": [
         "ROT",
         "SOB"
+      ],
+      "taxonomy_attrs": [
+        "ROT",
+        "SOB",
+        "SM"
       ],
       "median_sqrt_area_px": 9.105,
       "tiny": false
@@ -7198,6 +9361,14 @@
         "OCC",
         "SOB"
       ],
+      "taxonomy_attrs": [
+        "ROT",
+        "OCC",
+        "SOB",
+        "BCH",
+        "IBG",
+        "STO"
+      ],
       "median_sqrt_area_px": 4.529,
       "tiny": true
     },
@@ -7218,6 +9389,11 @@
       "unified_attrs": [
         "ROT",
         "SOB"
+      ],
+      "taxonomy_attrs": [
+        "ROT",
+        "SOB",
+        "IBG"
       ],
       "median_sqrt_area_px": 6.537,
       "tiny": true
@@ -7242,6 +9418,13 @@
         "OCC",
         "SOB"
       ],
+      "taxonomy_attrs": [
+        "IV",
+        "OCC",
+        "SOB",
+        "STO",
+        "CO"
+      ],
       "median_sqrt_area_px": 10.318,
       "tiny": false
     },
@@ -7261,6 +9444,10 @@
       "unified_attrs": [
         "SOB"
       ],
+      "taxonomy_attrs": [
+        "SOB",
+        "BCH"
+      ],
       "median_sqrt_area_px": 11.906,
       "tiny": false
     },
@@ -7279,6 +9466,10 @@
       ],
       "unified_attrs": [
         "SOB"
+      ],
+      "taxonomy_attrs": [
+        "SOB",
+        "BCH"
       ],
       "median_sqrt_area_px": 9.929,
       "tiny": false
@@ -7303,6 +9494,13 @@
         "OCC",
         "SOB"
       ],
+      "taxonomy_attrs": [
+        "ROT",
+        "OCC",
+        "SOB",
+        "BCH",
+        "LTO"
+      ],
       "median_sqrt_area_px": 31.602,
       "tiny": false
     },
@@ -7322,6 +9520,10 @@
       "unified_attrs": [
         "IV"
       ],
+      "taxonomy_attrs": [
+        "IV",
+        "SM"
+      ],
       "median_sqrt_area_px": 27.826,
       "tiny": false
     },
@@ -7338,6 +9540,9 @@
         "BCH"
       ],
       "unified_attrs": [],
+      "taxonomy_attrs": [
+        "BCH"
+      ],
       "median_sqrt_area_px": 24.522,
       "tiny": false
     },
@@ -7356,6 +9561,10 @@
       ],
       "unified_attrs": [
         "ROT"
+      ],
+      "taxonomy_attrs": [
+        "ROT",
+        "BCH"
       ],
       "median_sqrt_area_px": 25.18,
       "tiny": false
@@ -7378,6 +9587,13 @@
       "unified_attrs": [
         "ROT",
         "OCC"
+      ],
+      "taxonomy_attrs": [
+        "ROT",
+        "OCC",
+        "BCH",
+        "STO",
+        "CO"
       ],
       "median_sqrt_area_px": 4.641,
       "tiny": true
@@ -7403,6 +9619,15 @@
         "ROT",
         "OCC"
       ],
+      "taxonomy_attrs": [
+        "ROT",
+        "OCC",
+        "BCH",
+        "IBG",
+        "STO",
+        "LTO",
+        "CO"
+      ],
       "median_sqrt_area_px": 4.815,
       "tiny": true
     },
@@ -7424,6 +9649,13 @@
       "unified_attrs": [
         "ROT",
         "OCC"
+      ],
+      "taxonomy_attrs": [
+        "ROT",
+        "OCC",
+        "IBG",
+        "STO",
+        "CO"
       ],
       "median_sqrt_area_px": 7.077,
       "tiny": true
@@ -7447,6 +9679,13 @@
         "ROT",
         "OCC"
       ],
+      "taxonomy_attrs": [
+        "ROT",
+        "OCC",
+        "BCH",
+        "IBG",
+        "STO"
+      ],
       "median_sqrt_area_px": 5.486,
       "tiny": true
     },
@@ -7465,6 +9704,10 @@
       ],
       "unified_attrs": [
         "SOB"
+      ],
+      "taxonomy_attrs": [
+        "SOB",
+        "BCH"
       ],
       "median_sqrt_area_px": 4.582,
       "tiny": true
@@ -7490,6 +9733,14 @@
         "ROT",
         "OCC"
       ],
+      "taxonomy_attrs": [
+        "IV",
+        "ROT",
+        "OCC",
+        "IBG",
+        "STO",
+        "CO"
+      ],
       "median_sqrt_area_px": 4.443,
       "tiny": true
     },
@@ -7511,6 +9762,12 @@
         "OCC",
         "SOB"
       ],
+      "taxonomy_attrs": [
+        "OCC",
+        "SOB",
+        "STO",
+        "CO"
+      ],
       "median_sqrt_area_px": 4.711,
       "tiny": true
     },
@@ -7531,6 +9788,11 @@
       "unified_attrs": [
         "ROT",
         "SOB"
+      ],
+      "taxonomy_attrs": [
+        "ROT",
+        "SOB",
+        "BCH"
       ],
       "median_sqrt_area_px": 6.628,
       "tiny": true
@@ -7555,6 +9817,13 @@
         "OCC",
         "SOB"
       ],
+      "taxonomy_attrs": [
+        "ROT",
+        "OCC",
+        "SOB",
+        "BCH",
+        "STO"
+      ],
       "median_sqrt_area_px": 4.342,
       "tiny": true
     },
@@ -7578,6 +9847,13 @@
         "OCC",
         "SOB"
       ],
+      "taxonomy_attrs": [
+        "ROT",
+        "OCC",
+        "SOB",
+        "BCH",
+        "STO"
+      ],
       "median_sqrt_area_px": 5.057,
       "tiny": true
     },
@@ -7596,6 +9872,10 @@
       ],
       "unified_attrs": [
         "SOB"
+      ],
+      "taxonomy_attrs": [
+        "SOB",
+        "BCH"
       ],
       "median_sqrt_area_px": 4.718,
       "tiny": true
@@ -7620,6 +9900,14 @@
         "ROT",
         "OCC"
       ],
+      "taxonomy_attrs": [
+        "ROT",
+        "OCC",
+        "BCH",
+        "IBG",
+        "STO",
+        "CO"
+      ],
       "median_sqrt_area_px": 4.118,
       "tiny": true
     },
@@ -7642,6 +9930,13 @@
         "ROT",
         "OCC",
         "SOB"
+      ],
+      "taxonomy_attrs": [
+        "ROT",
+        "OCC",
+        "SOB",
+        "BCH",
+        "STO"
       ],
       "median_sqrt_area_px": 5.539,
       "tiny": true
@@ -7670,6 +9965,16 @@
         "OCC",
         "SOB"
       ],
+      "taxonomy_attrs": [
+        "IV",
+        "ROT",
+        "OCC",
+        "SOB",
+        "BCH",
+        "ND",
+        "IBG",
+        "STO"
+      ],
       "median_sqrt_area_px": 6.172,
       "tiny": true
     },
@@ -7690,6 +9995,13 @@
       ],
       "unified_attrs": [
         "OCC"
+      ],
+      "taxonomy_attrs": [
+        "OCC",
+        "BCH",
+        "IBG",
+        "STO",
+        "CO"
       ],
       "median_sqrt_area_px": 5.855,
       "tiny": true
@@ -7714,6 +10026,13 @@
         "OCC",
         "SOB"
       ],
+      "taxonomy_attrs": [
+        "ROT",
+        "OCC",
+        "SOB",
+        "BCH",
+        "STO"
+      ],
       "median_sqrt_area_px": 5.603,
       "tiny": true
     },
@@ -7737,6 +10056,13 @@
         "OCC",
         "SOB"
       ],
+      "taxonomy_attrs": [
+        "ROT",
+        "OCC",
+        "SOB",
+        "BCH",
+        "STO"
+      ],
       "median_sqrt_area_px": 5.777,
       "tiny": true
     },
@@ -7757,6 +10083,11 @@
         "OCC",
         "SOB"
       ],
+      "taxonomy_attrs": [
+        "OCC",
+        "SOB",
+        "STO"
+      ],
       "median_sqrt_area_px": 4.138,
       "tiny": true
     },
@@ -7776,6 +10107,11 @@
       "unified_attrs": [
         "OCC",
         "SOB"
+      ],
+      "taxonomy_attrs": [
+        "OCC",
+        "SOB",
+        "STO"
       ],
       "median_sqrt_area_px": 4.736,
       "tiny": true
@@ -7801,6 +10137,14 @@
         "OCC",
         "SOB"
       ],
+      "taxonomy_attrs": [
+        "IV",
+        "OCC",
+        "SOB",
+        "IBG",
+        "STO",
+        "CO"
+      ],
       "median_sqrt_area_px": 4.529,
       "tiny": true
     },
@@ -7815,6 +10159,7 @@
       "gt_format": "xywh_with_state",
       "native_attrs": [],
       "unified_attrs": [],
+      "taxonomy_attrs": [],
       "median_sqrt_area_px": 5.46,
       "tiny": true
     },
@@ -7835,6 +10180,11 @@
       "unified_attrs": [
         "ROT"
       ],
+      "taxonomy_attrs": [
+        "ROT",
+        "BCH",
+        "IBG"
+      ],
       "median_sqrt_area_px": 5.603,
       "tiny": true
     },
@@ -7853,6 +10203,9 @@
       "unified_attrs": [
         "SOB"
       ],
+      "taxonomy_attrs": [
+        "SOB"
+      ],
       "median_sqrt_area_px": 6.567,
       "tiny": true
     },
@@ -7869,6 +10222,9 @@
         "IPR"
       ],
       "unified_attrs": [
+        "ROT"
+      ],
+      "taxonomy_attrs": [
         "ROT"
       ],
       "median_sqrt_area_px": 4.858,
@@ -7893,6 +10249,12 @@
         "ROT",
         "SOB"
       ],
+      "taxonomy_attrs": [
+        "ROT",
+        "SOB",
+        "BCH",
+        "SM"
+      ],
       "median_sqrt_area_px": 5.144,
       "tiny": true
     },
@@ -7914,6 +10276,11 @@
         "ROT",
         "SOB"
       ],
+      "taxonomy_attrs": [
+        "ROT",
+        "SOB",
+        "BCH"
+      ],
       "median_sqrt_area_px": 5.328,
       "tiny": true
     },
@@ -7932,6 +10299,10 @@
       ],
       "unified_attrs": [
         "ROT"
+      ],
+      "taxonomy_attrs": [
+        "ROT",
+        "BCH"
       ],
       "median_sqrt_area_px": 5.926,
       "tiny": true
@@ -7956,6 +10327,13 @@
         "ROT",
         "OCC",
         "SOB"
+      ],
+      "taxonomy_attrs": [
+        "IV",
+        "ROT",
+        "OCC",
+        "SOB",
+        "STO"
       ],
       "median_sqrt_area_px": 4.757,
       "tiny": true
@@ -7983,6 +10361,15 @@
         "ROT",
         "SOB"
       ],
+      "taxonomy_attrs": [
+        "IV",
+        "ROT",
+        "SOB",
+        "BCH",
+        "ND",
+        "IBG",
+        "SM"
+      ],
       "median_sqrt_area_px": 4.986,
       "tiny": true
     },
@@ -8006,6 +10393,12 @@
         "ROT",
         "SOB"
       ],
+      "taxonomy_attrs": [
+        "IV",
+        "ROT",
+        "SOB",
+        "SM"
+      ],
       "median_sqrt_area_px": 5.098,
       "tiny": true
     },
@@ -8026,6 +10419,12 @@
       "unified_attrs": [
         "ROT",
         "OCC"
+      ],
+      "taxonomy_attrs": [
+        "ROT",
+        "OCC",
+        "ND",
+        "LTO"
       ],
       "median_sqrt_area_px": 5.433,
       "tiny": true
@@ -8050,6 +10449,13 @@
         "IV",
         "ROT"
       ],
+      "taxonomy_attrs": [
+        "IV",
+        "ROT",
+        "BCH",
+        "IBG",
+        "SM"
+      ],
       "median_sqrt_area_px": 5.675,
       "tiny": true
     },
@@ -8068,6 +10474,11 @@
         "SM"
       ],
       "unified_attrs": [],
+      "taxonomy_attrs": [
+        "BCH",
+        "IBG",
+        "SM"
+      ],
       "median_sqrt_area_px": 6.01,
       "tiny": true
     },
@@ -8087,6 +10498,11 @@
       ],
       "unified_attrs": [
         "ROT"
+      ],
+      "taxonomy_attrs": [
+        "ROT",
+        "BCH",
+        "SM"
       ],
       "median_sqrt_area_px": 4.941,
       "tiny": true
@@ -8112,6 +10528,14 @@
         "OCC",
         "SOB"
       ],
+      "taxonomy_attrs": [
+        "IV",
+        "OCC",
+        "SOB",
+        "BCH",
+        "STO",
+        "CO"
+      ],
       "median_sqrt_area_px": 4.578,
       "tiny": true
     },
@@ -8126,6 +10550,7 @@
       "gt_format": "xywh_with_state",
       "native_attrs": [],
       "unified_attrs": [],
+      "taxonomy_attrs": [],
       "median_sqrt_area_px": 40.433,
       "tiny": false
     },
@@ -8146,6 +10571,12 @@
       "unified_attrs": [
         "IV",
         "OCC"
+      ],
+      "taxonomy_attrs": [
+        "IV",
+        "OCC",
+        "STO",
+        "CO"
       ],
       "median_sqrt_area_px": 4.09,
       "tiny": true
@@ -8174,6 +10605,16 @@
         "OCC",
         "SOB"
       ],
+      "taxonomy_attrs": [
+        "IV",
+        "ROT",
+        "OCC",
+        "SOB",
+        "SM",
+        "STO",
+        "LTO",
+        "CO"
+      ],
       "median_sqrt_area_px": 4.768,
       "tiny": true
     },
@@ -8195,6 +10636,11 @@
         "IV",
         "ROT"
       ],
+      "taxonomy_attrs": [
+        "IV",
+        "ROT",
+        "IBG"
+      ],
       "median_sqrt_area_px": 5.837,
       "tiny": true
     },
@@ -8211,6 +10657,9 @@
         "IPR"
       ],
       "unified_attrs": [
+        "ROT"
+      ],
+      "taxonomy_attrs": [
         "ROT"
       ],
       "median_sqrt_area_px": 5.54,
@@ -8232,6 +10681,11 @@
       "unified_attrs": [
         "OCC"
       ],
+      "taxonomy_attrs": [
+        "OCC",
+        "BCH",
+        "STO"
+      ],
       "median_sqrt_area_px": 20.943,
       "tiny": false
     },
@@ -8251,6 +10705,11 @@
       "unified_attrs": [
         "ROT",
         "OCC"
+      ],
+      "taxonomy_attrs": [
+        "ROT",
+        "OCC",
+        "STO"
       ],
       "median_sqrt_area_px": 7.763,
       "tiny": true
@@ -8273,6 +10732,12 @@
         "ROT",
         "OCC",
         "SOB"
+      ],
+      "taxonomy_attrs": [
+        "ROT",
+        "OCC",
+        "SOB",
+        "STO"
       ],
       "median_sqrt_area_px": 7.668,
       "tiny": true
@@ -8299,6 +10764,15 @@
         "OCC",
         "SOB"
       ],
+      "taxonomy_attrs": [
+        "IV",
+        "OCC",
+        "SOB",
+        "BCH",
+        "IBG",
+        "STO",
+        "CO"
+      ],
       "median_sqrt_area_px": 7.669,
       "tiny": true
     },
@@ -8315,6 +10789,9 @@
         "IPR"
       ],
       "unified_attrs": [
+        "ROT"
+      ],
+      "taxonomy_attrs": [
         "ROT"
       ],
       "median_sqrt_area_px": 7.626,
@@ -8338,6 +10815,12 @@
         "OCC",
         "SOB"
       ],
+      "taxonomy_attrs": [
+        "OCC",
+        "SOB",
+        "STO",
+        "CO"
+      ],
       "median_sqrt_area_px": 6.193,
       "tiny": true
     },
@@ -8359,6 +10842,12 @@
         "OCC",
         "SOB"
       ],
+      "taxonomy_attrs": [
+        "OCC",
+        "SOB",
+        "STO",
+        "CO"
+      ],
       "median_sqrt_area_px": 6.599,
       "tiny": true
     },
@@ -8378,6 +10867,11 @@
       "unified_attrs": [
         "OCC"
       ],
+      "taxonomy_attrs": [
+        "OCC",
+        "BCH",
+        "STO"
+      ],
       "median_sqrt_area_px": 8.388,
       "tiny": false
     },
@@ -8396,6 +10890,11 @@
       ],
       "unified_attrs": [
         "OCC"
+      ],
+      "taxonomy_attrs": [
+        "OCC",
+        "BCH",
+        "STO"
       ],
       "median_sqrt_area_px": 8.376,
       "tiny": false
@@ -8420,6 +10919,12 @@
         "ROT",
         "SOB"
       ],
+      "taxonomy_attrs": [
+        "IV",
+        "ROT",
+        "SOB",
+        "BCH"
+      ],
       "median_sqrt_area_px": 6.54,
       "tiny": true
     },
@@ -8437,6 +10942,10 @@
         "IPR"
       ],
       "unified_attrs": [
+        "ROT",
+        "SOB"
+      ],
+      "taxonomy_attrs": [
         "ROT",
         "SOB"
       ],
@@ -8465,6 +10974,14 @@
         "OCC",
         "SOB"
       ],
+      "taxonomy_attrs": [
+        "IV",
+        "ROT",
+        "OCC",
+        "SOB",
+        "SM",
+        "STO"
+      ],
       "median_sqrt_area_px": 6.462,
       "tiny": true
     },
@@ -8490,6 +11007,14 @@
         "OCC",
         "SOB"
       ],
+      "taxonomy_attrs": [
+        "IV",
+        "ROT",
+        "OCC",
+        "SOB",
+        "SM",
+        "STO"
+      ],
       "median_sqrt_area_px": 5.407,
       "tiny": true
     },
@@ -8504,6 +11029,7 @@
       "gt_format": "xywh_with_state",
       "native_attrs": [],
       "unified_attrs": [],
+      "taxonomy_attrs": [],
       "median_sqrt_area_px": 7.733,
       "tiny": true
     },
@@ -8524,6 +11050,11 @@
       "unified_attrs": [
         "ROT",
         "SOB"
+      ],
+      "taxonomy_attrs": [
+        "ROT",
+        "SOB",
+        "SM"
       ],
       "median_sqrt_area_px": 6.448,
       "tiny": true
@@ -8547,6 +11078,12 @@
         "OCC",
         "SOB"
       ],
+      "taxonomy_attrs": [
+        "ROT",
+        "OCC",
+        "SOB",
+        "STO"
+      ],
       "median_sqrt_area_px": 5.88,
       "tiny": true
     },
@@ -8565,6 +11102,11 @@
       ],
       "unified_attrs": [
         "OCC"
+      ],
+      "taxonomy_attrs": [
+        "OCC",
+        "STO",
+        "CO"
       ],
       "median_sqrt_area_px": 6.04,
       "tiny": true
@@ -8586,6 +11128,12 @@
       "unified_attrs": [
         "ROT",
         "OCC"
+      ],
+      "taxonomy_attrs": [
+        "ROT",
+        "OCC",
+        "STO",
+        "CO"
       ],
       "median_sqrt_area_px": 16.461,
       "tiny": false
@@ -8610,6 +11158,14 @@
         "IV",
         "OCC"
       ],
+      "taxonomy_attrs": [
+        "IV",
+        "OCC",
+        "BCH",
+        "IBG",
+        "STO",
+        "CO"
+      ],
       "median_sqrt_area_px": 5.692,
       "tiny": true
     },
@@ -8630,6 +11186,11 @@
         "ROT",
         "OCC"
       ],
+      "taxonomy_attrs": [
+        "ROT",
+        "OCC",
+        "STO"
+      ],
       "median_sqrt_area_px": 6.253,
       "tiny": true
     },
@@ -8648,6 +11209,10 @@
       ],
       "unified_attrs": [
         "ROT"
+      ],
+      "taxonomy_attrs": [
+        "ROT",
+        "IBG"
       ],
       "median_sqrt_area_px": 5.945,
       "tiny": true
@@ -8673,6 +11238,14 @@
         "OCC",
         "SOB"
       ],
+      "taxonomy_attrs": [
+        "IV",
+        "OCC",
+        "SOB",
+        "IBG",
+        "STO",
+        "CO"
+      ],
       "median_sqrt_area_px": 6.093,
       "tiny": true
     },
@@ -8690,6 +11263,10 @@
       ],
       "unified_attrs": [
         "OCC"
+      ],
+      "taxonomy_attrs": [
+        "OCC",
+        "STO"
       ],
       "median_sqrt_area_px": 8.767,
       "tiny": false
@@ -8713,6 +11290,12 @@
         "OCC",
         "SOB"
       ],
+      "taxonomy_attrs": [
+        "ROT",
+        "OCC",
+        "SOB",
+        "STO"
+      ],
       "median_sqrt_area_px": 6.321,
       "tiny": true
     },
@@ -8732,6 +11315,10 @@
       "unified_attrs": [
         "ROT"
       ],
+      "taxonomy_attrs": [
+        "ROT",
+        "IBG"
+      ],
       "median_sqrt_area_px": 5.586,
       "tiny": true
     },
@@ -8749,6 +11336,10 @@
       ],
       "unified_attrs": [
         "OCC"
+      ],
+      "taxonomy_attrs": [
+        "OCC",
+        "STO"
       ],
       "median_sqrt_area_px": 11.665,
       "tiny": false
@@ -8772,6 +11363,13 @@
         "IV",
         "OCC"
       ],
+      "taxonomy_attrs": [
+        "IV",
+        "OCC",
+        "BCH",
+        "STO",
+        "CO"
+      ],
       "median_sqrt_area_px": 5.438,
       "tiny": true
     },
@@ -8791,6 +11389,12 @@
       ],
       "unified_attrs": [
         "OCC"
+      ],
+      "taxonomy_attrs": [
+        "OCC",
+        "BCH",
+        "STO",
+        "CO"
       ],
       "median_sqrt_area_px": 5.543,
       "tiny": true
@@ -8814,6 +11418,13 @@
         "IV",
         "ROT",
         "OCC"
+      ],
+      "taxonomy_attrs": [
+        "IV",
+        "ROT",
+        "OCC",
+        "STO",
+        "CO"
       ],
       "median_sqrt_area_px": 6.709,
       "tiny": true
@@ -8839,6 +11450,14 @@
         "OCC",
         "SOB"
       ],
+      "taxonomy_attrs": [
+        "IV",
+        "OCC",
+        "SOB",
+        "BCH",
+        "STO",
+        "CO"
+      ],
       "median_sqrt_area_px": 5.527,
       "tiny": true
     },
@@ -8863,6 +11482,14 @@
         "OCC",
         "SOB"
       ],
+      "taxonomy_attrs": [
+        "IV",
+        "OCC",
+        "SOB",
+        "BCH",
+        "STO",
+        "CO"
+      ],
       "median_sqrt_area_px": 6.683,
       "tiny": true
     },
@@ -8886,6 +11513,13 @@
         "OCC",
         "SOB"
       ],
+      "taxonomy_attrs": [
+        "ROT",
+        "OCC",
+        "SOB",
+        "STO",
+        "CO"
+      ],
       "median_sqrt_area_px": 4.996,
       "tiny": true
     },
@@ -8908,6 +11542,13 @@
         "IV",
         "ROT",
         "OCC"
+      ],
+      "taxonomy_attrs": [
+        "IV",
+        "ROT",
+        "OCC",
+        "STO",
+        "CO"
       ],
       "median_sqrt_area_px": 6.53,
       "tiny": true
@@ -8934,6 +11575,14 @@
         "OCC",
         "SOB"
       ],
+      "taxonomy_attrs": [
+        "IV",
+        "ROT",
+        "OCC",
+        "SOB",
+        "STO",
+        "CO"
+      ],
       "median_sqrt_area_px": 9.869,
       "tiny": false
     },
@@ -8948,6 +11597,7 @@
       "gt_format": "xywh_with_state",
       "native_attrs": [],
       "unified_attrs": [],
+      "taxonomy_attrs": [],
       "median_sqrt_area_px": 55.67,
       "tiny": false
     },
@@ -8968,6 +11618,11 @@
       "unified_attrs": [
         "SOB"
       ],
+      "taxonomy_attrs": [
+        "SOB",
+        "ND",
+        "SM"
+      ],
       "median_sqrt_area_px": 4.829,
       "tiny": true
     },
@@ -8984,6 +11639,9 @@
         "DS"
       ],
       "unified_attrs": [
+        "SOB"
+      ],
+      "taxonomy_attrs": [
         "SOB"
       ],
       "median_sqrt_area_px": 5.455,
@@ -9005,6 +11663,10 @@
       "unified_attrs": [
         "SOB"
       ],
+      "taxonomy_attrs": [
+        "SOB",
+        "SM"
+      ],
       "median_sqrt_area_px": 4.294,
       "tiny": true
     },
@@ -9023,6 +11685,11 @@
       ],
       "unified_attrs": [
         "OCC"
+      ],
+      "taxonomy_attrs": [
+        "OCC",
+        "SM",
+        "STO"
       ],
       "median_sqrt_area_px": 5.322,
       "tiny": true
@@ -9046,6 +11713,12 @@
         "OCC",
         "SOB"
       ],
+      "taxonomy_attrs": [
+        "IV",
+        "OCC",
+        "SOB",
+        "STO"
+      ],
       "median_sqrt_area_px": 4.69,
       "tiny": true
     },
@@ -9063,6 +11736,10 @@
         "IV"
       ],
       "unified_attrs": [
+        "IV",
+        "SOB"
+      ],
+      "taxonomy_attrs": [
         "IV",
         "SOB"
       ],
@@ -9087,6 +11764,11 @@
         "ROT",
         "SOB"
       ],
+      "taxonomy_attrs": [
+        "ROT",
+        "SOB",
+        "SM"
+      ],
       "median_sqrt_area_px": 5.588,
       "tiny": true
     },
@@ -9103,6 +11785,9 @@
         "IV"
       ],
       "unified_attrs": [
+        "IV"
+      ],
+      "taxonomy_attrs": [
         "IV"
       ],
       "median_sqrt_area_px": 5.032,
@@ -9122,6 +11807,10 @@
         "IV"
       ],
       "unified_attrs": [
+        "IV",
+        "SOB"
+      ],
+      "taxonomy_attrs": [
         "IV",
         "SOB"
       ],
@@ -9145,6 +11834,10 @@
         "IV",
         "SOB"
       ],
+      "taxonomy_attrs": [
+        "IV",
+        "SOB"
+      ],
       "median_sqrt_area_px": 5.091,
       "tiny": true
     },
@@ -9162,6 +11855,10 @@
         "IV"
       ],
       "unified_attrs": [
+        "IV",
+        "SOB"
+      ],
+      "taxonomy_attrs": [
         "IV",
         "SOB"
       ],
@@ -9185,6 +11882,10 @@
         "IV",
         "SOB"
       ],
+      "taxonomy_attrs": [
+        "IV",
+        "SOB"
+      ],
       "median_sqrt_area_px": 4.944,
       "tiny": true
     },
@@ -9202,6 +11903,10 @@
         "IV"
       ],
       "unified_attrs": [
+        "IV",
+        "SOB"
+      ],
+      "taxonomy_attrs": [
         "IV",
         "SOB"
       ],
@@ -9225,6 +11930,10 @@
         "IV",
         "SOB"
       ],
+      "taxonomy_attrs": [
+        "IV",
+        "SOB"
+      ],
       "median_sqrt_area_px": 4.822,
       "tiny": true
     },
@@ -9242,6 +11951,10 @@
         "IV"
       ],
       "unified_attrs": [
+        "IV",
+        "SOB"
+      ],
+      "taxonomy_attrs": [
         "IV",
         "SOB"
       ],
@@ -9263,6 +11976,9 @@
       "unified_attrs": [
         "SOB"
       ],
+      "taxonomy_attrs": [
+        "SOB"
+      ],
       "median_sqrt_area_px": 4.541,
       "tiny": true
     },
@@ -9280,6 +11996,10 @@
         "IV"
       ],
       "unified_attrs": [
+        "IV",
+        "SOB"
+      ],
+      "taxonomy_attrs": [
         "IV",
         "SOB"
       ],
@@ -9303,6 +12023,10 @@
         "ROT",
         "SOB"
       ],
+      "taxonomy_attrs": [
+        "ROT",
+        "SOB"
+      ],
       "median_sqrt_area_px": 4.89,
       "tiny": true
     },
@@ -9319,6 +12043,9 @@
         "DS"
       ],
       "unified_attrs": [
+        "SOB"
+      ],
+      "taxonomy_attrs": [
         "SOB"
       ],
       "median_sqrt_area_px": 4.276,
@@ -9342,6 +12069,11 @@
         "ROT",
         "SOB"
       ],
+      "taxonomy_attrs": [
+        "ROT",
+        "SOB",
+        "IBG"
+      ],
       "median_sqrt_area_px": 3.85,
       "tiny": true
     },
@@ -9358,6 +12090,9 @@
         "DS"
       ],
       "unified_attrs": [
+        "SOB"
+      ],
+      "taxonomy_attrs": [
         "SOB"
       ],
       "median_sqrt_area_px": 4.189,
@@ -9377,6 +12112,10 @@
         "IPR"
       ],
       "unified_attrs": [
+        "ROT",
+        "SOB"
+      ],
+      "taxonomy_attrs": [
         "ROT",
         "SOB"
       ],
@@ -9400,6 +12139,10 @@
         "ROT",
         "SOB"
       ],
+      "taxonomy_attrs": [
+        "ROT",
+        "SOB"
+      ],
       "median_sqrt_area_px": 3.842,
       "tiny": true
     },
@@ -9417,6 +12160,10 @@
         "IPR"
       ],
       "unified_attrs": [
+        "ROT",
+        "SOB"
+      ],
+      "taxonomy_attrs": [
         "ROT",
         "SOB"
       ],
@@ -9440,6 +12187,10 @@
         "ROT",
         "SOB"
       ],
+      "taxonomy_attrs": [
+        "ROT",
+        "SOB"
+      ],
       "median_sqrt_area_px": 4.775,
       "tiny": true
     },
@@ -9456,6 +12207,9 @@
         "BCL"
       ],
       "unified_attrs": [],
+      "taxonomy_attrs": [
+        "IBG"
+      ],
       "median_sqrt_area_px": 4.919,
       "tiny": true
     },
@@ -9474,6 +12228,10 @@
       "unified_attrs": [
         "OCC"
       ],
+      "taxonomy_attrs": [
+        "OCC",
+        "STO"
+      ],
       "median_sqrt_area_px": 4.488,
       "tiny": true
     },
@@ -9491,6 +12249,10 @@
         "IV"
       ],
       "unified_attrs": [
+        "IV",
+        "SOB"
+      ],
+      "taxonomy_attrs": [
         "IV",
         "SOB"
       ],
@@ -9514,6 +12276,10 @@
         "IV",
         "SOB"
       ],
+      "taxonomy_attrs": [
+        "IV",
+        "SOB"
+      ],
       "median_sqrt_area_px": 5.214,
       "tiny": true
     },
@@ -9531,6 +12297,10 @@
         "IV"
       ],
       "unified_attrs": [
+        "IV",
+        "SOB"
+      ],
+      "taxonomy_attrs": [
         "IV",
         "SOB"
       ],
@@ -9552,6 +12322,9 @@
       "unified_attrs": [
         "ROT"
       ],
+      "taxonomy_attrs": [
+        "ROT"
+      ],
       "median_sqrt_area_px": 5.367,
       "tiny": true
     },
@@ -9569,6 +12342,10 @@
       ],
       "unified_attrs": [
         "OCC"
+      ],
+      "taxonomy_attrs": [
+        "OCC",
+        "STO"
       ],
       "median_sqrt_area_px": 6.017,
       "tiny": true
@@ -9588,6 +12365,9 @@
       "unified_attrs": [
         "SOB"
       ],
+      "taxonomy_attrs": [
+        "SOB"
+      ],
       "median_sqrt_area_px": 5.63,
       "tiny": true
     },
@@ -9604,6 +12384,9 @@
         "DS"
       ],
       "unified_attrs": [
+        "SOB"
+      ],
+      "taxonomy_attrs": [
         "SOB"
       ],
       "median_sqrt_area_px": 4.891,
@@ -9626,6 +12409,11 @@
         "OCC",
         "SOB"
       ],
+      "taxonomy_attrs": [
+        "OCC",
+        "SOB",
+        "STO"
+      ],
       "median_sqrt_area_px": 5.548,
       "tiny": true
     },
@@ -9642,6 +12430,9 @@
         "DS"
       ],
       "unified_attrs": [
+        "SOB"
+      ],
+      "taxonomy_attrs": [
         "SOB"
       ],
       "median_sqrt_area_px": 5.289,
@@ -9663,6 +12454,11 @@
       "unified_attrs": [
         "OCC",
         "SOB"
+      ],
+      "taxonomy_attrs": [
+        "OCC",
+        "SOB",
+        "STO"
       ],
       "median_sqrt_area_px": 6.648,
       "tiny": true
@@ -9687,6 +12483,13 @@
         "OCC",
         "SOB"
       ],
+      "taxonomy_attrs": [
+        "ROT",
+        "OCC",
+        "SOB",
+        "SM",
+        "STO"
+      ],
       "median_sqrt_area_px": 4.669,
       "tiny": true
     },
@@ -9703,6 +12506,9 @@
         "DS"
       ],
       "unified_attrs": [
+        "SOB"
+      ],
+      "taxonomy_attrs": [
         "SOB"
       ],
       "median_sqrt_area_px": 4.223,
@@ -9722,6 +12528,10 @@
         "IPR"
       ],
       "unified_attrs": [
+        "ROT",
+        "SOB"
+      ],
+      "taxonomy_attrs": [
         "ROT",
         "SOB"
       ],
@@ -9745,6 +12555,10 @@
         "ROT",
         "SOB"
       ],
+      "taxonomy_attrs": [
+        "ROT",
+        "SOB"
+      ],
       "median_sqrt_area_px": 5.296,
       "tiny": true
     },
@@ -9761,6 +12575,9 @@
         "IPR"
       ],
       "unified_attrs": [
+        "ROT"
+      ],
+      "taxonomy_attrs": [
         "ROT"
       ],
       "median_sqrt_area_px": 4.962,
@@ -9781,6 +12598,9 @@
       "unified_attrs": [
         "IV"
       ],
+      "taxonomy_attrs": [
+        "IV"
+      ],
       "median_sqrt_area_px": 4.585,
       "tiny": true
     },
@@ -9797,6 +12617,9 @@
         "BCL"
       ],
       "unified_attrs": [],
+      "taxonomy_attrs": [
+        "IBG"
+      ],
       "median_sqrt_area_px": 4.899,
       "tiny": true
     }

@@ -118,7 +118,7 @@ attribute.
 \begin{table*}[t]
 \centering
 \caption{Occlusion sub-types of the unified \textbf{OCC} attribute (Tab.~\ref{tab:attributes_taxonomy}).
-SatSOT and OOTB annotate occlusion along the \emph{spatial} axis (partial vs.\ full); SV248S annotates it along the \emph{temporal} axis (short-term vs.\ long-term vs.\ continuous). Because the two axes are not comparable at the sequence-attribute level, the five sub-types are kept dataset-unique. Columns 4--6 give the corresponding per-dataset label (``---'' if not annotated); the last two columns report the number of sequences and frames in the annotating dataset that carry the sub-type.}
+SatSOT and OOTB annotate occlusion along the \emph{spatial} axis (partial vs.\ full); SV248S annotates it along the \emph{temporal} axis (short-term vs.\ long-term vs.\ continuous). Because the two axes are not comparable at the sequence-attribute level, the five sub-types are split into a spatial pair (POC, FOC) and a temporal triple (STO, LTO, CO). Within the spatial pair, SatSOT POC and OOTB PO are merged into POC, and SatSOT FOC and OOTB FO are merged into FOC, mirroring the OCC unification in Tab.~\ref{tab:attributes_taxonomy}. Columns 4--6 give the corresponding per-dataset label (``---'' if not annotated); the last two columns report the total number of sequences and frames pooled across the annotating dataset(s) that carry the sub-type (summed across the two dataset cells for POC/FOC, single-dataset for STO/LTO/CO).}
 \label{tab:occlusion_subtypes_taxonomy}
 \small
 \setlength{\tabcolsep}{4pt}
@@ -128,8 +128,8 @@ SatSOT and OOTB annotate occlusion along the \emph{spatial} axis (partial vs.\ f
 \toprule
 \textbf{Abbr.} & \textbf{Full Name} & \textbf{Definition} & \textbf{SatSOT} & \textbf{SV248S} & \textbf{OOTB} & \textbf{\#Seq} & \textbf{\#Frames} \\
 \midrule
-POC  & Partial Occlusion       & Target is partially (but not fully) occluded in the image plane                                       & POC & ---          & PO  & 34 &  8{,}572  \\
-FOC  & Full Occlusion          & Target is fully occluded in the image plane                                                           & FOC & ---          & FO  & 12 &  4{,}103  \\
+POC  & Partial Occlusion       & Target is partially (but not fully) occluded in the image plane                                       & POC & ---          & PO  & 51 & 13{,}225  \\
+FOC  & Full Occlusion          & Target is fully occluded in the image plane                                                           & FOC & ---          & FO  & 20 &  7{,}252  \\
 STO  & Short-Term Occlusion    & $\leq 50$ consecutive frames carry the OCC flag                                                       & --- & STO          & --- & 79 & 52{,}597  \\
 LTO  & Long-Term Occlusion     & $>50$ consecutive frames carry the OCC flag                                                           & --- & LTO          & ---     &  9 &  5{,}764  \\
 CO   & Continuous Occlusion    & Two or more STO/LTO events occur within a single sequence                                             & --- & CO           & ---     & 34 & 23{,}910  \\
