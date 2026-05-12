@@ -12,7 +12,7 @@ This directory ships:
 
 ## Conventions
 
-The manifest does **not** ship raw imagery or GT — readers are expected to download SatSOT, SV248S, and OOTB themselves under their original licenses, the same way LaSOT and GOT-10k handle it.
+The manifest does **not** ship raw imagery or GT — readers are expected to download SatSOT, SV248S, and OOTB themselves under their original licenses, the same way LaSOT and GOT-10k handle it. See [`DATASETS.md`](DATASETS.md) for direct download links to every dataset used in the paper (SOT + MOT).
 
 Attribute taxonomy: 6 unified attributes (BC, IV, ROT, OCC, SOB, DEF) consolidate the per-dataset native labels (e.g. OCC = SatSOT \{POC, FOC\} ∪ SV248S \{STO, LTO, CO\} ∪ OOTB \{PO, FO\}). The full mapping is in `manifest['unified_attributes']`.
 
