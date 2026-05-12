@@ -1,8 +1,10 @@
-"""Manifest loader + filtering API.
+"""SOT manifest loader + filtering API.
 
-The manifest is a single JSON file (~200 KB) cataloguing every sequence in
+The manifest (``space_tracker.json``, ~260 KB) catalogues every sequence in
 SatSOT / SV248S / OOTB along with native and unified attribute labels and
 sequence-level scale stats. Read once, query in memory.
+
+For the multi-object-tracking companion, see :mod:`space_tracker.manifest_mot`.
 """
 
 from __future__ import annotations

@@ -1,5 +1,5 @@
 """
-Build the Space-tracker manifest (``space_tracker.json``).
+Build the Space-tracker SOT manifest (``space_tracker.json``).
 
 The manifest is a single self-describing JSON file that catalogs every
 sequence in SatSOT / SV248S / OOTB along with:
