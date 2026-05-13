@@ -1,7 +1,7 @@
 # Spaceborne Video Dataset — License Audit
 
 > Prepared for benchmark inclusion review.  
-> Last updated: April 2026
+> Last updated: May 2026
 
 ---
 
@@ -10,10 +10,10 @@
 | Dataset | License | Confirmed Source | Redistribution | Contact |
 |---|---|---|---|---|
 | **VISO** | CC BY-NC-SA 4.0 | GitHub README | ❌ NC + ShareAlike | Paper authors / Changguang Satellite |
-| **SV248S** | Non-commercial (exact variant unclear) | Dataset description | ❌ NC restriction | Paper authors |
+| **SV248S** | CC BY-NC 4.0 | Author confirmation | ❌ NC restriction | Paper authors |
 | **LMOD** | Not stated — application-based | GitHub (rs_devotee@163.com) | ⚠️ Access by request | rs_devotee@163.com |
-| **OOTB** | Not stated — application-based | GitHub (Baidu / Google Drive) | ⚠️ Access by request | yuzeng_chen@whu.edu.cn / rs_devotee@163.com |
-| **SAT-MTB** | Not stated | Zenodo (marked "Open") | ⚠️ Unconfirmed | Paper authors (CAS) |
+| **OOTB** | CC BY-NC 4.0 | Author confirmation | ❌ NC restriction | yuzeng_chen@whu.edu.cn / rs_devotee@163.com |
+| **SAT-MTB** | CC BY 4.0 | Author confirmation | ✅ Attribution only | Paper authors (CAS) |
 | **SAT-MTB-SOS** | Not stated | No standalone download | ⚠️ Unconfirmed | Same as SAT-MTB authors |
 | **SatSOT** | Not stated | IEEE / no license file | ⚠️ Research-use implied | Paper authors |
 | **AIR-MOT** | Not stated | GitHub (citation only) | ⚠️ Research-use implied | heqibin@aircas.ac.cn |
@@ -40,11 +40,11 @@
 ---
 
 ### SV248S
-- **License:** Non-commercial (exact Creative Commons variant not specified)
-- **Source confirmation:** Noted in dataset description on [GitHub](https://github.com/xdai-dlgvv/SV248S)
+- **License:** CC BY-NC 4.0
+- **Source confirmation:** Confirmed by paper authors via email
 - **Data origin:** Jilin-1 satellite, 0.92 m resolution, 25 FPS (VFI from 10 FPS original)
-- **Key constraints:** Non-commercial use only
-- **Recommendation:** Confirm exact license terms and CC variant via email before any redistribution.
+- **Key constraints:** Non-commercial use only; attribution required
+- **Recommendation:** Evaluation-only use is permitted. Any redistribution must remain non-commercial and preserve attribution.
 
 ---
 
@@ -58,20 +58,22 @@
 ---
 
 ### OOTB
-- **License:** Not publicly stated
-- **Access model:** Application-based — download via Baidu Cloud (code: OOTB) or Google Drive; contact authors for formal use
+- **License:** CC BY-NC 4.0
+- **Source confirmation:** Confirmed by paper authors via email
+- **Access model:** Download via Baidu Cloud (code: OOTB) or Google Drive
 - **Data origin:** Multiple (JL-1, SkySat, ISS)
-- **Key constraints:** No public license
-- **Recommendation:** Contact `yuzeng_chen@whu.edu.cn` or `rs_devotee@163.com` to confirm terms.
+- **Key constraints:** Non-commercial use only; attribution required
+- **Recommendation:** Evaluation-only use is permitted. Any redistribution must remain non-commercial and preserve attribution.
 
 ---
 
 ### SAT-MTB
-- **License:** Not stated on Zenodo (record marked "Open" but no CC/license selected)
+- **License:** CC BY 4.0
+- **Source confirmation:** Confirmed by paper authors via email
 - **Source:** [Zenodo record 15253996](https://zenodo.org/records/15253996) — published by Technology and Engineering Center for Space Utilization, CAS
 - **Data origin:** Jilin-1 satellite
-- **Key constraints:** Unconfirmed — "Open" on Zenodo does not imply a specific permissive license
-- **Recommendation:** Email CAS authors to request explicit license confirmation.
+- **Key constraints:** Attribution required; commercial use permitted
+- **Recommendation:** Most permissive license in the collection. Safe to redistribute with proper attribution.
 
 ---
 
@@ -129,13 +131,15 @@ Release only evaluation code, standardized split files, and metric results. User
 
 | Risk level | Datasets |
 |---|---|
-| ❌ Hard block (confirmed NC-SA) | VISO, SV248S |
-| ⚠️ Unconfirmed (no license) | SatSOT, AIR-MOT, SAT-MTB, SAT-MTB-SOS, IRSatVideo-LEO, SDM-Car |
-| ⚠️ Access-controlled | LMOD, OOTB |
+| ✅ Permissive (CC BY) | SAT-MTB |
+| ❌ Non-commercial (confirmed) | VISO (NC-SA), SV248S (NC), OOTB (NC) |
+| ⚠️ Unconfirmed (no license) | SatSOT, AIR-MOT, SAT-MTB-SOS, IRSatVideo-LEO, SDM-Car |
+| ⚠️ Access-controlled | LMOD |
 
 - VISO's CC BY-NC-SA 4.0 ShareAlike clause would propagate to the entire unified release
+- SV248S and OOTB both require non-commercial use and proper attribution but do not have ShareAlike
 - Datasets with no license are not "free to use" by default — absence of license means all rights reserved under copyright law
-- Written permission is required from each author before any redistribution
+- Written permission is required from each author before any redistribution of unconfirmed datasets
 
 ---
 
@@ -143,12 +147,13 @@ Release only evaluation code, standardized split files, and metric results. User
 
 | Dataset | Action needed | Contact |
 |---|---|---|
-| SAT-MTB + SAT-MTB-SOS | Email for license confirmation | CAS authors (see paper) |
+| SAT-MTB-SOS | Email to confirm whether CC BY 4.0 inherits from SAT-MTB | CAS authors (see paper) |
 | SatSOT | Email for license confirmation | Manqi Zhao et al. (see paper) |
 | AIR-MOT | Email for license confirmation | heqibin@aircas.ac.cn |
 | IRSatVideo-LEO | Email for license confirmation | yingxinyi18@nudt.edu.cn |
 | SDM-Car | Email for license confirmation | Zhang et al. (see paper) |
 | LMOD | Submit access form + ask for license | rs_devotee@163.com |
-| OOTB | Submit access request + ask for license | yuzeng_chen@whu.edu.cn |
 | VISO | Already confirmed CC BY-NC-SA 4.0 — decide on redistribution strategy | — |
-| SV248S | Confirm exact CC variant | Paper authors |
+| SV248S | Confirmed CC BY-NC 4.0 — decide on redistribution strategy | — |
+| OOTB | Confirmed CC BY-NC 4.0 — decide on redistribution strategy | — |
+| SAT-MTB | Confirmed CC BY 4.0 — safe to redistribute with attribution | — |
