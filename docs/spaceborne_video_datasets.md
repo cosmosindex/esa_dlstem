@@ -13,7 +13,7 @@ A curated list of publicly available spaceborne video datasets for computer visi
 
 | Dataset | Satellite / Sensor | Modality | #Videos / Seq | Downstream Task | Venue / Year | Link |
 |---|---|---|---|---|---|---|
-| ✅ **SatSOT** | Jilin-1 | VNIR | 105 seq | SOT | TGRS 2022 | [IEEE](https://ieeexplore.ieee.org/document/9672083/) |
+| ✅ **SatSOT** | Jilin-1, Skybox, and Carbonite-2| VNIR | 105 seq | SOT | TGRS 2022 | [IEEE](https://ieeexplore.ieee.org/document/9672083/) |
 | ✅ **AIR-MOT** | Jilin-1 | VNIR | 10 | MOT | TGRS 2022 | [IEEE](https://ieeexplore.ieee.org/document/9715124) · [GitHub](https://github.com/HeQibin/TGraM) |
 | ✅ **SAT-MTB** | Jilin-1 | VNIR | 249 | Det · MOT · Seg | TGRS 2023 | [Zenodo](https://zenodo.org/records/15253996) · [IEEE](https://ieeexplore.ieee.org/document/10130311)|
 | ✅ **VISO (SatVideoDT)** | Jilin-1 | VNIR | 100 | Det · MOT | TGRS 2022 | [GitHub](https://github.com/QingyongHu/VISO) · [Project](https://satvideodt.github.io/) |
