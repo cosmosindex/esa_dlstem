@@ -13,12 +13,12 @@
 | **SV248S** | CC BY-NC 4.0 | Author confirmation | ❌ NC restriction | Paper authors |
 | **LMOD** | Not stated — application-based | GitHub (rs_devotee@163.com) | ⚠️ Access by request | rs_devotee@163.com |
 | **OOTB** | CC BY-NC 4.0 | Author confirmation | ❌ NC restriction | yuzeng_chen@whu.edu.cn / rs_devotee@163.com |
-| **SAT-MTB** | CC BY 4.0 | Author confirmation | ✅ Attribution only | Paper authors (CAS) |
+| **SAT-MTB** | CC BY 4.0 | Zenodo | ✅ Attribution only | Paper authors (CAS) |
 | **SAT-MTB-SOS** | Not stated | No standalone download | ⚠️ Unconfirmed | Same as SAT-MTB authors |
 | **SatSOT** | Not stated | IEEE / no license file | ⚠️ Research-use implied | Paper authors |
 | **AIR-MOT** | Not stated | GitHub (citation only) | ⚠️ Research-use implied | heqibin@aircas.ac.cn |
 | **IRSatVideo-LEO** | Backgrounds: Landsat (public domain); synthetic layer unclear | GitHub (no license file) | ⚠️ Partially unconfirmed | yingxinyi18@nudt.edu.cn |
-| **SDM-Car** | Not stated | GitHub (no license file) | ⚠️ Research-use implied | Paper authors |
+| **SDM-Car** | CC BY-NC 4.0 | GitHub | ✅ | Paper authors |
 
 **Legend:**  
 ❌ Confirmed restriction &nbsp;|&nbsp; ⚠️ Requires author confirmation &nbsp;|&nbsp; ✅ Permissive / confirmed
