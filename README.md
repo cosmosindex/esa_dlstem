@@ -11,21 +11,6 @@ Both manifests are thin JSON pointers to per-sequence images + native ground-tru
 
 Detailed conventions, taxonomies, and quick-start examples are in [`space_tracker/README.md`](space_tracker/README.md).
 
-## What the benchmark stresses
-
-`OOTB / plane_23` is a representative hard sequence — attributes **IV · MB · BC · SA** (illumination variation, motion blur, background clutter, similar appearance) — that simultaneously breaks four different tracker families in four qualitatively different ways:
-
-<video src="docs/figures/plane_23_combined_trackers.mp4" controls muted loop width="100%"></video>
-
-> Green = GT. Seven trackers overlaid: `siamrpn` (orange) · `ostrack` (blue) · `odtrack` (yellow) · `lorat` (red) · `sam2` (magenta) · `samurai` (cyan) · `sam3` (purple).
->
-> - **OSTrack flips at frame ~45**, **LoRAT flips at frame ~62** — discrete `argmax` on the cross-attention score map jumps onto a BC distractor in one step.
-> - **SiamRPN starts deforming from frame ~5** — RPN's continuous regression head bakes the next-strongest peak's contribution into the box, predicted height grows from 73 → 127 px while GT stays at 74 px; position prior gradually poisons.
-> - **SAMURAI is intermittent throughout** — 138 / 192 frames return no mask at all (mask-quality gate rejects below threshold); brief mid-sequence recovery as the plane enters a cleaner background patch, then permanent fail-out.
-> - **SAM3 stays the closest to GT** for the longest run — the only tracker in this comparison that survives past the BC distractor on this sequence.
->
-> Full failure-mode analysis: [`docs/lorat_plane23_frame62_failure.md`](docs/lorat_plane23_frame62_failure.md).
-
 ## SOT — quick start
 
 ```python
@@ -100,6 +85,8 @@ preds = bench.run(my_tracker, categories=["car"], splits=["test"])
 
 - **SOT** — `tools/reaggregate_sot_per_sequence.py` recomputes the headline SR/NPR/PR/P@5 numbers from existing `per_image_metrics.json` files. `tools/sot_unified_attribute_table.py` produces the unified-attribute breakdown CSVs.
 - **MOT** — `tools/compute_hota.py` computes HOTA / MOTA / IDF1 over predictions persisted to disk; the `MOT_<date>/<tracker>/` experiment layout is documented inside that script.
+
+![OOTB / plane_23 — IV · MB · BC · SA](docs/figures/plane_23_combined_trackers.gif)
 
 ## Citation
 
