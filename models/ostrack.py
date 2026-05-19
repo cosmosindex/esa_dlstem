@@ -82,15 +82,18 @@ def _install_compat_stubs():
 def _activate_ostrack_root():
     """Put OSTrack's project root on sys.path so `lib.*` is importable.
 
-    Warning: both OSTrack and ODTrack expose a top-level `lib` package. If
-    you've already imported the ODTrack wrapper in this process, `lib.*` is
-    pinned to ODTrack's version and a fresh OSTrack import will return cached
-    modules. Mixing both in one process requires running them in separate
-    Python processes (which is the normal case — one eval script at a time).
+    Warning: both OSTrack and ODTrack expose a top-level `lib` package, and
+    so does HiEUM (auto-imported by ``models/__init__.py``). Once Python
+    caches a foreign ``lib`` module the OSTrack import resolves there
+    instead. We purge any cached ``lib`` / ``lib.*`` entries and prepend
+    OSTrack's root so the fresh import binds to OSTrack's package.
     """
     _install_compat_stubs()
-    if _OSTRACK_ROOT not in sys.path:
-        sys.path.insert(0, _OSTRACK_ROOT)
+    for key in [k for k in sys.modules if k == "lib" or k.startswith("lib.")]:
+        del sys.modules[key]
+    if _OSTRACK_ROOT in sys.path:
+        sys.path.remove(_OSTRACK_ROOT)
+    sys.path.insert(0, _OSTRACK_ROOT)
 
 
 class OSTrackTracker(nn.Module):

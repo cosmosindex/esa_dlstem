@@ -85,10 +85,17 @@ def _install_compat_stubs():
 
 
 def _activate_odtrack_root():
-    """Put ODTrack's project root on sys.path so `lib.*` is importable."""
+    """Put ODTrack's project root on sys.path so `lib.*` is importable.
+
+    Purges any cached foreign ``lib`` modules (OSTrack/HiEUM also expose
+    top-level ``lib`` packages) so the fresh import binds to ODTrack's.
+    """
     _install_compat_stubs()
-    if _ODTRACK_ROOT not in sys.path:
-        sys.path.insert(0, _ODTRACK_ROOT)
+    for key in [k for k in sys.modules if k == "lib" or k.startswith("lib.")]:
+        del sys.modules[key]
+    if _ODTRACK_ROOT in sys.path:
+        sys.path.remove(_ODTRACK_ROOT)
+    sys.path.insert(0, _ODTRACK_ROOT)
 
 
 class ODTrackTracker(nn.Module):

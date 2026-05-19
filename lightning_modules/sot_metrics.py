@@ -453,6 +453,23 @@ def _group_sequences_by_attribute(
     return out
 
 
+def _group_by_attribute(
+    records: list[SOTRecord],
+    sequence_attributes: dict[str, list[str]],
+) -> dict[str, list[SOTRecord]]:
+    """Flat per-attribute record groupings (multi-label).
+
+    Sister of ``_group_sequences_by_attribute`` returning a flat list of
+    records per attribute — the shape expected by ``_plot_success`` /
+    ``_plot_precision`` (``dict[str, list[SOTRecord]]``).
+    """
+    out: dict[str, list[SOTRecord]] = {}
+    for r in records:
+        for attr in sequence_attributes.get(r.video_id, ()):
+            out.setdefault(attr, []).append(r)
+    return out
+
+
 def _per_seq_curve(
     records: list[SOTRecord],
     metric: str,

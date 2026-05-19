@@ -20,12 +20,17 @@ This directory ships:
 
 Neither manifest ships raw imagery or GT — readers are expected to download each source dataset themselves under its original license, the same way LaSOT and GOT-10k handle it. See [`../DATASETS.md`](../DATASETS.md) for direct download links.
 
-### SOT attribute taxonomy (two layers)
+### SOT attribute taxonomy
 
-1. **Unified attributes** (6 shared rows): `BC`, `IV`, `ROT`, `OCC`, `SOB`, `DEF`. These consolidate per-dataset native labels (e.g. OCC = SatSOT \{POC, FOC\} ∪ SV248S \{STO, LTO, CO\} ∪ OOTB \{PO, FO\}). Mapping lives in `manifest['unified_attributes']`; per-sequence labels are in `seq.unified_attrs`.
-2. **Full paper taxonomy** (23 rows total, mirrors `split_attributes_table.tex`): the 6 unified rows plus aspect-ratio (`ARC`, `OON`), 10 dataset-unique-other (`LQ`, `BJT`, `BCH`, `ND`, `IBG`, `SM`, `LT`, `MB`, `IM`, `AM`), and 5 occlusion sub-types (`POC`, `FOC`, `STO`, `LTO`, `CO`). Mapping lives in `manifest['attribute_taxonomy']`; per-sequence labels are in `seq.taxonomy_attrs`.
+The paper reports **18 unified attributes**, consolidated from each source dataset's native labels:
 
-The two layers are consistent: any sequence with an occlusion sub-type also carries `OCC` in its unified set, and the unified set is always a subset of the taxonomy set. Use `unified_attrs` for cross-dataset headline numbers; use `taxonomy_attrs` to drill down (e.g. OCC → POC vs. FOC vs. STO/LTO/CO).
+- **6 shared** (annotated in ≥2 of the 3 datasets, collapsed into one unified row): `BC`, `IV`, `ROT`, `OCC`, `SOB`, `DEF`. e.g. `OCC = SatSOT{POC, FOC} ∪ SV248S{STO, LTO, CO} ∪ OOTB{PO, FO}`.
+- **2 aspect-ratio**: `ARC` (SatSOT, temporal change) and `OON` (OOTB, static extreme).
+- **10 dataset-unique-other**: `LQ`, `BJT` (SatSOT); `BCH`, `ND`, `IBG`, `SM` (SV248S); `LT`, `MB`, `IM`, `AM` (OOTB).
+
+The per-sequence labels live in two manifest fields. `seq.unified_attrs` carries only the 6 shared rows (use this for headline cross-dataset numbers). `seq.taxonomy_attrs` carries all 18 rows (use this for any per-attribute breakdown). The full per-attribute spec — group, definition, datasets that annotate it — is in `manifest['attribute_taxonomy']['attributes']`.
+
+> **Optional drill-down.** The manifest additionally exposes 5 sub-types of `OCC` (`POC`, `FOC`, `STO`, `LTO`, `CO`) along the spatial / temporal occlusion axes. They are *not* part of the 18-attribute headline taxonomy; query them via `bench.manifest.occlusion_subtypes()` and `seq.taxonomy_attrs` if you need to slice the OCC row finer.
 
 ### MOT class taxonomy
 

@@ -214,7 +214,14 @@ class DetectionVisualizationCallback(L.Callback):
         The first folder gets the real file; the remaining attribute folders
         receive a hardlink (with symlink fallback), so a frame with K
         attributes costs ~1× disk instead of K×.
+
+        Setting env var ``SOT_SKIP_VIZ_SAVE=1`` short-circuits this entirely
+        (no JPEG encode, no hardlinks) — used by the combined-viz rerun that
+        only needs pred_box coords from per_image_metrics.json.
         """
+        if os.environ.get("SOT_SKIP_VIZ_SAVE") == "1":
+            return
+
         safe_vid = video_id.replace("/", "_")
         filename = f"{safe_vid}_frame{frame_id:04d}.jpg"
         bgr = cv2.cvtColor(vis, cv2.COLOR_RGB2BGR)
@@ -619,6 +626,9 @@ class DetectionVisualizationCallback(L.Callback):
                     "norm_center_dist": float("inf"),
                     "gt_class": gt_name,
                     "gt_size": gt_sk,
+                    "gt_box": [int(v) for v in gt_box.astype(int).tolist()],
+                    "pred_box": None,
+                    "pred_score": None,
                 })
                 continue
 
@@ -648,6 +658,9 @@ class DetectionVisualizationCallback(L.Callback):
                 "norm_center_dist": round(ncdist, 4),
                 "gt_class": gt_name,
                 "gt_size": gt_sk,
+                "gt_box": [int(v) for v in gt_box.astype(int).tolist()],
+                "pred_box": [int(v) for v in best_box.astype(int).tolist()],
+                "pred_score": float(pred_scores[best_pi]),
             })
 
             # Draw GT
@@ -952,6 +965,11 @@ class SAM2VisualizationCallback(DetectionVisualizationCallback):
                     "norm_center_dist": float("inf"),
                     "gt_class": gt_name,
                     "gt_size": gt_sk,
+                    "gt_box": [int(v) for v in gt_box.astype(int).tolist()],
+                    "gt_poly": [float(v) for v in np.asarray(gt_poly).reshape(-1).tolist()],
+                    "pred_box": None,
+                    "pred_poly": None,
+                    "pred_score": None,
                 })
                 continue
 
@@ -981,6 +999,11 @@ class SAM2VisualizationCallback(DetectionVisualizationCallback):
                 "norm_center_dist": round(ncdist, 4),
                 "gt_class": gt_name,
                 "gt_size": gt_sk,
+                "gt_box": [int(v) for v in gt_box.astype(int).tolist()],
+                "gt_poly": [float(v) for v in np.asarray(gt_poly).reshape(-1).tolist()],
+                "pred_box": [int(v) for v in pred_boxes[best_pi].astype(int).tolist()],
+                "pred_poly": [float(v) for v in np.asarray(best_poly).reshape(-1).tolist()],
+                "pred_score": float(pred_scores[best_pi]),
             })
 
             # Draw GT OBB (red)
