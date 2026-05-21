@@ -13,7 +13,7 @@
 | **SV248S** | CC BY-NC 4.0 | Author confirmation | ✅ | Paper authors |
 | **OOTB** | CC BY-NC 4.0 | Author confirmation | ✅ | yuzeng_chen@whu.edu.cn / rs_devotee@163.com |
 | **SAT-MTB** | CC BY 4.0 | Zenodo | ✅ Attribution only | Paper authors (CAS) |
-| **SatSOT** | Not stated | IEEE / no license file | ⚠️ Research-use implied | Paper authors |
+| **SatSOT** | CC BY-NC 4.0 | Author confirmation | ✅ | Prof.Yuxuan Shi |
 | **AIR-MOT** | Not stated | GitHub (citation only) | ⚠️ Research-use implied | heqibin@aircas.ac.cn |
 | **SDM-Car** | CC BY-NC 4.0 | GitHub | ✅ | Paper authors |
 | **LMOD** | Not stated — application-based | GitHub (rs_devotee@163.com) | ⚠️ Access by request | rs_devotee@163.com |
