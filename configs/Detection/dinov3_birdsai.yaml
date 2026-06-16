@@ -1,0 +1,68 @@
+# DINOv3 (ViT-B/16, frozen) + dense FCOS head on BIRDSAI (wild-animal thermal drone).
+# "Foundation features + simple head" companion to yolo11_birdsai.yaml /
+# fasterrcnn_birdsai.yaml — same data (BIRDSAI_MOT per-frame boxes), same 2 classes
+# {animal, human}, same 640² input, same train/val/test splits.
+#
+# Backbone frozen (LVD-1689M web pretrain); only the FCOS head is trained. FCOS (not
+# DETR) head: frozen features + small data make DETR set-prediction collapse to
+# all-no-object (mAP 0); dense focal + center-sampled GIoU localises from epoch 1.
+# 640/16 = 40×40 patch feature map (stride 16) — coarse for BIRDSAI's tiny thermal
+# blobs, so this is expected to be the weakest of the three (same finding as fire).
+#
+# Run with:
+#   CUDA_VISIBLE_DEVICES=0 python training_scripts/train_dinov3_fire.py \
+#       --config configs/Detection/dinov3_birdsai.yaml
+
+# ----- Dataset roots ------------------------------------------------------
+datasets:
+  BIRDSAI_MOT: /data/ESA_DLSTEM_2025/data/wild_animal/BIRDSAI
+
+# Fine-grained species labels (CSV species col): dog (test-only) + unlabeled → "unknown".
+per_dataset_kwargs:
+  BIRDSAI_MOT:
+    granularity: fine
+
+# ----- Class map (0-indexed; no background) -------------------------------
+class_map:
+  human:    0
+  elephant: 1
+  giraffe:  2
+  lion:     3
+  unknown:  4
+
+num_classes: 5
+
+# ----- Model (DINOv3 backbone + dense FCOS head) --------------------------
+hf_model_name: facebook/dinov3-vitb16-pretrain-lvd1689m
+freeze_backbone: true
+head_type: fcos
+fcos_num_convs: 4
+fcos_hidden: 256
+fcos_center_radius: 1.5
+nms_thresh: 0.6
+conf_thresh: 0.05
+img_size: 640
+
+# ----- Lightning training -------------------------------------------------
+batch_size: 16
+num_workers: 0
+max_epochs: 30
+warmup_epochs: 3
+optimizer: adamw
+lr: 2.0e-4
+weight_decay: 1.0e-4
+lr_scheduler: cosine
+precision: bf16-mixed
+gradient_clip_val: 10.0
+
+# ----- Run / logging ------------------------------------------------------
+run_name: dinov3_vitb16_birdsai
+experiment_root: /work/ziwen/experiments
+wandb_project: esa-dlstem
+wandb_entity: chengziwen693
+skip_visualization: true
+visualization_score_thresh: 0.5
+
+monitor_metric: val/mAP
+monitor_mode: max
+patience: 8

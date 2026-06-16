@@ -1,0 +1,18 @@
+# FairMOT (one-shot JDT) eval on SDM-Car test split — records-only (no viz).
+# Same UNION model as the other fairmot_*.yaml. SDM-Car bucket = 1920x1088
+# (native 1920x1080 + 8px H-pad for HRNet stride-32).
+# Centroid protocol matches the HiEUM/TBD rows so the MOT table stays comparable.
+dataset: sdmcar
+checkpoint: /home/ziwen/code/esa_dlstem/FairMOT/exp/mot/fairmot_hrnet18_union/model_best.pth
+arch: hrnet_18
+input_w: 1920
+input_h: 1088
+class_map: {car: 0}
+conf_thres: 0.4
+track_buffer: 30
+frame_rate: 30
+K: 500
+min_box_area: 0.0
+match_metric: centroid
+centroid_dist_thresh: 5.0
+iou_thresh: 0.3

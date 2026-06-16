@@ -1,0 +1,22 @@
+# FairMOT 4-CLASS union model eval — records-only (no viz).
+# A single all-class union model (HRNet-18, trained on the 4-class JDE export:
+# RsCarData + SDM-Car + SAT-MTB + AIR-MOT + VISO-no-car, classes
+# {car:0, airplane:1, ship:2, train:3}) is evaluated on every test split.
+#   * num_classes:4 -> the eval auto-enters all-class mode: hm head = 4ch,
+#     all GT classes surfaced, every predicted class pooled into ONE foreground
+#     association pool (class-agnostic HOTA, matching compute_hota).
+#   * input_w/input_h are IGNORED in all-class mode — the eval picks each
+#     dataset's native-res training bucket from _ALLCLASS_INPUT.
+#   * run per split via --dataset {rscardata,satmtb,sdmcar,airmot,viso_no_car}.
+dataset: rscardata          # default; overridden per-run by --dataset
+checkpoint: /home/ziwen/code/esa_dlstem/FairMOT/exp/mot/fairmot_hrnet18_union_all/model_best.pth
+arch: hrnet_18
+num_classes: 4
+conf_thres: 0.4
+track_buffer: 30
+frame_rate: 30
+K: 500
+min_box_area: 0.0
+match_metric: centroid
+centroid_dist_thresh: 5.0
+iou_thresh: 0.3

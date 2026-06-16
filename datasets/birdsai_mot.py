@@ -50,8 +50,14 @@ from .base import BaseVideoDataset, VideoInfo
 
 _SPLIT_SEED = 42
 
-# Map CSV class column to category name
+# Coarse: CSV `class` column (col 6) → category name.
 _CLASS_NAMES = {0: "animal", 1: "human"}
+
+# Fine: CSV `species` column (col 7) → category name. Any species not listed here
+# (dog=4 — test-only / never in train; crocodile/hippo/zebra/rhino=5..8 — absent)
+# folds into "unknown", i.e. "an animal whose species the training vocab never saw".
+# -1 (species genuinely unlabeled) is also "unknown" — the largest animal group.
+_SPECIES_NAMES = {-1: "unknown", 0: "human", 1: "elephant", 2: "lion", 3: "giraffe"}
 
 
 class BIRDSAIMOTDataset(BaseVideoDataset):
@@ -64,7 +70,19 @@ class BIRDSAIMOTDataset(BaseVideoDataset):
         **kwargs:  Forwarded to BaseVideoDataset.
     """
 
-    def __init__(self, root: str | Path, split: str = "train", **kwargs):
+    def __init__(
+        self,
+        root: str | Path,
+        split: str = "train",
+        granularity: str = "coarse",
+        **kwargs,
+    ):
+        # granularity: "coarse" → {animal, human} (class col 6);
+        #              "fine"   → species {human, elephant, giraffe, lion, unknown} (col 7).
+        if granularity not in ("coarse", "fine"):
+            raise ValueError(f"granularity must be 'coarse' or 'fine', got {granularity!r}")
+        self.granularity = granularity
+
         # Caches populated in _build_index
         # video_id → { frame_id → list of (track_id, class_name, x1, y1, x2, y2) }
         self._ann_cache: dict[str, dict[int, list[tuple[int, str, float, float, float, float]]]] = {}
@@ -191,14 +209,18 @@ class BIRDSAIMOTDataset(BaseVideoDataset):
     # Private helpers
     # ------------------------------------------------------------------
 
-    @staticmethod
     def _parse_csv(
+        self,
         path: Path,
     ) -> dict[int, list[tuple[int, str, float, float, float, float]]]:
         """Parse a MOT CSV file.
 
         CSV columns: frame, object_id, x, y, w, h, class, species, occlusion, noise
-        class: 0 = animal, 1 = human.
+        class: 0 = animal, 1 = human.  species: -1 unknown, 0 human, 1 elephant,
+        2 lion, 3 giraffe, 4 dog, 5 crocodile, 6 hippo, 7 zebra, 8 rhino.
+
+        Category name depends on self.granularity ("coarse" uses the class col,
+        "fine" uses the species col, folding unseen species → "unknown").
 
         Returns dict mapping frame_id → list of (track_id, class_name, x1, y1, x2, y2)
         in xyxy format.
@@ -222,9 +244,15 @@ class BIRDSAIMOTDataset(BaseVideoDataset):
                 h = float(parts[5])
                 cls = int(parts[6])
 
-                class_name = _CLASS_NAMES.get(cls)
-                if class_name is None:
-                    continue
+                if self.granularity == "fine":
+                    if len(parts) < 8:
+                        continue
+                    # species col → fine name; unseen/unlabeled species → "unknown".
+                    class_name = _SPECIES_NAMES.get(int(parts[7]), "unknown")
+                else:
+                    class_name = _CLASS_NAMES.get(cls)
+                    if class_name is None:
+                        continue
 
                 # Convert xywh → xyxy
                 frame_anns[frame_id].append((track_id, class_name, x, y, x + w, y + h))

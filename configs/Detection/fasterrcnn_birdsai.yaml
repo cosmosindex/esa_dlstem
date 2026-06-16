@@ -1,0 +1,97 @@
+# Faster R-CNN (R50-FPN) trained on BIRDSAI (wild-animal thermal drone MOT) — detection.
+# Apple-to-apple companion to yolo11_birdsai.yaml / dinov3_birdsai.yaml — same data
+# (BIRDSAI_MOT per-frame boxes), same 2 classes {animal, human}, same 640² input.
+# Train on TrainReal, validate/test on TestReal (val 30% / test 70%, seed 42).
+#
+# Box-size rationale (from BIRDSAI bbox stats, original scale):
+#   - 49.9% of all boxes are < 32×32; human/lion/giraffe/dog/unknown are ~100% small
+#     (~10-28 px sides). elephant is the only large class (median ~50-66 px, max ~120 px).
+#   - Effectively NO large objects → anchor pyramid skewed small (4 → 128 px) vs the
+#     fire pyramid which reached 640 px for near-full-frame smoke.
+# min_size=max_size=640 makes the internal GeneralizedRCNNTransform a no-op.
+#
+# Run with:
+#   CUDA_VISIBLE_DEVICES=1 python training_scripts/train_fasterrcnn_fire.py \
+#       --config configs/Detection/fasterrcnn_birdsai.yaml
+
+# ----- Dataset roots ------------------------------------------------------
+datasets:
+  BIRDSAI_MOT: /data/ESA_DLSTEM_2025/data/wild_animal/BIRDSAI
+
+# Fine-grained species labels (CSV species col): dog (test-only) + unlabeled → "unknown".
+per_dataset_kwargs:
+  BIRDSAI_MOT:
+    granularity: fine
+
+# ----- Class map (1-indexed; 0 = background) ------------------------------
+class_map:
+  human:    1
+  elephant: 2
+  giraffe:  3
+  lion:     4
+  unknown:  5
+
+num_classes: 6              # 5 foreground + 1 background
+
+# ----- Model --------------------------------------------------------------
+use_v2: false
+pretrained: true
+trainable_backbone_layers: 3
+score_thresh: 0.05
+nms_thresh: 0.5
+detections_per_img: 300
+
+# BIRDSAI-tuned anchor pyramid (small objects only). Each FPN level = stride × {2,4}:
+#   P2 stride 4  → [4, 8]      tiny unknown/lion/giraffe blobs (sides ~10 px)
+#   P3 stride 8  → [16, 24]    human / small-animal median (~15-28 px)
+#   P4 stride 16 → [32, 48]    elephant median (~50-66 px)
+#   P5 stride 32 → [64, 96]    large elephant
+#   P6 stride 64 → [128, 192]  near-max box (~120 px)
+anchor_sizes:
+  - [4, 8]
+  - [16, 24]
+  - [32, 48]
+  - [64, 96]
+  - [128, 192]
+anchor_aspect_ratios:
+  - [0.5, 1.0, 2.0]
+  - [0.5, 1.0, 2.0]
+  - [0.5, 1.0, 2.0]
+  - [0.5, 1.0, 2.0]
+  - [0.5, 1.0, 2.0]
+
+# Relaxed RPN/box thresholds for tiny boxes.
+rpn_fg_iou_thresh: 0.5
+rpn_bg_iou_thresh: 0.2
+box_fg_iou_thresh: 0.4
+box_bg_iou_thresh: 0.3
+rpn_pre_nms_top_n_train: 4000
+rpn_post_nms_top_n_train: 2000
+
+min_size: 640
+max_size: 640
+
+# ----- Training transform -------------------------------------------------
+img_size: 640
+
+# ----- Lightning training -------------------------------------------------
+batch_size: 8
+num_workers: 0
+max_epochs: 30
+lr: 5.0e-4
+weight_decay: 1.0e-4
+warmup_epochs: 3
+lr_scheduler: cosine
+precision: 16-mixed
+
+# ----- Run / logging ------------------------------------------------------
+run_name: fasterrcnn_birdsai
+experiment_root: /work/ziwen/experiments
+wandb_project: esa-dlstem
+wandb_entity: chengziwen693
+skip_visualization: true
+visualization_score_thresh: 0.5
+
+monitor_metric: val/mAP
+monitor_mode: max
+patience: 8

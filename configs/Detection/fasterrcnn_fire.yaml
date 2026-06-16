@@ -1,0 +1,99 @@
+# Faster R-CNN (R50-FPN) trained on the RGBT-3M wildfire dataset (detection).
+# Apple-to-apple companion to yolo11_fire.yaml — same data (FireRGBT train
+# split), same 3 classes {smoke, fire, person}, same 640² input.
+# Train on train, validate on val (video2, carved leak-free from the
+# official train side), test on the official test split (3 366 frames).
+#
+# Why resize to 640² (build_train_transform / build_eval_transform) instead
+# of the satmot crop@1024 pipeline: FireRGBT frames are a uniform 640×480.
+# Resizing both train and eval to 640² keeps the object pixel-scale identical
+# across train/val/test AND identical to what YOLO sees, so the two detectors
+# are directly comparable. min_size=max_size=640 makes FasterRCNN's internal
+# GeneralizedRCNNTransform a no-op.
+#
+# Box-size rationale (docs-style, from train labels, at 640² scale):
+#   - fire / person are small: median side ≈ 29 px, p5 ≈ 10 px, p95 ≈ 64 px.
+#   - smoke is large: median ≈ 145 px, up to a near-full-frame ≈ 640 px.
+#   - overall 44 % of boxes are < 32 px, 25 % are ≥ 96 px → wide scale range.
+# Hence a 5-level anchor pyramid spanning 8 → 640 px (see below).
+#
+# Run with:
+#   CUDA_VISIBLE_DEVICES=1 python training_scripts/train_fasterrcnn_fire.py \
+#       --config configs/Detection/fasterrcnn_fire.yaml
+
+# ----- Dataset roots ------------------------------------------------------
+datasets:
+  FireRGBT: /data/ESA_DLSTEM_2025/data/fire/RGBT-3M
+
+# ----- Class map (1-indexed; 0 = background) ------------------------------
+class_map:
+  smoke:  1
+  fire:   2
+  person: 3
+
+num_classes: 4               # 3 foreground + 1 background
+
+# ----- Model --------------------------------------------------------------
+use_v2: false
+pretrained: true
+trainable_backbone_layers: 3
+score_thresh: 0.05
+nms_thresh: 0.5
+detections_per_img: 300
+
+# FireRGBT-tuned anchor pyramid. Each FPN level = stride × {2, 4}:
+#   P2 stride 4  → [8, 16]      tiny fire / person (p5 ≈ 10 px)
+#   P3 stride 8  → [24, 48]     fire / person median (≈ 29 px)
+#   P4 stride 16 → [64, 128]    large fire / person + small smoke
+#   P5 stride 32 → [192, 320]   medium-large smoke
+#   P6 stride 64 → [448, 640]   near-full-frame smoke (max ≈ 640 px)
+anchor_sizes:
+  - [8, 16]
+  - [24, 48]
+  - [64, 128]
+  - [192, 320]
+  - [448, 640]
+anchor_aspect_ratios:
+  - [0.5, 1.0, 2.0]
+  - [0.5, 1.0, 2.0]
+  - [0.5, 1.0, 2.0]
+  - [0.5, 1.0, 2.0]
+  - [0.5, 1.0, 2.0]
+
+# Relaxed RPN/box thresholds for the small fire/person boxes.
+rpn_fg_iou_thresh: 0.5
+rpn_bg_iou_thresh: 0.2
+box_fg_iou_thresh: 0.4
+box_bg_iou_thresh: 0.3
+rpn_pre_nms_top_n_train: 4000
+rpn_post_nms_top_n_train: 2000
+
+# 640×640 fixed input (transform already resizes) → make internal resize a no-op.
+min_size: 640
+max_size: 640
+
+# ----- Training transform -------------------------------------------------
+img_size: 640                # build_train_transform / build_eval_transform target
+
+# ----- Lightning training -------------------------------------------------
+batch_size: 8
+num_workers: 0
+max_epochs: 30
+lr: 5.0e-4
+weight_decay: 1.0e-4
+warmup_epochs: 3
+lr_scheduler: cosine
+precision: 16-mixed
+
+# ----- Run / logging ------------------------------------------------------
+run_name: fasterrcnn_fire
+experiment_root: /work/ziwen/experiments
+wandb_project: esa-dlstem
+wandb_entity: chengziwen693
+visualization_max_wandb_images: 50
+visualization_score_thresh: 0.5
+visualization_iou_thresh: 0.5
+
+monitor_metric: val/mAP
+monitor_mode: max
+patience: 8

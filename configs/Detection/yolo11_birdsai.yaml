@@ -1,0 +1,62 @@
+# YOLOv11 trained on BIRDSAI (wild-animal thermal drone MOT dataset) — detection.
+# Wild-animal use-case companion to fasterrcnn_birdsai.yaml / dinov3_birdsai.yaml —
+# same data (BIRDSAI_MOT per-frame boxes), same 2-class taxonomy {animal, human},
+# same 640² input. Train on TrainReal, validate/test on TestReal (val 30% / test 70%).
+#
+# BIRDSAI objects are tiny thermal blobs (49.9% of boxes < 32², many ~10-20 px) on
+# ~698×519 grayscale frames. Trained with the SAME manual loop as fire (warmup LR
+# works in a plain loop, unlike under Lightning — see train_yolo_fire_manual.py).
+#
+# Run with:
+#   CUDA_VISIBLE_DEVICES=0 python training_scripts/train_yolo_fire_manual.py \
+#       --config configs/Detection/yolo11_birdsai.yaml
+
+# ----- Dataset roots ------------------------------------------------------
+datasets:
+  BIRDSAI_MOT: /data/ESA_DLSTEM_2025/data/wild_animal/BIRDSAI
+
+# Fine-grained species labels (CSV species col): dog (test-only) + unlabeled → "unknown".
+per_dataset_kwargs:
+  BIRDSAI_MOT:
+    granularity: fine
+
+# ----- Class map (0-indexed for YOLO; no background) ----------------------
+class_map:
+  human:    0
+  elephant: 1
+  giraffe:  2
+  lion:     3
+  unknown:  4
+
+num_classes: 5
+
+# ----- Model --------------------------------------------------------------
+model_name: /work/ziwen/checkpoints/yolo11l.pt
+conf_thresh: 0.05
+iou_thresh: 0.5
+img_size: 640
+
+# ----- Training (manual loop) ---------------------------------------------
+batch_size: 16
+num_workers: 0
+max_epochs: 30
+optimizer: sgd
+lr: 0.01
+momentum: 0.937
+weight_decay: 5.0e-4
+warmup_epochs: 3
+lr_scheduler: cosine
+precision: bf16-mixed
+gradient_clip_val: 10.0
+
+# ----- Run / logging ------------------------------------------------------
+run_name: yolo11l_birdsai
+experiment_root: /work/ziwen/experiments
+wandb_project: esa-dlstem
+wandb_entity: chengziwen693
+skip_visualization: true
+visualization_score_thresh: 0.5
+
+monitor_metric: val/mAP
+monitor_mode: max
+patience: 8

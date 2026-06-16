@@ -57,6 +57,8 @@ class ObjectDetectionModule(L.LightningModule):
         gamma: float = 0.1,
         iou_match_thresh: float = 0.5,
         class_hierarchy: dict[int, int] | None = None,
+        optimizer: str = "adamw",
+        momentum: float = 0.937,
     ):
         """
         ``class_hierarchy``: optional fine-class-id → coarse-class-id map.
@@ -112,6 +114,16 @@ class ObjectDetectionModule(L.LightningModule):
 
         # Cached sample for one-shot FLOPs counting on the first test batch.
         self._flop_sample: torch.Tensor | None = None
+
+        # Count of optimizer steps skipped because the gradient was non-finite
+        # (NaN/Inf). Protects the weights from being permanently poisoned by a
+        # single bad batch — the root cause of the YOLO FireRGBT divergence
+        # (yolo_issues #15): one non-finite grad at peak LR turned every later
+        # forward into NaN, freezing the "best" ckpt at the warmup point.
+        self._nan_grad_skips: int = 0
+        # Debug flag: print pre-clip grad norm periodically (set via env in probes).
+        import os as _os
+        self._dbg_clip: bool = _os.environ.get("DBG_CLIP", "0") == "1"
 
     # ------------------------------------------------------------------
     # Tracking state helpers
@@ -286,7 +298,55 @@ class ObjectDetectionModule(L.LightningModule):
 
         self.log("train/loss", loss, prog_bar=True, on_step=True, on_epoch=True,
                  batch_size=bs)
+        if not torch.isfinite(loss):
+            # A non-finite loss would back-propagate NaN grads; the
+            # configure_gradient_clipping guard zeros them so the step is a
+            # no-op and the weights survive. Log it so divergence is visible.
+            print(f"[NaN-guard] non-finite train loss at step {self.global_step} "
+                  f"(batch {batch_idx}); gradient step will be skipped.")
         return loss
+
+    def configure_gradient_clipping(self, optimizer, gradient_clip_val=None,
+                                    gradient_clip_algorithm=None):
+        """Skip the optimiser step on any non-finite gradient, then clip.
+
+        Gradient clipping alone does NOT protect against NaN/Inf grads — a
+        non-finite element makes the clip coefficient non-finite, so the grads
+        (and then the weights) stay poisoned forever. Here we detect a
+        non-finite gradient first and zero ALL grads so ``optimizer.step`` makes
+        no parameter update (the momentum buffer is left untouched by the bad
+        batch). Healthy steps fall through to normal clipping. See yolo_issues #15.
+        """
+        finite = True
+        for group in optimizer.param_groups:
+            for p in group["params"]:
+                if p.grad is not None and not torch.isfinite(p.grad).all():
+                    finite = False
+                    break
+            if not finite:
+                break
+
+        if not finite:
+            self._nan_grad_skips += 1
+            for group in optimizer.param_groups:
+                for p in group["params"]:
+                    if p.grad is not None:
+                        p.grad.zero_()
+            return  # skip clipping; zeroed grads → no-op step
+
+        # Clip by global norm exactly as a plain training loop does. NOTE: this
+        # deliberately does NOT call self.clip_gradients() — empirically the
+        # YOLO fine-tune explodes (loss 8 -> 1e14 in ~5 steps) under Lightning's
+        # clipping path but NOT under a bare clip_grad_norm_ loop, so we mirror
+        # the loop that is known to stay stable. See yolo_issues #15.
+        clip_val = gradient_clip_val if gradient_clip_val is not None else 0.0
+        if clip_val and clip_val > 0:
+            params = [p for group in optimizer.param_groups for p in group["params"]
+                      if p.grad is not None]
+            total_norm = torch.nn.utils.clip_grad_norm_(params, clip_val)
+            if self._dbg_clip and (self.global_step % 50 == 0):
+                print(f"[clip] step {self.global_step}: pre-clip grad_norm="
+                      f"{float(total_norm):.3f} (clip to {clip_val})", flush=True)
 
     # ------------------------------------------------------------------
     # Validation step
@@ -716,7 +776,12 @@ class ObjectDetectionModule(L.LightningModule):
         per_class = result.get("map_per_class")
         classes   = result.get("classes")
         if per_class is not None and torch.is_tensor(per_class) and per_class.numel() > 0:
-            ids = classes.tolist() if torch.is_tensor(classes) else list(range(per_class.numel()))
+            # When only one class is tracked, torchmetrics returns 0-dim tensors
+            # whose .tolist() yields a scalar (not a list) → zip() would fail.
+            # atleast_1d normalises the single-class case to a length-1 sequence.
+            per_class = torch.atleast_1d(per_class)
+            ids = (torch.atleast_1d(classes).tolist() if torch.is_tensor(classes)
+                   else list(range(per_class.numel())))
             for cls_id, ap in zip(ids, per_class.tolist()):
                 self.log(f"{prefix}/AP_per_class{suffix}/cls{int(cls_id)}",
                          torch.tensor(float(ap)))
@@ -798,12 +863,35 @@ class ObjectDetectionModule(L.LightningModule):
     # ------------------------------------------------------------------
 
     def configure_optimizers(self):
-        params = [p for p in self.model.parameters() if p.requires_grad]
-        opt = torch.optim.AdamW(
-            params,
-            lr=self.hparams.lr,
-            weight_decay=self.hparams.weight_decay,
-        )
+        opt_name = str(getattr(self.hparams, "optimizer", "adamw")).lower()
+
+        if opt_name == "sgd":
+            # Ultralytics-style SGD for YOLO: nesterov momentum + parameter
+            # groups that exclude norm/bias params from weight decay. AdamW at
+            # lr=1e-3 diverges to NaN on the YOLO DFL/CIoU loss at peak LR
+            # (see yolo_issues #15); SGD matches the optimiser YOLO is tuned for.
+            decay, no_decay = [], []
+            for p in self.model.parameters():
+                if not p.requires_grad:
+                    continue
+                # No weight decay on biases and 1-D params (BN/norm weights).
+                (no_decay if p.ndim <= 1 else decay).append(p)
+            opt = torch.optim.SGD(
+                [
+                    {"params": decay, "weight_decay": self.hparams.weight_decay},
+                    {"params": no_decay, "weight_decay": 0.0},
+                ],
+                lr=self.hparams.lr,
+                momentum=self.hparams.momentum,
+                nesterov=True,
+            )
+        else:
+            params = [p for p in self.model.parameters() if p.requires_grad]
+            opt = torch.optim.AdamW(
+                params,
+                lr=self.hparams.lr,
+                weight_decay=self.hparams.weight_decay,
+            )
 
         sched_name = self.hparams.lr_scheduler
         if sched_name is None:

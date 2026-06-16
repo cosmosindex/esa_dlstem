@@ -102,11 +102,30 @@ class OCSortTracker:
         # Re-attach the per-track score by IoU-matching against the input
         # detections (upstream drops the score column from update_public).
         out_score = self._lookup_scores(out[:, :4], boxes, scores)
-        return np.column_stack([
+        result = np.column_stack([
             out[:, :4],            # xyxy
             out_score,             # score
             out[:, 4].astype(np.float32),   # track_id
         ])
+        return self._dedup_by_id(result)
+
+    @staticmethod
+    def _dedup_by_id(tracks: np.ndarray) -> np.ndarray:
+        """Keep one row per track id in a frame (highest score; ties -> first).
+
+        Upstream ``update_public``'s observation-centric recovery can emit the
+        same track id twice in one frame (its matched detection *and* a
+        re-anchored last-observation box). A track cannot occupy two boxes in a
+        timestep, so collapse them — otherwise TrackEval rejects the sequence
+        ("predicts the same ID more than once in a single timestep") and scores
+        it NaN.
+        """
+        if len(tracks) <= 1:
+            return tracks
+        order = np.argsort(-tracks[:, 4], kind="stable")  # score desc, stable
+        srt = tracks[order]
+        _, first = np.unique(srt[:, 5], return_index=True)
+        return srt[np.sort(first)]
 
     @staticmethod
     def _lookup_scores(track_boxes, det_boxes, det_scores):

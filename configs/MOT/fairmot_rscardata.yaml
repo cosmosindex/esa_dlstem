@@ -1,0 +1,21 @@
+# FairMOT (one-shot JDT) eval on RsCarData test split — records-only (no viz).
+# A single UNION model (trained on RsCarData+SDM-Car+SAT-MTB at native-res
+# buckets) is evaluated on each split, so all three fairmot_*.yaml share this
+# checkpoint. Each dataset is evaluated at the SAME size it was trained at
+# (its bucket): RsCarData -> 1024x1024 (512^2 upscaled 2x, the validated size).
+# Detection+association scored with the same centroid protocol as the HiEUM/TBD
+# rows (match_metric=centroid, dist<=5px) so the MOT table stays comparable.
+dataset: rscardata
+checkpoint: /home/ziwen/code/esa_dlstem/FairMOT/exp/mot/fairmot_hrnet18_union/model_best.pth
+arch: hrnet_18
+input_w: 1024
+input_h: 1024
+class_map: {car: 0}
+conf_thres: 0.4            # FairMOT detector + track-init threshold (its operating point)
+track_buffer: 30
+frame_rate: 30
+K: 500
+min_box_area: 0.0         # keep all (the pedestrian min_box_area=100 kills tiny cars)
+match_metric: centroid
+centroid_dist_thresh: 5.0
+iou_thresh: 0.3

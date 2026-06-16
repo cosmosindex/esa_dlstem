@@ -1,0 +1,23 @@
+# TGraM (RS-specialized one-shot JDT: MobileNetV3 + graph spatiotemporal
+# reasoning) eval on sdmcar test split — records-only (no viz).
+# A single UNION model (trained on RsCarData+SDM-Car+SAT-MTB at native-res
+# buckets, mirroring FairMOT) is evaluated on each split, so all three
+# tgram_*.yaml share this checkpoint. Each dataset is evaluated at the SAME
+# bucket size it was trained at. Detection+association scored with the same
+# centroid protocol as the HiEUM/TBD/FairMOT rows so the MOT table stays
+# comparable.
+dataset: sdmcar
+checkpoint: /home/ziwen/code/esa_dlstem/TGraM/exp/mot/tgram_mbseg_union/model_best.pth
+arch: tgrammbseg
+input_w: 1920
+input_h: 1088
+num_frames: 3            # temporal clip length (TGraM graph module); train-time default
+class_map: {car: 0}
+conf_thres: 0.4          # detector + track-init threshold (TGraM operating point)
+track_buffer: 30
+frame_rate: 30
+K: 500
+min_box_area: 0.0        # keep all (the pedestrian min_box_area=100 kills tiny cars)
+match_metric: centroid
+centroid_dist_thresh: 5.0
+iou_thresh: 0.3

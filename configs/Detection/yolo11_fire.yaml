@@ -1,0 +1,70 @@
+# YOLOv11 trained on the RGBT-3M wildfire dataset (detection).
+# Apple-to-apple companion to fasterrcnn_fire.yaml — same data (FireRGBT
+# train split), same 3-class taxonomy {smoke, fire, person}, same 640²
+# input. Train on train, validate on val (video2, carved from train),
+# test on the official test split.
+#
+# Difference vs the fasterrcnn version:
+#   - YOLO labels are 0-indexed (no background) → num_classes=3.
+#   - YOLO trains via ultralytics' own anchor-free head + augmentation
+#     (mosaic / mixup / affine); no anchor pyramid needed.
+#
+# Run with:
+#   CUDA_VISIBLE_DEVICES=1 python training_scripts/train_yolo_fire.py \
+#       --config configs/Detection/yolo11_fire.yaml
+
+# ----- Dataset roots ------------------------------------------------------
+datasets:
+  FireRGBT: /data/ESA_DLSTEM_2025/data/fire/RGBT-3M
+
+# ----- Class map (0-indexed for YOLO; no background) ----------------------
+class_map:
+  smoke:  0
+  fire:   1
+  person: 2
+
+num_classes: 3
+
+# ----- Model --------------------------------------------------------------
+# yolo11l ("large", ~25 M params) to match scale with FasterRCNN-R50-FPN.
+model_name: /work/ziwen/checkpoints/yolo11l.pt
+conf_thresh: 0.05
+iou_thresh: 0.5
+img_size: 640              # native 640x480 → 640² (matches FasterRCNN input)
+
+# ----- Lightning training -------------------------------------------------
+batch_size: 16             # yolo11l @640² fits easily in 32 GiB
+num_workers: 0             # NUM_WORKERS=0 (project rule)
+max_epochs: 50
+# Optimiser: SGD (YOLO-native) instead of AdamW. AdamW@1e-3 diverged to NaN at
+# peak LR on the DFL/CIoU loss (yolo_issues #15); epoch-0 warmup trained fine
+# then exploded → best ckpt frozen at the warmup point (val/mAP stuck ~0/0.58).
+# SGD lr0=0.01 + momentum=0.937 + nesterov is the recipe YOLO is tuned for.
+optimizer: sgd
+lr: 0.01
+momentum: 0.937
+weight_decay: 5.0e-4
+warmup_epochs: 5
+lr_scheduler: cosine
+# bf16, NOT fp16. ROOT CAUSE of the old "never converges, best stuck at warmup"
+# (yolo_issues #15): at peak LR a finite, clipped gradient step pushed weights
+# into a region whose activations exceed fp16's 65504 max → Inf → every later
+# forward NaN → weights permanently poisoned → best ckpt frozen at the warmup
+# point. bf16 has the same exponent range as fp32, so it does not overflow.
+# Verified: fp16 diverges at peak LR, bf16 trains clean (0 non-finite events).
+# A non-finite-grad guard in ObjectDetectionModule is kept as a defensive backstop.
+precision: bf16-mixed
+gradient_clip_val: 10.0
+
+# ----- Run / logging ------------------------------------------------------
+run_name: yolo11l_fire
+experiment_root: /work/ziwen/experiments
+wandb_project: esa-dlstem
+wandb_entity: chengziwen693
+visualization_max_wandb_images: 50
+visualization_score_thresh: 0.5
+visualization_iou_thresh: 0.5
+
+monitor_metric: val/mAP
+monitor_mode: max
+patience: 10

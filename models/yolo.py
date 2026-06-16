@@ -10,6 +10,8 @@ Lightning controls the training loop. The tracking state (ByteTrack) is
 maintained per-sequence and reset between sequences.
 """
 
+import math
+
 import torch
 import torch.nn as nn
 
@@ -85,12 +87,25 @@ class YOLODetector(nn.Module):
 
     @staticmethod
     def _rebuild_cls_head(yolo, nc: int):
-        """Replace the classification Conv2d layers in cv3 for a new class count."""
+        """Replace the classification Conv2d layers in cv3 for a new class count.
+
+        The cls bias is **not** zeroed. Ultralytics' ``Detect.bias_init`` sets a
+        prior-probability cls bias (``log(5 / nc / (640/stride)**2)`` ≈ -5…-8) so
+        the initial per-anchor confidence is ≈0.003. Zeroing the bias instead
+        makes every anchor predict p≈0.5 → the BCE cls loss over ~8400 mostly-
+        background anchors explodes to ~2000 → gradient explosion → NaN loss,
+        and the model never trains (val/mAP stays 0). See yolo_issues.md #12/#14.
+        """
         head = yolo.model.model[-1]
-        for scale_branch in head.cv3:
+        strides = getattr(head, "stride", None)
+        for i, scale_branch in enumerate(head.cv3):
             old_conv = scale_branch[-1]  # Conv2d(..., old_nc, 1x1)
             new_conv = nn.Conv2d(old_conv.in_channels, nc, kernel_size=1)
-            nn.init.zeros_(new_conv.bias)
+            if strides is not None and i < len(strides):
+                s = float(strides[i])
+                new_conv.bias.data.fill_(math.log(5 / nc / (640 / s) ** 2))
+            else:
+                new_conv.bias.data.fill_(-4.6)  # sigmoid ≈ 0.01 fallback
             scale_branch[-1] = new_conv
         head.nc = nc
         head.no = nc + head.reg_max * 4
@@ -151,43 +166,91 @@ class YOLODetector(nn.Module):
             "bboxes": torch.cat([r[:, 2:] for r in label_rows]),
             "batch_idx": torch.cat([r[:, 0] for r in label_rows]),
         }
+        # Ultralytics' v8DetectionLoss returns ``loss * batch_size`` (utils/loss.py:538)
+        # to suit its own SGD/nbs-scaled lr. Left un-normalised here the gradients are
+        # ``batch_size``× too large, so a normal AdamW lr (1e-3, fine for FasterRCNN on
+        # the same module) diverges to NaN once warmup ends — see yolo_issues.md #15.
+        # Divide by batch size to get a per-sample mean loss, matching every other model.
+        bs = batch.shape[0]
         loss, loss_items = self.model.loss(ul_batch)
         return {
-            "loss": loss.sum(),
+            "loss": loss.sum() / bs,
             "loss_box": loss_items[0],
             "loss_cls": loss_items[1],
             "loss_dfl": loss_items[2],
         }
 
     def _inference_forward(self, images):
-        # Ultralytics expects numpy HWC uint8 images, not tensors
+        """Eval-mode detection via a bare module forward + manual NMS.
+
+        The detection path deliberately avoids Ultralytics' high-level
+        ``predict()``. That API lazily builds a **cached** predictor
+        (``engine/model.py``: ``if not self.predictor``) whose ``setup_model``
+        wraps the model in ``AutoBackend(fuse=True, fp16=...)`` — fusing Conv+BN
+        (and optionally half-casting) ``self.model`` *in place*. Inside
+        Lightning's fit→validate loop that predictor is first built during the
+        sanity-check validation, when the rebuilt classification head is still
+        random, then frozen and reused every epoch → ``val/mAP`` pinned at 0 and
+        the fused model can no longer train. Running ``self.model(x)`` directly
+        keeps train and val on the same un-fused weights.
+
+        The tracking path still uses Ultralytics ``track()`` (stateful by
+        design); it only runs at test time, so the fit-loop fusion issue above
+        does not arise. See ``yolo_issues.md`` #3/#10/#11.
+        """
+        device = images[0].device
+
+        if self.enable_tracking:
+            return self._track_forward(images, device)
+
+        from ultralytics.utils.nms import non_max_suppression
+
+        # images are float [0, 1] CHW (dataset: from_numpy(...).float() / 255).
+        batch = torch.stack(images) if isinstance(images, list) else images
+        raw = self.model(batch)            # eval mode → (B, 4+nc, num_anchors)
+        if isinstance(raw, (list, tuple)):
+            raw = raw[0]
+
+        dets = non_max_suppression(
+            raw,
+            conf_thres=self.conf_thresh,
+            iou_thres=self.iou_thresh,
+            nc=self.model.model[-1].nc,
+            max_det=300,
+        )
+
+        outputs = []
+        for d in dets:                     # d: (n, 6) → [x1, y1, x2, y2, conf, cls]
+            outputs.append({
+                "boxes":  d[:, :4].to(device),
+                "labels": d[:, 5].long().to(device),
+                "scores": d[:, 4].to(device),
+            })
+        return outputs
+
+    def _track_forward(self, images, device):
+        """Stateful multi-object tracking via Ultralytics ``track()``.
+
+        Test-time only (MOT eval). Uses the high-level API on purpose because
+        ByteTrack state must persist across frames; the predictor-fusion issue
+        documented in ``_inference_forward`` does not apply since there is no
+        interleaved training validation here.
+        """
         import numpy as np
         np_images = [
             (img.cpu().permute(1, 2, 0).numpy() * 255).astype(np.uint8)
             for img in images
         ]
 
-        if self.enable_tracking:
-            results = self._yolo.track(
-                np_images,
-                conf=self.conf_thresh,
-                iou=self.iou_thresh,
-                imgsz=self.img_size,
-                tracker=self.tracker_config,
-                persist=True,
-                verbose=False,
-            )
-        else:
-            results = self._yolo.predict(
-                np_images,
-                conf=self.conf_thresh,
-                iou=self.iou_thresh,
-                imgsz=self.img_size,
-                verbose=False,
-            )
-
-        # Determine device from input images so outputs match targets
-        device = images[0].device
+        results = self._yolo.track(
+            np_images,
+            conf=self.conf_thresh,
+            iou=self.iou_thresh,
+            imgsz=self.img_size,
+            tracker=self.tracker_config,
+            persist=True,
+            verbose=False,
+        )
 
         outputs = []
         for r in results:
@@ -197,20 +260,15 @@ class YOLODetector(nn.Module):
                 "labels": boxes.cls.long().to(device),
                 "scores": boxes.conf.to(device),
             }
-            if self.enable_tracking and boxes.id is not None:
+            if boxes.id is not None:
                 out["track_ids"] = boxes.id.long().to(device)
             outputs.append(out)
 
-        # Ultralytics predictor sets requires_grad=False on parameters;
-        # restore so that subsequent training forward passes can compute gradients.
+        # track() disables requires_grad + caches inference-mode anchors on the
+        # Detect head; restore so a later training forward still works.
         for p in self.model.parameters():
             p.requires_grad = True
-
-        # Ultralytics inference caches anchors/strides as inference-mode tensors
-        # on the Detect head. Reset the cached shape so they are recomputed
-        # in normal mode during the next training forward pass.
-        head = self.model.model[-1]
-        head.shape = None
+        self.model.model[-1].shape = None
 
         return outputs
 

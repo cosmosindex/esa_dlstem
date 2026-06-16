@@ -1,0 +1,43 @@
+# FAST repro/verify config for the YOLO11 FireRGBT NaN divergence (yolo_issues #15).
+# warmup_epochs=1 → hits peak LR by epoch 1 (the divergence used to appear at
+# ep1 step 7-34 in warmup=1 stress tests). max_epochs=4 → ~5 min total.
+# Keeps precision: 16-mixed (the exact config that diverged) so we can confirm
+# the non-finite-grad guard rescues fp16 training.
+datasets:
+  FireRGBT: /data/ESA_DLSTEM_2025/data/fire/RGBT-3M
+
+class_map:
+  smoke:  0
+  fire:   1
+  person: 2
+
+num_classes: 3
+
+model_name: /work/ziwen/checkpoints/yolo11l.pt
+conf_thresh: 0.05
+iou_thresh: 0.5
+img_size: 640
+
+batch_size: 16
+num_workers: 0
+max_epochs: 4
+optimizer: sgd
+lr: 0.01
+momentum: 0.937
+weight_decay: 5.0e-4
+warmup_epochs: 1
+lr_scheduler: cosine
+precision: bf16-mixed
+gradient_clip_val: 10.0
+
+run_name: yolo11l_fire_fastrepro
+experiment_root: /work/ziwen/experiments
+wandb_project: esa-dlstem
+wandb_entity: chengziwen693
+visualization_max_wandb_images: 0
+visualization_score_thresh: 0.5
+visualization_iou_thresh: 0.5
+
+monitor_metric: val/mAP
+monitor_mode: max
+patience: 10

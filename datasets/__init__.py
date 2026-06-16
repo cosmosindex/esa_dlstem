@@ -17,6 +17,7 @@ from .viso import VISODataset
 from .sv248s import SV248SDataset
 from .sdmcar import SDMCarDataset
 from .rscardata import RsCarDataset
+from .fire_rgbt import FireRGBTDataset
 
 __all__ = [
     "BaseVideoDataset",
@@ -36,4 +37,5 @@ __all__ = [
     "SV248SDataset",
     "SDMCarDataset",
     "RsCarDataset",
+    "FireRGBTDataset",
 ]

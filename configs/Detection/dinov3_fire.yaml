@@ -1,0 +1,72 @@
+# DINOv3 (ViT-B/16) + lightweight DETR head on the RGBT-3M wildfire dataset.
+# Apple-to-apple companion to yolo11_fire.yaml / fasterrcnn_fire.yaml — same
+# data (FireRGBT), same 3-class taxonomy {smoke, fire, person}, same 640²
+# input, same train/val/test splits.
+#
+# Paradigm: a frozen self-supervised foundation backbone (DINOv3 ViT-B/16,
+# LVD-1689M web pretrain) with only a small DETR-style decoder head trained on
+# top — the "foundation features + simple head" row of the comparison.
+#
+# Boxes/labels are 0-indexed (no background); the DETR head adds its own
+# no-object class internally, so num_classes = 3 foreground classes.
+#
+# Run with (GPU0 is occupied by another training job → use GPU1):
+#   CUDA_VISIBLE_DEVICES=1 python training_scripts/train_dinov3_fire.py \
+#       --config configs/Detection/dinov3_fire.yaml
+
+# ----- Dataset roots ------------------------------------------------------
+datasets:
+  FireRGBT: /data/ESA_DLSTEM_2025/data/fire/RGBT-3M
+
+# ----- Class map (0-indexed; no background) -------------------------------
+class_map:
+  smoke:  0
+  fire:   1
+  person: 2
+
+num_classes: 3
+
+# ----- Model (DINOv3 backbone + dense FCOS head) --------------------------
+# ViT-B/16 LVD-1689M web pretrain (NOT sat493m — fire imagery is ground/aerial
+# RGB, not satellite). Backbone frozen → only the detection head is trained.
+#
+# head_type=fcos: a dense anchor-free head on the 40×40 patch feature map.
+# The original DETR head (head_type=detr) does NOT converge here — frozen
+# features + small data + set-prediction need hundreds of epochs and collapse
+# to all-no-object (val mAP stuck at 0). FCOS uses sigmoid focal loss (no
+# no-object class) + dense per-location regression → localises from epoch 1,
+# converging in tens of epochs like YOLO/FasterRCNN.
+hf_model_name: facebook/dinov3-vitb16-pretrain-lvd1689m
+freeze_backbone: true
+head_type: fcos
+fcos_num_convs: 4
+fcos_hidden: 256
+fcos_center_radius: 1.5
+nms_thresh: 0.6
+conf_thresh: 0.05         # low keep-thresh (matches YOLO/FRCNN eval); NMS prunes
+img_size: 640             # 640/16 = 40×40 feature map (stride 16)
+
+# ----- Lightning training -------------------------------------------------
+batch_size: 16            # frozen backbone runs under no_grad → modest memory
+num_workers: 0            # NUM_WORKERS=0 (project rule: fork+CUDA deadlock)
+max_epochs: 50
+warmup_epochs: 5
+optimizer: adamw          # head from scratch; configure_optimizers filters to
+lr: 2.0e-4                # requires_grad params → only the FCOS head is optimised
+weight_decay: 1.0e-4
+lr_scheduler: cosine
+precision: bf16-mixed     # bf16 (not fp16): full fp32 exponent range, no overflow
+gradient_clip_val: 10.0
+
+# ----- Run / logging ------------------------------------------------------
+run_name: dinov3_vitb16_fire
+experiment_root: /work/ziwen/experiments
+wandb_project: esa-dlstem
+wandb_entity: chengziwen693
+visualization_max_wandb_images: 50
+visualization_score_thresh: 0.5
+visualization_iou_thresh: 0.5
+
+monitor_metric: val/mAP
+monitor_mode: max
+patience: 10

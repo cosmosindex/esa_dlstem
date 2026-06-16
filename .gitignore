@@ -78,3 +78,34 @@ logs/sv248s_sot/20260420_083349/siamrpn.log
 .claude/skills/add-mot-tracker/SKILL.md
 compute_hota.py
 .claude/scheduled_tasks.lock
+
+# ---- cleanup 2026-06-16: artifacts & vendored repos ----
+# Regenerable training/eval artifacts (canonical checkpoints live in /work/ziwen/checkpoints)
+checkpoints/
+logs/
+pr_curve.json
+pr_curve.png
+
+# Local experiment-driver bash scripts (kept on disk, not committed)
+scripts/
+
+# Vendored third-party tracker/detector repos (each has its own .git; needed to run evals, not committed)
+BoT-SORT/
+ByteTrack/
+FairMOT/
+GroundingDINO/
+LoRAT/
+MOTRv2/
+OC_SORT/
+ODTrack/
+OOTB/
+OSTrack/
+RAFT/
+TGraM/
+TrackTrack/
+sam3/
+samurai/
+siamban/
+pysot/
+Moving-object-detection-DSFNet/
+Moving-object-detection-in-satellite-videos-HiEUM/

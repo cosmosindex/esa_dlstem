@@ -1,0 +1,17 @@
+# FairMOT (one-shot JDT) eval on SAT-MTB (car) test split — records-only (no viz).
+# Same UNION model as the other fairmot_*.yaml. SAT-MTB bucket = 1024x1024 (native).
+# Centroid protocol matches the HiEUM/TBD rows so the MOT table stays comparable.
+dataset: satmtb
+checkpoint: /home/ziwen/code/esa_dlstem/FairMOT/exp/mot/fairmot_hrnet18_union/model_best.pth
+arch: hrnet_18
+input_w: 1024
+input_h: 1024
+class_map: {car: 0}
+conf_thres: 0.4
+track_buffer: 30
+frame_rate: 30
+K: 500
+min_box_area: 0.0
+match_metric: centroid
+centroid_dist_thresh: 5.0
+iou_thresh: 0.3

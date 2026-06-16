@@ -38,6 +38,7 @@ from datasets.viso import VISODataset
 from datasets.sv248s import SV248SDataset
 from datasets.sdmcar import SDMCarDataset
 from datasets.rscardata import RsCarDataset
+from datasets.fire_rgbt import FireRGBTDataset
 
 # ---------------------------------------------------------------------------
 # Dataset registry — add new dataset classes here
@@ -56,6 +57,7 @@ _DATASET_REGISTRY: dict[str, type] = {
     "SV248S": SV248SDataset,
     "SDM-Car": SDMCarDataset,
     "RsCarData": RsCarDataset,
+    "FireRGBT": FireRGBTDataset,
 }
 
 # ---------------------------------------------------------------------------
