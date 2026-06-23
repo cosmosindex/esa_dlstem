@@ -1,0 +1,55 @@
+# SAM3 open-vocabulary MOT on BIRDSAI (thermal wild-animal drone dataset).
+# No GT boxes ever reach the model — SAM3's text-prompted detector discovers
+# instances per frame from two noun phrases ("person" / "animal").
+#
+# Coarse 2-class {animal, human} (NOT the fine 5-class species taxonomy used
+# by the YOLO/FasterRCNN/DINOv3 detectors) — SAM3 has no way to tell elephant
+# from giraffe via text, so we compare it on the coarse split. GT category
+# "human" is prompted as "person" (SAM3's vocab detects people far better),
+# decoupled via `text_prompts` while keeping label ids tied to class_map.
+
+dataset: BIRDSAI_MOT
+dataset_root: /data/ESA_DLSTEM_2025/data/wild_animal/BIRDSAI
+run_name_suffix: birdsai
+class_map:
+  animal: 0
+  human: 1
+text_prompts:
+  human: person      # GT "human" → prompt "person"
+  animal: animal     # GT "animal" → prompt "animal"
+
+# Coarse granularity (default for BIRDSAIMOTDataset, made explicit).
+dataset_kwargs:
+  granularity: coarse
+
+eval_mode: mot
+split: test
+img_size: null
+
+sam3_checkpoint_path: null
+apply_temporal_disambiguation: true
+
+tracker_type: text
+prompt_strategy: text
+
+clip_len: 32
+clip_stride: 1
+batch_size: 1
+num_workers: 0
+
+iou_thresh: 0.3
+score_thresh: 0.5
+max_wandb_images: 50
+
+# No visualization — just dump every frame's predictions to predictions.json
+# (same schema as eval_birdsai_detect_track.py; combined viz built later).
+skip_visualization: true
+dump_predictions: true
+pred_dump_score_thresh: 0.0
+
+# Emit per-video MOTChallenge text files for optional HOTA computation.
+dump_mot_format: true
+mot_dump_score_thresh: 0.0
+
+wandb_project: esa-dlstem
+wandb_entity: chengziwen693

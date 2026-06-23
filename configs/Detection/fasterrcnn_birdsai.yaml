@@ -41,24 +41,26 @@ score_thresh: 0.05
 nms_thresh: 0.5
 detections_per_img: 300
 
-# BIRDSAI-tuned anchor pyramid (small objects only). Each FPN level = stride × {2,4}:
-#   P2 stride 4  → [4, 8]      tiny unknown/lion/giraffe blobs (sides ~10 px)
-#   P3 stride 8  → [16, 24]    human / small-animal median (~15-28 px)
-#   P4 stride 16 → [32, 48]    elephant median (~50-66 px)
-#   P5 stride 32 → [64, 96]    large elephant
-#   P6 stride 64 → [128, 192]  near-max box (~120 px)
-anchor_sizes:
-  - [4, 8]
-  - [16, 24]
-  - [32, 48]
-  - [64, 96]
-  - [128, 192]
-anchor_aspect_ratios:
-  - [0.5, 1.0, 2.0]
-  - [0.5, 1.0, 2.0]
-  - [0.5, 1.0, 2.0]
-  - [0.5, 1.0, 2.0]
-  - [0.5, 1.0, 2.0]
+# Data-driven anchor pyramid (BIRDSAI train, measured in the 640x640 MODEL space —
+# frames are A.Resize(640,640)'d, so heights are stretched x1.333 vs original px).
+# Side=sqrt(w*h) percentiles: p1=9 p25=16 p50=40 p75=55 p90=90 p99=145.
+#   - The old [4,8] P2 level was dead: 4px/8px anchors cover 0.0%/0.4% of boxes
+#     (no object is that small in model space) → smallest level lifted to [10,16].
+# Aspect ratio is h/w (torchvision convention). Measured w/h median=0.51 → objects
+# are ~2x TALLER than wide; w/h p95=0.95 means almost nothing is wider than square.
+#   - Old {0.5,1.0,2.0} wasted 0.5 (wide) entirely → replaced with tall {1.0,2.0,3.5}.
+anchor_sizes:                 # FPN P2..P6, strides 4/8/16/32/64
+  - [10, 16]
+  - [24, 36]
+  - [48, 72]
+  - [96, 128]
+  - [160, 200]
+anchor_aspect_ratios:         # h/w — skewed tall to match the data
+  - [1.0, 2.0, 3.5]
+  - [1.0, 2.0, 3.5]
+  - [1.0, 2.0, 3.5]
+  - [1.0, 2.0, 3.5]
+  - [1.0, 2.0, 3.5]
 
 # Relaxed RPN/box thresholds for tiny boxes.
 rpn_fg_iou_thresh: 0.5
@@ -95,3 +97,6 @@ visualization_score_thresh: 0.5
 monitor_metric: val/mAP
 monitor_mode: max
 patience: 8
+# Train the full schedule (no early stop) and also keep last.ckpt (final epoch),
+# so a too-early val-selected best can't truncate training.
+early_stopping: false

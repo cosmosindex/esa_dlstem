@@ -50,6 +50,11 @@ from .base import BaseVideoDataset, VideoInfo
 
 _SPLIT_SEED = 42
 
+# Frame-level val carve from TrainReal: every _VAL_FRAME_STRIDE-th frame of each
+# TrainReal video (offset to skip frame 0) becomes val (~14%); the rest is train.
+_VAL_FRAME_STRIDE = 7
+_VAL_FRAME_OFFSET = 3
+
 # Coarse: CSV `class` column (col 6) → category name.
 _CLASS_NAMES = {0: "animal", 1: "human"}
 
@@ -67,6 +72,11 @@ class BIRDSAIMOTDataset(BaseVideoDataset):
     Args:
         root:      Path to BIRDSAI root (contains TrainReal/ and TestReal/).
         split:     "train", "val", "test", or "no_split".
+        annotations_dirname: name of the per-split annotation subdir to read
+                   CSVs from. Default "annotations" (original GT). Set to
+                   "annotations_sam3" to use the SAM3 box-refined GT produced by
+                   evaluation/relabel_birdsai_sam3.py (tighter thermal boxes;
+                   same 10-column schema, same row counts).
         **kwargs:  Forwarded to BaseVideoDataset.
     """
 
@@ -75,8 +85,10 @@ class BIRDSAIMOTDataset(BaseVideoDataset):
         root: str | Path,
         split: str = "train",
         granularity: str = "coarse",
+        annotations_dirname: str = "annotations",
         **kwargs,
     ):
+        self.annotations_dirname = annotations_dirname
         # granularity: "coarse" → {animal, human} (class col 6);
         #              "fine"   → species {human, elephant, giraffe, lion, unknown} (col 7).
         if granularity not in ("coarse", "fine"):
@@ -103,7 +115,12 @@ class BIRDSAIMOTDataset(BaseVideoDataset):
             if not split_dir.exists():
                 continue
 
-            ann_dir = split_dir / "annotations"
+            ann_dir = split_dir / self.annotations_dirname
+            if not ann_dir.exists():
+                raise FileNotFoundError(
+                    f"Annotation dir not found: {ann_dir} "
+                    f"(annotations_dirname={self.annotations_dirname!r})"
+                )
             images_root = split_dir / "images"
 
             for csv_path in sorted(ann_dir.glob("*.csv")):
@@ -142,21 +159,51 @@ class BIRDSAIMOTDataset(BaseVideoDataset):
                 source_map[video_id] = orig_split
 
         # --- Assign splits ---
-        # TrainReal → train
-        # TestReal  → val (30%) + test (70%), stratified by video
-        train_vids = [v for v in all_videos if source_map[v.video_id] == "train"]
-        test_vids = [v for v in all_videos if source_map[v.video_id] == "test"]
-
-        for v in train_vids:
-            v.split = "train"
-
-        val_test_map = self._stratified_val_test_split(test_vids)
-        for v in test_vids:
-            v.split = val_test_map[v.video_id]
-
-        # Keep only requested split
+        # TrainReal → train + val ; TestReal → test (kept fully intact).
+        #
+        # Why frame-level val: BIRDSAI source videos are almost entirely single-class
+        # (lion has only 1 video, giraffe 2), so a per-VIDEO val cannot be balanced by
+        # class — a held-out video removes its class from train entirely. We instead
+        # carve a per-video STRIDED frame subset (every _VAL_FRAME_STRIDE-th frame) out
+        # of each TrainReal video: val then inherits every video's class *and* object-size
+        # distribution, so all 5 classes and both size regimes are represented.
+        #
+        # This couples train/val temporally (a val frame is adjacent to train frames),
+        # but val is used ONLY for checkpoint selection / early stopping — the reported
+        # TEST set is all of TestReal, a fully disjoint source, so no leakage reaches the
+        # test metrics. (The old code split TestReal into val/test by random video, which
+        # gave a val with 0 elephants and 96% tiny boxes — useless for model selection.)
+        kept = []
         for v in all_videos:
-            if self.split == "no_split" or v.split == self.split:
+            if source_map[v.video_id] == "test":
+                v.split = "test"
+                if self.split in ("test", "no_split"):
+                    kept.append(v)
+                continue
+
+            # TrainReal video
+            if self.split == "no_split":
+                v.split = "train"
+                kept.append(v)
+                continue
+
+            val_fids = set(v.frame_ids[_VAL_FRAME_OFFSET::_VAL_FRAME_STRIDE])
+            if self.split == "val":
+                sel = [f for f in v.frame_ids if f in val_fids]
+            elif self.split == "train":
+                sel = [f for f in v.frame_ids if f not in val_fids]
+            else:
+                continue  # requested split is "test" → no TrainReal video
+            if not sel:
+                continue
+            v.split = self.split
+            v.frame_ids = sel
+            v.num_frames = len(sel)
+            kept.append(v)
+
+        kept_ids = {v.video_id for v in kept}
+        for v in all_videos:
+            if v.video_id in kept_ids:
                 self.videos.append(v)
             else:
                 self._ann_cache.pop(v.video_id, None)
@@ -258,19 +305,3 @@ class BIRDSAIMOTDataset(BaseVideoDataset):
                 frame_anns[frame_id].append((track_id, class_name, x, y, x + w, y + h))
 
         return dict(frame_anns)
-
-    @staticmethod
-    def _stratified_val_test_split(
-        videos: list[VideoInfo],
-        val_ratio: float = 0.3,
-    ) -> dict[str, str]:
-        """Split TestReal videos into val (30%) / test (70%)."""
-        rng = np.random.RandomState(_SPLIT_SEED)
-
-        video_ids = [v.video_id for v in videos]
-        rng.shuffle(video_ids)
-
-        n_val = max(1, round(len(video_ids) * val_ratio))
-        val_set = set(video_ids[:n_val])
-
-        return {vid: ("val" if vid in val_set else "test") for vid in video_ids}

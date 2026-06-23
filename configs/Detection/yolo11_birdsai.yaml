@@ -60,3 +60,5 @@ visualization_score_thresh: 0.5
 monitor_metric: val/mAP
 monitor_mode: max
 patience: 8
+# Train the full schedule (no early stop); best.pt = val-selected, last.pt = final epoch.
+early_stopping: false

@@ -6,8 +6,10 @@
 # Backbone frozen (LVD-1689M web pretrain); only the FCOS head is trained. FCOS (not
 # DETR) head: frozen features + small data make DETR set-prediction collapse to
 # all-no-object (mAP 0); dense focal + center-sampled GIoU localises from epoch 1.
-# 640/16 = 40×40 patch feature map (stride 16) — coarse for BIRDSAI's tiny thermal
-# blobs, so this is expected to be the weakest of the three (same finding as fire).
+# 640/16 = 40×40 patch feature map (stride 16) is far too coarse for BIRDSAI's
+# ~12 px thermal blobs (they fall inside a single cell → zero positive FCOS
+# locations). fcos_feat_stride: 8 bilinearly upsamples the token map to 80×80
+# (stride 8) before the head so tiny objects get sampled.
 #
 # Run with:
 #   CUDA_VISIBLE_DEVICES=0 python training_scripts/train_dinov3_fire.py \
@@ -39,8 +41,10 @@ head_type: fcos
 fcos_num_convs: 4
 fcos_hidden: 256
 fcos_center_radius: 1.5
+fcos_feat_stride: 8         # upsample 40x40 (stride16) -> 80x80 (stride8) for tiny objects
 nms_thresh: 0.6
 conf_thresh: 0.05
+max_dets: 300               # match FasterRCNN detections_per_img (dense herds)
 img_size: 640
 
 # ----- Lightning training -------------------------------------------------
@@ -66,3 +70,5 @@ visualization_score_thresh: 0.5
 monitor_metric: val/mAP
 monitor_mode: max
 patience: 8
+# Train the full schedule (no early stop); best = val-selected, last.ckpt = final epoch.
+early_stopping: false
