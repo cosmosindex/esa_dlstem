@@ -132,7 +132,7 @@ def main():
                         choices=sorted(_DATASET_TABLE.keys()))
     parser.add_argument("--split", default="test")
     parser.add_argument("--checkpoint",
-                        default="/work/ziwen/checkpoints/hieum/model_best.pth")
+                        default="/work/anon/checkpoints/hieum/model_best.pth")
     parser.add_argument("--output-dir",
                         default="/data/ESA_DLSTEM_2025/experiments/Detection/hieum_dets_cache")
     parser.add_argument("--score-floor", type=float, default=0.05,

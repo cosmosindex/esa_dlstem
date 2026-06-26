@@ -52,7 +52,7 @@ def main():
     torch.set_float32_matmul_precision("high")
 
     run_name = cfg["run_name"]
-    exp_root = cfg.get("experiment_root", "/work/ziwen/experiments")
+    exp_root = cfg.get("experiment_root", "/work/anon/experiments")
     experiment_dir = f"{exp_root}/{run_name}_{datetime.now():%Y%m%d_%H%M%S}"
 
     img_size = cfg.get("img_size", 1024)
@@ -102,7 +102,7 @@ def main():
     # ------------------------------------------------------------------
     logger = WandbLogger(
         project=cfg.get("wandb_project", "esa-dlstem"),
-        entity=cfg.get("wandb_entity", "chengziwen693"),
+        entity=cfg.get("wandb_entity", "anonymous"),
         name=run_name,
         log_model=False,
     )

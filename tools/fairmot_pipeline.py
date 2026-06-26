@@ -96,7 +96,7 @@ def main():
     args = ap.parse_args()
 
     ts = datetime.now().strftime("%Y%m%d_%H%M%S")
-    exp_root = os.environ.get("EXPERIMENT_ROOT", "/work/ziwen/experiments")
+    exp_root = os.environ.get("EXPERIMENT_ROOT", "/work/anon/experiments")
     pipe_dir = Path(args.pipe_dir or f"{exp_root}/fairmot_union_{ts}")
     pipe_dir.mkdir(parents=True, exist_ok=True)
     st = Status(pipe_dir / "pipeline_status.json")

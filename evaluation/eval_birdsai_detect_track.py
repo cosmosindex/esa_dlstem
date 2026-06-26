@@ -21,7 +21,7 @@ Usage::
 
     CUDA_VISIBLE_DEVICES=0 python eval_birdsai_detect_track.py \\
         --model yolo --config configs/Detection/yolo11_birdsai.yaml \\
-        --checkpoint /work/ziwen/experiments/yolo11l_birdsai_manual_.../checkpoints/best.pt
+        --checkpoint /work/anon/experiments/yolo11l_birdsai_manual_.../checkpoints/best.pt
 
     # FasterRCNN / DINOv3 take the Lightning best-*.ckpt:
     CUDA_VISIBLE_DEVICES=1 python eval_birdsai_detect_track.py \\
@@ -117,8 +117,9 @@ def _build_dinov3(cfg):
         hf_model_name=cfg.get("hf_model_name", "facebook/dinov3-vitb16-pretrain-lvd1689m"),
         freeze_backbone=cfg.get("freeze_backbone", True), head_type=cfg.get("head_type", "fcos"),
         fcos_num_convs=cfg.get("fcos_num_convs", 4), fcos_hidden=cfg.get("fcos_hidden", 256),
-        fcos_center_radius=cfg.get("fcos_center_radius", 1.5), nms_thresh=cfg.get("nms_thresh", 0.6),
-        conf_thresh=cfg.get("conf_thresh", 0.05),
+        fcos_center_radius=cfg.get("fcos_center_radius", 1.5),
+        fcos_feat_stride=cfg.get("fcos_feat_stride"), nms_thresh=cfg.get("nms_thresh", 0.6),
+        max_dets=cfg.get("max_dets", 100), conf_thresh=cfg.get("conf_thresh", 0.05),
     )
 
 
@@ -218,7 +219,7 @@ def main():
     model.eval().to(DEVICE)
 
     run_name = f"{args.model}_birdsai_dettrack"
-    exp_root = cfg.get("experiment_root", "/work/ziwen/experiments")
+    exp_root = cfg.get("experiment_root", "/work/anon/experiments")
     experiment_dir = Path(f"{exp_root}/{run_name}_{datetime.now():%Y%m%d_%H%M%S}")
     (experiment_dir / "mot_format").mkdir(parents=True, exist_ok=True)
 

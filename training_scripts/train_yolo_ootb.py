@@ -51,7 +51,7 @@ WARMUP_EPOCHS = 5
 def main():
     torch.set_float32_matmul_precision("high")
 
-    experiment_dir = f"/work/ziwen/experiments/{RUN_NAME}_{datetime.now():%Y%m%d_%H%M%S}"
+    experiment_dir = f"/work/anon/experiments/{RUN_NAME}_{datetime.now():%Y%m%d_%H%M%S}"
 
     # ------------------------------------------------------------------
     # Data
@@ -97,7 +97,7 @@ def main():
     # ------------------------------------------------------------------
     logger = WandbLogger(
         project="esa-dlstem",
-        entity="chengziwen693",
+        entity="anonymous",
         name=RUN_NAME,
         log_model=False,
     )

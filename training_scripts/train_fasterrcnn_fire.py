@@ -58,7 +58,7 @@ def main():
     torch.set_float32_matmul_precision("high")
 
     run_name = cfg["run_name"]
-    exp_root = cfg.get("experiment_root", "/work/ziwen/experiments")
+    exp_root = cfg.get("experiment_root", "/work/anon/experiments")
     experiment_dir = f"{exp_root}/{run_name}_{datetime.now():%Y%m%d_%H%M%S}"
 
     img_size = cfg.get("img_size", 640)
@@ -123,7 +123,7 @@ def main():
     # ------------------------------------------------------------------
     logger = WandbLogger(
         project=cfg.get("wandb_project", "esa-dlstem"),
-        entity=cfg.get("wandb_entity", "chengziwen693"),
+        entity=cfg.get("wandb_entity", "anonymous"),
         name=run_name,
         log_model=False,
     )
@@ -139,13 +139,17 @@ def main():
             save_top_k=1,
             filename="best-epoch={epoch}-val_mAP={val/mAP:.3f}",
             auto_insert_metric_name=False,
+            save_last=True,   # also keep last.ckpt (final epoch)
         ),
-        EarlyStopping(
+    ]
+    # Early stopping is opt-in (default on). BIRDSAI sets early_stopping: false so it
+    # trains the full schedule and last.ckpt = the final epoch.
+    if cfg.get("early_stopping", True):
+        callbacks.append(EarlyStopping(
             monitor=cfg.get("monitor_metric", "val/mAP"),
             mode=cfg.get("monitor_mode", "max"),
             patience=cfg.get("patience", 8),
-        ),
-    ]
+        ))
     # Visualization is opt-out via `skip_visualization: true` (BIRDSAI runs dump
     # per-frame predictions to JSON in a separate eval step instead).
     if not cfg.get("skip_visualization", False):

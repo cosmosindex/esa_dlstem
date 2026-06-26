@@ -34,13 +34,13 @@ mpl.rcParams.update({
 })
 
 DEFAULT_SUMMARY = Path(
-    "/work/ziwen/experiments/NeurIPS/SOT_whole_dataset_04_22/analysis/perf_vs_bbox_size_bin2/summary.json"
+    "/work/anon/experiments/NeurIPS/SOT_whole_dataset_04_22/analysis/perf_vs_bbox_size_bin2/summary.json"
 )
 DEFAULT_OUT_DIR = Path(
-    "/home/ziwen/code/esa_dlstem/docs/NeurIPS_results/SOT/attributes"
+    "/home/anon/code/esa_dlstem/docs/NeurIPS_results/SOT/attributes"
 )
 PAPER_PLOTS_DIR = Path(
-    "/home/ziwen/code/esa_dlstem/Formatting Instructions For NeurIPS 2026/plots"
+    "/home/anon/code/esa_dlstem/Formatting Instructions For NeurIPS 2026/plots"
 )
 
 DATASET_ORDER = ("OOTB", "SatSOT", "SV248S")

@@ -186,7 +186,7 @@ def main():
     dist_thr      = float(cfg.get("centroid_dist_thresh", 5.0))
     score_floor   = float(cfg.get("score_floor", 0.0))
 
-    exp_root = os.environ.get("EXPERIMENT_ROOT", "/work/ziwen/experiments")
+    exp_root = os.environ.get("EXPERIMENT_ROOT", "/work/anon/experiments")
     run_name = f"{tracker_name}_{dataset_key}"
     experiment_dir = Path(f"{exp_root}/{run_name}_{datetime.now():%Y%m%d_%H%M%S}")
     experiment_dir.mkdir(parents=True, exist_ok=True)

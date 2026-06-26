@@ -1,5 +1,5 @@
 # pysot-native ModelBuilder config for the SiamRPN++ R50-L234-DWXCorr checkpoint
-# we were given at /work/ziwen/checkpoints/siamrpn/siamrpn_r50_l234_dwxcorr.pth.
+# we were given at /work/anon/checkpoints/siamrpn/siamrpn_r50_l234_dwxcorr.pth.
 #
 # NOTE: this is NOT identical to pysot/experiments/siamrpn_r50_l234_dwxcorr/config.yaml.
 # The checkpoint we have was trained with an alternative fork that uses per-layer

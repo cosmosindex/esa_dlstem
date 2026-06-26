@@ -94,7 +94,7 @@ def main():
     tracker_kwargs = json.loads(args.tracker_kwargs)
     dataset_key = args.dataset
 
-    exp_root = os.environ.get("EXPERIMENT_ROOT", "/work/ziwen/experiments")
+    exp_root = os.environ.get("EXPERIMENT_ROOT", "/work/anon/experiments")
     run_name = f"{args.tracker}_oracle_{dataset_key}"
     experiment_dir = Path(f"{exp_root}/{run_name}_{datetime.now():%Y%m%d_%H%M%S}")
     experiment_dir.mkdir(parents=True, exist_ok=True)

@@ -80,7 +80,7 @@ compute_hota.py
 .claude/scheduled_tasks.lock
 
 # ---- cleanup 2026-06-16: artifacts & vendored repos ----
-# Regenerable training/eval artifacts (canonical checkpoints live in /work/ziwen/checkpoints)
+# Regenerable training/eval artifacts (canonical checkpoints live in /work/anon/checkpoints)
 checkpoints/
 logs/
 pr_curve.json

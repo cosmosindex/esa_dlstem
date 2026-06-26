@@ -1,7 +1,7 @@
 # Key Observations — Per-Attribute SOT Performance
 
 Per-sequence aggregation, PR over CLE ∈ [0, 50] px. Numbers come from
-`/work/ziwen/experiments/NeurIPS/SOT_whole_dataset_04_22/analysis/unified_attributes/`:
+`/work/anon/experiments/NeurIPS/SOT_whole_dataset_04_22/analysis/unified_attributes/`:
 
 - `unified_attr.csv` — 6 unified attributes (BC, IV, ROT, OCC, SOB, DEF), averaged across the datasets that annotate them.
 - `unique_attr.csv` — 18 dataset-unique attributes, evaluated on the single annotating dataset.

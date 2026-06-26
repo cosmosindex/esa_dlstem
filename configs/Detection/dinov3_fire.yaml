@@ -60,9 +60,9 @@ gradient_clip_val: 10.0
 
 # ----- Run / logging ------------------------------------------------------
 run_name: dinov3_vitb16_fire
-experiment_root: /work/ziwen/experiments
+experiment_root: /work/anon/experiments
 wandb_project: esa-dlstem
-wandb_entity: chengziwen693
+wandb_entity: anonymous
 visualization_max_wandb_images: 50
 visualization_score_thresh: 0.5
 visualization_iou_thresh: 0.5

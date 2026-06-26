@@ -156,7 +156,7 @@ def main():
     torch.set_float32_matmul_precision("high")
 
     run_name = cfg["run_name"] + "_manual"
-    exp_root = cfg.get("experiment_root", "/work/ziwen/experiments")
+    exp_root = cfg.get("experiment_root", "/work/anon/experiments")
     experiment_dir = Path(f"{exp_root}/{run_name}_{datetime.now():%Y%m%d_%H%M%S}")
     (experiment_dir / "checkpoints").mkdir(parents=True, exist_ok=True)
 
@@ -204,7 +204,7 @@ def main():
             import wandb
             wb = wandb.init(
                 project=cfg.get("wandb_project", "esa-dlstem"),
-                entity=cfg.get("wandb_entity", "chengziwen693"),
+                entity=cfg.get("wandb_entity", "anonymous"),
                 name=run_name, config=cfg,
             )
         except Exception as e:
@@ -220,6 +220,7 @@ def main():
 
     best_map = -1.0
     best_path = experiment_dir / "checkpoints" / "best.pt"
+    last_path = experiment_dir / "checkpoints" / "last.pt"
     epochs_no_improve = 0
     nan_skips = 0
 
@@ -259,6 +260,9 @@ def main():
                         "val_mAP": best_map, "num_classes": num_classes}, best_path)
         else:
             epochs_no_improve += 1
+        # always keep the latest epoch's weights (guards against a too-early best)
+        torch.save({"model": model.state_dict(), "epoch": epoch,
+                    "val_mAP": val["mAP"], "num_classes": num_classes}, last_path)
 
         pc = " ".join(f"{class_names.get(c, c)}={ap:.3f}"
                       for c, ap in sorted(val["per_class_ap"].items()))
@@ -277,7 +281,7 @@ def main():
                 log[f"val/AP_{class_names.get(c, c)}"] = ap
             wb.log(log)
 
-        if epochs_no_improve >= patience:
+        if cfg.get("early_stopping", True) and epochs_no_improve >= patience:
             print(f"[early stop] no val/mAP improvement for {patience} epochs.", flush=True)
             break
 

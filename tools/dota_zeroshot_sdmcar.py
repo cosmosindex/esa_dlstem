@@ -22,7 +22,7 @@ HBB GT shipped by SDMCarDataset.
 Usage:
   micromamba run -n mmrotate_dota python tools/dota_zeroshot_sdmcar.py \\
       --video-id test/1-2 --score-thr 0.05 \\
-      --out-dir /work/ziwen/experiments/dota_zeroshot_sdmcar/test_1-2
+      --out-dir /work/anon/experiments/dota_zeroshot_sdmcar/test_1-2
 
 Run inside the mmrotate_dota env (mmrotate 1.0.0rc1 + mmdet 3.x +
 mmcv 2.x). The host esa_dlstem env's PyTorch 2.10/cu128 is incompatible
@@ -122,7 +122,7 @@ def main():
                     help="mmrotate config .py path. Auto-resolved from "
                          "the mmrotate package install when None.")
     ap.add_argument("--ckpt",
-                    default="/work/ziwen/checkpoints/mmrotate/"
+                    default="/work/anon/checkpoints/mmrotate/"
                             "rotated_faster_rcnn_r50_fpn_1x_dota_le90.pth")
     ap.add_argument("--dataset-root",
                     default="/data/ESA_DLSTEM_2025/data/trafic/SDM-Car")

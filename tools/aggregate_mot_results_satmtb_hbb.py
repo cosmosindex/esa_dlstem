@@ -24,7 +24,7 @@ DEFAULT_HOTA_CSV = Path(
     "/data/ESA_DLSTEM_2025/experiments/MOT/tracker_satmtb_hbb_LATEST/hota_summary.csv"
 )
 DEFAULT_OUT_DIR = Path(
-    "/home/ziwen/code/esa_dlstem/Formatting Instructions For NeurIPS 2026/tables/MOT"
+    "/home/anon/code/esa_dlstem/Formatting Instructions For NeurIPS 2026/tables/MOT"
 )
 
 TRACKER_META = [

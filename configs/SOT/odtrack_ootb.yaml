@@ -16,8 +16,8 @@ obb_eval_mode: ootb_aabb
 img_size: null
 
 variant: baseline_large
-yaml_path: /home/ziwen/code/esa_dlstem/ODTrack/experiments/odtrack/baseline_large.yaml
-ckpt_path: /work/ziwen/checkpoints/odtrack/baseline_large/ODTrack_ep0300.pth.tar
+yaml_path: /home/anon/code/esa_dlstem/ODTrack/experiments/odtrack/baseline_large.yaml
+ckpt_path: /work/anon/checkpoints/odtrack/baseline_large/ODTrack_ep0300.pth.tar
 
 prompt_strategy: first_frame
 prompt_interval: 10
@@ -32,4 +32,4 @@ score_thresh: 0.5
 max_wandb_images: 50
 
 wandb_project: esa-dlstem
-wandb_entity: chengziwen693
+wandb_entity: anonymous

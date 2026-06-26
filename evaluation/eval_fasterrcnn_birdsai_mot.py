@@ -45,7 +45,7 @@ BIRDSAI_ROOT = "/data/ESA_DLSTEM_2025/data/wild_animal/BIRDSAI"
 IMG_SIZE = (640, 640)
 
 CHECKPOINT = (
-    "/work/ziwen/experiments/Wrong/fasterrcnn-v2_birdsai_mot_20260312_141413"
+    "/work/anon/experiments/Wrong/fasterrcnn-v2_birdsai_mot_20260312_141413"
     "/checkpoints/best-epoch=3-val_AP50=0.000.ckpt"
 )
 
@@ -58,7 +58,7 @@ NUM_WORKERS = 0
 def main():
     torch.set_float32_matmul_precision("high")
 
-    experiment_dir = f"/work/ziwen/experiments/{RUN_NAME}_{datetime.now():%Y%m%d_%H%M%S}"
+    experiment_dir = f"/work/anon/experiments/{RUN_NAME}_{datetime.now():%Y%m%d_%H%M%S}"
 
     # ------------------------------------------------------------------
     # Data (test split only)
@@ -100,7 +100,7 @@ def main():
     # ------------------------------------------------------------------
     logger = WandbLogger(
         project="esa-dlstem",
-        entity="chengziwen693",
+        entity="anonymous",
         name=RUN_NAME,
         log_model=False,
     )

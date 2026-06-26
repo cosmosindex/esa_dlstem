@@ -15,7 +15,7 @@ Usage:
   micromamba run -n mmrotate_dota python tools/dota_zeroshot_sdmcar_tiled.py \\
       --video-id test/1-2 --tile-size 512 --tile-overlap 128 \\
       --score-thr 0.05 --iou-thr 0.3 \\
-      --out-dir /work/ziwen/experiments/dota_zeroshot_sdmcar_tiled/test_1-2_TS
+      --out-dir /work/anon/experiments/dota_zeroshot_sdmcar_tiled/test_1-2_TS
 
 Run inside the mmrotate_dota env.
 """
@@ -138,7 +138,7 @@ def main():
     ap.add_argument("--video-id", default="test/1-2")
     ap.add_argument("--config", default=None)
     ap.add_argument("--ckpt",
-                    default="/work/ziwen/checkpoints/mmrotate/"
+                    default="/work/anon/checkpoints/mmrotate/"
                             "rotated_faster_rcnn_r50_fpn_1x_dota_le90.pth")
     ap.add_argument("--dataset-root",
                     default="/data/ESA_DLSTEM_2025/data/trafic/SDM-Car")

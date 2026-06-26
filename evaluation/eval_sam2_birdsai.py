@@ -68,7 +68,7 @@ def run_mot_evaluation(
     if prompt_strategy == "every_n":
         run_name = f"sam2_every{prompt_interval}_birdsai_mot"
 
-    experiment_dir = f"/work/ziwen/experiments/{run_name}_{datetime.now():%Y%m%d_%H%M%S}"
+    experiment_dir = f"/work/anon/experiments/{run_name}_{datetime.now():%Y%m%d_%H%M%S}"
 
     dm = SAM2DataModule(
         cfg=SAM2DataModuleConfig(
@@ -92,7 +92,7 @@ def run_mot_evaluation(
 
     logger = WandbLogger(
         project="esa-dlstem",
-        entity="chengziwen693",
+        entity="anonymous",
         name=run_name,
         log_model=False,
     )
@@ -130,7 +130,7 @@ def run_sot_evaluation(
     if prompt_strategy == "every_n":
         run_name = f"sam2_every{prompt_interval}_birdsai_sot"
 
-    experiment_dir = f"/work/ziwen/experiments/{run_name}_{datetime.now():%Y%m%d_%H%M%S}"
+    experiment_dir = f"/work/anon/experiments/{run_name}_{datetime.now():%Y%m%d_%H%M%S}"
 
     dm = SAM2DataModule(
         cfg=SAM2DataModuleConfig(
@@ -154,7 +154,7 @@ def run_sot_evaluation(
 
     logger = WandbLogger(
         project="esa-dlstem",
-        entity="chengziwen693",
+        entity="anonymous",
         name=run_name,
         log_model=False,
     )

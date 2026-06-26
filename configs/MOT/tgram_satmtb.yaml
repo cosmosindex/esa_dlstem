@@ -7,7 +7,7 @@
 # centroid protocol as the HiEUM/TBD/FairMOT rows so the MOT table stays
 # comparable.
 dataset: satmtb
-checkpoint: /home/ziwen/code/esa_dlstem/TGraM/exp/mot/tgram_mbseg_union/model_best.pth
+checkpoint: /home/anon/code/esa_dlstem/TGraM/exp/mot/tgram_mbseg_union/model_best.pth
 arch: tgrammbseg
 input_w: 1024
 input_h: 1024

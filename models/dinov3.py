@@ -225,6 +225,12 @@ class DINOv3Detector(nn.Module):
         fcos_num_convs: int = 4,
         fcos_hidden: int = 256,
         fcos_center_radius: float = 1.5,
+        # Effective feature stride for the FCOS head. ViT-B/16 gives a stride-16
+        # token map (one cell per 16 px) — far too coarse for ~12 px objects, which
+        # then get zero positive locations. Set e.g. 8 to bilinearly upsample the
+        # token map 2x before the head → stride-8 grid, so tiny objects get sampled.
+        # None / patch_size → no upsample (original behaviour).
+        fcos_feat_stride: int | None = None,
         nms_thresh: float = 0.6,
         max_dets: int = 100,
         # Inference
@@ -291,7 +297,15 @@ class DINOv3Detector(nn.Module):
         # ------------------------------------------------------------------ #
         self.head_type = head_type
         self.stride = self._patch_size            # single ViT feature level
+        self._fcos_upsample = 1
         if head_type == "fcos":
+            if fcos_feat_stride is not None and fcos_feat_stride != self._patch_size:
+                if self._patch_size % fcos_feat_stride != 0:
+                    raise ValueError(
+                        f"fcos_feat_stride ({fcos_feat_stride}) must divide the "
+                        f"backbone patch size ({self._patch_size})")
+                self._fcos_upsample = self._patch_size // fcos_feat_stride
+                self.stride = fcos_feat_stride
             self.fcos_center_radius = fcos_center_radius
             self.nms_thresh = nms_thresh
             self.max_dets   = max_dets
@@ -424,6 +438,12 @@ class DINOv3Detector(nn.Module):
         if self.head_type == "fcos":
             Hp, Wp = H // self._patch_size, W // self._patch_size
             feat = tokens.transpose(1, 2).reshape(tokens.shape[0], -1, Hp, Wp)
+            if self._fcos_upsample > 1:
+                # stride-16 token map → finer grid (e.g. stride-8) so small objects
+                # get positive sample locations. self.stride is set accordingly.
+                feat = F.interpolate(feat, scale_factor=self._fcos_upsample,
+                                     mode="bilinear", align_corners=False)
+                Hp, Wp = Hp * self._fcos_upsample, Wp * self._fcos_upsample
             cls_logits, ltrb, ctr = self.head(feat)
             if self.training:
                 assert targets is not None

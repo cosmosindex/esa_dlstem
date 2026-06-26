@@ -5,7 +5,7 @@ OSTrack (ECCV 2022) is the direct predecessor to ODTrack — same lab, same
 `lib/` layout, near-identical inference API. One-stream Siamese transformer
 single-object tracker with optional Candidate Elimination (CE) module.
 
-Source: `/home/ziwen/code/esa_dlstem/OSTrack`.
+Source: `/home/anon/code/esa_dlstem/OSTrack`.
 
 This wrapper mirrors `ODTrackTracker` almost exactly; see that file for the
 rationale behind each compat stub. Differences from ODTrack:

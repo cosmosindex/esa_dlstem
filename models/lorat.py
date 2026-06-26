@@ -7,7 +7,7 @@ the init frame, then for every subsequent frame builds a search-region crop
 around the last prediction and runs a single joint forward pass through the
 ViT to get a score map + per-cell bounding box.
 
-Source: `/home/ziwen/code/esa_dlstem/LoRAT` (ECCV 2024 official repo).
+Source: `/home/anon/code/esa_dlstem/LoRAT` (ECCV 2024 official repo).
 
 Integration quirks
 ------------------
@@ -32,10 +32,10 @@ Integration quirks
 
 Usage mirrors OSTrackTracker:
     tracker = LoRATTracker(
-        lorat_root="/home/ziwen/code/esa_dlstem/LoRAT",
+        lorat_root="/home/anon/code/esa_dlstem/LoRAT",
         method_name="LoRAT",
         config_name="g-378",
-        ckpt_path="/work/ziwen/checkpoints/lorat/lorat_g378.bin",
+        ckpt_path="/work/anon/checkpoints/lorat/lorat_g378.bin",
     )
     tracker.init_video(frames)
     tracker.add_prompts(frame_idx=0, boxes=..., labels=..., obj_ids=...)

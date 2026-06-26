@@ -6,7 +6,7 @@
 # Detection+association scored with the same centroid protocol as the HiEUM/TBD
 # rows (match_metric=centroid, dist<=5px) so the MOT table stays comparable.
 dataset: rscardata
-checkpoint: /home/ziwen/code/esa_dlstem/FairMOT/exp/mot/fairmot_hrnet18_union/model_best.pth
+checkpoint: /home/anon/code/esa_dlstem/FairMOT/exp/mot/fairmot_hrnet18_union/model_best.pth
 arch: hrnet_18
 input_w: 1024
 input_h: 1024

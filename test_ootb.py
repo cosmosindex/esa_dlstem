@@ -48,7 +48,7 @@ MODELS = {
         "class_map": {"car": 1, "plane": 2, "ship": 3, "train": 4},
         "num_classes": 5,
         "checkpoint": (
-            "/work/ziwen/experiments/"
+            "/work/anon/experiments/"
             "fasterrcnn-v2_ootb_trainable_backbone_layers_20260309_205156/"
             "checkpoints/best-epoch=3-val/"
             "AP50=0.291.ckpt"
@@ -67,7 +67,7 @@ MODELS = {
         "class_map": {"car": 0, "plane": 1, "ship": 2, "train": 3},
         "num_classes": 4,
         "checkpoint": (
-            "/work/ziwen/experiments/"
+            "/work/anon/experiments/"
             "yolo11n_ootb_20260309_190516/"
             "checkpoints/best-epoch=4-val/"
             "AP50=0.237.ckpt"
@@ -122,7 +122,7 @@ def test_model(model_name: str):
 
     # Output directory
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    output_dir = f"/work/ziwen/experiments/{model_name}_test_{timestamp}"
+    output_dir = f"/work/anon/experiments/{model_name}_test_{timestamp}"
 
     # ------------------------------------------------------------------
     # Data (test split only)

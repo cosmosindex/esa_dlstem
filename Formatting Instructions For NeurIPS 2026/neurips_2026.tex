@@ -101,15 +101,7 @@
 
 
 \author{%
-Ziwen Cheng \\ CosmosIndex\\ Munich, Germany\\
-  % examples of more authors
-   \And
-Sirui Wang \\ CosmosIndex \\ Munich, Germany\\
-  \And
-Gordon Campbell \\ European Space Agency\\
-   \And
-Yuanyuan Wang \thanks{corresponding author. yuanyuan.wang@cosmos-index.com}\\
-CosmosIndex \\ Munich, Germany\\ }
+Anonymous Author(s) \\ Affiliation withheld for double-blind review \\ }
   % \texttt{email} \\
   % \And
   % Coauthor \\
@@ -144,13 +136,8 @@ occlusion, and severe motion blur from low-frame-rate high-velocity acquisition.
 \end{abstract}
 
 
-% 我们的benchmark是否可以提出一个新的 research question:"Modern CV motion
 % segmentation methods, developed on driving / generic video, generalize to
-% spaceborne video — to what extent, and where do they break?" 这个问题在 CV
-% 顶会基本没人系统地回答过,因为没有合适的 benchmark。这就是你为什么要建这个
-% benchmark 的 narrative —— 不是"another remote sensing dataset",而是"the
 % missing testbed for CV motion methods in a domain they've never been tested
-% on"。
 \section{Introduction}
 \label{sec:introduction}
 \noindent\textbf{Motivation.}
@@ -246,7 +233,6 @@ restricting their ability to evaluate model generalization.
 
 
 \section{Our Dataset}
-% For Sirui,说到这里，我们就不得不提在我们的数据集中object detection只在SAT-MTB上的部分sequences上支持，而且只有ship, plane, train被标注。这一点你要在这部分提到，后面我会说到这一点。而且你要说清楚这个object detection是包含静态物体的标注，其他数据集都有MOT标注，但是标注的都是场景中的动态物体，没有标注静态物体。
 \label{sec:dataset}
 \noindent\textbf{Design principle.}
 Space-tracker is constructed under multiple main principles:  1) Multi-modality: The dataset covers imagery from multiple platforms and constellations, including Jilin-1 sub-meter RGB, SkySat, and the International Space Station (ISS). %, and spans both visible--near-infrared (VNIR) and thermal infrared (TIR) modalities. 
@@ -437,7 +423,6 @@ much of the gap between classical association and modern learning-based
 association actually transfers to satellite data.
 
 \subsection{Evaluation Metrics}
-% 每一个精简到2-3句话
 \subhead{Single Object Tracking}
 We evaluate SOT trackers using four complementary metrics---Success Rate
 (SR), Normalized Precision (NPR), Precision (PR), and P@5---chosen to align

@@ -46,7 +46,7 @@ from datasets.viso import VISODataset              # noqa: E402
 # run with JDE_ROOT=/data/ESA_DLSTEM_2025/data/fairmot_jde_all so it does NOT
 # clobber the car-only export that backs the completed FairMOT/TGraM models.
 JDE_ROOT = os.environ.get("JDE_ROOT", "/data/ESA_DLSTEM_2025/data/fairmot_jde")
-CFG_DIR = "/home/ziwen/code/esa_dlstem/FairMOT/src/lib/cfg"
+CFG_DIR = "/home/anon/code/esa_dlstem/FairMOT/src/lib/cfg"
 
 # Canonical unified Space-tracker MOT class indices (manifest order).
 # Note VISO names planes "plane"; AIR-MOT/SAT-MTB use "airplane" — both map to 1.

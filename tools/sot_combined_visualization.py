@@ -322,9 +322,9 @@ replaced with ``_``).
 def main() -> None:
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument("--manifest",
-                   default="/home/ziwen/code/esa_dlstem/space_tracker/space_tracker.json")
+                   default="/home/anon/code/esa_dlstem/space_tracker/space_tracker.json")
     p.add_argument("--run-root", required=True,
-                   help="e.g. /work/ziwen/experiments/NeurIPS/SOT_whole_dataset_20260518")
+                   help="e.g. /work/anon/experiments/NeurIPS/SOT_whole_dataset_20260518")
     p.add_argument("--output", required=True,
                    help="e.g. /data/ESA_DLSTEM_2025/experiments/SOT_combined_viz_20260518")
     p.add_argument("--workers", type=int, default=8)

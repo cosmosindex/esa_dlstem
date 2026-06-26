@@ -298,7 +298,7 @@ def main():
     if not os.path.isfile(checkpoint):
         raise FileNotFoundError(f"checkpoint not found: {checkpoint}")
 
-    exp_root = os.environ.get("EXPERIMENT_ROOT", "/work/ziwen/experiments")
+    exp_root = os.environ.get("EXPERIMENT_ROOT", "/work/anon/experiments")
     _prefix = "tgram_oracle" if gt_oracle else ("tgram_all" if all_class else "tgram")
     run_name = f"{_prefix}_{dataset_key}"
     experiment_dir = Path(f"{exp_root}/{run_name}_{datetime.now():%Y%m%d_%H%M%S}")

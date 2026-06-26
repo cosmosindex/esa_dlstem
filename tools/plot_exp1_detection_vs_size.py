@@ -30,8 +30,8 @@ from plot_style import apply_neurips_style  # noqa: E402
 
 import matplotlib.pyplot as plt  # noqa: E402
 
-CSV = Path("/home/ziwen/code/esa_dlstem/docs/figures/exp1_detection_recall_by_size.csv")
-OUT_DIR = Path("/home/ziwen/code/esa_dlstem/docs/figures")
+CSV = Path("/home/anon/code/esa_dlstem/docs/figures/exp1_detection_recall_by_size.csv")
+OUT_DIR = Path("/home/anon/code/esa_dlstem/docs/figures")
 MIN_GT = 50  # drop bins with too few GT boxes (size outliers / noise)
 
 BIN_LABELS = ["<5", "5-8", "8-12", "12-20", "20-40", ">=40"]

@@ -168,7 +168,7 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument(
         "--root",
-        default="/work/ziwen/experiments/NeurIPS/SOT_whole_dataset_04_22",
+        default="/work/anon/experiments/NeurIPS/SOT_whole_dataset_04_22",
     )
     ap.add_argument(
         "--out",

@@ -18,7 +18,7 @@ split: test
 img_size: null
 
 gdino_config_path: GroundingDINO/groundingdino/config/GroundingDINO_SwinT_OGC.py
-gdino_checkpoint_path: /work/ziwen/checkpoints/grounding_dino/groundingdino_swint_ogc.pth
+gdino_checkpoint_path: /work/anon/checkpoints/grounding_dino/groundingdino_swint_ogc.pth
 box_threshold: 0.35
 text_threshold: 0.25
 
@@ -34,4 +34,4 @@ score_thresh: 0.5
 max_wandb_images: 50
 
 wandb_project: esa-dlstem
-wandb_entity: chengziwen693
+wandb_entity: anonymous

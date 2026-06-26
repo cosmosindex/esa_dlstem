@@ -12,7 +12,7 @@ The first attribute folder gets the real file (via `os.rename`); the rest
 are hardlinked to the same inode so disk usage does not multiply.
 
 Usage:
-    python tools/regroup_sot_vis_by_attribute.py /work/ziwen/experiments/NeurIPS/SOT_0420
+    python tools/regroup_sot_vis_by_attribute.py /work/anon/experiments/NeurIPS/SOT_0420
     python tools/regroup_sot_vis_by_attribute.py <root> --dry-run
 """
 

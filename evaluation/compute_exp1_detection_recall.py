@@ -59,7 +59,7 @@ FRCNN_DIR = "/data/ESA_DLSTEM_2025/experiments/Detection/fasterrcnn_satmtb_hbb_d
 FAIRMOT_GLOB = "/data/ESA_DLSTEM_2025/experiments/MOT/allclass_20260608/fairmot_all_satmtb_*/mot_format"
 TGRAM_GLOB = "/data/ESA_DLSTEM_2025/experiments/MOT/allclass_20260608/tgram_all_satmtb_*/mot_format"
 
-OUT_CSV = Path("/home/ziwen/code/esa_dlstem/docs/figures/exp1_detection_recall_by_size.csv")
+OUT_CSV = Path("/home/anon/code/esa_dlstem/docs/figures/exp1_detection_recall_by_size.csv")
 
 # detector -> which classes it is scored on
 DETECTOR_CLASSES = {

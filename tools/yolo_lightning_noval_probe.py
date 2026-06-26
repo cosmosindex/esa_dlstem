@@ -47,7 +47,7 @@ def main():
                              train_transform=build_train_transform((IMG, IMG)),
                              eval_transform=build_eval_transform((IMG, IMG)))
 
-    model = YOLODetector(model_name="/work/ziwen/checkpoints/yolo11l.pt",
+    model = YOLODetector(model_name="/work/anon/checkpoints/yolo11l.pt",
                          num_classes=3, enable_tracking=False,
                          conf_thresh=0.05, iou_thresh=0.5, img_size=IMG)
     module = ObjectDetectionModule(

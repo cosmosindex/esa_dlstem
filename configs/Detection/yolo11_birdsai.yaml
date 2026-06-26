@@ -31,7 +31,7 @@ class_map:
 num_classes: 5
 
 # ----- Model --------------------------------------------------------------
-model_name: /work/ziwen/checkpoints/yolo11l.pt
+model_name: /work/anon/checkpoints/yolo11l.pt
 conf_thresh: 0.05
 iou_thresh: 0.5
 img_size: 640
@@ -51,9 +51,9 @@ gradient_clip_val: 10.0
 
 # ----- Run / logging ------------------------------------------------------
 run_name: yolo11l_birdsai
-experiment_root: /work/ziwen/experiments
+experiment_root: /work/anon/experiments
 wandb_project: esa-dlstem
-wandb_entity: chengziwen693
+wandb_entity: anonymous
 skip_visualization: true
 visualization_score_thresh: 0.5
 

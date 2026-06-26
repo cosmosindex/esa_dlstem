@@ -49,4 +49,4 @@ dump_mot_format: true
 mot_dump_score_thresh: 0.0
 
 wandb_project: esa-dlstem
-wandb_entity: chengziwen693
+wandb_entity: anonymous

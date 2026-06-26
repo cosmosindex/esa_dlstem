@@ -36,7 +36,7 @@ from plot_style import apply_neurips_style  # noqa: E402
 import matplotlib.pyplot as plt  # noqa: E402
 
 ROOT = Path("/data/ESA_DLSTEM_2025/data/trafic")
-OUT_DIR = Path("/home/ziwen/code/esa_dlstem/docs/bbox_stats")
+OUT_DIR = Path("/home/anon/code/esa_dlstem/docs/bbox_stats")
 CACHE = Path("/tmp/mot_bbox_size_cache.pkl")  # delete to force re-parse
 
 CLASSES = ["car", "airplane", "ship", "train"]

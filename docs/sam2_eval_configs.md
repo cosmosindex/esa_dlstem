@@ -51,7 +51,7 @@ max_wandb_images: 50
 
 # --- W&B ---
 wandb_project: esa-dlstem
-wandb_entity: chengziwen693
+wandb_entity: anonymous
 ```
 
 ## Key Design Decisions

@@ -294,7 +294,7 @@ def main():
     ap.add_argument("--dataset", required=True,
                     help="Dataset name: viso_no_car / viso / rscardata")
     ap.add_argument("--dataset-root", required=True)
-    ap.add_argument("--raft-ckpt", default="/work/ziwen/checkpoints/raft/raft-things.pth")
+    ap.add_argument("--raft-ckpt", default="/work/anon/checkpoints/raft/raft-things.pth")
     ap.add_argument("--tau", type=float, default=0.5,
                     help="Per-tracklet motion threshold (pixels/frame).")
     ap.add_argument("--agg", choices=("max", "p80", "mean"), default="p80")

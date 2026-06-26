@@ -10,7 +10,7 @@
 #     dataset's native-res training bucket from _ALLCLASS_INPUT.
 #   * run per split via --dataset {rscardata,satmtb,sdmcar,airmot,viso_no_car}.
 dataset: rscardata          # default; overridden per-run by --dataset
-checkpoint: /home/ziwen/code/esa_dlstem/TGraM/exp/mot/tgram_mbseg_union_all/model_best.pth
+checkpoint: /home/anon/code/esa_dlstem/TGraM/exp/mot/tgram_mbseg_union_all/model_best.pth
 arch: tgrammbseg
 num_classes: 4
 num_frames: 3               # temporal clip length (TGraM graph module)

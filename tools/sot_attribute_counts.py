@@ -103,7 +103,7 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument(
         "--out",
-        default="/work/ziwen/experiments/NeurIPS/SOT_whole_dataset_04_22/"
+        default="/work/anon/experiments/NeurIPS/SOT_whole_dataset_04_22/"
                 "analysis/unified_attributes/attribute_counts.csv",
     )
     args = ap.parse_args()

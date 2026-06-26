@@ -2,7 +2,7 @@
 # Same UNION model as the other fairmot_*.yaml. SAT-MTB bucket = 1024x1024 (native).
 # Centroid protocol matches the HiEUM/TBD rows so the MOT table stays comparable.
 dataset: satmtb
-checkpoint: /home/ziwen/code/esa_dlstem/FairMOT/exp/mot/fairmot_hrnet18_union/model_best.pth
+checkpoint: /home/anon/code/esa_dlstem/FairMOT/exp/mot/fairmot_hrnet18_union/model_best.pth
 arch: hrnet_18
 input_w: 1024
 input_h: 1024

@@ -97,9 +97,9 @@ precision: 16-mixed
 
 # ----- Run / logging ------------------------------------------------------
 run_name: fasterrcnn_satmtb_hbb
-experiment_root: /work/ziwen/experiments
+experiment_root: /work/anon/experiments
 wandb_project: esa-dlstem
-wandb_entity: chengziwen693
+wandb_entity: anonymous
 visualization_max_wandb_images: 50
 visualization_score_thresh: 0.5
 visualization_iou_thresh: 0.5

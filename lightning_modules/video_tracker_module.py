@@ -206,7 +206,14 @@ class VideoTrackerEvaluationModule(L.LightningModule):
             # so datasets like AIR-MOT drive SAM3 with a single noun phrase
             # per video instead of looping over every class.
             if hasattr(self.model, "set_text_prompt"):
-                self.model.set_text_prompt(getattr(clip, "category", "") or None)
+                # Drive SAM3 with the clip's dominant category as a single noun
+                # phrase only when it names a class the tracker knows (e.g.
+                # AIR-MOT "airplane"). Datasets whose videos mix classes set
+                # category="mixed" (BIRDSAI MOT) — that isn't a prompt, so pass
+                # None and let the tracker loop over every class prompt instead.
+                cat = getattr(clip, "category", "") or None
+                known = set(getattr(self.model, "class_names", []) or [])
+                self.model.set_text_prompt(cat if cat in known else None)
             preds = self.model.propagate()
             # Cross-clip ID stitching only matters for MOT — skip in det-only.
             if not self.det_only_mode:

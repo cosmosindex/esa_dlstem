@@ -13,8 +13,8 @@ eval_mode: sot
 img_size: null
 
 variant: r50_l234_dwxcorr
-yaml_path: /home/ziwen/code/esa_dlstem/configs/SOT/pysot_siamrpn_r50_l234_dwxcorr.yaml
-ckpt_path: /work/ziwen/checkpoints/siamrpn/siamrpn_r50_l234_dwxcorr.pth
+yaml_path: /home/anon/code/esa_dlstem/configs/SOT/pysot_siamrpn_r50_l234_dwxcorr.yaml
+ckpt_path: /work/anon/checkpoints/siamrpn/siamrpn_r50_l234_dwxcorr.pth
 
 prompt_strategy: first_frame
 prompt_interval: 10
@@ -29,4 +29,4 @@ score_thresh: 0.5
 max_wandb_images: 50
 
 wandb_project: esa-dlstem
-wandb_entity: chengziwen693
+wandb_entity: anonymous

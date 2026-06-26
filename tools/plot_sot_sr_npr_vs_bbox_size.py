@@ -16,7 +16,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 DEFAULT_DIR = Path(
-    "/work/ziwen/experiments/NeurIPS/SOT_whole_dataset_04_22/analysis/perf_vs_bbox_size_bin2"
+    "/work/anon/experiments/NeurIPS/SOT_whole_dataset_04_22/analysis/perf_vs_bbox_size_bin2"
 )
 
 METRIC_COLORS = {"SR": "#1f77b4", "NPR": "#2ca02c"}

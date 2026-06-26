@@ -6,7 +6,7 @@ Unlike the SAM family, it works frame-by-frame: given an initial bbox on one
 frame it encodes a template, then processes each subsequent frame's search
 region and regresses a new HBB. It does NOT produce segmentation masks.
 
-Source: `/home/ziwen/code/esa_dlstem/ODTrack` (cloned from yangchris11/ODTrack).
+Source: `/home/anon/code/esa_dlstem/ODTrack` (cloned from yangchris11/ODTrack).
 
 Integration quirks
 ------------------

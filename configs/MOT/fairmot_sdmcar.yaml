@@ -3,7 +3,7 @@
 # (native 1920x1080 + 8px H-pad for HRNet stride-32).
 # Centroid protocol matches the HiEUM/TBD rows so the MOT table stays comparable.
 dataset: sdmcar
-checkpoint: /home/ziwen/code/esa_dlstem/FairMOT/exp/mot/fairmot_hrnet18_union/model_best.pth
+checkpoint: /home/anon/code/esa_dlstem/FairMOT/exp/mot/fairmot_hrnet18_union/model_best.pth
 arch: hrnet_18
 input_w: 1920
 input_h: 1088

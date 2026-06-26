@@ -153,8 +153,8 @@ resizing (preserves aspect ratio).
 
 ## Logging / outputs
 
-- **W&B** project `esa-dlstem`, entity `chengziwen693`, run name `fasterrcnn_satmot`.
-- **Local experiment dir**: `/work/ziwen/experiments/fasterrcnn_satmot_<TS>/`
+- **W&B** project `esa-dlstem`, entity `anonymous`, run name `fasterrcnn_satmot`.
+- **Local experiment dir**: `/work/anon/experiments/fasterrcnn_satmot_<TS>/`
   - `checkpoints/best-epoch=<N>-val_mAP=<X>.ckpt`
   - `pr_curve.json` / `pr_curve.png` (test split, written by
     `ObjectDetectionModule._save_pr_curves` to `default_root_dir`)
@@ -206,7 +206,7 @@ micromamba run -n esa_dlstem python training_scripts/train_fasterrcnn_satmot.py 
 ```bash
 micromamba run -n esa_dlstem python eval_fasterrcnn_satmot.py \
   --config configs/Detection/fasterrcnn_satmot.yaml \
-  --ckpt   /work/ziwen/experiments/fasterrcnn_satmot_<TS>/checkpoints/best-*.ckpt
+  --ckpt   /work/anon/experiments/fasterrcnn_satmot_<TS>/checkpoints/best-*.ckpt
 ```
 
 ## Open follow-ups (not done, may want to revisit)

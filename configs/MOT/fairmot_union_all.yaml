@@ -9,7 +9,7 @@
 #     dataset's native-res training bucket from _ALLCLASS_INPUT.
 #   * run per split via --dataset {rscardata,satmtb,sdmcar,airmot,viso_no_car}.
 dataset: rscardata          # default; overridden per-run by --dataset
-checkpoint: /home/ziwen/code/esa_dlstem/FairMOT/exp/mot/fairmot_hrnet18_union_all/model_best.pth
+checkpoint: /home/anon/code/esa_dlstem/FairMOT/exp/mot/fairmot_hrnet18_union_all/model_best.pth
 arch: hrnet_18
 num_classes: 4
 conf_thres: 0.4

@@ -13,9 +13,9 @@ eval_mode: sot
 img_size: null
 
 variant: g-378
-lorat_root: /home/ziwen/code/esa_dlstem/LoRAT
+lorat_root: /home/anon/code/esa_dlstem/LoRAT
 method_name: LoRAT
-ckpt_path: /work/ziwen/checkpoints/lorat/lorat_g378.bin
+ckpt_path: /work/anon/checkpoints/lorat/lorat_g378.bin
 
 prompt_strategy: first_frame
 prompt_interval: 10
@@ -30,4 +30,4 @@ score_thresh: 0.5
 max_wandb_images: 50
 
 wandb_project: esa-dlstem
-wandb_entity: chengziwen693
+wandb_entity: anonymous

@@ -35,7 +35,7 @@ def main():
     dm.setup("fit")
 
     torch.manual_seed(0)
-    model = YOLODetector(model_name="/work/ziwen/checkpoints/yolo11l.pt",
+    model = YOLODetector(model_name="/work/anon/checkpoints/yolo11l.pt",
                          num_classes=3, enable_tracking=False, img_size=IMG).to(DEVICE)
     params = [p for p in model.parameters() if p.requires_grad]
     opt = torch.optim.SGD(params, lr=0.01, momentum=0.937, nesterov=True, weight_decay=5e-4)

@@ -65,7 +65,7 @@ def grad_norm(params):
 def run_config(name, batches, *, opt_kind, lr, amp_dtype, grad_clip, nan_skip):
     print(f"\n{'='*70}\nCONFIG: {name}\n  opt={opt_kind} lr={lr} amp={amp_dtype} clip={grad_clip} nan_skip={nan_skip}\n{'='*70}")
     torch.manual_seed(0)
-    model = YOLODetector(model_name="/work/ziwen/checkpoints/yolo11l.pt",
+    model = YOLODetector(model_name="/work/anon/checkpoints/yolo11l.pt",
                          num_classes=3, enable_tracking=False, img_size=IMG).to(DEVICE)
     model.train()
     params = [p for p in model.parameters() if p.requires_grad]

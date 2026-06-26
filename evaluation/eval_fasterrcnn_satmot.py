@@ -13,7 +13,7 @@ compared at the same granularity.
 Usage:
     python eval_fasterrcnn_satmot.py \
         --config configs/Detection/fasterrcnn_satmot.yaml \
-        --ckpt   /work/ziwen/experiments/fasterrcnn_satmot_<TS>/checkpoints/best-*.ckpt
+        --ckpt   /work/anon/experiments/fasterrcnn_satmot_<TS>/checkpoints/best-*.ckpt
 """
 
 from __future__ import annotations

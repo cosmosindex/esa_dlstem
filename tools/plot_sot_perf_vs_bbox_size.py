@@ -33,7 +33,7 @@ SUCCESS_THRESHOLDS = np.linspace(0, 1, 21)           # SR  curve x-axis
 PRECISION_THRESHOLDS = np.arange(0, 31, dtype=float)  # PR  curve x-axis (OOTB)
 NORM_PRECISION_THRESHOLDS = np.linspace(0, 0.5, 21)   # NPR curve x-axis
 
-EXP_ROOT = Path("/work/ziwen/experiments/NeurIPS/SOT_whole_dataset_04_22")
+EXP_ROOT = Path("/work/anon/experiments/NeurIPS/SOT_whole_dataset_04_22")
 DATA_ROOTS = {
     "OOTB":   Path("/data/ESA_DLSTEM_2025/data/trafic/OOTB"),
     "SatSOT": Path("/data/ESA_DLSTEM_2025/data/trafic/SatSOT"),

@@ -56,7 +56,7 @@ def main():
     if prompt_strategy == "every_n":
         run_name = f"odtrack_{variant}_every{prompt_interval}_{dataset_name.lower()}"
 
-    exp_root = os.environ.get("EXPERIMENT_ROOT", "/work/ziwen/experiments")
+    exp_root = os.environ.get("EXPERIMENT_ROOT", "/work/anon/experiments")
     experiment_dir = f"{exp_root}/{run_name}_{datetime.now():%Y%m%d_%H%M%S}"
 
     img_size = cfg.get("img_size")
@@ -95,7 +95,7 @@ def main():
 
     logger = WandbLogger(
         project=cfg.get("wandb_project", "esa-dlstem"),
-        entity=cfg.get("wandb_entity", "chengziwen693"),
+        entity=cfg.get("wandb_entity", "anonymous"),
         name=run_name,
         log_model=False,
     )

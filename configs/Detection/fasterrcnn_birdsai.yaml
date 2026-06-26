@@ -88,9 +88,9 @@ precision: 16-mixed
 
 # ----- Run / logging ------------------------------------------------------
 run_name: fasterrcnn_birdsai
-experiment_root: /work/ziwen/experiments
+experiment_root: /work/anon/experiments
 wandb_project: esa-dlstem
-wandb_entity: chengziwen693
+wandb_entity: anonymous
 skip_visualization: true
 visualization_score_thresh: 0.5
 

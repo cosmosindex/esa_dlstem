@@ -14,8 +14,8 @@ img_size: null
 
 # OSTrack variant: vitb_384_mae_ce_32x4_ep300 = paper's main "OSTrack-384" with CE
 variant: vitb_384_mae_ce_32x4_ep300
-yaml_path: /home/ziwen/code/esa_dlstem/OSTrack/experiments/ostrack/vitb_384_mae_ce_32x4_ep300.yaml
-ckpt_path: /work/ziwen/checkpoints/ostrack/vitb_384_mae_ce_32x4_ep300/OSTrack_ep0300.pth.tar
+yaml_path: /home/anon/code/esa_dlstem/OSTrack/experiments/ostrack/vitb_384_mae_ce_32x4_ep300.yaml
+ckpt_path: /work/anon/checkpoints/ostrack/vitb_384_mae_ce_32x4_ep300/OSTrack_ep0300.pth.tar
 
 prompt_strategy: first_frame
 prompt_interval: 10
@@ -30,4 +30,4 @@ score_thresh: 0.5
 max_wandb_images: 50
 
 wandb_project: esa-dlstem
-wandb_entity: chengziwen693
+wandb_entity: anonymous

@@ -77,7 +77,7 @@ Tool: `tools/raft_filter_tracklets.py`. RAFT repo:
 | Hyperparameter           | Value                                                    |
 |--------------------------|----------------------------------------------------------|
 | Variant                  | RAFT (large), `small=False`, no mixed precision          |
-| Pretrained weights       | `raft-things.pth` (Sintel-style, pretrained on FlyingThings3D) at `/work/ziwen/checkpoints/raft/` |
+| Pretrained weights       | `raft-things.pth` (Sintel-style, pretrained on FlyingThings3D) at `/work/anon/checkpoints/raft/` |
 | Refinement iterations    | 20 (`iters=20`, `test_mode=True`)                        |
 | Frame pairing            | consecutive: `F_t = flow(I_{t-1} → I_t)`                 |
 | First-frame fallback     | `F_0 = flow(I_0 → I_1)` (so each tracklet gets ≥1 sample)|

@@ -59,7 +59,7 @@ def main():
     torch.set_float32_matmul_precision("high")
 
     run_name = cfg["run_name"]
-    exp_root = cfg.get("experiment_root", "/work/ziwen/experiments")
+    exp_root = cfg.get("experiment_root", "/work/anon/experiments")
     experiment_dir = f"{exp_root}/{run_name}_{datetime.now():%Y%m%d_%H%M%S}"
 
     img_size = cfg.get("img_size", 640)
@@ -98,6 +98,7 @@ def main():
         fcos_num_convs=cfg.get("fcos_num_convs", 4),
         fcos_hidden=cfg.get("fcos_hidden", 256),
         fcos_center_radius=cfg.get("fcos_center_radius", 1.5),
+        fcos_feat_stride=cfg.get("fcos_feat_stride"),
         nms_thresh=cfg.get("nms_thresh", 0.6),
         max_dets=cfg.get("max_dets", 100),
         conf_thresh=cfg.get("conf_thresh", 0.05),
@@ -119,7 +120,7 @@ def main():
     # ------------------------------------------------------------------
     logger = WandbLogger(
         project=cfg.get("wandb_project", "esa-dlstem"),
-        entity=cfg.get("wandb_entity", "chengziwen693"),
+        entity=cfg.get("wandb_entity", "anonymous"),
         name=run_name,
         log_model=False,
     )
@@ -135,13 +136,18 @@ def main():
             save_top_k=1,
             filename="best-epoch={epoch}-val_mAP={val/mAP:.3f}",
             auto_insert_metric_name=False,
+            save_last=True,   # also keep last.ckpt (final epoch) — guards against
+                              # a too-early val-selected best (see birdsai configs)
         ),
-        EarlyStopping(
+    ]
+    # Early stopping is opt-in (default on for back-compat). BIRDSAI sets
+    # early_stopping: false so it trains the full schedule and last.ckpt = final epoch.
+    if cfg.get("early_stopping", True):
+        callbacks.append(EarlyStopping(
             monitor=cfg.get("monitor_metric", "val/mAP"),
             mode=cfg.get("monitor_mode", "max"),
             patience=cfg.get("patience", 10),
-        ),
-    ]
+        ))
     # Visualization is opt-out via `skip_visualization: true` (BIRDSAI runs dump
     # per-frame predictions to JSON in a separate eval step instead).
     if not cfg.get("skip_visualization", False):

@@ -30,6 +30,7 @@ from lightning_modules import (
     SAM2VisualizationCallback,
     SAM2SOTEvalCallback,
     MOTFormatDumpCallback,
+    VideoPredictionDumpCallback,
 )
 from transforms import build_eval_transform
 
@@ -70,7 +71,7 @@ def main():
     if prompt_strategy == "every_n":
         run_name = f"{run_prefix}_every{prompt_interval}_{bench_slug}"
 
-    exp_root = os.environ.get("EXPERIMENT_ROOT", "/work/ziwen/experiments")
+    exp_root = os.environ.get("EXPERIMENT_ROOT", "/work/anon/experiments")
     experiment_dir = f"{exp_root}/{run_name}_{datetime.now():%Y%m%d_%H%M%S}"
 
     # --- Transform ---
@@ -99,14 +100,23 @@ def main():
     tracker_type = cfg.get("tracker_type", "box")
     is_sam31 = run_prefix == "sam3p1"
     if tracker_type == "text":
+        # Optional ``text_prompts`` decouples the noun phrase shown to SAM3
+        # from the dataset's GT category name (e.g. GT "human" but prompt
+        # "person", which SAM3 detects far better). Maps GT-class-name →
+        # prompt-string; class ids stay tied to ``class_map`` so predictions
+        # still match GT labels. Datasets without it keep GT names as prompts.
+        text_prompt_map = cfg.get("text_prompts", {})
+        ordered = sorted(class_map.items(), key=lambda kv: kv[1])
         # Class names ordered by their integer id, so label assignment is stable
-        class_names_ordered = [
-            name for name, _ in sorted(class_map.items(), key=lambda kv: kv[1])
-        ]
+        class_names_ordered = [text_prompt_map.get(name, name) for name, _ in ordered]
+        # label_to_id keyed by the *prompt* string the tracker iterates over.
+        label_to_id = {
+            text_prompt_map.get(name, name): idx for name, idx in class_map.items()
+        }
         if is_sam31:
             tracker = SAM31TextTracker(
                 class_names=class_names_ordered,
-                label_to_id=class_map,
+                label_to_id=label_to_id,
                 checkpoint_path=cfg.get("sam3_checkpoint_path"),
                 max_num_objects=cfg.get("sam31_max_num_objects", 16),
                 multiplex_count=cfg.get("sam31_multiplex_count", 16),
@@ -121,7 +131,7 @@ def main():
         else:
             tracker = SAM3TextTracker(
                 class_names=class_names_ordered,
-                label_to_id=class_map,
+                label_to_id=label_to_id,
                 checkpoint_path=cfg.get("sam3_checkpoint_path"),
                 apply_temporal_disambiguation=cfg.get("apply_temporal_disambiguation", True),
             )
@@ -149,23 +159,42 @@ def main():
     # --- Logger ---
     logger = WandbLogger(
         project=cfg.get("wandb_project", "esa-dlstem"),
-        entity=cfg.get("wandb_entity", "chengziwen693"),
+        entity=cfg.get("wandb_entity", "anonymous"),
         name=run_name,
         log_model=False,
     )
 
     # --- Callbacks ---
 
-    callbacks = [
-        SAM2VisualizationCallback(
-            class_names=class_names,
-            output_dir=experiment_dir,
-            iou_thresh=cfg.get("iou_thresh", 0.3),
-            max_wandb_images=cfg.get("max_wandb_images", 50),
-            score_thresh=cfg.get("score_thresh", 0.5),
-            sot_mode=sot_mode,
-        ),
-    ]
+    callbacks = []
+
+    # Visualization is optional — skipped for the BIRDSAI dump-only run where
+    # we only want predictions.json (combined viz is built separately later).
+    if not cfg.get("skip_visualization", False):
+        callbacks.append(
+            SAM2VisualizationCallback(
+                class_names=class_names,
+                output_dir=experiment_dir,
+                iou_thresh=cfg.get("iou_thresh", 0.3),
+                max_wandb_images=cfg.get("max_wandb_images", 50),
+                score_thresh=cfg.get("score_thresh", 0.5),
+                sot_mode=sot_mode,
+            )
+        )
+
+    # Dump every frame's predictions to predictions.json (same schema as
+    # eval_birdsai_detect_track.py so the JSON aligns across models).
+    if cfg.get("dump_predictions", False):
+        callbacks.append(
+            VideoPredictionDumpCallback(
+                output_dir=experiment_dir,
+                class_names=class_names,
+                model_name=run_prefix,
+                dataset=dataset_name,
+                split=cfg.get("split", "test"),
+                score_thresh=cfg.get("pred_dump_score_thresh", 0.0),
+            )
+        )
 
     if sot_mode:
         callbacks.append(

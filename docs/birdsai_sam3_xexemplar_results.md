@@ -52,7 +52,7 @@ eval GT, per the project decision to use the refined labels.
 | **OVERALL** | 0.195 | 0.581 | **0.292** | **−1.86** | |
 
 Run: 16/16 videos, ~144 min, GPU0, `SEED_CAP=24`, gated re-detect r=8. Output
-`/work/ziwen/experiments/sam3_birdsai_xexemplar_full_20260622_142509`.
+`/work/anon/experiments/sam3_birdsai_xexemplar_full_20260622_142509`.
 
 ## Where it sits vs the detectors and the oracle rows
 

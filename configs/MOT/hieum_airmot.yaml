@@ -15,7 +15,7 @@ eval_mode: mot
 split: test
 img_size: null
 
-hieum_checkpoint_path: /work/ziwen/checkpoints/hieum/model_best.pth
+hieum_checkpoint_path: /work/anon/checkpoints/hieum/model_best.pth
 hieum_layers: 3
 hieum_seq_len: 20
 hieum_image_size: [1024, 1024]
@@ -33,4 +33,4 @@ score_thresh: 0.2
 max_wandb_images: 50
 
 wandb_project: esa-dlstem
-wandb_entity: chengziwen693
+wandb_entity: anonymous

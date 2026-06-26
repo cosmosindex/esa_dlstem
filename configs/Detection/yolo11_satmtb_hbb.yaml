@@ -31,7 +31,7 @@ num_classes: 3
 # ----- Model --------------------------------------------------------------
 # yolo11l = "large" (~25 M params). Match scale with FasterRCNN-R50-FPN.
 # Switch to yolo11x for the largest variant or yolo11m for a smaller fit.
-model_name: /work/ziwen/checkpoints/yolo11l.pt
+model_name: /work/anon/checkpoints/yolo11l.pt
 conf_thresh: 0.05
 iou_thresh: 0.5
 img_size: 1024              # match FasterRCNN min_size for fair comparison
@@ -55,9 +55,9 @@ gradient_clip_val: 10.0
 
 # ----- Run / logging ------------------------------------------------------
 run_name: yolo11l_satmtb_hbb
-experiment_root: /work/ziwen/experiments
+experiment_root: /work/anon/experiments
 wandb_project: esa-dlstem
-wandb_entity: chengziwen693
+wandb_entity: anonymous
 visualization_max_wandb_images: 50
 visualization_score_thresh: 0.5
 visualization_iou_thresh: 0.5

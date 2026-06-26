@@ -36,7 +36,7 @@ import torch
 from PIL import Image
 import yaml
 
-sys.path.insert(0, "/home/ziwen/code/esa_dlstem")
+sys.path.insert(0, "/home/anon/code/esa_dlstem")
 
 from datasets.airmot import AIRMOTDataset
 from datasets.satmtb import SATMTBDataset
@@ -46,10 +46,10 @@ from lightning_modules import ObjectDetectionModule
 
 
 _DEFAULT_CKPT = (
-    "/work/ziwen/experiments/fasterrcnn_satmtb_hbb_20260430_075421/"
+    "/work/anon/experiments/fasterrcnn_satmtb_hbb_20260430_075421/"
     "checkpoints/best-epoch=5-val_mAP=0.545.ckpt"
 )
-_DEFAULT_CONFIG = "/home/ziwen/code/esa_dlstem/configs/Detection/fasterrcnn_satmtb_hbb.yaml"
+_DEFAULT_CONFIG = "/home/anon/code/esa_dlstem/configs/Detection/fasterrcnn_satmtb_hbb.yaml"
 _DEFAULT_OUT_ROOT = "/data/ESA_DLSTEM_2025/experiments/Detection/fasterrcnn_satmtb_hbb_dets_cache"
 
 

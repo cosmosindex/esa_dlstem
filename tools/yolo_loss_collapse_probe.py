@@ -54,7 +54,7 @@ def main():
     dm.setup("fit")
 
     torch.manual_seed(0)
-    model = YOLODetector(model_name="/work/ziwen/checkpoints/yolo11l.pt",
+    model = YOLODetector(model_name="/work/anon/checkpoints/yolo11l.pt",
                          num_classes=3, enable_tracking=False,
                          conf_thresh=0.05, iou_thresh=0.5, img_size=IMG).to(DEVICE)
     params = [p for p in model.parameters() if p.requires_grad]

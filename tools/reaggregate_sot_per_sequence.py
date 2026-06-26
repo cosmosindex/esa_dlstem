@@ -25,7 +25,7 @@ Outputs: ``<root>/<tracker>/<run>/test_metrics_per_seq.json`` (per run) and
 Usage::
 
     micromamba run -n esa_dlstem python tools/reaggregate_sot_per_sequence.py \
-        --root /work/ziwen/experiments/NeurIPS/SOT_whole_dataset_04_22
+        --root /work/anon/experiments/NeurIPS/SOT_whole_dataset_04_22
 """
 
 from __future__ import annotations
@@ -392,7 +392,7 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument(
         "--root",
-        default="/work/ziwen/experiments/NeurIPS/SOT_whole_dataset_04_22",
+        default="/work/anon/experiments/NeurIPS/SOT_whole_dataset_04_22",
         help="Experiment root containing <tracker>/<run>/ subdirs.",
     )
     ap.add_argument(

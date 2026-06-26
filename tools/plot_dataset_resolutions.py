@@ -20,7 +20,7 @@ from plot_style import apply_neurips_style
 apply_neurips_style()
 
 DATA_ROOT = Path("/data/ESA_DLSTEM_2025/data/trafic")
-OUT_DIR = Path("/home/ziwen/code/esa_dlstem/docs/figures")
+OUT_DIR = Path("/home/anon/code/esa_dlstem/docs/figures")
 CACHE_PATH = OUT_DIR / "dataset_resolutions_cache.json"
 
 

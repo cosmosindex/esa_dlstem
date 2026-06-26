@@ -117,7 +117,7 @@ def main():
         False if args.no_wandb else
         WandbLogger(
             project=cfg.get("wandb_project", "esa-dlstem"),
-            entity=cfg.get("wandb_entity", "chengziwen693"),
+            entity=cfg.get("wandb_entity", "anonymous"),
             name=f"{cfg['run_name']}_reeval_imgsz{args.img_size}",
             log_model=False,
         )

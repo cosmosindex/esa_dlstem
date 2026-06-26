@@ -8,7 +8,7 @@ cross-correlation. This wrapper uses the SenseTime pysot repo's
 clean per-frame `init(img, bbox) / track(img)` API, so there is almost no
 glue needed.
 
-Source: `/home/ziwen/code/esa_dlstem/pysot` (SenseTime pysot).
+Source: `/home/anon/code/esa_dlstem/pysot` (SenseTime pysot).
 
 Integration quirks
 ------------------
@@ -28,7 +28,7 @@ Integration quirks
 Usage mirrors OSTrackTracker:
     tracker = SiamRPNTracker_Wrapper(
         yaml_path="configs/SOT/pysot_siamrpn_r50_l234_dwxcorr.yaml",
-        ckpt_path="/work/ziwen/checkpoints/siamrpn/siamrpn_r50_l234_dwxcorr.pth",
+        ckpt_path="/work/anon/checkpoints/siamrpn/siamrpn_r50_l234_dwxcorr.pth",
     )
     tracker.init_video(frames)
     tracker.add_prompts(frame_idx=0, boxes=..., labels=..., obj_ids=...)

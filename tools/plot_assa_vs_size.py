@@ -26,7 +26,7 @@ import matplotlib.pyplot as plt  # noqa: E402
 
 ROOT = Path("/data/ESA_DLSTEM_2025/experiments/MOT/exp2_oracle_20260608")
 CSV = ROOT / "assa_vs_size.csv"
-OUT_DIR = Path("/home/ziwen/code/esa_dlstem/docs/figures")
+OUT_DIR = Path("/home/anon/code/esa_dlstem/docs/figures")
 
 # bin_idx 0..5 -> label (matches compute_hota_by_size.py)
 BINS = [(0, "<5"), (1, "5–8"), (2, "8–12"),
