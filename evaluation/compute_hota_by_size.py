@@ -249,8 +249,12 @@ def _eval_bin(dataset_name, methods, runs, videos, track_sizes,
             box_by_fid[fid] = np.asarray(keep_boxes, dtype=np.float32).reshape(-1, 4)
         inbin_gt_boxes[seq] = box_by_fid
         (gt_root / seq / "gt" / "gt.txt").write_text("\n".join(lines))
+        # seqLength must cover the max 1-indexed timestep, not the annotated-frame
+        # COUNT — BIRDSAI frames are sparse (count < max id). For contiguous-frame
+        # datasets (Exp2) max(fid)+offset == len(frame_ids), so this is unchanged.
+        seq_len = max((int(f) + offset for f in frame_ids), default=0)
         (gt_root / seq / "seqinfo.ini").write_text(
-            f"[Sequence]\nname={seq}\nseqLength={len(frame_ids)}\n"
+            f"[Sequence]\nname={seq}\nseqLength={seq_len}\n"
             "imWidth=1024\nimHeight=1024\nimExt=.jpg\n")
         seq_names.append(seq)
 
