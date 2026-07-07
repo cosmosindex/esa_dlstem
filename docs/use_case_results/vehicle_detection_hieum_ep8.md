@@ -20,8 +20,18 @@ author comparison. From here on, **ep8 is the detection result for this use case
 - Matching: HiEUM paper protocol — **centroid Euclidean distance ≤ 5 px** (not IoU).
 - Input: full-resolution clips, `hieum_image_size = 1024²`, `seq_len = 20`.
 - **best-F1** = each set evaluated at its own optimal score threshold via a shared
-  sweep (`score_thresh = 0.01`, sweep floor `0.02`); best-Precision / best-Recall
-  are that operating point. This is the primary detection metric.
+  sweep; best-Precision / best-Recall are that operating point. This is the primary
+  detection metric. Two thresholds are involved:
+  - `score_thresh = 0.01` — the **model output floor**: at inference HiEUM keeps
+    every detection with score ≥ 0.01, so the candidate pool handed to the sweep is
+    complete.
+  - **sweep floor `0.02`** — the **lowest candidate cutoff the sweep searches**: F1
+    is maximised only over thresholds ≥ 0.02, never below. It sits just above the
+    model floor so that at every evaluated cutoff (≥ 0.02) the candidate pool
+    (≥ 0.01) is still complete — the sweep can never brush the model's output floor.
+
+  The winning per-set thresholds (`best-thr` below, 0.16–0.20) land well above the
+  0.02 floor, so the floor does not affect the reported operating points.
 - Object size: on the COCO area split, **every car box lands in the `small`
   bucket** on all three sets (there are effectively no large cars in satellite
   video), so a small-vs-large breakdown is degenerate here and is omitted.
@@ -35,21 +45,25 @@ author comparison. From here on, **ep8 is the detection result for this use case
 | **SDM-Car** | 290,010 | **0.6324** | 0.7563 | 0.5693 | 0.20 |
 | **Mean** | — | **0.7495** | 0.8283 | 0.7038 | — |
 
-## Detection counts & tracking-context metrics
+## Detection counts (lowest-threshold operating point)
 
-At each set's best-F1 threshold (TP / FP / FN, centroid ≤ 5 px). MOTA and IDF1
-are reported for context — MOTA is negative because dense small cars generate many
-FPs under the strict 5-px match; this is a detection-recall property of the task,
-not a checkpoint defect.
+TP / FP / FN recorded at each run's default `per_category` operating point — the
+sweep's **lowest cutoff (≈0.02)**, *not* the best-F1 threshold of the table above.
+At this near-floor threshold recall is close to its ceiling (0.81–0.92) while FP is
+large: the small-car detection-recall picture — the model finds most cars but
+over-fires under the strict 5-px centroid match. Matching is centroid ≤ 5 px.
 
-| Test set | TP | FP | FN | IDsw | MOTA | IDF1 |
-|---|---:|---:|---:|---:|---:|---:|
-| RsCarData | 141,800 | 142,310 | 11,628 | 0 | −0.003 | 0.648 |
-| SAT-MTB (car) | 206,792 | 282,098 | 49,025 | 0 | −0.294 | 0.555 |
-| SDM-Car | 179,727 | 247,598 | 110,283 | 0 | −0.234 | 0.501 |
+| Test set | num GT | TP | FP | FN |
+|---|---:|---:|---:|---:|
+| RsCarData | 153,428 | 141,800 | 142,310 | 11,628 |
+| SAT-MTB (car) | 255,817 | 206,792 | 282,098 | 49,025 |
+| SDM-Car | 290,010 | 179,727 | 247,598 | 110,283 |
 
-(The TP/FP/FN above are recorded at the fixed default operating point in each run's
-`per_category`; the best-thr P/R in the table above come from the score sweep.)
+(HiEUM is **detector-only** — no cross-frame identity — so MOT metrics like MOTA /
+IDF1 / ID-switches degenerate to detection quantities here: IDsw is 0 by
+construction, and MOTA reduces to `1 − (FP+FN)/GT`, adding nothing over the TP/FP/FN
+above. They are therefore omitted. Only P/R/F1 at the swept best-thr — the primary
+detection metric in the table above — should be read as the checkpoint's quality.)
 
 ## Efficiency
 
@@ -78,8 +92,9 @@ full-res 1024² clips, `seq_len = 20`.
   (RsCarData + SAT-MTB car + SDM-Car), continued from the public HiEUM author
   checkpoint. See memory `hieum_union_retrain.md`.
 - Eval driver: `evaluation/eval_hieum.py`; per-set configs mirror
-  `configs/MOT/hieum_{rscardata,satmtb,sdmcar}.yaml` with the ep8 checkpoint path
-  and score sweep (`score_thresh = 0.01`) overridden.
+  `configs/MOT/hieum_{rscardata,satmtb,sdmcar}.yaml` with the ep8 checkpoint path,
+  the model score floor (`score_thresh = 0.01`), and the score sweep (floor `0.02`)
+  overridden.
 - Raw outputs: `test_metrics.json` under
   `/work/ziwen/experiments/hieum_test_compare_20260702_v2/{rscardata,satmtb,sdmcar}_ep8/`.
 </content>
