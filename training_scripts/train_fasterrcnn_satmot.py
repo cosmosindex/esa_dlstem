@@ -21,6 +21,7 @@ Usage:
 from __future__ import annotations
 
 import argparse
+import os
 import sys
 from pathlib import Path
 
@@ -65,7 +66,9 @@ def main():
     torch.set_float32_matmul_precision("high")
 
     run_name = cfg["run_name"]
-    exp_root = cfg.get("experiment_root", "/work/anon/experiments")
+    # EXPERIMENT_ROOT env overrides the (anonymised) config path at runtime.
+    exp_root = os.environ.get("EXPERIMENT_ROOT") or cfg.get(
+        "experiment_root", "/work/anon/experiments")
     experiment_dir = f"{exp_root}/{run_name}_{datetime.now():%Y%m%d_%H%M%S}"
 
     # ------------------------------------------------------------------
@@ -129,7 +132,8 @@ def main():
     # ------------------------------------------------------------------
     logger = WandbLogger(
         project=cfg.get("wandb_project", "esa-dlstem"),
-        entity=cfg.get("wandb_entity", "anonymous"),
+        # WANDB_ENTITY env overrides the (anonymised) config entity at runtime.
+        entity=os.environ.get("WANDB_ENTITY") or cfg.get("wandb_entity", "anonymous"),
         name=run_name,
         log_model=False,
     )
@@ -153,14 +157,20 @@ def main():
             mode=cfg.get("monitor_mode", "max"),
             patience=cfg.get("patience", 8),
         ),
-        DetectionVisualizationCallback(
-            class_names=class_names,
-            output_dir=experiment_dir,
-            iou_thresh=cfg.get("visualization_iou_thresh", 0.5),
-            max_wandb_images=cfg.get("visualization_max_wandb_images", 50),
-            score_thresh=cfg.get("visualization_score_thresh", 0.5),
-        ),
     ]
+    # Visualization is opt-out via `skip_visualization: true`. When skipped, only
+    # the best checkpoint is kept; per-frame predicted boxes are dumped separately
+    # by the eval-dump step (no JPEG/W&B image saving).
+    if not cfg.get("skip_visualization", False):
+        callbacks.append(
+            DetectionVisualizationCallback(
+                class_names=class_names,
+                output_dir=experiment_dir,
+                iou_thresh=cfg.get("visualization_iou_thresh", 0.5),
+                max_wandb_images=cfg.get("visualization_max_wandb_images", 50),
+                score_thresh=cfg.get("visualization_score_thresh", 0.5),
+            )
+        )
 
     # ------------------------------------------------------------------
     # Trainer.

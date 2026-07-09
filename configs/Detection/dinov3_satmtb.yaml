@@ -1,0 +1,82 @@
+# DINOv3 (ViT-B/16, frozen) + dense FCOS head on SAT-MTB HBB detection.
+# Apple-to-apple companion to fasterrcnn_satmtb_hbb.yaml / yolo11_satmtb_hbb.yaml
+# — same data (SAT-MTB det/HBB), same 3-class taxonomy {airplane, ship, train},
+# same 1024² input, same train/val/test splits.
+#
+# Paradigm: a frozen self-supervised foundation backbone with only a small
+# dense head trained on top — the "foundation features + simple head" row of
+# the detector comparison.
+#
+# Backbone note: the satellite-pretrain variant (…-pretrain-sat493m) would be
+# the natural fit for satellite imagery, but that HF repo is gated/unavailable
+# here, so we use the web LVD-1689M variant (same ViT-B/16 arch) to stay
+# consistent with the fire / BIRDSAI DINOv3 rows. Backbone stays frozen; only
+# the FCOS head is trained.
+#
+# Run with (pick a free GPU via CUDA_VISIBLE_DEVICES):
+#   EXPERIMENT_ROOT=/work/ziwen/experiments CUDA_VISIBLE_DEVICES=1 \
+#       python training_scripts/train_dinov3_satmtb.py \
+#       --config configs/Detection/dinov3_satmtb.yaml
+
+# ----- Dataset roots ------------------------------------------------------
+datasets:
+  SAT-MTB: /data/ESA_DLSTEM_2025/data/trafic/SAT-MTB
+
+per_dataset_kwargs:
+  SAT-MTB:
+    task: det_hbb            # XML HBB labels (all instances, static + moving)
+
+# ----- Class map (0-indexed; no background) -------------------------------
+# Matches yolo11_satmtb_hbb.yaml so class ids line up across detectors.
+class_map:
+  airplane: 0
+  ship:     1
+  train:    2
+
+num_classes: 3
+
+# ----- Model (DINOv3 backbone + dense FCOS head) --------------------------
+hf_model_name: facebook/dinov3-vitb16-pretrain-lvd1689m
+freeze_backbone: true
+head_type: fcos
+fcos_num_convs: 4
+fcos_hidden: 256
+fcos_center_radius: 1.5
+# SAT-MTB objects are tiny (ship median side 17 px, p5 ~5 px). The raw ViT
+# token map is stride 16 → a 17 px ship is ~1 cell. Upsample the token map to
+# stride 8 (patch_size 16 / 8 = 2×) so small objects get ≥2 feature cells,
+# mirroring the BIRDSAI small-object fix.
+fcos_feat_stride: 8
+nms_thresh: 0.5
+conf_thresh: 0.05         # low keep-thresh (matches YOLO/FRCNN eval); NMS prunes
+max_dets: 300             # match FasterRCNN detections_per_img for dense scenes
+img_size: 1024            # match FRCNN/YOLO; 1024/16 = 64×64 tokens → 128×128 @ stride 8
+
+# ----- Lightning training -------------------------------------------------
+batch_size: 8             # 1024² → 4096 ViT tokens; frozen backbone under no_grad
+                          # (smoke: bs4 peak 2.3 GB, so bs8 ≈ 5 GB — ample headroom)
+num_workers: 0            # NUM_WORKERS=0 (project rule: fork+CUDA deadlock)
+max_epochs: 50
+warmup_epochs: 5
+optimizer: adamw          # head from scratch; configure_optimizers filters to
+lr: 2.0e-4                # requires_grad params → only the FCOS head is optimised
+weight_decay: 1.0e-4
+lr_scheduler: cosine
+precision: bf16-mixed     # bf16 (not fp16): full fp32 exponent range, no overflow
+gradient_clip_val: 10.0
+
+# ----- Run / logging ------------------------------------------------------
+run_name: dinov3_vitb16_satmtb_hbb
+experiment_root: /work/anon/experiments
+wandb_project: esa-dlstem
+wandb_entity: anonymous
+# No visualization saving — keep only the best checkpoint; per-frame predicted
+# boxes are dumped separately by evaluation/eval_satmtb_detect_dump.py.
+skip_visualization: true
+visualization_max_wandb_images: 50
+visualization_score_thresh: 0.5
+visualization_iou_thresh: 0.5
+
+monitor_metric: val/mAP
+monitor_mode: max
+patience: 10

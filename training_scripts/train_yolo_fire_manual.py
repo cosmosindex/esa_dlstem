@@ -25,6 +25,7 @@ from __future__ import annotations
 import argparse
 import json
 import math
+import os
 import sys
 from datetime import datetime
 from pathlib import Path
@@ -156,7 +157,9 @@ def main():
     torch.set_float32_matmul_precision("high")
 
     run_name = cfg["run_name"] + "_manual"
-    exp_root = cfg.get("experiment_root", "/work/anon/experiments")
+    # EXPERIMENT_ROOT env overrides the (anonymised) config path at runtime.
+    exp_root = os.environ.get("EXPERIMENT_ROOT") or cfg.get(
+        "experiment_root", "/work/anon/experiments")
     experiment_dir = Path(f"{exp_root}/{run_name}_{datetime.now():%Y%m%d_%H%M%S}")
     (experiment_dir / "checkpoints").mkdir(parents=True, exist_ok=True)
 
@@ -188,7 +191,8 @@ def main():
 
     # ---- model / optim ----
     model = YOLODetector(
-        model_name=cfg.get("model_name", "yolo11l.pt"), num_classes=num_classes,
+        model_name=os.environ.get("YOLO_CKPT") or cfg.get("model_name", "yolo11l.pt"),
+        num_classes=num_classes,
         enable_tracking=False, conf_thresh=cfg.get("conf_thresh", 0.05),
         iou_thresh=cfg.get("iou_thresh", 0.5), img_size=img,
     ).to(DEVICE)
@@ -204,7 +208,8 @@ def main():
             import wandb
             wb = wandb.init(
                 project=cfg.get("wandb_project", "esa-dlstem"),
-                entity=cfg.get("wandb_entity", "anonymous"),
+                # WANDB_ENTITY env overrides the (anonymised) config entity at runtime.
+                entity=os.environ.get("WANDB_ENTITY") or cfg.get("wandb_entity", "anonymous"),
                 name=run_name, config=cfg,
             )
         except Exception as e:

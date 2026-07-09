@@ -50,7 +50,10 @@ lr: 1.0e-3
 weight_decay: 5.0e-4
 warmup_epochs: 5
 lr_scheduler: cosine
-precision: 16-mixed
+# bf16 (not fp16): the manual training loop (train_yolo_fire_manual.py) uses
+# autocast; bf16 has the full fp32 exponent range so the DFL/CIoU loss cannot
+# overflow to NaN the way fp16 did on fire (yolo_issues #15). Ada supports it.
+precision: bf16-mixed
 gradient_clip_val: 10.0
 
 # ----- Run / logging ------------------------------------------------------

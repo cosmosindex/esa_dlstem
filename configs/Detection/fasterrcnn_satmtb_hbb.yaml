@@ -46,30 +46,39 @@ score_thresh: 0.05
 nms_thresh: 0.5
 detections_per_img: 300
 
-# SAT-MTB det_hbb-tuned anchor pyramid (tighter than the cross-dataset
-# satmot one, which had a [4,8] bottom level for ~5 px cars). SAT-MTB
-# det_hbb has no `car`; the smallest class is ship (avg side 17-30 px,
-# min ~3 px outlier), the largest is train (max 304x202 px). See
-# docs/bbox_stats/bbox_stats_report_satmtb.md → "Task: det_hbb".
+# SAT-MTB det_hbb anchor pyramid, DATA-DRIVEN from the TRAIN-split
+# side-length (max(w,h)) percentiles per class (bbox stats + k-means over
+# 183 k boxes). The three classes span a huge scale range and two of them
+# are strongly non-square, so the pyramid is re-derived rather than using
+# the stride×{2,4} textbook default:
+#   ship     n=75 k : p5=5  p25=8  p50=17  p75=39  p95=87  (tiny, and
+#                      elongated — aspect w/h p5=0.55 .. p95=2.50)
+#   airplane n=105k : p5=24 p50=48 p95=108                 (near-square)
+#   train    n=4  k : p25=120 p50=195 p95=524 max=650      (huge, very
+#                      elongated — aspect p95≈18)
+# k-means(10) anchor scales over pooled sides: 6 11 18 27 34 43 55 75 104 300.
 #
-# Each level = FPN stride × {2, 4} (standard FPN convention):
-#   P2 stride 4  → [8, 16]      tiny ship outliers
-#   P3 stride 8  → [24, 48]     ship avg + small airplane
-#   P4 stride 16 → [64, 96]     airplane avg (46²) + ship max
-#   P5 stride 32 → [128, 192]   big airplane + medium train
-#   P6 stride 64 → [256, 384]   train (covers max 304×202)
+# Each level = one FPN stride; two sizes/level bracket the k-means scales.
+#   P2 stride 4  → [6, 12]      ship p1–p25 (4–9 px)
+#   P3 stride 8  → [20, 32]     ship p50 (17) + small airplane
+#   P4 stride 16 → [48, 72]     airplane p50 (48) + ship p75–p90
+#   P5 stride 32 → [104, 160]   airplane p95 (108) + small train
+#   P6 stride 64 → [256, 448]   train p50–p95 (195–524; regression covers 650)
+# Aspect ratios widened to {0.33 .. 3.0} on every level (uniform count is
+# required — torchvision RPNHead shares one conv across levels) to catch the
+# elongated ships and trains that {0.5,1,2} misses. 2 sizes × 5 ratios = 10.
 anchor_sizes:
-  - [8, 16]
-  - [24, 48]
-  - [64, 96]
-  - [128, 192]
-  - [256, 384]
+  - [6, 12]
+  - [20, 32]
+  - [48, 72]
+  - [104, 160]
+  - [256, 448]
 anchor_aspect_ratios:
-  - [0.5, 1.0, 2.0]
-  - [0.5, 1.0, 2.0]
-  - [0.5, 1.0, 2.0]
-  - [0.5, 1.0, 2.0]
-  - [0.5, 1.0, 2.0]
+  - [0.33, 0.5, 1.0, 2.0, 3.0]
+  - [0.33, 0.5, 1.0, 2.0, 3.0]
+  - [0.33, 0.5, 1.0, 2.0, 3.0]
+  - [0.33, 0.5, 1.0, 2.0, 3.0]
+  - [0.33, 0.5, 1.0, 2.0, 3.0]
 
 # Relaxed RPN/box thresholds for small-object recall.
 rpn_fg_iou_thresh: 0.5
@@ -100,6 +109,9 @@ run_name: fasterrcnn_satmtb_hbb
 experiment_root: /work/anon/experiments
 wandb_project: esa-dlstem
 wandb_entity: anonymous
+# No visualization saving — keep only the best checkpoint; per-frame predicted
+# boxes are dumped separately by evaluation/eval_satmtb_detect_dump.py.
+skip_visualization: true
 visualization_max_wandb_images: 50
 visualization_score_thresh: 0.5
 visualization_iou_thresh: 0.5

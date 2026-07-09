@@ -1,0 +1,62 @@
+# YOLOv11 on SAT-MTB **HBB detection** — lower-LR retrain.
+#
+# The lr=1.0e-3 run (yolo11l_satmtb_hbb_manual) peaked at val/mAP=0.5651 on
+# epoch 1, while the 5-epoch warmup was still ramping (lr=2.0e-4). Once lr
+# reached the 1.0e-3 plateau val/mAP decayed monotonically — ship AP fell
+# 0.570 -> 0.241 — and early stopping fired on epoch 11. The "best" weights
+# were therefore an under-trained mid-warmup checkpoint, not a converged
+# model. Since the optimum sat at or below 2.0e-4, drop the target LR by an
+# order of magnitude and shorten warmup so the plateau is reached earlier.
+#
+# Everything else matches yolo11_satmtb_hbb.yaml exactly (same data, same
+# 3-class taxonomy, same 1024² input) so the two runs stay comparable.
+#
+# Run with:
+#   python training_scripts/train_yolo_fire_manual.py \
+#       --config configs/Detection/yolo11_satmtb_hbb_lr1e4.yaml
+
+# ----- Dataset roots ------------------------------------------------------
+datasets:
+  SAT-MTB: /data/ESA_DLSTEM_2025/data/trafic/SAT-MTB
+
+per_dataset_kwargs:
+  SAT-MTB:
+    task: det_hbb            # XML HBB labels (all instances, static + moving)
+
+# ----- Class map (0-indexed for YOLO; no background) ----------------------
+class_map:
+  airplane: 0
+  ship:     1
+  train:    2
+
+num_classes: 3
+
+# ----- Model --------------------------------------------------------------
+model_name: /work/anon/checkpoints/yolo11l.pt
+conf_thresh: 0.05
+iou_thresh: 0.5
+img_size: 1024              # match FasterRCNN min_size for fair comparison
+
+# ----- Lightning training -------------------------------------------------
+batch_size: 8                # yolo11l + 1024² fits in ~14 GiB at bs=8
+num_workers: 0               # NUM_WORKERS=0 (project rule)
+max_epochs: 50
+lr: 1.0e-4
+weight_decay: 5.0e-4
+warmup_epochs: 3
+lr_scheduler: cosine
+precision: bf16-mixed
+gradient_clip_val: 10.0
+
+# ----- Run / logging ------------------------------------------------------
+run_name: yolo11l_satmtb_hbb_lr1e4
+experiment_root: /work/anon/experiments
+wandb_project: esa-dlstem
+wandb_entity: anonymous
+visualization_max_wandb_images: 50
+visualization_score_thresh: 0.5
+visualization_iou_thresh: 0.5
+
+monitor_metric: val/mAP
+monitor_mode: max
+patience: 10
