@@ -11,6 +11,26 @@ Both manifests are thin JSON pointers to per-sequence images + native ground-tru
 
 Detailed conventions, taxonomies, and quick-start examples are in [`space_tracker/README.md`](space_tracker/README.md).
 
+## Attribute showcase
+
+Ground truth plus all 7 SOT trackers overlaid frame-by-frame, on four OOTB sequences that between them cover the hard cases: background clutter, illumination variation, similar distractor objects, motion blur, low texture, and occlusion.
+
+**`ootb/plane_23`** — Background Clutter · Illumination Variation · Similar Object · Motion Blur
+
+![OOTB / plane_23 — BC · IV · SOB · MB](docs/figures/attributes_videos/plane_23_combined_trackers.gif)
+
+**`ootb/car_39`** — Background Clutter · Illumination Variation · Occlusion · Similar Object · Less Textures · Isotropic Motion — *tiny target*
+
+![OOTB / car_39 — BC · IV · OCC · SOB · LT · IM](docs/figures/attributes_videos/car_39_combined_trackers.gif)
+
+**`ootb/car_45`** — Background Clutter · Illumination Variation · Motion Blur
+
+![OOTB / car_45 — BC · IV · MB](docs/figures/attributes_videos/car_45_combined_trackers.gif)
+
+**`ootb/ship_4`** — Background Clutter · Illumination Variation · Less Textures · Motion Blur
+
+![OOTB / ship_4 — BC · IV · LT · MB](docs/figures/attributes_videos/ship_4_combined_trackers.gif)
+
 ## SOT — quick start
 
 ```python
@@ -85,8 +105,6 @@ preds = bench.run(my_tracker, categories=["car"], splits=["test"])
 
 - **SOT** — `tools/reaggregate_sot_per_sequence.py` recomputes the headline SR/NPR/PR/P@5 numbers from existing `per_image_metrics.json` files. `tools/sot_unified_attribute_table.py` produces the unified-attribute breakdown CSVs.
 - **MOT** — `tools/compute_hota.py` computes HOTA / MOTA / IDF1 over predictions persisted to disk; the `MOT_<date>/<tracker>/` experiment layout is documented inside that script.
-
-![OOTB / plane_23 — IV · MB · BC · SA](docs/figures/plane_23_combined_trackers.gif)
 
 ## Citation
 
