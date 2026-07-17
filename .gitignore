@@ -109,3 +109,9 @@ siamban/
 pysot/
 Moving-object-detection-DSFNet/
 Moving-object-detection-in-satellite-videos-HiEUM/
+
+# Chinese-language report drafts — never committed (double-blind repo)
+docs/drafts/
+
+# Source videos for README figures — keep locally, embed the GIFs instead
+docs/figures/**/*.mp4
