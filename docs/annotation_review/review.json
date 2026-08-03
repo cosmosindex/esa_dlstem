@@ -1,0 +1,840 @@
+{
+  "sequences": {
+    "airmot/100": {
+      "boxes": {},
+      "deleted": [],
+      "drawn": {},
+      "note": "",
+      "reviewer": "",
+      "status": "accepted",
+      "updated": "2026-07-28T11:03:46",
+      "watched": true
+    },
+    "airmot/11": {
+      "boxes": {},
+      "deleted": [],
+      "drawn": {},
+      "note": "",
+      "reviewer": "",
+      "status": "accepted",
+      "updated": "2026-07-28T11:08:02",
+      "watched": true
+    },
+    "airmot/12": {
+      "boxes": {},
+      "deleted": [],
+      "drawn": {},
+      "note": "",
+      "reviewer": "",
+      "status": "accepted",
+      "updated": "2026-07-28T11:09:03",
+      "watched": true
+    },
+    "airmot/13": {
+      "boxes": {},
+      "deleted": [],
+      "drawn": {},
+      "note": "",
+      "reviewer": "",
+      "status": "accepted",
+      "updated": "2026-07-28T11:09:46",
+      "watched": true
+    },
+    "airmot/14": {
+      "boxes": {},
+      "deleted": [],
+      "drawn": {},
+      "note": "",
+      "reviewer": "",
+      "status": "accepted",
+      "updated": "2026-07-28T11:10:44",
+      "watched": true
+    },
+    "airmot/15": {
+      "boxes": {},
+      "deleted": [],
+      "drawn": {},
+      "note": "",
+      "reviewer": "",
+      "status": "accepted",
+      "updated": "2026-07-28T11:13:20",
+      "watched": true
+    },
+    "airmot/16": {
+      "boxes": {},
+      "deleted": [],
+      "drawn": {},
+      "note": "",
+      "reviewer": "",
+      "status": "accepted",
+      "updated": "2026-07-28T11:14:00",
+      "watched": true
+    },
+    "airmot/17": {
+      "boxes": {},
+      "deleted": [],
+      "drawn": {},
+      "note": "",
+      "reviewer": "",
+      "status": "accepted",
+      "updated": "2026-07-28T11:14:57",
+      "watched": true
+    },
+    "airmot/18": {
+      "boxes": {},
+      "deleted": [],
+      "drawn": {},
+      "note": "",
+      "reviewer": "",
+      "status": "accepted",
+      "updated": "2026-07-28T12:34:16",
+      "watched": true
+    },
+    "airmot/19": {
+      "boxes": {},
+      "deleted": [],
+      "drawn": {},
+      "note": "",
+      "reviewer": "",
+      "status": "accepted",
+      "updated": "2026-07-28T12:36:58",
+      "watched": true
+    },
+    "airmot/20": {
+      "boxes": {},
+      "deleted": [],
+      "drawn": {},
+      "note": "",
+      "reviewer": "",
+      "status": "accepted",
+      "updated": "2026-07-28T12:38:20",
+      "watched": true
+    },
+    "airmot/21": {
+      "boxes": {},
+      "deleted": [],
+      "drawn": {},
+      "note": "",
+      "reviewer": "",
+      "status": "accepted",
+      "updated": "2026-07-28T12:43:54",
+      "watched": true
+    },
+    "airmot/22": {
+      "boxes": {},
+      "deleted": [],
+      "drawn": {},
+      "note": "",
+      "reviewer": "",
+      "status": "accepted",
+      "updated": "2026-07-28T12:43:39",
+      "watched": true
+    },
+    "airmot/23": {
+      "boxes": {},
+      "deleted": [],
+      "drawn": {},
+      "note": "",
+      "reviewer": "",
+      "status": "accepted",
+      "updated": "2026-07-28T12:46:47",
+      "watched": true
+    },
+    "airmot/24": {
+      "boxes": {},
+      "deleted": [],
+      "drawn": {},
+      "note": "",
+      "reviewer": "",
+      "status": "accepted",
+      "updated": "2026-07-28T12:50:25",
+      "watched": true
+    },
+    "airmot/25": {
+      "boxes": {},
+      "deleted": [],
+      "drawn": {},
+      "note": "",
+      "reviewer": "",
+      "status": "accepted",
+      "updated": "2026-07-28T12:51:08",
+      "watched": true
+    },
+    "airmot/26": {
+      "boxes": {},
+      "deleted": [],
+      "drawn": {},
+      "note": "",
+      "reviewer": "",
+      "status": "accepted",
+      "updated": "2026-07-28T12:53:30",
+      "watched": true
+    },
+    "airmot/27": {
+      "boxes": {},
+      "deleted": [],
+      "drawn": {},
+      "note": "Occlusion, SOT",
+      "reviewer": "",
+      "status": "flagged",
+      "tags": [
+        "occlusion",
+        "single_object"
+      ],
+      "updated": "2026-07-28T14:34:12",
+      "watched": true
+    },
+    "airmot/28": {
+      "boxes": {},
+      "deleted": [],
+      "drawn": {},
+      "note": "All objects are static.",
+      "reviewer": "",
+      "status": "accepted",
+      "tags": [
+        "static"
+      ],
+      "updated": "2026-07-28T14:34:12",
+      "watched": true
+    },
+    "airmot/29": {
+      "boxes": {},
+      "deleted": [],
+      "drawn": {},
+      "note": "All objects are static",
+      "reviewer": "",
+      "status": "flagged",
+      "tags": [
+        "static"
+      ],
+      "updated": "2026-07-28T14:34:12",
+      "watched": false
+    },
+    "airmot/3": {
+      "boxes": {},
+      "deleted": [],
+      "drawn": {},
+      "note": "SOT",
+      "reviewer": "",
+      "status": "flagged",
+      "tags": [
+        "single_object"
+      ],
+      "updated": "2026-07-28T14:34:12",
+      "watched": true
+    },
+    "airmot/30": {
+      "boxes": {},
+      "deleted": [],
+      "drawn": {},
+      "note": "",
+      "reviewer": "",
+      "status": "accepted",
+      "updated": "2026-07-28T13:27:40",
+      "watched": true
+    },
+    "airmot/31": {
+      "boxes": {},
+      "deleted": [],
+      "drawn": {},
+      "note": "",
+      "reviewer": "",
+      "status": "accepted",
+      "updated": "2026-07-28T13:28:44",
+      "watched": true
+    },
+    "airmot/32": {
+      "boxes": {},
+      "deleted": [],
+      "drawn": {},
+      "note": "All the objects are static",
+      "reviewer": "",
+      "status": "accepted",
+      "tags": [
+        "static"
+      ],
+      "updated": "2026-07-28T14:34:12",
+      "watched": true
+    },
+    "airmot/33": {
+      "boxes": {},
+      "deleted": [],
+      "drawn": {},
+      "note": "SOT",
+      "reviewer": "",
+      "status": "flagged",
+      "tags": [
+        "single_object"
+      ],
+      "updated": "2026-07-28T14:34:12",
+      "watched": true
+    },
+    "airmot/35": {
+      "boxes": {},
+      "deleted": [],
+      "drawn": {},
+      "note": "SOT\uff0c fast moving",
+      "reviewer": "",
+      "status": "accepted",
+      "tags": [
+        "fast_motion",
+        "single_object"
+      ],
+      "updated": "2026-07-28T14:34:12",
+      "watched": true
+    },
+    "airmot/36": {
+      "boxes": {},
+      "deleted": [],
+      "drawn": {},
+      "note": "SOT\uff0c the object is static",
+      "reviewer": "",
+      "status": "flagged",
+      "tags": [
+        "single_object",
+        "static"
+      ],
+      "updated": "2026-07-28T14:34:12",
+      "watched": true
+    },
+    "airmot/37": {
+      "boxes": {},
+      "deleted": [],
+      "drawn": {},
+      "note": "SOT",
+      "reviewer": "",
+      "status": "flagged",
+      "tags": [
+        "single_object"
+      ],
+      "updated": "2026-07-28T14:34:12",
+      "watched": true
+    },
+    "airmot/38": {
+      "boxes": {},
+      "deleted": [],
+      "drawn": {},
+      "note": "SOT",
+      "reviewer": "",
+      "status": "flagged",
+      "tags": [
+        "single_object"
+      ],
+      "updated": "2026-07-28T14:34:12",
+      "watched": true
+    },
+    "airmot/39": {
+      "boxes": {},
+      "deleted": [],
+      "drawn": {},
+      "note": "SOT\uff0cobject is static",
+      "reviewer": "",
+      "status": "flagged",
+      "tags": [
+        "single_object",
+        "static"
+      ],
+      "updated": "2026-07-28T14:34:12",
+      "watched": true
+    },
+    "airmot/4": {
+      "boxes": {},
+      "deleted": [],
+      "drawn": {},
+      "note": "SOT",
+      "reviewer": "",
+      "status": "flagged",
+      "tags": [
+        "single_object"
+      ],
+      "updated": "2026-07-28T14:34:12",
+      "watched": true
+    },
+    "airmot/40": {
+      "boxes": {},
+      "deleted": [],
+      "drawn": {},
+      "note": "",
+      "reviewer": "",
+      "status": "accepted",
+      "updated": "2026-07-28T13:38:56",
+      "watched": true
+    },
+    "airmot/41": {
+      "boxes": {},
+      "deleted": [],
+      "drawn": {},
+      "note": "All objects are static",
+      "reviewer": "",
+      "status": "flagged",
+      "tags": [
+        "static"
+      ],
+      "updated": "2026-07-28T14:34:12",
+      "watched": true
+    },
+    "airmot/42": {
+      "boxes": {},
+      "deleted": [],
+      "drawn": {},
+      "note": "All objects are static",
+      "reviewer": "",
+      "status": "flagged",
+      "tags": [
+        "static"
+      ],
+      "updated": "2026-07-28T14:34:12",
+      "watched": true
+    },
+    "airmot/43": {
+      "boxes": {},
+      "deleted": [],
+      "drawn": {},
+      "note": "",
+      "reviewer": "",
+      "status": "accepted",
+      "updated": "2026-07-28T13:41:03",
+      "watched": true
+    },
+    "airmot/44": {
+      "boxes": {},
+      "deleted": [],
+      "drawn": {},
+      "note": "",
+      "reviewer": "",
+      "status": "accepted",
+      "updated": "2026-07-28T13:41:37",
+      "watched": true
+    },
+    "airmot/45": {
+      "boxes": {},
+      "deleted": [],
+      "drawn": {},
+      "note": "smoggy",
+      "reviewer": "",
+      "status": "flagged",
+      "tags": [
+        "weather"
+      ],
+      "updated": "2026-07-28T14:34:12",
+      "watched": true
+    },
+    "airmot/46": {
+      "boxes": {},
+      "deleted": [],
+      "drawn": {},
+      "note": "fast moving",
+      "reviewer": "",
+      "status": "flagged",
+      "tags": [
+        "fast_motion"
+      ],
+      "updated": "2026-07-28T14:34:12",
+      "watched": true
+    },
+    "airmot/47": {
+      "boxes": {},
+      "deleted": [],
+      "drawn": {},
+      "note": "fast moving air plane, The plane is making a turn.",
+      "reviewer": "",
+      "status": "flagged",
+      "tags": [
+        "fast_motion",
+        "maneuver"
+      ],
+      "updated": "2026-07-28T14:34:12",
+      "watched": true
+    },
+    "airmot/48": {
+      "boxes": {},
+      "deleted": [],
+      "drawn": {},
+      "note": "The aircraft that suddenly rushed out",
+      "reviewer": "",
+      "status": "flagged",
+      "tags": [
+        "fast_motion",
+        "sudden_entry"
+      ],
+      "updated": "2026-07-28T14:34:12",
+      "watched": true
+    },
+    "airmot/49": {
+      "boxes": {},
+      "deleted": [],
+      "drawn": {},
+      "note": "The aircraft that suddenly rushed out",
+      "reviewer": "",
+      "status": "flagged",
+      "tags": [
+        "fast_motion",
+        "sudden_entry"
+      ],
+      "updated": "2026-07-28T14:34:12",
+      "watched": true
+    },
+    "airmot/5": {
+      "boxes": {},
+      "deleted": [],
+      "drawn": {},
+      "note": "All objects are static",
+      "reviewer": "",
+      "status": "flagged",
+      "tags": [
+        "static"
+      ],
+      "updated": "2026-07-28T14:34:12",
+      "watched": true
+    },
+    "airmot/50": {
+      "boxes": {},
+      "deleted": [],
+      "drawn": {},
+      "note": "",
+      "reviewer": "",
+      "status": "flagged",
+      "updated": "2026-07-28T13:56:50",
+      "watched": true
+    },
+    "airmot/51": {
+      "boxes": {},
+      "deleted": [],
+      "drawn": {},
+      "note": "",
+      "reviewer": "",
+      "status": "accepted",
+      "updated": "2026-07-28T13:57:27",
+      "watched": true
+    },
+    "airmot/52": {
+      "boxes": {},
+      "deleted": [],
+      "drawn": {},
+      "note": "",
+      "reviewer": "",
+      "status": "flagged",
+      "updated": "2026-07-28T13:58:46",
+      "watched": true
+    },
+    "airmot/53": {
+      "boxes": {},
+      "deleted": [],
+      "drawn": {},
+      "note": "The airplane is not moving",
+      "reviewer": "",
+      "status": "flagged",
+      "tags": [
+        "static"
+      ],
+      "updated": "2026-07-28T14:34:12",
+      "watched": true
+    },
+    "airmot/54": {
+      "boxes": {},
+      "deleted": [],
+      "drawn": {},
+      "note": "",
+      "reviewer": "",
+      "status": "accepted",
+      "updated": "2026-07-28T14:02:01",
+      "watched": true
+    },
+    "airmot/55": {
+      "boxes": {},
+      "deleted": [],
+      "drawn": {},
+      "note": "All the airplanes are static, not moving",
+      "reviewer": "",
+      "status": "flagged",
+      "tags": [
+        "static"
+      ],
+      "updated": "2026-07-28T14:34:12",
+      "watched": true
+    },
+    "airmot/56": {
+      "boxes": {},
+      "deleted": [],
+      "drawn": {},
+      "note": "static tiny airplanes",
+      "reviewer": "",
+      "status": "flagged",
+      "tags": [
+        "static",
+        "tiny"
+      ],
+      "updated": "2026-07-28T14:34:12",
+      "watched": true
+    },
+    "airmot/57": {
+      "boxes": {},
+      "deleted": [],
+      "drawn": {},
+      "note": "fast moving airplane",
+      "reviewer": "",
+      "status": "flagged",
+      "tags": [
+        "fast_motion"
+      ],
+      "updated": "2026-07-28T14:34:12",
+      "watched": true
+    },
+    "airmot/58": {
+      "boxes": {},
+      "deleted": [],
+      "drawn": {},
+      "note": "Occusion",
+      "reviewer": "",
+      "status": "flagged",
+      "tags": [
+        "occlusion"
+      ],
+      "updated": "2026-07-28T14:34:12",
+      "watched": true
+    },
+    "airmot/59": {
+      "boxes": {},
+      "deleted": [],
+      "drawn": {},
+      "note": "",
+      "reviewer": "",
+      "status": "accepted",
+      "updated": "2026-07-28T14:07:23",
+      "watched": true
+    },
+    "airmot/6": {
+      "boxes": {},
+      "deleted": [],
+      "drawn": {},
+      "note": "single airplane",
+      "reviewer": "",
+      "status": "flagged",
+      "tags": [
+        "single_object"
+      ],
+      "updated": "2026-07-28T14:34:12",
+      "watched": true
+    },
+    "airmot/60": {
+      "boxes": {},
+      "deleted": [],
+      "drawn": {},
+      "note": "Occulssion",
+      "reviewer": "",
+      "status": "flagged",
+      "tags": [
+        "occlusion"
+      ],
+      "updated": "2026-07-28T14:34:12",
+      "watched": true
+    },
+    "airmot/61": {
+      "boxes": {},
+      "deleted": [],
+      "drawn": {},
+      "note": "Partial occlusion",
+      "reviewer": "",
+      "status": "flagged",
+      "tags": [
+        "occlusion"
+      ],
+      "updated": "2026-07-28T14:34:12",
+      "watched": true
+    },
+    "airmot/62": {
+      "boxes": {},
+      "deleted": [],
+      "drawn": {},
+      "note": "",
+      "reviewer": "",
+      "status": "accepted",
+      "updated": "2026-07-28T14:11:42",
+      "watched": true
+    },
+    "airmot/63": {
+      "boxes": {},
+      "deleted": [],
+      "drawn": {},
+      "note": "",
+      "reviewer": "",
+      "status": "accepted",
+      "updated": "2026-07-28T14:12:29",
+      "watched": true
+    },
+    "airmot/64": {
+      "boxes": {},
+      "deleted": [],
+      "drawn": {},
+      "note": "All airplane are static",
+      "reviewer": "",
+      "status": "flagged",
+      "tags": [
+        "static"
+      ],
+      "updated": "2026-07-28T14:34:12",
+      "watched": true
+    },
+    "airmot/65": {
+      "boxes": {},
+      "deleted": [],
+      "drawn": {},
+      "note": "All objects are static",
+      "reviewer": "",
+      "status": "flagged",
+      "tags": [
+        "static"
+      ],
+      "updated": "2026-07-28T14:34:12",
+      "watched": true
+    },
+    "airmot/66": {
+      "boxes": {},
+      "deleted": [],
+      "drawn": {},
+      "note": "",
+      "reviewer": "",
+      "status": "accepted",
+      "updated": "2026-07-28T14:14:44",
+      "watched": true
+    },
+    "airmot/67": {
+      "boxes": {},
+      "deleted": [],
+      "drawn": {},
+      "note": "all ships are static",
+      "reviewer": "",
+      "status": "flagged",
+      "tags": [
+        "static"
+      ],
+      "updated": "2026-07-28T14:34:12",
+      "watched": true
+    },
+    "airmot/68": {
+      "boxes": {},
+      "deleted": [],
+      "drawn": {},
+      "note": "",
+      "reviewer": "",
+      "status": "accepted",
+      "updated": "2026-07-28T14:16:04",
+      "watched": true
+    },
+    "airmot/7": {
+      "boxes": {},
+      "deleted": [],
+      "drawn": {},
+      "note": "All airplanes are not moving",
+      "reviewer": "",
+      "status": "flagged",
+      "tags": [
+        "static"
+      ],
+      "updated": "2026-07-28T14:34:12",
+      "watched": true
+    },
+    "airmot/8": {
+      "boxes": {},
+      "deleted": [],
+      "drawn": {},
+      "note": "",
+      "reviewer": "",
+      "status": "accepted",
+      "updated": "2026-07-28T14:17:21",
+      "watched": true
+    },
+    "airmot/95": {
+      "boxes": {},
+      "deleted": [],
+      "drawn": {},
+      "note": "",
+      "reviewer": "",
+      "status": "accepted",
+      "updated": "2026-07-28T14:17:56",
+      "watched": true
+    },
+    "airmot/96": {
+      "boxes": {},
+      "deleted": [],
+      "drawn": {},
+      "note": "",
+      "reviewer": "",
+      "status": "accepted",
+      "updated": "2026-07-28T14:18:25",
+      "watched": true
+    },
+    "airmot/97": {
+      "boxes": {},
+      "deleted": [],
+      "drawn": {},
+      "note": "",
+      "reviewer": "",
+      "status": "accepted",
+      "updated": "2026-07-28T14:23:05",
+      "watched": true
+    },
+    "airmot/98": {
+      "boxes": {},
+      "deleted": [],
+      "drawn": {},
+      "note": "",
+      "reviewer": "",
+      "status": "flagged",
+      "updated": "2026-07-28T14:23:52",
+      "watched": true
+    },
+    "airmot/99": {
+      "boxes": {},
+      "deleted": [],
+      "drawn": {},
+      "note": "",
+      "reviewer": "",
+      "status": "accepted",
+      "updated": "2026-07-28T14:24:41",
+      "watched": true
+    },
+    "rscardata/test1024/002": {
+      "boxes": {},
+      "deleted": [],
+      "drawn": {},
+      "note": "",
+      "reviewer": "",
+      "status": "flagged",
+      "tags": [],
+      "updated": "2026-07-28T14:37:39",
+      "watched": false
+    },
+    "satmtb/airplane/28": {
+      "boxes": {},
+      "deleted": [],
+      "drawn": {},
+      "note": "",
+      "reviewer": "",
+      "status": null,
+      "updated": "2026-07-28T09:29:59",
+      "watched": true
+    },
+    "satmtb/airplane/34": {
+      "boxes": {},
+      "deleted": [],
+      "drawn": {},
+      "note": "",
+      "reviewer": "",
+      "status": null,
+      "updated": "2026-07-28T09:31:40",
+      "watched": true
+    },
+    "viso/plane/040": {
+      "boxes": {},
+      "deleted": [],
+      "drawn": {},
+      "note": "",
+      "reviewer": "",
+      "status": null,
+      "updated": "2026-07-28T09:56:15",
+      "watched": true
+    }
+  },
+  "version": 1
+}

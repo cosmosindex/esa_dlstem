@@ -1,0 +1,2243 @@
+{
+  "decisions": {
+    "satmtb/airplane/03#det_xml:airplane:3": {
+      "boxes": null,
+      "boxes_source": null,
+      "category": "airplane",
+      "confirmed": false,
+      "mode": "static",
+      "note": "",
+      "reviewer": "",
+      "updated": "2026-07-27T19:59:47",
+      "verdict": "accept"
+    },
+    "satmtb/airplane/03#det_xml:airplane:4": {
+      "boxes": {
+        "1": [
+          1033.0,
+          219.0,
+          1060.0,
+          245.0
+        ],
+        "10": [
+          1036.0,
+          219.0,
+          1061.0,
+          244.0
+        ],
+        "100": [
+          1046.0,
+          218.0,
+          1071.0,
+          242.0
+        ],
+        "101": [
+          1046.0,
+          218.0,
+          1071.0,
+          242.0
+        ],
+        "102": [
+          1045.0,
+          217.0,
+          1071.0,
+          242.0
+        ],
+        "103": [
+          1046.0,
+          217.0,
+          1071.0,
+          242.0
+        ],
+        "104": [
+          1045.0,
+          218.0,
+          1072.0,
+          242.0
+        ],
+        "105": [
+          1046.0,
+          217.0,
+          1071.0,
+          242.0
+        ],
+        "106": [
+          1046.0,
+          217.0,
+          1071.0,
+          242.0
+        ],
+        "107": [
+          1046.0,
+          218.0,
+          1071.0,
+          242.0
+        ],
+        "108": [
+          1046.0,
+          218.0,
+          1071.0,
+          242.0
+        ],
+        "109": [
+          1046.0,
+          217.0,
+          1071.0,
+          242.0
+        ],
+        "11": [
+          1035.0,
+          218.0,
+          1061.0,
+          245.0
+        ],
+        "110": [
+          1046.0,
+          217.0,
+          1071.0,
+          243.0
+        ],
+        "111": [
+          1048.0,
+          217.0,
+          1072.0,
+          243.0
+        ],
+        "112": [
+          1045.0,
+          217.0,
+          1073.0,
+          242.0
+        ],
+        "113": [
+          1047.0,
+          217.0,
+          1072.0,
+          242.0
+        ],
+        "114": [
+          1047.0,
+          217.0,
+          1072.0,
+          243.0
+        ],
+        "115": [
+          1048.0,
+          217.0,
+          1072.0,
+          243.0
+        ],
+        "116": [
+          1046.0,
+          216.0,
+          1072.0,
+          243.0
+        ],
+        "117": [
+          1048.0,
+          217.0,
+          1072.0,
+          242.0
+        ],
+        "118": [
+          1048.0,
+          217.0,
+          1072.0,
+          242.0
+        ],
+        "119": [
+          1048.0,
+          217.0,
+          1072.0,
+          242.0
+        ],
+        "12": [
+          1035.0,
+          218.0,
+          1061.0,
+          244.0
+        ],
+        "120": [
+          1048.0,
+          217.0,
+          1073.0,
+          242.0
+        ],
+        "121": [
+          1047.0,
+          217.0,
+          1072.0,
+          243.0
+        ],
+        "122": [
+          1048.0,
+          218.0,
+          1072.0,
+          242.0
+        ],
+        "123": [
+          1049.0,
+          217.0,
+          1072.0,
+          243.0
+        ],
+        "124": [
+          1048.0,
+          217.0,
+          1073.0,
+          243.0
+        ],
+        "125": [
+          1048.0,
+          217.0,
+          1073.0,
+          242.0
+        ],
+        "126": [
+          1048.0,
+          218.0,
+          1074.0,
+          242.0
+        ],
+        "127": [
+          1049.0,
+          217.0,
+          1073.0,
+          242.0
+        ],
+        "128": [
+          1048.0,
+          218.0,
+          1073.0,
+          242.0
+        ],
+        "129": [
+          1049.0,
+          217.0,
+          1074.0,
+          242.0
+        ],
+        "13": [
+          1037.0,
+          218.0,
+          1061.0,
+          245.0
+        ],
+        "130": [
+          1048.0,
+          217.0,
+          1074.0,
+          242.0
+        ],
+        "131": [
+          1048.0,
+          217.0,
+          1073.0,
+          242.0
+        ],
+        "132": [
+          1049.0,
+          218.0,
+          1073.0,
+          242.0
+        ],
+        "133": [
+          1049.0,
+          218.0,
+          1074.0,
+          242.0
+        ],
+        "134": [
+          1049.0,
+          217.0,
+          1073.0,
+          242.0
+        ],
+        "135": [
+          1049.0,
+          218.0,
+          1073.0,
+          242.0
+        ],
+        "136": [
+          1049.0,
+          218.0,
+          1074.0,
+          242.0
+        ],
+        "137": [
+          1048.0,
+          217.0,
+          1074.0,
+          242.0
+        ],
+        "138": [
+          1048.0,
+          218.0,
+          1074.0,
+          242.0
+        ],
+        "139": [
+          1049.0,
+          217.0,
+          1074.0,
+          242.0
+        ],
+        "14": [
+          1036.0,
+          219.0,
+          1062.0,
+          245.0
+        ],
+        "140": [
+          1049.0,
+          218.0,
+          1074.0,
+          242.0
+        ],
+        "141": [
+          1049.0,
+          217.0,
+          1074.0,
+          242.0
+        ],
+        "142": [
+          1049.0,
+          217.0,
+          1074.0,
+          242.0
+        ],
+        "143": [
+          1049.0,
+          217.0,
+          1074.0,
+          242.0
+        ],
+        "144": [
+          1049.0,
+          217.0,
+          1074.0,
+          242.0
+        ],
+        "145": [
+          1049.0,
+          217.0,
+          1074.0,
+          242.0
+        ],
+        "146": [
+          1049.0,
+          217.0,
+          1074.0,
+          242.0
+        ],
+        "147": [
+          1049.0,
+          216.0,
+          1075.0,
+          242.0
+        ],
+        "148": [
+          1049.0,
+          217.0,
+          1075.0,
+          242.0
+        ],
+        "149": [
+          1049.0,
+          217.0,
+          1075.0,
+          242.0
+        ],
+        "15": [
+          1034.0,
+          218.0,
+          1063.0,
+          244.0
+        ],
+        "150": [
+          1049.0,
+          217.0,
+          1075.0,
+          242.0
+        ],
+        "151": [
+          1050.0,
+          217.0,
+          1075.0,
+          242.0
+        ],
+        "152": [
+          1050.0,
+          217.0,
+          1075.0,
+          243.0
+        ],
+        "153": [
+          1050.0,
+          217.0,
+          1075.0,
+          243.0
+        ],
+        "154": [
+          1049.0,
+          217.0,
+          1074.0,
+          242.0
+        ],
+        "155": [
+          1050.0,
+          216.0,
+          1075.0,
+          242.0
+        ],
+        "156": [
+          1048.0,
+          218.0,
+          1075.0,
+          243.0
+        ],
+        "157": [
+          1049.0,
+          216.0,
+          1077.0,
+          244.0
+        ],
+        "158": [
+          1050.0,
+          216.0,
+          1075.0,
+          243.0
+        ],
+        "159": [
+          1050.0,
+          217.0,
+          1076.0,
+          244.0
+        ],
+        "16": [
+          1038.0,
+          218.0,
+          1063.0,
+          246.0
+        ],
+        "160": [
+          1050.0,
+          218.0,
+          1077.0,
+          242.0
+        ],
+        "161": [
+          1047.0,
+          217.0,
+          1076.0,
+          243.0
+        ],
+        "162": [
+          1050.0,
+          215.0,
+          1077.0,
+          244.0
+        ],
+        "163": [
+          1050.0,
+          217.0,
+          1076.0,
+          243.0
+        ],
+        "164": [
+          1050.0,
+          217.0,
+          1075.0,
+          243.0
+        ],
+        "165": [
+          1050.0,
+          216.0,
+          1076.0,
+          243.0
+        ],
+        "166": [
+          1050.0,
+          217.0,
+          1076.0,
+          243.0
+        ],
+        "167": [
+          1050.0,
+          217.0,
+          1076.0,
+          243.0
+        ],
+        "168": [
+          1050.0,
+          217.0,
+          1077.0,
+          244.0
+        ],
+        "169": [
+          1049.0,
+          217.0,
+          1077.0,
+          243.0
+        ],
+        "17": [
+          1035.0,
+          218.0,
+          1062.0,
+          244.0
+        ],
+        "170": [
+          1050.0,
+          216.0,
+          1077.0,
+          243.0
+        ],
+        "171": [
+          1050.0,
+          217.0,
+          1077.0,
+          243.0
+        ],
+        "172": [
+          1050.0,
+          216.0,
+          1077.0,
+          243.0
+        ],
+        "173": [
+          1050.0,
+          217.0,
+          1077.0,
+          243.0
+        ],
+        "18": [
+          1038.0,
+          219.0,
+          1062.0,
+          244.0
+        ],
+        "19": [
+          1036.0,
+          218.0,
+          1062.0,
+          245.0
+        ],
+        "2": [
+          1033.0,
+          219.0,
+          1058.0,
+          245.0
+        ],
+        "20": [
+          1038.0,
+          218.0,
+          1062.0,
+          244.0
+        ],
+        "21": [
+          1034.0,
+          218.0,
+          1061.0,
+          244.0
+        ],
+        "22": [
+          1037.0,
+          218.0,
+          1063.0,
+          244.0
+        ],
+        "23": [
+          1038.0,
+          218.0,
+          1063.0,
+          244.0
+        ],
+        "24": [
+          1037.0,
+          218.0,
+          1063.0,
+          244.0
+        ],
+        "25": [
+          1038.0,
+          218.0,
+          1064.0,
+          244.0
+        ],
+        "26": [
+          1038.0,
+          218.0,
+          1063.0,
+          244.0
+        ],
+        "27": [
+          1038.0,
+          218.0,
+          1063.0,
+          244.0
+        ],
+        "28": [
+          1038.0,
+          218.0,
+          1065.0,
+          244.0
+        ],
+        "29": [
+          1037.0,
+          218.0,
+          1063.0,
+          244.0
+        ],
+        "3": [
+          1035.0,
+          219.0,
+          1061.0,
+          245.0
+        ],
+        "30": [
+          1039.0,
+          218.0,
+          1063.0,
+          244.0
+        ],
+        "31": [
+          1039.0,
+          218.0,
+          1064.0,
+          244.0
+        ],
+        "32": [
+          1039.0,
+          218.0,
+          1064.0,
+          243.0
+        ],
+        "33": [
+          1037.0,
+          218.0,
+          1064.0,
+          243.0
+        ],
+        "34": [
+          1039.0,
+          219.0,
+          1064.0,
+          244.0
+        ],
+        "35": [
+          1039.0,
+          218.0,
+          1063.0,
+          243.0
+        ],
+        "36": [
+          1039.0,
+          218.0,
+          1064.0,
+          243.0
+        ],
+        "37": [
+          1039.0,
+          218.0,
+          1064.0,
+          243.0
+        ],
+        "38": [
+          1039.0,
+          218.0,
+          1064.0,
+          243.0
+        ],
+        "39": [
+          1040.0,
+          218.0,
+          1065.0,
+          243.0
+        ],
+        "4": [
+          1035.0,
+          218.0,
+          1061.0,
+          245.0
+        ],
+        "40": [
+          1040.0,
+          217.0,
+          1064.0,
+          243.0
+        ],
+        "41": [
+          1040.0,
+          218.0,
+          1064.0,
+          243.0
+        ],
+        "42": [
+          1040.0,
+          218.0,
+          1065.0,
+          243.0
+        ],
+        "43": [
+          1040.0,
+          218.0,
+          1064.0,
+          242.0
+        ],
+        "44": [
+          1039.0,
+          218.0,
+          1064.0,
+          243.0
+        ],
+        "45": [
+          1041.0,
+          217.0,
+          1065.0,
+          243.0
+        ],
+        "46": [
+          1042.0,
+          218.0,
+          1065.0,
+          242.0
+        ],
+        "47": [
+          1041.0,
+          218.0,
+          1065.0,
+          242.0
+        ],
+        "48": [
+          1041.0,
+          217.0,
+          1065.0,
+          243.0
+        ],
+        "49": [
+          1041.0,
+          218.0,
+          1065.0,
+          244.0
+        ],
+        "5": [
+          1035.0,
+          219.0,
+          1060.0,
+          245.0
+        ],
+        "50": [
+          1042.0,
+          217.0,
+          1066.0,
+          244.0
+        ],
+        "51": [
+          1041.0,
+          218.0,
+          1066.0,
+          242.0
+        ],
+        "52": [
+          1042.0,
+          217.0,
+          1066.0,
+          242.0
+        ],
+        "53": [
+          1040.0,
+          218.0,
+          1066.0,
+          242.0
+        ],
+        "54": [
+          1041.0,
+          218.0,
+          1066.0,
+          242.0
+        ],
+        "55": [
+          1042.0,
+          218.0,
+          1066.0,
+          242.0
+        ],
+        "56": [
+          1043.0,
+          218.0,
+          1066.0,
+          242.0
+        ],
+        "57": [
+          1042.0,
+          218.0,
+          1066.0,
+          243.0
+        ],
+        "58": [
+          1043.0,
+          218.0,
+          1067.0,
+          242.0
+        ],
+        "59": [
+          1042.0,
+          218.0,
+          1067.0,
+          243.0
+        ],
+        "6": [
+          1034.0,
+          219.0,
+          1061.0,
+          245.0
+        ],
+        "60": [
+          1043.0,
+          218.0,
+          1067.0,
+          242.0
+        ],
+        "61": [
+          1043.0,
+          218.0,
+          1067.0,
+          242.0
+        ],
+        "62": [
+          1043.0,
+          218.0,
+          1068.0,
+          243.0
+        ],
+        "63": [
+          1043.0,
+          218.0,
+          1068.0,
+          242.0
+        ],
+        "64": [
+          1043.0,
+          218.0,
+          1068.0,
+          243.0
+        ],
+        "65": [
+          1042.0,
+          217.0,
+          1068.0,
+          243.0
+        ],
+        "66": [
+          1041.0,
+          218.0,
+          1068.0,
+          243.0
+        ],
+        "67": [
+          1043.0,
+          218.0,
+          1068.0,
+          242.0
+        ],
+        "68": [
+          1044.0,
+          218.0,
+          1069.0,
+          243.0
+        ],
+        "69": [
+          1042.0,
+          218.0,
+          1068.0,
+          243.0
+        ],
+        "7": [
+          1032.0,
+          218.0,
+          1060.0,
+          245.0
+        ],
+        "70": [
+          1043.0,
+          218.0,
+          1069.0,
+          243.0
+        ],
+        "71": [
+          1043.0,
+          218.0,
+          1069.0,
+          242.0
+        ],
+        "72": [
+          1043.0,
+          218.0,
+          1068.0,
+          242.0
+        ],
+        "73": [
+          1043.0,
+          218.0,
+          1069.0,
+          243.0
+        ],
+        "74": [
+          1043.0,
+          218.0,
+          1069.0,
+          243.0
+        ],
+        "75": [
+          1043.0,
+          218.0,
+          1069.0,
+          242.0
+        ],
+        "76": [
+          1041.0,
+          218.0,
+          1069.0,
+          242.0
+        ],
+        "77": [
+          1043.0,
+          217.0,
+          1069.0,
+          243.0
+        ],
+        "78": [
+          1041.0,
+          218.0,
+          1069.0,
+          242.0
+        ],
+        "79": [
+          1041.0,
+          218.0,
+          1070.0,
+          243.0
+        ],
+        "8": [
+          1033.0,
+          219.0,
+          1060.0,
+          245.0
+        ],
+        "80": [
+          1040.0,
+          218.0,
+          1069.0,
+          243.0
+        ],
+        "81": [
+          1044.0,
+          218.0,
+          1069.0,
+          242.0
+        ],
+        "82": [
+          1043.0,
+          217.0,
+          1069.0,
+          243.0
+        ],
+        "83": [
+          1045.0,
+          218.0,
+          1070.0,
+          242.0
+        ],
+        "84": [
+          1043.0,
+          218.0,
+          1070.0,
+          242.0
+        ],
+        "85": [
+          1041.0,
+          218.0,
+          1071.0,
+          243.0
+        ],
+        "86": [
+          1044.0,
+          218.0,
+          1069.0,
+          242.0
+        ],
+        "87": [
+          1042.0,
+          217.0,
+          1072.0,
+          243.0
+        ],
+        "88": [
+          1044.0,
+          218.0,
+          1070.0,
+          242.0
+        ],
+        "89": [
+          1043.0,
+          217.0,
+          1070.0,
+          243.0
+        ],
+        "9": [
+          1034.0,
+          218.0,
+          1061.0,
+          245.0
+        ],
+        "90": [
+          1045.0,
+          218.0,
+          1070.0,
+          242.0
+        ],
+        "91": [
+          1045.0,
+          218.0,
+          1070.0,
+          242.0
+        ],
+        "92": [
+          1045.0,
+          217.0,
+          1072.0,
+          243.0
+        ],
+        "93": [
+          1046.0,
+          218.0,
+          1070.0,
+          242.0
+        ],
+        "94": [
+          1045.0,
+          217.0,
+          1070.0,
+          242.0
+        ],
+        "95": [
+          1041.0,
+          217.0,
+          1071.0,
+          242.0
+        ],
+        "96": [
+          1045.0,
+          217.0,
+          1071.0,
+          242.0
+        ],
+        "97": [
+          1045.0,
+          217.0,
+          1070.0,
+          242.0
+        ],
+        "98": [
+          1042.0,
+          218.0,
+          1072.0,
+          243.0
+        ],
+        "99": [
+          1046.0,
+          217.0,
+          1071.0,
+          242.0
+        ]
+      },
+      "boxes_source": "sam3_per_frame",
+      "category": "airplane",
+      "confirmed": false,
+      "mode": "static",
+      "note": "",
+      "reviewer": "",
+      "updated": "2026-07-27T19:59:39",
+      "verdict": "accept"
+    },
+    "satmtb/airplane/03#det_xml:airplane:5": {
+      "boxes": null,
+      "boxes_source": null,
+      "category": "airplane",
+      "confirmed": false,
+      "mode": "static",
+      "note": "",
+      "reviewer": "",
+      "updated": "2026-07-27T20:00:02",
+      "verdict": "accept"
+    },
+    "satmtb/airplane/04#det_xml:airplane:1": {
+      "boxes": null,
+      "boxes_source": null,
+      "category": "airplane",
+      "confirmed": false,
+      "mode": "static",
+      "note": "",
+      "reviewer": "",
+      "updated": "2026-07-27T20:00:11",
+      "verdict": "accept"
+    },
+    "satmtb/airplane/04#det_xml:airplane:2": {
+      "boxes": null,
+      "boxes_source": null,
+      "category": "airplane",
+      "confirmed": false,
+      "mode": "static",
+      "note": "",
+      "reviewer": "",
+      "updated": "2026-07-27T20:00:09",
+      "verdict": "accept"
+    },
+    "satmtb/airplane/04#det_xml:airplane:3": {
+      "boxes": null,
+      "boxes_source": null,
+      "category": "airplane",
+      "confirmed": false,
+      "mode": "static",
+      "note": "",
+      "reviewer": "",
+      "updated": "2026-07-27T20:00:15",
+      "verdict": "accept"
+    },
+    "satmtb/airplane/04#det_xml:airplane:4": {
+      "boxes": null,
+      "boxes_source": null,
+      "category": "airplane",
+      "confirmed": false,
+      "mode": "static",
+      "note": "",
+      "reviewer": "",
+      "updated": "2026-07-27T20:00:12",
+      "verdict": "accept"
+    },
+    "satmtb/airplane/04#det_xml:airplane:6": {
+      "boxes": null,
+      "boxes_source": null,
+      "category": "airplane",
+      "confirmed": false,
+      "mode": "static",
+      "note": "",
+      "reviewer": "",
+      "updated": "2026-07-27T20:00:17",
+      "verdict": "accept"
+    },
+    "satmtb/airplane/04#det_xml:airplane:7": {
+      "boxes": null,
+      "boxes_source": null,
+      "category": "airplane",
+      "confirmed": false,
+      "mode": "static",
+      "note": "",
+      "reviewer": "",
+      "updated": "2026-07-27T20:00:13",
+      "verdict": "accept"
+    },
+    "satmtb/airplane/04#det_xml:airplane:8": {
+      "boxes": null,
+      "boxes_source": null,
+      "category": "airplane",
+      "confirmed": false,
+      "mode": "static",
+      "note": "",
+      "reviewer": "",
+      "updated": "2026-07-27T20:00:16",
+      "verdict": "accept"
+    },
+    "satmtb/airplane/05#det_xml:airplane:1": {
+      "boxes": null,
+      "boxes_source": null,
+      "category": "airplane",
+      "confirmed": false,
+      "mode": "static",
+      "note": "",
+      "reviewer": "",
+      "updated": "2026-07-27T20:00:25",
+      "verdict": "accept"
+    },
+    "satmtb/airplane/05#det_xml:airplane:10": {
+      "boxes": null,
+      "boxes_source": null,
+      "category": "airplane",
+      "confirmed": false,
+      "mode": "static",
+      "note": "",
+      "reviewer": "",
+      "updated": "2026-07-27T20:00:23",
+      "verdict": "accept"
+    },
+    "satmtb/airplane/05#det_xml:airplane:11": {
+      "boxes": null,
+      "boxes_source": null,
+      "category": "airplane",
+      "confirmed": false,
+      "mode": "static",
+      "note": "",
+      "reviewer": "",
+      "updated": "2026-07-27T20:00:28",
+      "verdict": "accept"
+    },
+    "satmtb/airplane/05#det_xml:airplane:4": {
+      "boxes": null,
+      "boxes_source": null,
+      "category": "airplane",
+      "confirmed": false,
+      "mode": "static",
+      "note": "",
+      "reviewer": "",
+      "updated": "2026-07-27T20:00:27",
+      "verdict": "accept"
+    },
+    "satmtb/airplane/05#det_xml:airplane:5": {
+      "boxes": null,
+      "boxes_source": null,
+      "category": "airplane",
+      "confirmed": false,
+      "mode": "static",
+      "note": "",
+      "reviewer": "",
+      "updated": "2026-07-27T20:00:30",
+      "verdict": "accept"
+    },
+    "satmtb/airplane/05#det_xml:airplane:6": {
+      "boxes": null,
+      "boxes_source": null,
+      "category": "airplane",
+      "confirmed": false,
+      "mode": "static",
+      "note": "",
+      "reviewer": "",
+      "updated": "2026-07-27T20:00:19",
+      "verdict": "accept"
+    },
+    "satmtb/airplane/05#det_xml:airplane:7": {
+      "boxes": null,
+      "boxes_source": null,
+      "category": "airplane",
+      "confirmed": false,
+      "mode": "static",
+      "note": "",
+      "reviewer": "",
+      "updated": "2026-07-27T20:00:26",
+      "verdict": "accept"
+    },
+    "satmtb/airplane/05#det_xml:airplane:9": {
+      "boxes": null,
+      "boxes_source": null,
+      "category": "airplane",
+      "confirmed": false,
+      "mode": "static",
+      "note": "",
+      "reviewer": "",
+      "updated": "2026-07-27T20:00:21",
+      "verdict": "accept"
+    },
+    "satmtb/airplane/07#det_xml:airplane:1": {
+      "boxes": null,
+      "boxes_source": null,
+      "category": "airplane",
+      "confirmed": false,
+      "mode": "static",
+      "note": "",
+      "reviewer": "",
+      "updated": "2026-07-27T20:00:38",
+      "verdict": "accept"
+    },
+    "satmtb/airplane/07#det_xml:airplane:10": {
+      "boxes": null,
+      "boxes_source": null,
+      "category": "airplane",
+      "confirmed": false,
+      "mode": "static",
+      "note": "",
+      "reviewer": "",
+      "updated": "2026-07-27T20:00:32",
+      "verdict": "accept"
+    },
+    "satmtb/airplane/07#det_xml:airplane:11": {
+      "boxes": null,
+      "boxes_source": null,
+      "category": "airplane",
+      "confirmed": false,
+      "mode": "static",
+      "note": "",
+      "reviewer": "",
+      "updated": "2026-07-27T20:00:37",
+      "verdict": "accept"
+    },
+    "satmtb/airplane/07#det_xml:airplane:2": {
+      "boxes": null,
+      "boxes_source": null,
+      "category": "airplane",
+      "confirmed": false,
+      "mode": "static",
+      "note": "",
+      "reviewer": "",
+      "updated": "2026-07-27T20:00:36",
+      "verdict": "accept"
+    },
+    "satmtb/airplane/07#det_xml:airplane:3": {
+      "boxes": null,
+      "boxes_source": null,
+      "category": "airplane",
+      "confirmed": false,
+      "mode": "static",
+      "note": "",
+      "reviewer": "",
+      "updated": "2026-07-27T20:00:41",
+      "verdict": "accept"
+    },
+    "satmtb/airplane/07#det_xml:airplane:4": {
+      "boxes": null,
+      "boxes_source": null,
+      "category": "airplane",
+      "confirmed": false,
+      "mode": "static",
+      "note": "",
+      "reviewer": "",
+      "updated": "2026-07-27T20:00:33",
+      "verdict": "accept"
+    },
+    "satmtb/airplane/07#det_xml:airplane:5": {
+      "boxes": null,
+      "boxes_source": null,
+      "category": "airplane",
+      "confirmed": false,
+      "mode": "static",
+      "note": "",
+      "reviewer": "",
+      "updated": "2026-07-27T20:00:41",
+      "verdict": "accept"
+    },
+    "satmtb/airplane/07#det_xml:airplane:6": {
+      "boxes": null,
+      "boxes_source": null,
+      "category": "airplane",
+      "confirmed": false,
+      "mode": "static",
+      "note": "",
+      "reviewer": "",
+      "updated": "2026-07-27T20:00:37",
+      "verdict": "accept"
+    },
+    "satmtb/airplane/07#det_xml:airplane:7": {
+      "boxes": null,
+      "boxes_source": null,
+      "category": "airplane",
+      "confirmed": false,
+      "mode": "static",
+      "note": "",
+      "reviewer": "",
+      "updated": "2026-07-27T20:00:40",
+      "verdict": "accept"
+    },
+    "satmtb/airplane/07#det_xml:airplane:8": {
+      "boxes": null,
+      "boxes_source": null,
+      "category": "airplane",
+      "confirmed": false,
+      "mode": "static",
+      "note": "",
+      "reviewer": "",
+      "updated": "2026-07-27T20:00:39",
+      "verdict": "accept"
+    },
+    "satmtb/airplane/07#det_xml:airplane:9": {
+      "boxes": null,
+      "boxes_source": null,
+      "category": "airplane",
+      "confirmed": false,
+      "mode": "static",
+      "note": "",
+      "reviewer": "",
+      "updated": "2026-07-27T20:00:34",
+      "verdict": "accept"
+    },
+    "satmtb/airplane/08#det_xml:airplane:1": {
+      "boxes": null,
+      "boxes_source": null,
+      "category": "airplane",
+      "confirmed": false,
+      "mode": "static",
+      "note": "",
+      "reviewer": "",
+      "updated": "2026-07-27T20:00:47",
+      "verdict": "accept"
+    },
+    "satmtb/airplane/08#det_xml:airplane:2": {
+      "boxes": null,
+      "boxes_source": null,
+      "category": "airplane",
+      "confirmed": false,
+      "mode": "static",
+      "note": "",
+      "reviewer": "",
+      "updated": "2026-07-27T20:00:48",
+      "verdict": "accept"
+    },
+    "satmtb/airplane/08#det_xml:airplane:3": {
+      "boxes": null,
+      "boxes_source": null,
+      "category": "airplane",
+      "confirmed": false,
+      "mode": "static",
+      "note": "",
+      "reviewer": "",
+      "updated": "2026-07-27T20:00:46",
+      "verdict": "accept"
+    },
+    "satmtb/airplane/08#det_xml:airplane:4": {
+      "boxes": null,
+      "boxes_source": null,
+      "category": "airplane",
+      "confirmed": false,
+      "mode": "static",
+      "note": "",
+      "reviewer": "",
+      "updated": "2026-07-27T20:00:47",
+      "verdict": "accept"
+    },
+    "satmtb/airplane/08#det_xml:airplane:5": {
+      "boxes": null,
+      "boxes_source": null,
+      "category": "airplane",
+      "confirmed": false,
+      "mode": "static",
+      "note": "",
+      "reviewer": "",
+      "updated": "2026-07-27T20:00:43",
+      "verdict": "accept"
+    },
+    "satmtb/airplane/08#det_xml:airplane:6": {
+      "boxes": null,
+      "boxes_source": null,
+      "category": "airplane",
+      "confirmed": false,
+      "mode": "static",
+      "note": "",
+      "reviewer": "",
+      "updated": "2026-07-27T20:00:45",
+      "verdict": "accept"
+    },
+    "satmtb/airplane/10#det_xml:airplane:1": {
+      "boxes": null,
+      "boxes_source": null,
+      "category": "airplane",
+      "confirmed": false,
+      "mode": "static",
+      "note": "",
+      "reviewer": "",
+      "updated": "2026-07-27T20:00:51",
+      "verdict": "accept"
+    },
+    "satmtb/airplane/10#det_xml:airplane:10": {
+      "boxes": null,
+      "boxes_source": null,
+      "category": "airplane",
+      "confirmed": false,
+      "mode": "static",
+      "note": "",
+      "reviewer": "",
+      "updated": "2026-07-27T20:01:01",
+      "verdict": "accept"
+    },
+    "satmtb/airplane/10#det_xml:airplane:11": {
+      "boxes": null,
+      "boxes_source": null,
+      "category": "airplane",
+      "confirmed": false,
+      "mode": "static",
+      "note": "",
+      "reviewer": "",
+      "updated": "2026-07-27T20:00:56",
+      "verdict": "accept"
+    },
+    "satmtb/airplane/10#det_xml:airplane:12": {
+      "boxes": null,
+      "boxes_source": null,
+      "category": "airplane",
+      "confirmed": false,
+      "mode": "static",
+      "note": "",
+      "reviewer": "",
+      "updated": "2026-07-27T20:00:51",
+      "verdict": "accept"
+    },
+    "satmtb/airplane/10#det_xml:airplane:13": {
+      "boxes": null,
+      "boxes_source": null,
+      "category": "airplane",
+      "confirmed": false,
+      "mode": "static",
+      "note": "",
+      "reviewer": "",
+      "updated": "2026-07-27T20:00:57",
+      "verdict": "accept"
+    },
+    "satmtb/airplane/10#det_xml:airplane:14": {
+      "boxes": null,
+      "boxes_source": null,
+      "category": "airplane",
+      "confirmed": false,
+      "mode": "static",
+      "note": "",
+      "reviewer": "",
+      "updated": "2026-07-27T20:00:54",
+      "verdict": "accept"
+    },
+    "satmtb/airplane/10#det_xml:airplane:15": {
+      "boxes": null,
+      "boxes_source": null,
+      "category": "airplane",
+      "confirmed": false,
+      "mode": "static",
+      "note": "",
+      "reviewer": "",
+      "updated": "2026-07-27T20:00:58",
+      "verdict": "accept"
+    },
+    "satmtb/airplane/10#det_xml:airplane:16": {
+      "boxes": null,
+      "boxes_source": null,
+      "category": "airplane",
+      "confirmed": false,
+      "mode": "static",
+      "note": "",
+      "reviewer": "",
+      "updated": "2026-07-27T20:00:58",
+      "verdict": "accept"
+    },
+    "satmtb/airplane/10#det_xml:airplane:18": {
+      "boxes": null,
+      "boxes_source": null,
+      "category": "airplane",
+      "confirmed": false,
+      "mode": "static",
+      "note": "",
+      "reviewer": "",
+      "updated": "2026-07-27T20:00:49",
+      "verdict": "accept"
+    },
+    "satmtb/airplane/10#det_xml:airplane:19": {
+      "boxes": null,
+      "boxes_source": null,
+      "category": "airplane",
+      "confirmed": false,
+      "mode": "static",
+      "note": "",
+      "reviewer": "",
+      "updated": "2026-07-27T20:00:52",
+      "verdict": "accept"
+    },
+    "satmtb/airplane/10#det_xml:airplane:2": {
+      "boxes": null,
+      "boxes_source": null,
+      "category": "airplane",
+      "confirmed": false,
+      "mode": "static",
+      "note": "",
+      "reviewer": "",
+      "updated": "2026-07-27T20:00:59",
+      "verdict": "accept"
+    },
+    "satmtb/airplane/10#det_xml:airplane:21": {
+      "boxes": null,
+      "boxes_source": null,
+      "category": "airplane",
+      "confirmed": false,
+      "mode": "static",
+      "note": "",
+      "reviewer": "",
+      "updated": "2026-07-27T20:00:53",
+      "verdict": "accept"
+    },
+    "satmtb/airplane/10#det_xml:airplane:3": {
+      "boxes": null,
+      "boxes_source": null,
+      "category": "airplane",
+      "confirmed": false,
+      "mode": "static",
+      "note": "",
+      "reviewer": "",
+      "updated": "2026-07-27T20:00:53",
+      "verdict": "accept"
+    },
+    "satmtb/airplane/10#det_xml:airplane:4": {
+      "boxes": null,
+      "boxes_source": null,
+      "category": "airplane",
+      "confirmed": false,
+      "mode": "static",
+      "note": "",
+      "reviewer": "",
+      "updated": "2026-07-27T20:00:55",
+      "verdict": "accept"
+    },
+    "satmtb/airplane/10#det_xml:airplane:5": {
+      "boxes": null,
+      "boxes_source": null,
+      "category": "airplane",
+      "confirmed": false,
+      "mode": "static",
+      "note": "",
+      "reviewer": "",
+      "updated": "2026-07-27T20:00:55",
+      "verdict": "accept"
+    },
+    "satmtb/airplane/10#det_xml:airplane:6": {
+      "boxes": null,
+      "boxes_source": null,
+      "category": "airplane",
+      "confirmed": false,
+      "mode": "static",
+      "note": "",
+      "reviewer": "",
+      "updated": "2026-07-27T20:00:50",
+      "verdict": "accept"
+    },
+    "satmtb/airplane/10#det_xml:airplane:7": {
+      "boxes": null,
+      "boxes_source": null,
+      "category": "airplane",
+      "confirmed": false,
+      "mode": "static",
+      "note": "",
+      "reviewer": "",
+      "updated": "2026-07-27T20:01:00",
+      "verdict": "accept"
+    },
+    "satmtb/airplane/10#det_xml:airplane:8": {
+      "boxes": null,
+      "boxes_source": null,
+      "category": "airplane",
+      "confirmed": false,
+      "mode": "static",
+      "note": "",
+      "reviewer": "",
+      "updated": "2026-07-27T20:01:00",
+      "verdict": "accept"
+    },
+    "satmtb/airplane/10#det_xml:airplane:9": {
+      "boxes": null,
+      "boxes_source": null,
+      "category": "airplane",
+      "confirmed": false,
+      "mode": "static",
+      "note": "",
+      "reviewer": "",
+      "updated": "2026-07-27T20:00:59",
+      "verdict": "accept"
+    },
+    "satmtb/airplane/12#det_xml:airplane:2": {
+      "boxes": null,
+      "boxes_source": null,
+      "category": "airplane",
+      "confirmed": false,
+      "mode": "static",
+      "note": "",
+      "reviewer": "",
+      "updated": "2026-07-27T20:01:05",
+      "verdict": "accept"
+    },
+    "satmtb/airplane/12#det_xml:airplane:3": {
+      "boxes": null,
+      "boxes_source": null,
+      "category": "airplane",
+      "confirmed": false,
+      "mode": "static",
+      "note": "",
+      "reviewer": "",
+      "updated": "2026-07-27T20:01:03",
+      "verdict": "accept"
+    },
+    "satmtb/airplane/12#det_xml:airplane:5": {
+      "boxes": null,
+      "boxes_source": null,
+      "category": "airplane",
+      "confirmed": false,
+      "mode": "static",
+      "note": "",
+      "reviewer": "",
+      "updated": "2026-07-27T20:01:02",
+      "verdict": "accept"
+    },
+    "satmtb/airplane/12#det_xml:airplane:6": {
+      "boxes": null,
+      "boxes_source": null,
+      "category": "airplane",
+      "confirmed": false,
+      "mode": "static",
+      "note": "",
+      "reviewer": "",
+      "updated": "2026-07-27T20:01:03",
+      "verdict": "accept"
+    },
+    "satmtb/airplane/12#det_xml:airplane:7": {
+      "boxes": null,
+      "boxes_source": null,
+      "category": "airplane",
+      "confirmed": false,
+      "mode": "static",
+      "note": "",
+      "reviewer": "",
+      "updated": "2026-07-27T20:01:04",
+      "verdict": "accept"
+    },
+    "satmtb/airplane/14#det_xml:airplane:2": {
+      "boxes": null,
+      "boxes_source": null,
+      "category": "airplane",
+      "confirmed": false,
+      "mode": "static",
+      "note": "",
+      "reviewer": "",
+      "updated": "2026-07-27T20:01:07",
+      "verdict": "accept"
+    },
+    "satmtb/airplane/14#det_xml:airplane:3": {
+      "boxes": null,
+      "boxes_source": null,
+      "category": "airplane",
+      "confirmed": false,
+      "mode": "static",
+      "note": "",
+      "reviewer": "",
+      "updated": "2026-07-27T20:01:08",
+      "verdict": "accept"
+    },
+    "satmtb/airplane/14#det_xml:airplane:4": {
+      "boxes": null,
+      "boxes_source": null,
+      "category": "airplane",
+      "confirmed": false,
+      "mode": "static",
+      "note": "",
+      "reviewer": "",
+      "updated": "2026-07-27T20:01:05",
+      "verdict": "accept"
+    },
+    "satmtb/airplane/14#det_xml:airplane:5": {
+      "boxes": null,
+      "boxes_source": null,
+      "category": "airplane",
+      "confirmed": false,
+      "mode": "static",
+      "note": "",
+      "reviewer": "",
+      "updated": "2026-07-27T20:01:06",
+      "verdict": "accept"
+    },
+    "satmtb/airplane/14#det_xml:airplane:6": {
+      "boxes": null,
+      "boxes_source": null,
+      "category": "airplane",
+      "confirmed": false,
+      "mode": "static",
+      "note": "",
+      "reviewer": "",
+      "updated": "2026-07-27T20:01:08",
+      "verdict": "accept"
+    },
+    "satmtb/airplane/14#det_xml:airplane:7": {
+      "boxes": null,
+      "boxes_source": null,
+      "category": "airplane",
+      "confirmed": false,
+      "mode": "static",
+      "note": "",
+      "reviewer": "",
+      "updated": "2026-07-27T20:01:09",
+      "verdict": "accept"
+    },
+    "satmtb/airplane/14#det_xml:airplane:8": {
+      "boxes": null,
+      "boxes_source": null,
+      "category": "airplane",
+      "confirmed": false,
+      "mode": "static",
+      "note": "",
+      "reviewer": "",
+      "updated": "2026-07-27T20:01:09",
+      "verdict": "accept"
+    },
+    "satmtb/airplane/15#det_xml:airplane:2": {
+      "boxes": null,
+      "boxes_source": null,
+      "category": "airplane",
+      "confirmed": false,
+      "mode": "static",
+      "note": "",
+      "reviewer": "",
+      "updated": "2026-07-27T20:01:15",
+      "verdict": "accept"
+    },
+    "satmtb/airplane/15#det_xml:airplane:3": {
+      "boxes": null,
+      "boxes_source": null,
+      "category": "airplane",
+      "confirmed": false,
+      "mode": "static",
+      "note": "",
+      "reviewer": "",
+      "updated": "2026-07-27T20:01:13",
+      "verdict": "accept"
+    },
+    "satmtb/airplane/15#det_xml:airplane:4": {
+      "boxes": null,
+      "boxes_source": null,
+      "category": "airplane",
+      "confirmed": false,
+      "mode": "static",
+      "note": "",
+      "reviewer": "",
+      "updated": "2026-07-27T20:01:14",
+      "verdict": "accept"
+    },
+    "satmtb/airplane/15#det_xml:airplane:5": {
+      "boxes": null,
+      "boxes_source": null,
+      "category": "airplane",
+      "confirmed": false,
+      "mode": "static",
+      "note": "",
+      "reviewer": "",
+      "updated": "2026-07-27T20:01:11",
+      "verdict": "accept"
+    },
+    "satmtb/airplane/16#det_xml:airplane:1": {
+      "boxes": null,
+      "boxes_source": null,
+      "category": "airplane",
+      "confirmed": false,
+      "mode": "static",
+      "note": "",
+      "reviewer": "",
+      "updated": "2026-07-27T20:01:16",
+      "verdict": "accept"
+    },
+    "satmtb/airplane/16#det_xml:airplane:2": {
+      "boxes": null,
+      "boxes_source": null,
+      "category": "airplane",
+      "confirmed": false,
+      "mode": "static",
+      "note": "",
+      "reviewer": "",
+      "updated": "2026-07-27T20:01:17",
+      "verdict": "accept"
+    },
+    "satmtb/airplane/16#det_xml:airplane:5": {
+      "boxes": null,
+      "boxes_source": null,
+      "category": "airplane",
+      "confirmed": false,
+      "mode": "static",
+      "note": "",
+      "reviewer": "",
+      "updated": "2026-07-27T20:01:18",
+      "verdict": "accept"
+    },
+    "satmtb/airplane/18#det_xml:airplane:10": {
+      "boxes": null,
+      "boxes_source": null,
+      "category": "airplane",
+      "confirmed": false,
+      "mode": "static",
+      "note": "",
+      "reviewer": "",
+      "updated": "2026-07-27T20:01:25",
+      "verdict": "accept"
+    },
+    "satmtb/airplane/18#det_xml:airplane:11": {
+      "boxes": null,
+      "boxes_source": null,
+      "category": "airplane",
+      "confirmed": false,
+      "mode": "static",
+      "note": "",
+      "reviewer": "",
+      "updated": "2026-07-27T20:01:26",
+      "verdict": "accept"
+    },
+    "satmtb/airplane/18#det_xml:airplane:12": {
+      "boxes": null,
+      "boxes_source": null,
+      "category": "airplane",
+      "confirmed": false,
+      "mode": "static",
+      "note": "",
+      "reviewer": "",
+      "updated": "2026-07-27T20:01:24",
+      "verdict": "accept"
+    },
+    "satmtb/airplane/18#det_xml:airplane:3": {
+      "boxes": null,
+      "boxes_source": null,
+      "category": "airplane",
+      "confirmed": false,
+      "mode": "static",
+      "note": "",
+      "reviewer": "",
+      "updated": "2026-07-27T20:01:20",
+      "verdict": "accept"
+    },
+    "satmtb/airplane/18#det_xml:airplane:4": {
+      "boxes": null,
+      "boxes_source": null,
+      "category": "airplane",
+      "confirmed": false,
+      "mode": "static",
+      "note": "",
+      "reviewer": "",
+      "updated": "2026-07-27T20:01:19",
+      "verdict": "accept"
+    },
+    "satmtb/airplane/18#det_xml:airplane:5": {
+      "boxes": null,
+      "boxes_source": null,
+      "category": "airplane",
+      "confirmed": false,
+      "mode": "static",
+      "note": "",
+      "reviewer": "",
+      "updated": "2026-07-27T20:01:22",
+      "verdict": "accept"
+    },
+    "satmtb/airplane/18#det_xml:airplane:6": {
+      "boxes": null,
+      "boxes_source": null,
+      "category": "airplane",
+      "confirmed": false,
+      "mode": "static",
+      "note": "",
+      "reviewer": "",
+      "updated": "2026-07-27T20:01:26",
+      "verdict": "accept"
+    },
+    "satmtb/airplane/18#det_xml:airplane:7": {
+      "boxes": null,
+      "boxes_source": null,
+      "category": "airplane",
+      "confirmed": false,
+      "mode": "static",
+      "note": "",
+      "reviewer": "",
+      "updated": "2026-07-27T20:01:23",
+      "verdict": "accept"
+    },
+    "satmtb/airplane/18#det_xml:airplane:8": {
+      "boxes": null,
+      "boxes_source": null,
+      "category": "airplane",
+      "confirmed": false,
+      "mode": "static",
+      "note": "",
+      "reviewer": "",
+      "updated": "2026-07-27T20:01:23",
+      "verdict": "accept"
+    },
+    "satmtb/airplane/18#det_xml:airplane:9": {
+      "boxes": null,
+      "boxes_source": null,
+      "category": "airplane",
+      "confirmed": false,
+      "mode": "static",
+      "note": "",
+      "reviewer": "",
+      "updated": "2026-07-27T20:01:21",
+      "verdict": "accept"
+    },
+    "satmtb/airplane/19#det_xml:airplane:1": {
+      "boxes": null,
+      "boxes_source": null,
+      "category": "airplane",
+      "confirmed": false,
+      "mode": "static",
+      "note": "",
+      "reviewer": "",
+      "updated": "2026-07-27T20:01:30",
+      "verdict": "accept"
+    },
+    "satmtb/airplane/19#det_xml:airplane:10": {
+      "boxes": null,
+      "boxes_source": null,
+      "category": "airplane",
+      "confirmed": false,
+      "mode": "static",
+      "note": "",
+      "reviewer": "",
+      "updated": "2026-07-27T20:01:32",
+      "verdict": "accept"
+    },
+    "satmtb/airplane/19#det_xml:airplane:2": {
+      "boxes": null,
+      "boxes_source": null,
+      "category": "airplane",
+      "confirmed": false,
+      "mode": "static",
+      "note": "",
+      "reviewer": "",
+      "updated": "2026-07-27T20:01:32",
+      "verdict": "accept"
+    },
+    "satmtb/airplane/19#det_xml:airplane:3": {
+      "boxes": null,
+      "boxes_source": null,
+      "category": "airplane",
+      "confirmed": false,
+      "mode": "static",
+      "note": "",
+      "reviewer": "",
+      "updated": "2026-07-27T20:01:31",
+      "verdict": "accept"
+    },
+    "satmtb/airplane/19#det_xml:airplane:4": {
+      "boxes": null,
+      "boxes_source": null,
+      "category": "airplane",
+      "confirmed": false,
+      "mode": "static",
+      "note": "",
+      "reviewer": "",
+      "updated": "2026-07-27T20:01:33",
+      "verdict": "accept"
+    },
+    "satmtb/airplane/19#det_xml:airplane:5": {
+      "boxes": null,
+      "boxes_source": null,
+      "category": "airplane",
+      "confirmed": false,
+      "mode": "static",
+      "note": "",
+      "reviewer": "",
+      "updated": "2026-07-27T20:01:27",
+      "verdict": "accept"
+    },
+    "satmtb/airplane/19#det_xml:airplane:6": {
+      "boxes": null,
+      "boxes_source": null,
+      "category": "airplane",
+      "confirmed": false,
+      "mode": "static",
+      "note": "",
+      "reviewer": "",
+      "updated": "2026-07-27T20:01:29",
+      "verdict": "accept"
+    },
+    "satmtb/airplane/19#det_xml:airplane:7": {
+      "boxes": null,
+      "boxes_source": null,
+      "category": "airplane",
+      "confirmed": false,
+      "mode": "static",
+      "note": "",
+      "reviewer": "",
+      "updated": "2026-07-27T20:01:30",
+      "verdict": "accept"
+    },
+    "satmtb/airplane/19#det_xml:airplane:8": {
+      "boxes": null,
+      "boxes_source": null,
+      "category": "airplane",
+      "confirmed": false,
+      "mode": "static",
+      "note": "",
+      "reviewer": "",
+      "updated": "2026-07-27T20:01:28",
+      "verdict": "accept"
+    },
+    "satmtb/airplane/19#det_xml:airplane:9": {
+      "boxes": null,
+      "boxes_source": null,
+      "category": "airplane",
+      "confirmed": false,
+      "mode": "static",
+      "note": "",
+      "reviewer": "",
+      "updated": "2026-07-27T20:01:28",
+      "verdict": "accept"
+    },
+    "satmtb/airplane/20#det_xml:airplane:10": {
+      "boxes": null,
+      "boxes_source": null,
+      "category": "airplane",
+      "confirmed": false,
+      "mode": "static",
+      "note": "",
+      "reviewer": "",
+      "updated": "2026-07-27T20:01:35",
+      "verdict": "accept"
+    },
+    "satmtb/airplane/20#det_xml:airplane:11": {
+      "boxes": null,
+      "boxes_source": null,
+      "category": "airplane",
+      "confirmed": false,
+      "mode": "static",
+      "note": "",
+      "reviewer": "",
+      "updated": "2026-07-27T20:01:35",
+      "verdict": "accept"
+    },
+    "satmtb/airplane/20#det_xml:airplane:12": {
+      "boxes": null,
+      "boxes_source": null,
+      "category": "airplane",
+      "confirmed": false,
+      "mode": "static",
+      "note": "",
+      "reviewer": "",
+      "updated": "2026-07-27T20:06:56",
+      "verdict": "accept"
+    },
+    "satmtb/airplane/20#det_xml:airplane:13": {
+      "boxes": null,
+      "boxes_source": null,
+      "category": "airplane",
+      "confirmed": false,
+      "mode": "static",
+      "note": "",
+      "reviewer": "",
+      "updated": "2026-07-27T20:01:38",
+      "verdict": "accept"
+    },
+    "satmtb/airplane/20#det_xml:airplane:3": {
+      "boxes": null,
+      "boxes_source": null,
+      "category": "airplane",
+      "confirmed": false,
+      "mode": "static",
+      "note": "",
+      "reviewer": "",
+      "updated": "2026-07-27T20:01:38",
+      "verdict": "accept"
+    },
+    "satmtb/airplane/20#det_xml:airplane:4": {
+      "boxes": null,
+      "boxes_source": null,
+      "category": "airplane",
+      "confirmed": false,
+      "mode": "static",
+      "note": "",
+      "reviewer": "",
+      "updated": "2026-07-27T20:01:37",
+      "verdict": "accept"
+    },
+    "satmtb/airplane/20#det_xml:airplane:5": {
+      "boxes": null,
+      "boxes_source": null,
+      "category": "airplane",
+      "confirmed": false,
+      "mode": "static",
+      "note": "",
+      "reviewer": "",
+      "updated": "2026-07-27T20:06:58",
+      "verdict": "accept"
+    },
+    "satmtb/airplane/20#det_xml:airplane:6": {
+      "boxes": null,
+      "boxes_source": null,
+      "category": "airplane",
+      "confirmed": false,
+      "mode": "static",
+      "note": "",
+      "reviewer": "",
+      "updated": "2026-07-27T20:01:34",
+      "verdict": "accept"
+    },
+    "satmtb/airplane/20#det_xml:airplane:7": {
+      "boxes": null,
+      "boxes_source": null,
+      "category": "airplane",
+      "confirmed": false,
+      "mode": "static",
+      "note": "",
+      "reviewer": "",
+      "updated": "2026-07-27T20:06:53",
+      "verdict": "accept"
+    },
+    "satmtb/airplane/20#det_xml:airplane:8": {
+      "boxes": null,
+      "boxes_source": null,
+      "category": "airplane",
+      "confirmed": false,
+      "mode": "static",
+      "note": "",
+      "reviewer": "",
+      "updated": "2026-07-27T20:01:36",
+      "verdict": "accept"
+    },
+    "satmtb/airplane/20#det_xml:airplane:9": {
+      "boxes": null,
+      "boxes_source": null,
+      "category": "airplane",
+      "confirmed": false,
+      "mode": "static",
+      "note": "",
+      "reviewer": "",
+      "updated": "2026-07-27T20:01:36",
+      "verdict": "accept"
+    },
+    "satmtb/airplane/21#det_xml:airplane:2": {
+      "boxes": null,
+      "boxes_source": null,
+      "category": "airplane",
+      "confirmed": false,
+      "mode": "static",
+      "note": "",
+      "reviewer": "",
+      "updated": "2026-07-27T20:15:20",
+      "verdict": "accept"
+    },
+    "satmtb/airplane/21#det_xml:airplane:3": {
+      "boxes": null,
+      "boxes_source": null,
+      "category": "airplane",
+      "confirmed": false,
+      "mode": "static",
+      "note": "",
+      "reviewer": "",
+      "updated": "2026-07-27T20:15:23",
+      "verdict": "accept"
+    },
+    "satmtb/airplane/21#det_xml:airplane:4": {
+      "boxes": null,
+      "boxes_source": null,
+      "category": "airplane",
+      "confirmed": false,
+      "mode": "static",
+      "note": "",
+      "reviewer": "",
+      "updated": "2026-07-27T20:15:28",
+      "verdict": "accept"
+    },
+    "satmtb/airplane/21#det_xml:airplane:5": {
+      "boxes": null,
+      "boxes_source": null,
+      "category": "airplane",
+      "confirmed": false,
+      "mode": "static",
+      "note": "",
+      "reviewer": "",
+      "updated": "2026-07-27T20:15:22",
+      "verdict": "accept"
+    },
+    "satmtb/airplane/21#det_xml:airplane:6": {
+      "boxes": null,
+      "boxes_source": null,
+      "category": "airplane",
+      "confirmed": false,
+      "mode": "static",
+      "note": "",
+      "reviewer": "",
+      "updated": "2026-07-27T20:15:24",
+      "verdict": "accept"
+    }
+  },
+  "version": 1
+}

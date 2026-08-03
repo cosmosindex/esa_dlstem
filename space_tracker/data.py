@@ -42,17 +42,26 @@ def resolve(seq: SequenceRecord, dataset_root: str | Path) -> tuple[Path, Path]:
     return root / seq.image_dir, root / seq.gt_path
 
 
+def _is_frame(path: Path) -> bool:
+    """False for AppleDouble sidecars (``._0001.jpg``) and other dotfiles.
+
+    OOTB and SatSOT ship tens of thousands of these. Unlike a shell glob,
+    ``Path.glob('*.jpg')`` matches them, and ``._0001.jpg`` sorts *before*
+    ``0001.jpg`` — so without this filter every frame index is off.
+    """
+    return not path.name.startswith(".")
+
+
 def _list_images(image_dir: Path, image_glob: str) -> list[Path]:
     """Return per-frame image paths sorted in capture order."""
-    files = sorted(image_dir.glob(image_glob))
-    return files
+    return sorted(p for p in image_dir.glob(image_glob) if _is_frame(p))
 
 
 # ---------------------------------------------------------------- OOTB --
 
 def _iter_ootb(seq: SequenceRecord, dataset_root: Path) -> Iterator[Frame]:
     img_dir, gt_path = resolve(seq, dataset_root)
-    frames = sorted(img_dir.glob("*.jpg"))
+    frames = _list_images(img_dir, "*.jpg")
     with open(gt_path) as f:
         lines = [ln.strip() for ln in f if ln.strip()]
     n = min(len(frames), len(lines))
@@ -76,7 +85,7 @@ def _iter_ootb(seq: SequenceRecord, dataset_root: Path) -> Iterator[Frame]:
 
 def _iter_satsot(seq: SequenceRecord, dataset_root: Path) -> Iterator[Frame]:
     img_dir, gt_path = resolve(seq, dataset_root)
-    frames = sorted(img_dir.iterdir())
+    frames = sorted(p for p in img_dir.iterdir() if _is_frame(p))
     frames = [p for p in frames if p.suffix.lower() in (".jpg", ".jpeg", ".png", ".tif", ".tiff", ".bmp")]
     with open(gt_path) as f:
         lines = [ln.strip() for ln in f if ln.strip()]
@@ -104,7 +113,7 @@ def _iter_satsot(seq: SequenceRecord, dataset_root: Path) -> Iterator[Frame]:
 def _iter_sv248s(seq: SequenceRecord, dataset_root: Path) -> Iterator[Frame]:
     img_dir, rect_path = resolve(seq, dataset_root)
     state_path = rect_path.with_suffix(".state")
-    frames = sorted(img_dir.glob("*.tiff"))
+    frames = _list_images(img_dir, "*.tiff")
 
     rects: list[tuple[float, float, float, float]] = []
     with open(rect_path) as f:

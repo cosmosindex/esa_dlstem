@@ -115,3 +115,6 @@ docs/drafts/
 
 # Source videos for README figures — keep locally, embed the GIFs instead
 docs/figures/**/*.mp4
+
+# Review-tool auto-snapshots (written on every action)
+docs/annotation_review/backups/

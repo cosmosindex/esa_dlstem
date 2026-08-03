@@ -1,0 +1,8639 @@
+{
+ "version": "1.0",
+ "name": "space-tracker-size-split",
+ "description": "Per-sequence small / large object split for the Space-tracker SOT and MOT manifests.",
+ "criterion": {
+  "metric": "median_sqrt_area_px",
+  "definition": "median over all GT boxes in the sequence of sqrt(w * h) in pixels",
+  "threshold_px": 32.0,
+  "small_if": "median_sqrt_area_px <= 32.0",
+  "note": "COCO's small-object threshold (area <= 32*32). Sequence-level assignment by the median keeps sequences that merely jitter across the threshold out of the small bucket."
+ },
+ "source_manifests": [
+  "space_tracker.json",
+  "space_tracker_mot.json"
+ ],
+ "counts": {
+  "MOT/airmot": {
+   "small": 45,
+   "large": 24
+  },
+  "MOT/rscardata": {
+   "small": 77,
+   "large": 0
+  },
+  "MOT/satmtb": {
+   "small": 187,
+   "large": 50
+  },
+  "MOT/sdmcar": {
+   "small": 99,
+   "large": 0
+  },
+  "MOT/viso": {
+   "small": 4,
+   "large": 5
+  },
+  "SOT/ootb": {
+   "small": 74,
+   "large": 36
+  },
+  "SOT/satsot": {
+   "small": 75,
+   "large": 30
+  },
+  "SOT/sv248s": {
+   "small": 246,
+   "large": 2
+  }
+ },
+ "n_sequences": 954,
+ "sequences": {
+  "airmot/100": {
+   "task": "MOT",
+   "dataset": "airmot",
+   "category": "ship",
+   "bucket": "small",
+   "median_sqrt_area_px": 8.37,
+   "n_boxes": 83652,
+   "frac_small_area": 0.9961
+  },
+  "airmot/11": {
+   "task": "MOT",
+   "dataset": "airmot",
+   "category": "airplane",
+   "bucket": "small",
+   "median_sqrt_area_px": 31.02,
+   "n_boxes": 715,
+   "frac_small_area": 0.8
+  },
+  "airmot/12": {
+   "task": "MOT",
+   "dataset": "airmot",
+   "category": "ship",
+   "bucket": "small",
+   "median_sqrt_area_px": 8.06,
+   "n_boxes": 41155,
+   "frac_small_area": 1.0
+  },
+  "airmot/13": {
+   "task": "MOT",
+   "dataset": "airmot",
+   "category": "ship",
+   "bucket": "small",
+   "median_sqrt_area_px": 7.48,
+   "n_boxes": 2579,
+   "frac_small_area": 0.874
+  },
+  "airmot/14": {
+   "task": "MOT",
+   "dataset": "airmot",
+   "category": "ship",
+   "bucket": "small",
+   "median_sqrt_area_px": 8.49,
+   "n_boxes": 851,
+   "frac_small_area": 1.0
+  },
+  "airmot/15": {
+   "task": "MOT",
+   "dataset": "airmot",
+   "category": "ship",
+   "bucket": "small",
+   "median_sqrt_area_px": 7.48,
+   "n_boxes": 3724,
+   "frac_small_area": 1.0
+  },
+  "airmot/16": {
+   "task": "MOT",
+   "dataset": "airmot",
+   "category": "ship",
+   "bucket": "small",
+   "median_sqrt_area_px": 7.94,
+   "n_boxes": 7742,
+   "frac_small_area": 0.958
+  },
+  "airmot/17": {
+   "task": "MOT",
+   "dataset": "airmot",
+   "category": "ship",
+   "bucket": "small",
+   "median_sqrt_area_px": 14.07,
+   "n_boxes": 325,
+   "frac_small_area": 1.0
+  },
+  "airmot/18": {
+   "task": "MOT",
+   "dataset": "airmot",
+   "category": "ship",
+   "bucket": "small",
+   "median_sqrt_area_px": 13.07,
+   "n_boxes": 4564,
+   "frac_small_area": 1.0
+  },
+  "airmot/19": {
+   "task": "MOT",
+   "dataset": "airmot",
+   "category": "ship",
+   "bucket": "small",
+   "median_sqrt_area_px": 22.58,
+   "n_boxes": 3033,
+   "frac_small_area": 0.8925
+  },
+  "airmot/20": {
+   "task": "MOT",
+   "dataset": "airmot",
+   "category": "ship",
+   "bucket": "small",
+   "median_sqrt_area_px": 19.9,
+   "n_boxes": 902,
+   "frac_small_area": 1.0
+  },
+  "airmot/21": {
+   "task": "MOT",
+   "dataset": "airmot",
+   "category": "ship",
+   "bucket": "small",
+   "median_sqrt_area_px": 15.87,
+   "n_boxes": 2269,
+   "frac_small_area": 0.963
+  },
+  "airmot/22": {
+   "task": "MOT",
+   "dataset": "airmot",
+   "category": "ship",
+   "bucket": "large",
+   "median_sqrt_area_px": 37.47,
+   "n_boxes": 3470,
+   "frac_small_area": 0.4761
+  },
+  "airmot/23": {
+   "task": "MOT",
+   "dataset": "airmot",
+   "category": "ship",
+   "bucket": "small",
+   "median_sqrt_area_px": 18.25,
+   "n_boxes": 7088,
+   "frac_small_area": 0.6899
+  },
+  "airmot/24": {
+   "task": "MOT",
+   "dataset": "airmot",
+   "category": "ship",
+   "bucket": "small",
+   "median_sqrt_area_px": 26.94,
+   "n_boxes": 3002,
+   "frac_small_area": 0.8914
+  },
+  "airmot/25": {
+   "task": "MOT",
+   "dataset": "airmot",
+   "category": "ship",
+   "bucket": "large",
+   "median_sqrt_area_px": 42.43,
+   "n_boxes": 1748,
+   "frac_small_area": 0.3856
+  },
+  "airmot/26": {
+   "task": "MOT",
+   "dataset": "airmot",
+   "category": "ship",
+   "bucket": "small",
+   "median_sqrt_area_px": 19.97,
+   "n_boxes": 921,
+   "frac_small_area": 0.9522
+  },
+  "airmot/27": {
+   "task": "MOT",
+   "dataset": "airmot",
+   "category": "ship",
+   "bucket": "small",
+   "median_sqrt_area_px": 12.69,
+   "n_boxes": 250,
+   "frac_small_area": 1.0
+  },
+  "airmot/28": {
+   "task": "MOT",
+   "dataset": "airmot",
+   "category": "ship",
+   "bucket": "large",
+   "median_sqrt_area_px": 32.31,
+   "n_boxes": 4238,
+   "frac_small_area": 0.4615
+  },
+  "airmot/29": {
+   "task": "MOT",
+   "dataset": "airmot",
+   "category": "airplane",
+   "bucket": "large",
+   "median_sqrt_area_px": 56.99,
+   "n_boxes": 978,
+   "frac_small_area": 0.0
+  },
+  "airmot/3": {
+   "task": "MOT",
+   "dataset": "airmot",
+   "category": "airplane",
+   "bucket": "small",
+   "median_sqrt_area_px": 29.46,
+   "n_boxes": 143,
+   "frac_small_area": 1.0
+  },
+  "airmot/30": {
+   "task": "MOT",
+   "dataset": "airmot",
+   "category": "airplane",
+   "bucket": "large",
+   "median_sqrt_area_px": 36.78,
+   "n_boxes": 1091,
+   "frac_small_area": 0.0871
+  },
+  "airmot/31": {
+   "task": "MOT",
+   "dataset": "airmot",
+   "category": "airplane",
+   "bucket": "large",
+   "median_sqrt_area_px": 37.42,
+   "n_boxes": 2791,
+   "frac_small_area": 0.2694
+  },
+  "airmot/32": {
+   "task": "MOT",
+   "dataset": "airmot",
+   "category": "airplane",
+   "bucket": "large",
+   "median_sqrt_area_px": 47.25,
+   "n_boxes": 1956,
+   "frac_small_area": 0.3333
+  },
+  "airmot/33": {
+   "task": "MOT",
+   "dataset": "airmot",
+   "category": "ship",
+   "bucket": "large",
+   "median_sqrt_area_px": 79.09,
+   "n_boxes": 326,
+   "frac_small_area": 0.0
+  },
+  "airmot/35": {
+   "task": "MOT",
+   "dataset": "airmot",
+   "category": "airplane",
+   "bucket": "large",
+   "median_sqrt_area_px": 61.5,
+   "n_boxes": 44,
+   "frac_small_area": 0.0
+  },
+  "airmot/36": {
+   "task": "MOT",
+   "dataset": "airmot",
+   "category": "airplane",
+   "bucket": "large",
+   "median_sqrt_area_px": 37.88,
+   "n_boxes": 326,
+   "frac_small_area": 0.0
+  },
+  "airmot/37": {
+   "task": "MOT",
+   "dataset": "airmot",
+   "category": "ship",
+   "bucket": "large",
+   "median_sqrt_area_px": 123.84,
+   "n_boxes": 481,
+   "frac_small_area": 0.0437
+  },
+  "airmot/38": {
+   "task": "MOT",
+   "dataset": "airmot",
+   "category": "ship",
+   "bucket": "large",
+   "median_sqrt_area_px": 38.47,
+   "n_boxes": 171,
+   "frac_small_area": 0.1754
+  },
+  "airmot/39": {
+   "task": "MOT",
+   "dataset": "airmot",
+   "category": "airplane",
+   "bucket": "large",
+   "median_sqrt_area_px": 38.47,
+   "n_boxes": 326,
+   "frac_small_area": 0.0
+  },
+  "airmot/4": {
+   "task": "MOT",
+   "dataset": "airmot",
+   "category": "airplane",
+   "bucket": "large",
+   "median_sqrt_area_px": 32.5,
+   "n_boxes": 143,
+   "frac_small_area": 0.0
+  },
+  "airmot/40": {
+   "task": "MOT",
+   "dataset": "airmot",
+   "category": "ship",
+   "bucket": "large",
+   "median_sqrt_area_px": 46.83,
+   "n_boxes": 978,
+   "frac_small_area": 0.3333
+  },
+  "airmot/41": {
+   "task": "MOT",
+   "dataset": "airmot",
+   "category": "airplane",
+   "bucket": "large",
+   "median_sqrt_area_px": 38.79,
+   "n_boxes": 981,
+   "frac_small_area": 0.0
+  },
+  "airmot/42": {
+   "task": "MOT",
+   "dataset": "airmot",
+   "category": "airplane",
+   "bucket": "small",
+   "median_sqrt_area_px": 28.84,
+   "n_boxes": 650,
+   "frac_small_area": 1.0
+  },
+  "airmot/43": {
+   "task": "MOT",
+   "dataset": "airmot",
+   "category": "airplane",
+   "bucket": "large",
+   "median_sqrt_area_px": 39.42,
+   "n_boxes": 6754,
+   "frac_small_area": 0.0382
+  },
+  "airmot/44": {
+   "task": "MOT",
+   "dataset": "airmot",
+   "category": "airplane",
+   "bucket": "large",
+   "median_sqrt_area_px": 34.99,
+   "n_boxes": 1025,
+   "frac_small_area": 0.0
+  },
+  "airmot/45": {
+   "task": "MOT",
+   "dataset": "airmot",
+   "category": "airplane",
+   "bucket": "large",
+   "median_sqrt_area_px": 36.95,
+   "n_boxes": 5044,
+   "frac_small_area": 0.3517
+  },
+  "airmot/46": {
+   "task": "MOT",
+   "dataset": "airmot",
+   "category": "airplane",
+   "bucket": "small",
+   "median_sqrt_area_px": 30.46,
+   "n_boxes": 7111,
+   "frac_small_area": 0.6244
+  },
+  "airmot/47": {
+   "task": "MOT",
+   "dataset": "airmot",
+   "category": "airplane",
+   "bucket": "large",
+   "median_sqrt_area_px": 37.99,
+   "n_boxes": 2696,
+   "frac_small_area": 0.0022
+  },
+  "airmot/48": {
+   "task": "MOT",
+   "dataset": "airmot",
+   "category": "airplane",
+   "bucket": "small",
+   "median_sqrt_area_px": 26.93,
+   "n_boxes": 18,
+   "frac_small_area": 1.0
+  },
+  "airmot/49": {
+   "task": "MOT",
+   "dataset": "airmot",
+   "category": "airplane",
+   "bucket": "small",
+   "median_sqrt_area_px": 26.83,
+   "n_boxes": 134,
+   "frac_small_area": 1.0
+  },
+  "airmot/5": {
+   "task": "MOT",
+   "dataset": "airmot",
+   "category": "airplane",
+   "bucket": "large",
+   "median_sqrt_area_px": 45.43,
+   "n_boxes": 858,
+   "frac_small_area": 0.1713
+  },
+  "airmot/50": {
+   "task": "MOT",
+   "dataset": "airmot",
+   "category": "ship",
+   "bucket": "small",
+   "median_sqrt_area_px": 22.58,
+   "n_boxes": 333,
+   "frac_small_area": 1.0
+  },
+  "airmot/51": {
+   "task": "MOT",
+   "dataset": "airmot",
+   "category": "ship",
+   "bucket": "small",
+   "median_sqrt_area_px": 15.45,
+   "n_boxes": 1304,
+   "frac_small_area": 0.75
+  },
+  "airmot/52": {
+   "task": "MOT",
+   "dataset": "airmot",
+   "category": "ship",
+   "bucket": "small",
+   "median_sqrt_area_px": 25.69,
+   "n_boxes": 331,
+   "frac_small_area": 1.0
+  },
+  "airmot/53": {
+   "task": "MOT",
+   "dataset": "airmot",
+   "category": "airplane",
+   "bucket": "large",
+   "median_sqrt_area_px": 44.02,
+   "n_boxes": 326,
+   "frac_small_area": 0.0
+  },
+  "airmot/54": {
+   "task": "MOT",
+   "dataset": "airmot",
+   "category": "airplane",
+   "bucket": "small",
+   "median_sqrt_area_px": 14.97,
+   "n_boxes": 6194,
+   "frac_small_area": 0.9474
+  },
+  "airmot/55": {
+   "task": "MOT",
+   "dataset": "airmot",
+   "category": "airplane",
+   "bucket": "large",
+   "median_sqrt_area_px": 35.8,
+   "n_boxes": 3260,
+   "frac_small_area": 0.4672
+  },
+  "airmot/56": {
+   "task": "MOT",
+   "dataset": "airmot",
+   "category": "airplane",
+   "bucket": "small",
+   "median_sqrt_area_px": 9.38,
+   "n_boxes": 3156,
+   "frac_small_area": 1.0
+  },
+  "airmot/57": {
+   "task": "MOT",
+   "dataset": "airmot",
+   "category": "airplane",
+   "bucket": "small",
+   "median_sqrt_area_px": 14.97,
+   "n_boxes": 187,
+   "frac_small_area": 1.0
+  },
+  "airmot/58": {
+   "task": "MOT",
+   "dataset": "airmot",
+   "category": "ship",
+   "bucket": "small",
+   "median_sqrt_area_px": 11.62,
+   "n_boxes": 1346,
+   "frac_small_area": 1.0
+  },
+  "airmot/59": {
+   "task": "MOT",
+   "dataset": "airmot",
+   "category": "ship",
+   "bucket": "small",
+   "median_sqrt_area_px": 11.0,
+   "n_boxes": 2734,
+   "frac_small_area": 1.0
+  },
+  "airmot/6": {
+   "task": "MOT",
+   "dataset": "airmot",
+   "category": "airplane",
+   "bucket": "small",
+   "median_sqrt_area_px": 29.85,
+   "n_boxes": 110,
+   "frac_small_area": 1.0
+  },
+  "airmot/60": {
+   "task": "MOT",
+   "dataset": "airmot",
+   "category": "ship",
+   "bucket": "small",
+   "median_sqrt_area_px": 8.83,
+   "n_boxes": 2734,
+   "frac_small_area": 0.7304
+  },
+  "airmot/61": {
+   "task": "MOT",
+   "dataset": "airmot",
+   "category": "ship",
+   "bucket": "small",
+   "median_sqrt_area_px": 12.96,
+   "n_boxes": 2838,
+   "frac_small_area": 0.6554
+  },
+  "airmot/62": {
+   "task": "MOT",
+   "dataset": "airmot",
+   "category": "ship",
+   "bucket": "small",
+   "median_sqrt_area_px": 12.0,
+   "n_boxes": 4317,
+   "frac_small_area": 0.7735
+  },
+  "airmot/63": {
+   "task": "MOT",
+   "dataset": "airmot",
+   "category": "ship",
+   "bucket": "small",
+   "median_sqrt_area_px": 16.49,
+   "n_boxes": 52615,
+   "frac_small_area": 0.9413
+  },
+  "airmot/64": {
+   "task": "MOT",
+   "dataset": "airmot",
+   "category": "airplane",
+   "bucket": "small",
+   "median_sqrt_area_px": 27.25,
+   "n_boxes": 864,
+   "frac_small_area": 0.9167
+  },
+  "airmot/65": {
+   "task": "MOT",
+   "dataset": "airmot",
+   "category": "airplane",
+   "bucket": "large",
+   "median_sqrt_area_px": 47.96,
+   "n_boxes": 288,
+   "frac_small_area": 0.25
+  },
+  "airmot/66": {
+   "task": "MOT",
+   "dataset": "airmot",
+   "category": "ship",
+   "bucket": "small",
+   "median_sqrt_area_px": 8.43,
+   "n_boxes": 4896,
+   "frac_small_area": 1.0
+  },
+  "airmot/67": {
+   "task": "MOT",
+   "dataset": "airmot",
+   "category": "ship",
+   "bucket": "small",
+   "median_sqrt_area_px": 15.3,
+   "n_boxes": 700,
+   "frac_small_area": 1.0
+  },
+  "airmot/68": {
+   "task": "MOT",
+   "dataset": "airmot",
+   "category": "ship",
+   "bucket": "small",
+   "median_sqrt_area_px": 9.49,
+   "n_boxes": 6090,
+   "frac_small_area": 1.0
+  },
+  "airmot/7": {
+   "task": "MOT",
+   "dataset": "airmot",
+   "category": "airplane",
+   "bucket": "small",
+   "median_sqrt_area_px": 30.46,
+   "n_boxes": 2431,
+   "frac_small_area": 0.5882
+  },
+  "airmot/8": {
+   "task": "MOT",
+   "dataset": "airmot",
+   "category": "airplane",
+   "bucket": "small",
+   "median_sqrt_area_px": 29.29,
+   "n_boxes": 1892,
+   "frac_small_area": 0.852
+  },
+  "airmot/95": {
+   "task": "MOT",
+   "dataset": "airmot",
+   "category": "ship",
+   "bucket": "small",
+   "median_sqrt_area_px": 9.17,
+   "n_boxes": 2103,
+   "frac_small_area": 1.0
+  },
+  "airmot/96": {
+   "task": "MOT",
+   "dataset": "airmot",
+   "category": "ship",
+   "bucket": "small",
+   "median_sqrt_area_px": 9.49,
+   "n_boxes": 5584,
+   "frac_small_area": 1.0
+  },
+  "airmot/97": {
+   "task": "MOT",
+   "dataset": "airmot",
+   "category": "ship",
+   "bucket": "small",
+   "median_sqrt_area_px": 10.71,
+   "n_boxes": 652,
+   "frac_small_area": 1.0
+  },
+  "airmot/98": {
+   "task": "MOT",
+   "dataset": "airmot",
+   "category": "ship",
+   "bucket": "small",
+   "median_sqrt_area_px": 12.37,
+   "n_boxes": 456,
+   "frac_small_area": 0.8838
+  },
+  "airmot/99": {
+   "task": "MOT",
+   "dataset": "airmot",
+   "category": "ship",
+   "bucket": "small",
+   "median_sqrt_area_px": 7.48,
+   "n_boxes": 2575,
+   "frac_small_area": 1.0
+  },
+  "rscardata/test1024/002": {
+   "task": "MOT",
+   "dataset": "rscardata",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 6.48,
+   "n_boxes": 24562,
+   "frac_small_area": 1.0
+  },
+  "rscardata/test1024/003": {
+   "task": "MOT",
+   "dataset": "rscardata",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 4.47,
+   "n_boxes": 19907,
+   "frac_small_area": 1.0
+  },
+  "rscardata/test1024/005": {
+   "task": "MOT",
+   "dataset": "rscardata",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 6.48,
+   "n_boxes": 36167,
+   "frac_small_area": 1.0
+  },
+  "rscardata/test1024/006": {
+   "task": "MOT",
+   "dataset": "rscardata",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 4.9,
+   "n_boxes": 15913,
+   "frac_small_area": 1.0
+  },
+  "rscardata/test1024/008": {
+   "task": "MOT",
+   "dataset": "rscardata",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 5.48,
+   "n_boxes": 13333,
+   "frac_small_area": 1.0
+  },
+  "rscardata/test1024/009": {
+   "task": "MOT",
+   "dataset": "rscardata",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 5.48,
+   "n_boxes": 7999,
+   "frac_small_area": 1.0
+  },
+  "rscardata/test1024/010": {
+   "task": "MOT",
+   "dataset": "rscardata",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 6.93,
+   "n_boxes": 38106,
+   "frac_small_area": 1.0
+  },
+  "rscardata/train/001": {
+   "task": "MOT",
+   "dataset": "rscardata",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 5.48,
+   "n_boxes": 4096,
+   "frac_small_area": 1.0
+  },
+  "rscardata/train/002": {
+   "task": "MOT",
+   "dataset": "rscardata",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 4.9,
+   "n_boxes": 4087,
+   "frac_small_area": 1.0
+  },
+  "rscardata/train/003": {
+   "task": "MOT",
+   "dataset": "rscardata",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 4.9,
+   "n_boxes": 15220,
+   "frac_small_area": 1.0
+  },
+  "rscardata/train/004": {
+   "task": "MOT",
+   "dataset": "rscardata",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 4.9,
+   "n_boxes": 8108,
+   "frac_small_area": 1.0
+  },
+  "rscardata/train/005": {
+   "task": "MOT",
+   "dataset": "rscardata",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 5.0,
+   "n_boxes": 6968,
+   "frac_small_area": 1.0
+  },
+  "rscardata/train/006": {
+   "task": "MOT",
+   "dataset": "rscardata",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 5.48,
+   "n_boxes": 3975,
+   "frac_small_area": 1.0
+  },
+  "rscardata/train/007": {
+   "task": "MOT",
+   "dataset": "rscardata",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 5.48,
+   "n_boxes": 2778,
+   "frac_small_area": 1.0
+  },
+  "rscardata/train/008": {
+   "task": "MOT",
+   "dataset": "rscardata",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 5.29,
+   "n_boxes": 3956,
+   "frac_small_area": 1.0
+  },
+  "rscardata/train/009": {
+   "task": "MOT",
+   "dataset": "rscardata",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 5.48,
+   "n_boxes": 1851,
+   "frac_small_area": 1.0
+  },
+  "rscardata/train/010": {
+   "task": "MOT",
+   "dataset": "rscardata",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 5.48,
+   "n_boxes": 6855,
+   "frac_small_area": 1.0
+  },
+  "rscardata/train/011": {
+   "task": "MOT",
+   "dataset": "rscardata",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 5.48,
+   "n_boxes": 4972,
+   "frac_small_area": 1.0
+  },
+  "rscardata/train/012": {
+   "task": "MOT",
+   "dataset": "rscardata",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 5.48,
+   "n_boxes": 1810,
+   "frac_small_area": 1.0
+  },
+  "rscardata/train/013": {
+   "task": "MOT",
+   "dataset": "rscardata",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 6.48,
+   "n_boxes": 13890,
+   "frac_small_area": 1.0
+  },
+  "rscardata/train/014": {
+   "task": "MOT",
+   "dataset": "rscardata",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 7.0,
+   "n_boxes": 7183,
+   "frac_small_area": 1.0
+  },
+  "rscardata/train/015": {
+   "task": "MOT",
+   "dataset": "rscardata",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 4.47,
+   "n_boxes": 3147,
+   "frac_small_area": 1.0
+  },
+  "rscardata/train/016": {
+   "task": "MOT",
+   "dataset": "rscardata",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 4.0,
+   "n_boxes": 16736,
+   "frac_small_area": 1.0
+  },
+  "rscardata/train/017": {
+   "task": "MOT",
+   "dataset": "rscardata",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 4.47,
+   "n_boxes": 5880,
+   "frac_small_area": 1.0
+  },
+  "rscardata/train/018": {
+   "task": "MOT",
+   "dataset": "rscardata",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 4.47,
+   "n_boxes": 6947,
+   "frac_small_area": 1.0
+  },
+  "rscardata/train/019": {
+   "task": "MOT",
+   "dataset": "rscardata",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 5.29,
+   "n_boxes": 4081,
+   "frac_small_area": 1.0
+  },
+  "rscardata/train/020": {
+   "task": "MOT",
+   "dataset": "rscardata",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 5.48,
+   "n_boxes": 15897,
+   "frac_small_area": 1.0
+  },
+  "rscardata/train/021": {
+   "task": "MOT",
+   "dataset": "rscardata",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 5.48,
+   "n_boxes": 20265,
+   "frac_small_area": 1.0
+  },
+  "rscardata/train/022": {
+   "task": "MOT",
+   "dataset": "rscardata",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 5.48,
+   "n_boxes": 1552,
+   "frac_small_area": 1.0
+  },
+  "rscardata/train/023": {
+   "task": "MOT",
+   "dataset": "rscardata",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 6.93,
+   "n_boxes": 18904,
+   "frac_small_area": 1.0
+  },
+  "rscardata/train/024": {
+   "task": "MOT",
+   "dataset": "rscardata",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 7.35,
+   "n_boxes": 9219,
+   "frac_small_area": 1.0
+  },
+  "rscardata/train/025": {
+   "task": "MOT",
+   "dataset": "rscardata",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 14.97,
+   "n_boxes": 1756,
+   "frac_small_area": 1.0
+  },
+  "rscardata/train/026": {
+   "task": "MOT",
+   "dataset": "rscardata",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 15.0,
+   "n_boxes": 4851,
+   "frac_small_area": 1.0
+  },
+  "rscardata/train/027": {
+   "task": "MOT",
+   "dataset": "rscardata",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 5.92,
+   "n_boxes": 50384,
+   "frac_small_area": 1.0
+  },
+  "rscardata/train/028": {
+   "task": "MOT",
+   "dataset": "rscardata",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 6.32,
+   "n_boxes": 41357,
+   "frac_small_area": 1.0
+  },
+  "rscardata/train/029": {
+   "task": "MOT",
+   "dataset": "rscardata",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 6.93,
+   "n_boxes": 6857,
+   "frac_small_area": 1.0
+  },
+  "rscardata/train/030": {
+   "task": "MOT",
+   "dataset": "rscardata",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 6.32,
+   "n_boxes": 3108,
+   "frac_small_area": 1.0
+  },
+  "rscardata/train/031": {
+   "task": "MOT",
+   "dataset": "rscardata",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 8.49,
+   "n_boxes": 13060,
+   "frac_small_area": 1.0
+  },
+  "rscardata/train/032": {
+   "task": "MOT",
+   "dataset": "rscardata",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 8.0,
+   "n_boxes": 16556,
+   "frac_small_area": 1.0
+  },
+  "rscardata/train/033": {
+   "task": "MOT",
+   "dataset": "rscardata",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 7.0,
+   "n_boxes": 869,
+   "frac_small_area": 1.0
+  },
+  "rscardata/train/034": {
+   "task": "MOT",
+   "dataset": "rscardata",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 8.49,
+   "n_boxes": 10644,
+   "frac_small_area": 1.0
+  },
+  "rscardata/train/035": {
+   "task": "MOT",
+   "dataset": "rscardata",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 8.49,
+   "n_boxes": 9127,
+   "frac_small_area": 1.0
+  },
+  "rscardata/train/036": {
+   "task": "MOT",
+   "dataset": "rscardata",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 8.37,
+   "n_boxes": 8495,
+   "frac_small_area": 1.0
+  },
+  "rscardata/train/037": {
+   "task": "MOT",
+   "dataset": "rscardata",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 8.0,
+   "n_boxes": 233,
+   "frac_small_area": 1.0
+  },
+  "rscardata/train/038": {
+   "task": "MOT",
+   "dataset": "rscardata",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 8.49,
+   "n_boxes": 5112,
+   "frac_small_area": 1.0
+  },
+  "rscardata/train/039": {
+   "task": "MOT",
+   "dataset": "rscardata",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 8.49,
+   "n_boxes": 7415,
+   "frac_small_area": 1.0
+  },
+  "rscardata/train/040": {
+   "task": "MOT",
+   "dataset": "rscardata",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 8.77,
+   "n_boxes": 5927,
+   "frac_small_area": 1.0
+  },
+  "rscardata/train/041": {
+   "task": "MOT",
+   "dataset": "rscardata",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 8.0,
+   "n_boxes": 170,
+   "frac_small_area": 1.0
+  },
+  "rscardata/train/042": {
+   "task": "MOT",
+   "dataset": "rscardata",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 8.77,
+   "n_boxes": 3572,
+   "frac_small_area": 1.0
+  },
+  "rscardata/train/043": {
+   "task": "MOT",
+   "dataset": "rscardata",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 6.48,
+   "n_boxes": 5932,
+   "frac_small_area": 1.0
+  },
+  "rscardata/train/044": {
+   "task": "MOT",
+   "dataset": "rscardata",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 5.0,
+   "n_boxes": 6995,
+   "frac_small_area": 1.0
+  },
+  "rscardata/train/045": {
+   "task": "MOT",
+   "dataset": "rscardata",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 5.48,
+   "n_boxes": 10471,
+   "frac_small_area": 1.0
+  },
+  "rscardata/train/046": {
+   "task": "MOT",
+   "dataset": "rscardata",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 5.48,
+   "n_boxes": 8998,
+   "frac_small_area": 1.0
+  },
+  "rscardata/train/047": {
+   "task": "MOT",
+   "dataset": "rscardata",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 5.48,
+   "n_boxes": 5888,
+   "frac_small_area": 1.0
+  },
+  "rscardata/train/048": {
+   "task": "MOT",
+   "dataset": "rscardata",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 4.47,
+   "n_boxes": 12698,
+   "frac_small_area": 1.0
+  },
+  "rscardata/train/049": {
+   "task": "MOT",
+   "dataset": "rscardata",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 4.9,
+   "n_boxes": 35034,
+   "frac_small_area": 1.0
+  },
+  "rscardata/train/050": {
+   "task": "MOT",
+   "dataset": "rscardata",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 4.47,
+   "n_boxes": 21663,
+   "frac_small_area": 1.0
+  },
+  "rscardata/train/051": {
+   "task": "MOT",
+   "dataset": "rscardata",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 4.47,
+   "n_boxes": 8450,
+   "frac_small_area": 1.0
+  },
+  "rscardata/train/052": {
+   "task": "MOT",
+   "dataset": "rscardata",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 4.47,
+   "n_boxes": 7912,
+   "frac_small_area": 1.0
+  },
+  "rscardata/train/053": {
+   "task": "MOT",
+   "dataset": "rscardata",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 5.0,
+   "n_boxes": 1740,
+   "frac_small_area": 1.0
+  },
+  "rscardata/train/054": {
+   "task": "MOT",
+   "dataset": "rscardata",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 4.9,
+   "n_boxes": 12878,
+   "frac_small_area": 1.0
+  },
+  "rscardata/train/055": {
+   "task": "MOT",
+   "dataset": "rscardata",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 4.0,
+   "n_boxes": 20424,
+   "frac_small_area": 1.0
+  },
+  "rscardata/train/056": {
+   "task": "MOT",
+   "dataset": "rscardata",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 4.0,
+   "n_boxes": 22997,
+   "frac_small_area": 1.0
+  },
+  "rscardata/train/057": {
+   "task": "MOT",
+   "dataset": "rscardata",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 4.47,
+   "n_boxes": 21253,
+   "frac_small_area": 1.0
+  },
+  "rscardata/train/058": {
+   "task": "MOT",
+   "dataset": "rscardata",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 4.47,
+   "n_boxes": 14087,
+   "frac_small_area": 1.0
+  },
+  "rscardata/train/059": {
+   "task": "MOT",
+   "dataset": "rscardata",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 6.32,
+   "n_boxes": 2889,
+   "frac_small_area": 1.0
+  },
+  "rscardata/train/060": {
+   "task": "MOT",
+   "dataset": "rscardata",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 6.48,
+   "n_boxes": 480,
+   "frac_small_area": 1.0
+  },
+  "rscardata/train/061": {
+   "task": "MOT",
+   "dataset": "rscardata",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 5.48,
+   "n_boxes": 16421,
+   "frac_small_area": 1.0
+  },
+  "rscardata/train/062": {
+   "task": "MOT",
+   "dataset": "rscardata",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 5.48,
+   "n_boxes": 14879,
+   "frac_small_area": 1.0
+  },
+  "rscardata/train/063": {
+   "task": "MOT",
+   "dataset": "rscardata",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 7.35,
+   "n_boxes": 10944,
+   "frac_small_area": 1.0
+  },
+  "rscardata/train/064": {
+   "task": "MOT",
+   "dataset": "rscardata",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 7.35,
+   "n_boxes": 11380,
+   "frac_small_area": 1.0
+  },
+  "rscardata/train/065": {
+   "task": "MOT",
+   "dataset": "rscardata",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 7.75,
+   "n_boxes": 5245,
+   "frac_small_area": 1.0
+  },
+  "rscardata/train/066": {
+   "task": "MOT",
+   "dataset": "rscardata",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 8.37,
+   "n_boxes": 6238,
+   "frac_small_area": 1.0
+  },
+  "rscardata/train/067": {
+   "task": "MOT",
+   "dataset": "rscardata",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 7.75,
+   "n_boxes": 11239,
+   "frac_small_area": 1.0
+  },
+  "rscardata/train/068": {
+   "task": "MOT",
+   "dataset": "rscardata",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 7.94,
+   "n_boxes": 7937,
+   "frac_small_area": 1.0
+  },
+  "rscardata/train/069": {
+   "task": "MOT",
+   "dataset": "rscardata",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 7.48,
+   "n_boxes": 3989,
+   "frac_small_area": 1.0
+  },
+  "rscardata/train/070": {
+   "task": "MOT",
+   "dataset": "rscardata",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 8.49,
+   "n_boxes": 5868,
+   "frac_small_area": 1.0
+  },
+  "satmtb/airplane/02": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "mixed",
+   "bucket": "small",
+   "median_sqrt_area_px": 25.14,
+   "n_boxes": 279,
+   "frac_small_area": 0.6667
+  },
+  "satmtb/airplane/03": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "airplane",
+   "bucket": "large",
+   "median_sqrt_area_px": 34.81,
+   "n_boxes": 346,
+   "frac_small_area": 0.0
+  },
+  "satmtb/airplane/04": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "airplane",
+   "bucket": "large",
+   "median_sqrt_area_px": 51.72,
+   "n_boxes": 145,
+   "frac_small_area": 0.0
+  },
+  "satmtb/airplane/05": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "airplane",
+   "bucket": "large",
+   "median_sqrt_area_px": 48.93,
+   "n_boxes": 774,
+   "frac_small_area": 0.0749
+  },
+  "satmtb/airplane/06": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "mixed",
+   "bucket": "small",
+   "median_sqrt_area_px": 5.39,
+   "n_boxes": 12510,
+   "frac_small_area": 0.9471
+  },
+  "satmtb/airplane/07": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "airplane",
+   "bucket": "large",
+   "median_sqrt_area_px": 52.23,
+   "n_boxes": 430,
+   "frac_small_area": 0.0
+  },
+  "satmtb/airplane/08": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "airplane",
+   "bucket": "large",
+   "median_sqrt_area_px": 45.1,
+   "n_boxes": 152,
+   "frac_small_area": 0.0
+  },
+  "satmtb/airplane/09": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "mixed",
+   "bucket": "small",
+   "median_sqrt_area_px": 5.36,
+   "n_boxes": 6441,
+   "frac_small_area": 0.8864
+  },
+  "satmtb/airplane/10": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "airplane",
+   "bucket": "large",
+   "median_sqrt_area_px": 59.68,
+   "n_boxes": 576,
+   "frac_small_area": 0.0
+  },
+  "satmtb/airplane/11": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "mixed",
+   "bucket": "small",
+   "median_sqrt_area_px": 5.46,
+   "n_boxes": 12556,
+   "frac_small_area": 0.9771
+  },
+  "satmtb/airplane/12": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "airplane",
+   "bucket": "large",
+   "median_sqrt_area_px": 79.61,
+   "n_boxes": 537,
+   "frac_small_area": 0.0037
+  },
+  "satmtb/airplane/13": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "mixed",
+   "bucket": "small",
+   "median_sqrt_area_px": 4.83,
+   "n_boxes": 4293,
+   "frac_small_area": 0.9434
+  },
+  "satmtb/airplane/14": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "airplane",
+   "bucket": "large",
+   "median_sqrt_area_px": 87.01,
+   "n_boxes": 243,
+   "frac_small_area": 0.0
+  },
+  "satmtb/airplane/15": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "airplane",
+   "bucket": "large",
+   "median_sqrt_area_px": 53.88,
+   "n_boxes": 393,
+   "frac_small_area": 0.2545
+  },
+  "satmtb/airplane/16": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "airplane",
+   "bucket": "large",
+   "median_sqrt_area_px": 45.47,
+   "n_boxes": 819,
+   "frac_small_area": 0.1111
+  },
+  "satmtb/airplane/17": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "mixed",
+   "bucket": "small",
+   "median_sqrt_area_px": 5.03,
+   "n_boxes": 8511,
+   "frac_small_area": 0.9656
+  },
+  "satmtb/airplane/18": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "airplane",
+   "bucket": "large",
+   "median_sqrt_area_px": 39.89,
+   "n_boxes": 321,
+   "frac_small_area": 0.0031
+  },
+  "satmtb/airplane/19": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "airplane",
+   "bucket": "large",
+   "median_sqrt_area_px": 43.2,
+   "n_boxes": 80,
+   "frac_small_area": 0.0
+  },
+  "satmtb/airplane/20": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "airplane",
+   "bucket": "large",
+   "median_sqrt_area_px": 57.92,
+   "n_boxes": 386,
+   "frac_small_area": 0.0
+  },
+  "satmtb/airplane/21": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "airplane",
+   "bucket": "large",
+   "median_sqrt_area_px": 50.71,
+   "n_boxes": 579,
+   "frac_small_area": 0.0
+  },
+  "satmtb/airplane/22": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "mixed",
+   "bucket": "small",
+   "median_sqrt_area_px": 5.43,
+   "n_boxes": 13598,
+   "frac_small_area": 0.9432
+  },
+  "satmtb/airplane/23": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "airplane",
+   "bucket": "large",
+   "median_sqrt_area_px": 52.19,
+   "n_boxes": 78,
+   "frac_small_area": 0.0
+  },
+  "satmtb/airplane/24": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "airplane",
+   "bucket": "large",
+   "median_sqrt_area_px": 55.36,
+   "n_boxes": 193,
+   "frac_small_area": 0.0
+  },
+  "satmtb/airplane/25": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "mixed",
+   "bucket": "small",
+   "median_sqrt_area_px": 5.0,
+   "n_boxes": 4912,
+   "frac_small_area": 0.9715
+  },
+  "satmtb/airplane/26": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "airplane",
+   "bucket": "large",
+   "median_sqrt_area_px": 50.61,
+   "n_boxes": 142,
+   "frac_small_area": 0.0
+  },
+  "satmtb/airplane/27": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "mixed",
+   "bucket": "small",
+   "median_sqrt_area_px": 5.15,
+   "n_boxes": 70084,
+   "frac_small_area": 0.9888
+  },
+  "satmtb/airplane/28": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "airplane",
+   "bucket": "large",
+   "median_sqrt_area_px": 70.0,
+   "n_boxes": 1951,
+   "frac_small_area": 0.0
+  },
+  "satmtb/airplane/29": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "airplane",
+   "bucket": "large",
+   "median_sqrt_area_px": 53.42,
+   "n_boxes": 319,
+   "frac_small_area": 0.0
+  },
+  "satmtb/airplane/30": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "airplane",
+   "bucket": "large",
+   "median_sqrt_area_px": 49.98,
+   "n_boxes": 510,
+   "frac_small_area": 0.0
+  },
+  "satmtb/airplane/31": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "mixed",
+   "bucket": "small",
+   "median_sqrt_area_px": 5.3,
+   "n_boxes": 17966,
+   "frac_small_area": 0.9645
+  },
+  "satmtb/airplane/32": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "airplane",
+   "bucket": "large",
+   "median_sqrt_area_px": 50.39,
+   "n_boxes": 283,
+   "frac_small_area": 0.0
+  },
+  "satmtb/airplane/33": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "mixed",
+   "bucket": "small",
+   "median_sqrt_area_px": 5.39,
+   "n_boxes": 63231,
+   "frac_small_area": 0.9955
+  },
+  "satmtb/airplane/34": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "airplane",
+   "bucket": "large",
+   "median_sqrt_area_px": 100.09,
+   "n_boxes": 764,
+   "frac_small_area": 0.0
+  },
+  "satmtb/airplane/35": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "mixed",
+   "bucket": "small",
+   "median_sqrt_area_px": 5.31,
+   "n_boxes": 39089,
+   "frac_small_area": 0.9928
+  },
+  "satmtb/airplane/36": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "mixed",
+   "bucket": "small",
+   "median_sqrt_area_px": 5.77,
+   "n_boxes": 14801,
+   "frac_small_area": 0.9562
+  },
+  "satmtb/airplane/37": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "mixed",
+   "bucket": "small",
+   "median_sqrt_area_px": 5.0,
+   "n_boxes": 5948,
+   "frac_small_area": 0.9385
+  },
+  "satmtb/airplane/38": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "airplane",
+   "bucket": "large",
+   "median_sqrt_area_px": 40.03,
+   "n_boxes": 120,
+   "frac_small_area": 0.0
+  },
+  "satmtb/airplane/39": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "airplane",
+   "bucket": "large",
+   "median_sqrt_area_px": 54.1,
+   "n_boxes": 67,
+   "frac_small_area": 0.0299
+  },
+  "satmtb/airplane/40": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "mixed",
+   "bucket": "small",
+   "median_sqrt_area_px": 5.77,
+   "n_boxes": 15366,
+   "frac_small_area": 0.9577
+  },
+  "satmtb/airplane/41": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "airplane",
+   "bucket": "large",
+   "median_sqrt_area_px": 56.92,
+   "n_boxes": 136,
+   "frac_small_area": 0.4118
+  },
+  "satmtb/airplane/42": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "airplane",
+   "bucket": "large",
+   "median_sqrt_area_px": 71.86,
+   "n_boxes": 67,
+   "frac_small_area": 0.0
+  },
+  "satmtb/airplane/43": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "mixed",
+   "bucket": "small",
+   "median_sqrt_area_px": 5.43,
+   "n_boxes": 1197,
+   "frac_small_area": 0.8822
+  },
+  "satmtb/airplane/44": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "airplane",
+   "bucket": "large",
+   "median_sqrt_area_px": 54.18,
+   "n_boxes": 304,
+   "frac_small_area": 0.0
+  },
+  "satmtb/airplane/45": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "airplane",
+   "bucket": "large",
+   "median_sqrt_area_px": 44.88,
+   "n_boxes": 490,
+   "frac_small_area": 0.0286
+  },
+  "satmtb/airplane/46": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "airplane",
+   "bucket": "large",
+   "median_sqrt_area_px": 45.11,
+   "n_boxes": 655,
+   "frac_small_area": 0.0
+  },
+  "satmtb/airplane/47": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "mixed",
+   "bucket": "small",
+   "median_sqrt_area_px": 5.09,
+   "n_boxes": 786,
+   "frac_small_area": 0.9427
+  },
+  "satmtb/airplane/48": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "mixed",
+   "bucket": "small",
+   "median_sqrt_area_px": 5.43,
+   "n_boxes": 1766,
+   "frac_small_area": 0.8063
+  },
+  "satmtb/airplane/49": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "airplane",
+   "bucket": "large",
+   "median_sqrt_area_px": 45.99,
+   "n_boxes": 171,
+   "frac_small_area": 0.0
+  },
+  "satmtb/airplane/50": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "mixed",
+   "bucket": "small",
+   "median_sqrt_area_px": 5.04,
+   "n_boxes": 3515,
+   "frac_small_area": 0.8797
+  },
+  "satmtb/airplane/51": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "airplane",
+   "bucket": "large",
+   "median_sqrt_area_px": 59.01,
+   "n_boxes": 106,
+   "frac_small_area": 0.0
+  },
+  "satmtb/airplane/52": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "airplane",
+   "bucket": "large",
+   "median_sqrt_area_px": 43.26,
+   "n_boxes": 137,
+   "frac_small_area": 0.0
+  },
+  "satmtb/airplane/53": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "airplane",
+   "bucket": "large",
+   "median_sqrt_area_px": 33.81,
+   "n_boxes": 1928,
+   "frac_small_area": 0.3574
+  },
+  "satmtb/airplane/54": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "airplane",
+   "bucket": "small",
+   "median_sqrt_area_px": 18.64,
+   "n_boxes": 559,
+   "frac_small_area": 0.9428
+  },
+  "satmtb/airplane/55": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "airplane",
+   "bucket": "large",
+   "median_sqrt_area_px": 36.26,
+   "n_boxes": 369,
+   "frac_small_area": 0.1192
+  },
+  "satmtb/airplane/56": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "airplane",
+   "bucket": "small",
+   "median_sqrt_area_px": 23.8,
+   "n_boxes": 465,
+   "frac_small_area": 1.0
+  },
+  "satmtb/airplane/57": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "airplane",
+   "bucket": "large",
+   "median_sqrt_area_px": 38.42,
+   "n_boxes": 870,
+   "frac_small_area": 0.3333
+  },
+  "satmtb/airplane/58": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "airplane",
+   "bucket": "small",
+   "median_sqrt_area_px": 23.4,
+   "n_boxes": 212,
+   "frac_small_area": 1.0
+  },
+  "satmtb/airplane/59": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "airplane",
+   "bucket": "small",
+   "median_sqrt_area_px": 29.13,
+   "n_boxes": 144,
+   "frac_small_area": 1.0
+  },
+  "satmtb/airplane/60": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "mixed",
+   "bucket": "small",
+   "median_sqrt_area_px": 13.69,
+   "n_boxes": 885,
+   "frac_small_area": 1.0
+  },
+  "satmtb/airplane/61": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "airplane",
+   "bucket": "large",
+   "median_sqrt_area_px": 44.07,
+   "n_boxes": 288,
+   "frac_small_area": 0.0
+  },
+  "satmtb/airplane/62": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "airplane",
+   "bucket": "large",
+   "median_sqrt_area_px": 40.08,
+   "n_boxes": 284,
+   "frac_small_area": 0.0246
+  },
+  "satmtb/airplane/63": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "airplane",
+   "bucket": "small",
+   "median_sqrt_area_px": 24.15,
+   "n_boxes": 2160,
+   "frac_small_area": 0.8
+  },
+  "satmtb/car/01": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 3.57,
+   "n_boxes": 1376,
+   "frac_small_area": 1.0
+  },
+  "satmtb/car/02": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 3.68,
+   "n_boxes": 3868,
+   "frac_small_area": 1.0
+  },
+  "satmtb/car/03": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "mixed",
+   "bucket": "small",
+   "median_sqrt_area_px": 3.92,
+   "n_boxes": 2243,
+   "frac_small_area": 0.9719
+  },
+  "satmtb/car/04": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 4.15,
+   "n_boxes": 519,
+   "frac_small_area": 1.0
+  },
+  "satmtb/car/05": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "mixed",
+   "bucket": "small",
+   "median_sqrt_area_px": 3.5,
+   "n_boxes": 499,
+   "frac_small_area": 1.0
+  },
+  "satmtb/car/06": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 3.63,
+   "n_boxes": 2588,
+   "frac_small_area": 1.0
+  },
+  "satmtb/car/07": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 3.96,
+   "n_boxes": 1111,
+   "frac_small_area": 1.0
+  },
+  "satmtb/car/08": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 3.94,
+   "n_boxes": 4071,
+   "frac_small_area": 1.0
+  },
+  "satmtb/car/09": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 4.65,
+   "n_boxes": 3290,
+   "frac_small_area": 1.0
+  },
+  "satmtb/car/10": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 4.53,
+   "n_boxes": 5419,
+   "frac_small_area": 1.0
+  },
+  "satmtb/car/11": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 4.01,
+   "n_boxes": 3479,
+   "frac_small_area": 1.0
+  },
+  "satmtb/car/12": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 5.68,
+   "n_boxes": 2641,
+   "frac_small_area": 1.0
+  },
+  "satmtb/car/15": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 4.04,
+   "n_boxes": 4054,
+   "frac_small_area": 1.0
+  },
+  "satmtb/car/16": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 4.43,
+   "n_boxes": 3955,
+   "frac_small_area": 1.0
+  },
+  "satmtb/car/17": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 6.46,
+   "n_boxes": 1333,
+   "frac_small_area": 1.0
+  },
+  "satmtb/car/18": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "mixed",
+   "bucket": "small",
+   "median_sqrt_area_px": 4.86,
+   "n_boxes": 6153,
+   "frac_small_area": 0.9756
+  },
+  "satmtb/car/19": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 4.76,
+   "n_boxes": 1023,
+   "frac_small_area": 1.0
+  },
+  "satmtb/car/20": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "mixed",
+   "bucket": "small",
+   "median_sqrt_area_px": 3.6,
+   "n_boxes": 1218,
+   "frac_small_area": 0.9852
+  },
+  "satmtb/car/21": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 3.57,
+   "n_boxes": 1581,
+   "frac_small_area": 1.0
+  },
+  "satmtb/car/22": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "mixed",
+   "bucket": "small",
+   "median_sqrt_area_px": 4.43,
+   "n_boxes": 3414,
+   "frac_small_area": 1.0
+  },
+  "satmtb/car/23": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 4.69,
+   "n_boxes": 6561,
+   "frac_small_area": 1.0
+  },
+  "satmtb/car/24": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 5.35,
+   "n_boxes": 5080,
+   "frac_small_area": 1.0
+  },
+  "satmtb/car/25": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "mixed",
+   "bucket": "small",
+   "median_sqrt_area_px": 4.51,
+   "n_boxes": 1879,
+   "frac_small_area": 0.901
+  },
+  "satmtb/car/26": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "mixed",
+   "bucket": "small",
+   "median_sqrt_area_px": 3.99,
+   "n_boxes": 6226,
+   "frac_small_area": 0.9749
+  },
+  "satmtb/car/27": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "mixed",
+   "bucket": "small",
+   "median_sqrt_area_px": 4.89,
+   "n_boxes": 1386,
+   "frac_small_area": 1.0
+  },
+  "satmtb/car/28": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 3.84,
+   "n_boxes": 3446,
+   "frac_small_area": 1.0
+  },
+  "satmtb/car/29": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 4.5,
+   "n_boxes": 1894,
+   "frac_small_area": 1.0
+  },
+  "satmtb/car/30": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 3.72,
+   "n_boxes": 2293,
+   "frac_small_area": 1.0
+  },
+  "satmtb/car/31": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "mixed",
+   "bucket": "small",
+   "median_sqrt_area_px": 4.66,
+   "n_boxes": 9307,
+   "frac_small_area": 1.0
+  },
+  "satmtb/car/32": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 4.12,
+   "n_boxes": 6681,
+   "frac_small_area": 1.0
+  },
+  "satmtb/car/33": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 4.15,
+   "n_boxes": 4216,
+   "frac_small_area": 1.0
+  },
+  "satmtb/car/34": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 4.34,
+   "n_boxes": 4289,
+   "frac_small_area": 1.0
+  },
+  "satmtb/car/35": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 4.61,
+   "n_boxes": 3967,
+   "frac_small_area": 1.0
+  },
+  "satmtb/car/36": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 4.96,
+   "n_boxes": 5156,
+   "frac_small_area": 1.0
+  },
+  "satmtb/car/37": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 5.06,
+   "n_boxes": 1036,
+   "frac_small_area": 1.0
+  },
+  "satmtb/car/38": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 4.26,
+   "n_boxes": 1552,
+   "frac_small_area": 1.0
+  },
+  "satmtb/car/39": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 4.99,
+   "n_boxes": 2209,
+   "frac_small_area": 1.0
+  },
+  "satmtb/car/40": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 3.78,
+   "n_boxes": 1875,
+   "frac_small_area": 1.0
+  },
+  "satmtb/car/41": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 3.43,
+   "n_boxes": 3473,
+   "frac_small_area": 1.0
+  },
+  "satmtb/car/42": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 3.79,
+   "n_boxes": 1405,
+   "frac_small_area": 1.0
+  },
+  "satmtb/car/43": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 4.15,
+   "n_boxes": 1676,
+   "frac_small_area": 1.0
+  },
+  "satmtb/car/45": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 4.0,
+   "n_boxes": 1309,
+   "frac_small_area": 1.0
+  },
+  "satmtb/car/46": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 4.22,
+   "n_boxes": 3225,
+   "frac_small_area": 1.0
+  },
+  "satmtb/car/47": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 4.32,
+   "n_boxes": 10973,
+   "frac_small_area": 1.0
+  },
+  "satmtb/car/48": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 5.41,
+   "n_boxes": 4263,
+   "frac_small_area": 1.0
+  },
+  "satmtb/car/49": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 3.72,
+   "n_boxes": 18309,
+   "frac_small_area": 1.0
+  },
+  "satmtb/car/50": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 4.35,
+   "n_boxes": 15913,
+   "frac_small_area": 1.0
+  },
+  "satmtb/car/51": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 4.28,
+   "n_boxes": 10419,
+   "frac_small_area": 1.0
+  },
+  "satmtb/car/52": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 5.32,
+   "n_boxes": 13945,
+   "frac_small_area": 1.0
+  },
+  "satmtb/car/53": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 3.9,
+   "n_boxes": 13096,
+   "frac_small_area": 1.0
+  },
+  "satmtb/car/54": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 5.75,
+   "n_boxes": 4707,
+   "frac_small_area": 1.0
+  },
+  "satmtb/car/55": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 3.88,
+   "n_boxes": 4581,
+   "frac_small_area": 1.0
+  },
+  "satmtb/car/56": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 4.63,
+   "n_boxes": 4877,
+   "frac_small_area": 1.0
+  },
+  "satmtb/car/57": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 6.54,
+   "n_boxes": 8727,
+   "frac_small_area": 1.0
+  },
+  "satmtb/car/58": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 4.31,
+   "n_boxes": 2599,
+   "frac_small_area": 1.0
+  },
+  "satmtb/car/59": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 4.31,
+   "n_boxes": 6443,
+   "frac_small_area": 1.0
+  },
+  "satmtb/car/60": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 5.8,
+   "n_boxes": 6748,
+   "frac_small_area": 1.0
+  },
+  "satmtb/car/61": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 4.76,
+   "n_boxes": 4739,
+   "frac_small_area": 1.0
+  },
+  "satmtb/car/62": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 4.71,
+   "n_boxes": 6008,
+   "frac_small_area": 1.0
+  },
+  "satmtb/car/63": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 4.59,
+   "n_boxes": 5665,
+   "frac_small_area": 1.0
+  },
+  "satmtb/car/64": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 6.03,
+   "n_boxes": 6578,
+   "frac_small_area": 1.0
+  },
+  "satmtb/car/65": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 3.91,
+   "n_boxes": 6221,
+   "frac_small_area": 1.0
+  },
+  "satmtb/car/66": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 4.8,
+   "n_boxes": 6845,
+   "frac_small_area": 1.0
+  },
+  "satmtb/car/67": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 3.89,
+   "n_boxes": 11484,
+   "frac_small_area": 1.0
+  },
+  "satmtb/car/68": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 4.21,
+   "n_boxes": 5600,
+   "frac_small_area": 1.0
+  },
+  "satmtb/car/69": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 5.78,
+   "n_boxes": 21329,
+   "frac_small_area": 1.0
+  },
+  "satmtb/car/70": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 4.65,
+   "n_boxes": 20005,
+   "frac_small_area": 1.0
+  },
+  "satmtb/car/71": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 5.65,
+   "n_boxes": 17116,
+   "frac_small_area": 1.0
+  },
+  "satmtb/car/72": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 5.06,
+   "n_boxes": 17013,
+   "frac_small_area": 1.0
+  },
+  "satmtb/car/73": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 4.71,
+   "n_boxes": 8469,
+   "frac_small_area": 1.0
+  },
+  "satmtb/car/74": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 4.41,
+   "n_boxes": 14657,
+   "frac_small_area": 1.0
+  },
+  "satmtb/car/75": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 5.9,
+   "n_boxes": 28037,
+   "frac_small_area": 1.0
+  },
+  "satmtb/car/76": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 4.99,
+   "n_boxes": 12144,
+   "frac_small_area": 1.0
+  },
+  "satmtb/car/77": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 5.04,
+   "n_boxes": 6247,
+   "frac_small_area": 1.0
+  },
+  "satmtb/car/78": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 5.37,
+   "n_boxes": 9582,
+   "frac_small_area": 1.0
+  },
+  "satmtb/car/79": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 5.27,
+   "n_boxes": 10561,
+   "frac_small_area": 1.0
+  },
+  "satmtb/car/80": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 4.64,
+   "n_boxes": 9585,
+   "frac_small_area": 1.0
+  },
+  "satmtb/car/81": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 3.97,
+   "n_boxes": 19071,
+   "frac_small_area": 1.0
+  },
+  "satmtb/car/82": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 4.94,
+   "n_boxes": 10003,
+   "frac_small_area": 1.0
+  },
+  "satmtb/car/83": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 5.25,
+   "n_boxes": 19967,
+   "frac_small_area": 1.0
+  },
+  "satmtb/car/84": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 4.58,
+   "n_boxes": 10483,
+   "frac_small_area": 1.0
+  },
+  "satmtb/car/85": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 5.02,
+   "n_boxes": 10076,
+   "frac_small_area": 1.0
+  },
+  "satmtb/car/86": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 4.33,
+   "n_boxes": 9993,
+   "frac_small_area": 1.0
+  },
+  "satmtb/car/87": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 4.29,
+   "n_boxes": 8605,
+   "frac_small_area": 1.0
+  },
+  "satmtb/car/88": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 4.23,
+   "n_boxes": 7008,
+   "frac_small_area": 1.0
+  },
+  "satmtb/car/89": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 4.1,
+   "n_boxes": 7743,
+   "frac_small_area": 1.0
+  },
+  "satmtb/car/90": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 5.99,
+   "n_boxes": 12158,
+   "frac_small_area": 1.0
+  },
+  "satmtb/car/91": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 5.24,
+   "n_boxes": 27550,
+   "frac_small_area": 1.0
+  },
+  "satmtb/car/92": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 5.16,
+   "n_boxes": 23170,
+   "frac_small_area": 1.0
+  },
+  "satmtb/car/93": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 3.7,
+   "n_boxes": 20448,
+   "frac_small_area": 1.0
+  },
+  "satmtb/car/94": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 3.89,
+   "n_boxes": 12261,
+   "frac_small_area": 1.0
+  },
+  "satmtb/car/95": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 5.61,
+   "n_boxes": 18555,
+   "frac_small_area": 1.0
+  },
+  "satmtb/ship/01": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "ship",
+   "bucket": "small",
+   "median_sqrt_area_px": 31.89,
+   "n_boxes": 187,
+   "frac_small_area": 0.9251
+  },
+  "satmtb/ship/02": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "ship",
+   "bucket": "small",
+   "median_sqrt_area_px": 21.87,
+   "n_boxes": 287,
+   "frac_small_area": 1.0
+  },
+  "satmtb/ship/03": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "ship",
+   "bucket": "small",
+   "median_sqrt_area_px": 15.69,
+   "n_boxes": 287,
+   "frac_small_area": 1.0
+  },
+  "satmtb/ship/04": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "ship",
+   "bucket": "small",
+   "median_sqrt_area_px": 13.78,
+   "n_boxes": 861,
+   "frac_small_area": 1.0
+  },
+  "satmtb/ship/05": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "ship",
+   "bucket": "small",
+   "median_sqrt_area_px": 24.5,
+   "n_boxes": 861,
+   "frac_small_area": 1.0
+  },
+  "satmtb/ship/06": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "ship",
+   "bucket": "small",
+   "median_sqrt_area_px": 30.93,
+   "n_boxes": 574,
+   "frac_small_area": 0.8693
+  },
+  "satmtb/ship/07": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "ship",
+   "bucket": "large",
+   "median_sqrt_area_px": 43.71,
+   "n_boxes": 650,
+   "frac_small_area": 0.0
+  },
+  "satmtb/ship/08": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "ship",
+   "bucket": "small",
+   "median_sqrt_area_px": 17.03,
+   "n_boxes": 558,
+   "frac_small_area": 0.9642
+  },
+  "satmtb/ship/09": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "ship",
+   "bucket": "small",
+   "median_sqrt_area_px": 25.78,
+   "n_boxes": 290,
+   "frac_small_area": 1.0
+  },
+  "satmtb/ship/10": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "ship",
+   "bucket": "small",
+   "median_sqrt_area_px": 14.39,
+   "n_boxes": 313,
+   "frac_small_area": 1.0
+  },
+  "satmtb/ship/11": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "ship",
+   "bucket": "small",
+   "median_sqrt_area_px": 16.64,
+   "n_boxes": 187,
+   "frac_small_area": 1.0
+  },
+  "satmtb/ship/12": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "mixed",
+   "bucket": "small",
+   "median_sqrt_area_px": 10.06,
+   "n_boxes": 945,
+   "frac_small_area": 1.0
+  },
+  "satmtb/ship/13": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "ship",
+   "bucket": "large",
+   "median_sqrt_area_px": 34.42,
+   "n_boxes": 187,
+   "frac_small_area": 0.0
+  },
+  "satmtb/ship/14": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "ship",
+   "bucket": "small",
+   "median_sqrt_area_px": 31.23,
+   "n_boxes": 1228,
+   "frac_small_area": 0.6564
+  },
+  "satmtb/ship/15": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "ship",
+   "bucket": "large",
+   "median_sqrt_area_px": 39.5,
+   "n_boxes": 614,
+   "frac_small_area": 0.0
+  },
+  "satmtb/ship/16": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "ship",
+   "bucket": "small",
+   "median_sqrt_area_px": 22.81,
+   "n_boxes": 1560,
+   "frac_small_area": 0.8
+  },
+  "satmtb/ship/17": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "ship",
+   "bucket": "large",
+   "median_sqrt_area_px": 46.21,
+   "n_boxes": 771,
+   "frac_small_area": 0.1907
+  },
+  "satmtb/ship/18": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "ship",
+   "bucket": "large",
+   "median_sqrt_area_px": 56.37,
+   "n_boxes": 56,
+   "frac_small_area": 0.0
+  },
+  "satmtb/ship/19": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "ship",
+   "bucket": "small",
+   "median_sqrt_area_px": 16.65,
+   "n_boxes": 262,
+   "frac_small_area": 1.0
+  },
+  "satmtb/ship/20": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "ship",
+   "bucket": "small",
+   "median_sqrt_area_px": 28.51,
+   "n_boxes": 139,
+   "frac_small_area": 1.0
+  },
+  "satmtb/ship/21": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "ship",
+   "bucket": "small",
+   "median_sqrt_area_px": 12.06,
+   "n_boxes": 278,
+   "frac_small_area": 1.0
+  },
+  "satmtb/ship/22": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "mixed",
+   "bucket": "small",
+   "median_sqrt_area_px": 4.78,
+   "n_boxes": 1708,
+   "frac_small_area": 1.0
+  },
+  "satmtb/ship/23": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "ship",
+   "bucket": "small",
+   "median_sqrt_area_px": 15.62,
+   "n_boxes": 276,
+   "frac_small_area": 1.0
+  },
+  "satmtb/ship/24": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "ship",
+   "bucket": "small",
+   "median_sqrt_area_px": 13.41,
+   "n_boxes": 276,
+   "frac_small_area": 1.0
+  },
+  "satmtb/ship/25": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "ship",
+   "bucket": "small",
+   "median_sqrt_area_px": 3.44,
+   "n_boxes": 770,
+   "frac_small_area": 1.0
+  },
+  "satmtb/ship/26": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "ship",
+   "bucket": "small",
+   "median_sqrt_area_px": 10.96,
+   "n_boxes": 138,
+   "frac_small_area": 1.0
+  },
+  "satmtb/ship/27": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "ship",
+   "bucket": "small",
+   "median_sqrt_area_px": 13.72,
+   "n_boxes": 626,
+   "frac_small_area": 1.0
+  },
+  "satmtb/ship/28": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "ship",
+   "bucket": "small",
+   "median_sqrt_area_px": 31.99,
+   "n_boxes": 405,
+   "frac_small_area": 0.5037
+  },
+  "satmtb/ship/29": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "ship",
+   "bucket": "small",
+   "median_sqrt_area_px": 24.42,
+   "n_boxes": 590,
+   "frac_small_area": 1.0
+  },
+  "satmtb/ship/30": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "ship",
+   "bucket": "small",
+   "median_sqrt_area_px": 16.58,
+   "n_boxes": 1419,
+   "frac_small_area": 1.0
+  },
+  "satmtb/ship/31": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "ship",
+   "bucket": "small",
+   "median_sqrt_area_px": 16.79,
+   "n_boxes": 313,
+   "frac_small_area": 1.0
+  },
+  "satmtb/ship/32": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "ship",
+   "bucket": "small",
+   "median_sqrt_area_px": 15.67,
+   "n_boxes": 1878,
+   "frac_small_area": 1.0
+  },
+  "satmtb/ship/33": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "ship",
+   "bucket": "small",
+   "median_sqrt_area_px": 9.91,
+   "n_boxes": 928,
+   "frac_small_area": 1.0
+  },
+  "satmtb/ship/34": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "mixed",
+   "bucket": "small",
+   "median_sqrt_area_px": 5.17,
+   "n_boxes": 3184,
+   "frac_small_area": 0.9017
+  },
+  "satmtb/ship/35": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "ship",
+   "bucket": "small",
+   "median_sqrt_area_px": 31.89,
+   "n_boxes": 313,
+   "frac_small_area": 0.9808
+  },
+  "satmtb/ship/36": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "ship",
+   "bucket": "small",
+   "median_sqrt_area_px": 21.0,
+   "n_boxes": 1252,
+   "frac_small_area": 0.75
+  },
+  "satmtb/ship/37": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "mixed",
+   "bucket": "small",
+   "median_sqrt_area_px": 8.63,
+   "n_boxes": 4662,
+   "frac_small_area": 0.8767
+  },
+  "satmtb/ship/38": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "ship",
+   "bucket": "small",
+   "median_sqrt_area_px": 27.17,
+   "n_boxes": 909,
+   "frac_small_area": 0.9285
+  },
+  "satmtb/ship/39": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "ship",
+   "bucket": "small",
+   "median_sqrt_area_px": 20.55,
+   "n_boxes": 1955,
+   "frac_small_area": 1.0
+  },
+  "satmtb/ship/40": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "mixed",
+   "bucket": "small",
+   "median_sqrt_area_px": 24.66,
+   "n_boxes": 1202,
+   "frac_small_area": 0.7912
+  },
+  "satmtb/ship/41": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "ship",
+   "bucket": "small",
+   "median_sqrt_area_px": 23.87,
+   "n_boxes": 345,
+   "frac_small_area": 1.0
+  },
+  "satmtb/ship/42": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "mixed",
+   "bucket": "small",
+   "median_sqrt_area_px": 12.56,
+   "n_boxes": 223,
+   "frac_small_area": 1.0
+  },
+  "satmtb/ship/43": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "ship",
+   "bucket": "small",
+   "median_sqrt_area_px": 17.42,
+   "n_boxes": 276,
+   "frac_small_area": 1.0
+  },
+  "satmtb/ship/44": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "ship",
+   "bucket": "small",
+   "median_sqrt_area_px": 16.92,
+   "n_boxes": 417,
+   "frac_small_area": 1.0
+  },
+  "satmtb/ship/45": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "ship",
+   "bucket": "large",
+   "median_sqrt_area_px": 39.74,
+   "n_boxes": 476,
+   "frac_small_area": 0.416
+  },
+  "satmtb/ship/46": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "ship",
+   "bucket": "small",
+   "median_sqrt_area_px": 18.95,
+   "n_boxes": 139,
+   "frac_small_area": 1.0
+  },
+  "satmtb/ship/47": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "ship",
+   "bucket": "small",
+   "median_sqrt_area_px": 11.6,
+   "n_boxes": 230,
+   "frac_small_area": 1.0
+  },
+  "satmtb/ship/48": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "mixed",
+   "bucket": "small",
+   "median_sqrt_area_px": 5.35,
+   "n_boxes": 1091,
+   "frac_small_area": 1.0
+  },
+  "satmtb/ship/49": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "ship",
+   "bucket": "small",
+   "median_sqrt_area_px": 6.58,
+   "n_boxes": 2008,
+   "frac_small_area": 1.0
+  },
+  "satmtb/ship/50": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "ship",
+   "bucket": "small",
+   "median_sqrt_area_px": 8.29,
+   "n_boxes": 978,
+   "frac_small_area": 1.0
+  },
+  "satmtb/ship/51": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "ship",
+   "bucket": "small",
+   "median_sqrt_area_px": 10.04,
+   "n_boxes": 3260,
+   "frac_small_area": 1.0
+  },
+  "satmtb/ship/52": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "ship",
+   "bucket": "small",
+   "median_sqrt_area_px": 19.85,
+   "n_boxes": 978,
+   "frac_small_area": 1.0
+  },
+  "satmtb/ship/53": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "ship",
+   "bucket": "small",
+   "median_sqrt_area_px": 15.04,
+   "n_boxes": 1956,
+   "frac_small_area": 1.0
+  },
+  "satmtb/ship/54": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "mixed",
+   "bucket": "small",
+   "median_sqrt_area_px": 6.28,
+   "n_boxes": 4480,
+   "frac_small_area": 0.8545
+  },
+  "satmtb/ship/55": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "ship",
+   "bucket": "large",
+   "median_sqrt_area_px": 60.01,
+   "n_boxes": 1304,
+   "frac_small_area": 0.25
+  },
+  "satmtb/ship/56": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "ship",
+   "bucket": "small",
+   "median_sqrt_area_px": 10.99,
+   "n_boxes": 1630,
+   "frac_small_area": 1.0
+  },
+  "satmtb/ship/57": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "ship",
+   "bucket": "small",
+   "median_sqrt_area_px": 8.25,
+   "n_boxes": 2784,
+   "frac_small_area": 1.0
+  },
+  "satmtb/ship/58": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "ship",
+   "bucket": "small",
+   "median_sqrt_area_px": 13.35,
+   "n_boxes": 2264,
+   "frac_small_area": 0.856
+  },
+  "satmtb/ship/59": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "mixed",
+   "bucket": "small",
+   "median_sqrt_area_px": 7.15,
+   "n_boxes": 1525,
+   "frac_small_area": 0.8433
+  },
+  "satmtb/ship/60": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "ship",
+   "bucket": "small",
+   "median_sqrt_area_px": 16.61,
+   "n_boxes": 572,
+   "frac_small_area": 1.0
+  },
+  "satmtb/ship/61": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "ship",
+   "bucket": "small",
+   "median_sqrt_area_px": 16.57,
+   "n_boxes": 1296,
+   "frac_small_area": 1.0
+  },
+  "satmtb/ship/62": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "ship",
+   "bucket": "small",
+   "median_sqrt_area_px": 9.59,
+   "n_boxes": 432,
+   "frac_small_area": 1.0
+  },
+  "satmtb/ship/63": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "ship",
+   "bucket": "small",
+   "median_sqrt_area_px": 10.82,
+   "n_boxes": 720,
+   "frac_small_area": 1.0
+  },
+  "satmtb/ship/64": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "ship",
+   "bucket": "small",
+   "median_sqrt_area_px": 10.35,
+   "n_boxes": 3217,
+   "frac_small_area": 0.8657
+  },
+  "satmtb/ship/65": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "ship",
+   "bucket": "small",
+   "median_sqrt_area_px": 10.0,
+   "n_boxes": 1636,
+   "frac_small_area": 1.0
+  },
+  "satmtb/ship/66": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "ship",
+   "bucket": "small",
+   "median_sqrt_area_px": 6.1,
+   "n_boxes": 2058,
+   "frac_small_area": 1.0
+  },
+  "satmtb/ship/67": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "mixed",
+   "bucket": "small",
+   "median_sqrt_area_px": 4.54,
+   "n_boxes": 4086,
+   "frac_small_area": 1.0
+  },
+  "satmtb/ship/68": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "ship",
+   "bucket": "small",
+   "median_sqrt_area_px": 5.82,
+   "n_boxes": 404,
+   "frac_small_area": 1.0
+  },
+  "satmtb/ship/69": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "ship",
+   "bucket": "small",
+   "median_sqrt_area_px": 9.98,
+   "n_boxes": 432,
+   "frac_small_area": 1.0
+  },
+  "satmtb/ship/70": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "ship",
+   "bucket": "small",
+   "median_sqrt_area_px": 8.5,
+   "n_boxes": 3521,
+   "frac_small_area": 1.0
+  },
+  "satmtb/train/01": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "train",
+   "bucket": "large",
+   "median_sqrt_area_px": 146.35,
+   "n_boxes": 591,
+   "frac_small_area": 0.1658
+  },
+  "satmtb/train/02": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "train",
+   "bucket": "small",
+   "median_sqrt_area_px": 28.64,
+   "n_boxes": 752,
+   "frac_small_area": 0.6516
+  },
+  "satmtb/train/03": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "train",
+   "bucket": "large",
+   "median_sqrt_area_px": 102.9,
+   "n_boxes": 634,
+   "frac_small_area": 0.0
+  },
+  "satmtb/train/04": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "train",
+   "bucket": "large",
+   "median_sqrt_area_px": 196.88,
+   "n_boxes": 1089,
+   "frac_small_area": 0.0
+  },
+  "satmtb/train/05": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "train",
+   "bucket": "large",
+   "median_sqrt_area_px": 315.61,
+   "n_boxes": 550,
+   "frac_small_area": 0.0
+  },
+  "satmtb/train/06": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "train",
+   "bucket": "large",
+   "median_sqrt_area_px": 329.33,
+   "n_boxes": 804,
+   "frac_small_area": 0.0311
+  },
+  "satmtb/train/07": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "train",
+   "bucket": "large",
+   "median_sqrt_area_px": 96.61,
+   "n_boxes": 147,
+   "frac_small_area": 0.0
+  },
+  "satmtb/train/11": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "mixed",
+   "bucket": "small",
+   "median_sqrt_area_px": 4.41,
+   "n_boxes": 560,
+   "frac_small_area": 0.6429
+  },
+  "satmtb/train/12": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "mixed",
+   "bucket": "small",
+   "median_sqrt_area_px": 9.49,
+   "n_boxes": 654,
+   "frac_small_area": 0.9235
+  },
+  "satmtb/train/13": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "mixed",
+   "bucket": "small",
+   "median_sqrt_area_px": 5.07,
+   "n_boxes": 1914,
+   "frac_small_area": 1.0
+  },
+  "satmtb/train/14": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "mixed",
+   "bucket": "small",
+   "median_sqrt_area_px": 4.81,
+   "n_boxes": 1192,
+   "frac_small_area": 1.0
+  },
+  "satmtb/train/15": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "mixed",
+   "bucket": "small",
+   "median_sqrt_area_px": 3.87,
+   "n_boxes": 4326,
+   "frac_small_area": 0.923
+  },
+  "satmtb/train/16": {
+   "task": "MOT",
+   "dataset": "satmtb",
+   "category": "mixed",
+   "bucket": "small",
+   "median_sqrt_area_px": 4.03,
+   "n_boxes": 4895,
+   "frac_small_area": 0.9265
+  },
+  "sdmcar/test/1-2": {
+   "task": "MOT",
+   "dataset": "sdmcar",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 5.66,
+   "n_boxes": 12528,
+   "frac_small_area": 1.0
+  },
+  "sdmcar/test/10-2": {
+   "task": "MOT",
+   "dataset": "sdmcar",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 6.93,
+   "n_boxes": 12533,
+   "frac_small_area": 1.0
+  },
+  "sdmcar/test/13-2": {
+   "task": "MOT",
+   "dataset": "sdmcar",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 11.0,
+   "n_boxes": 14276,
+   "frac_small_area": 1.0
+  },
+  "sdmcar/test/14-3": {
+   "task": "MOT",
+   "dataset": "sdmcar",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 7.94,
+   "n_boxes": 51371,
+   "frac_small_area": 1.0
+  },
+  "sdmcar/test/15-3": {
+   "task": "MOT",
+   "dataset": "sdmcar",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 5.48,
+   "n_boxes": 3502,
+   "frac_small_area": 1.0
+  },
+  "sdmcar/test/16-3": {
+   "task": "MOT",
+   "dataset": "sdmcar",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 10.49,
+   "n_boxes": 19785,
+   "frac_small_area": 1.0
+  },
+  "sdmcar/test/17-2": {
+   "task": "MOT",
+   "dataset": "sdmcar",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 7.94,
+   "n_boxes": 8951,
+   "frac_small_area": 1.0
+  },
+  "sdmcar/test/19-3": {
+   "task": "MOT",
+   "dataset": "sdmcar",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 7.42,
+   "n_boxes": 13635,
+   "frac_small_area": 1.0
+  },
+  "sdmcar/test/2-7": {
+   "task": "MOT",
+   "dataset": "sdmcar",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 7.0,
+   "n_boxes": 22977,
+   "frac_small_area": 1.0
+  },
+  "sdmcar/test/22-4": {
+   "task": "MOT",
+   "dataset": "sdmcar",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 7.94,
+   "n_boxes": 24302,
+   "frac_small_area": 1.0
+  },
+  "sdmcar/test/24-3": {
+   "task": "MOT",
+   "dataset": "sdmcar",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 6.48,
+   "n_boxes": 3894,
+   "frac_small_area": 1.0
+  },
+  "sdmcar/test/25-3": {
+   "task": "MOT",
+   "dataset": "sdmcar",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 5.0,
+   "n_boxes": 4230,
+   "frac_small_area": 1.0
+  },
+  "sdmcar/test/30-1": {
+   "task": "MOT",
+   "dataset": "sdmcar",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 6.93,
+   "n_boxes": 503,
+   "frac_small_area": 1.0
+  },
+  "sdmcar/test/31-4": {
+   "task": "MOT",
+   "dataset": "sdmcar",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 6.48,
+   "n_boxes": 40737,
+   "frac_small_area": 1.0
+  },
+  "sdmcar/test/4-2": {
+   "task": "MOT",
+   "dataset": "sdmcar",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 5.48,
+   "n_boxes": 4201,
+   "frac_small_area": 1.0
+  },
+  "sdmcar/test/41-4": {
+   "task": "MOT",
+   "dataset": "sdmcar",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 4.9,
+   "n_boxes": 8844,
+   "frac_small_area": 1.0
+  },
+  "sdmcar/test/42-3": {
+   "task": "MOT",
+   "dataset": "sdmcar",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 7.48,
+   "n_boxes": 7937,
+   "frac_small_area": 1.0
+  },
+  "sdmcar/test/47-4": {
+   "task": "MOT",
+   "dataset": "sdmcar",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 4.9,
+   "n_boxes": 19183,
+   "frac_small_area": 1.0
+  },
+  "sdmcar/test/50-2": {
+   "task": "MOT",
+   "dataset": "sdmcar",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 6.93,
+   "n_boxes": 7980,
+   "frac_small_area": 1.0
+  },
+  "sdmcar/test/6-4": {
+   "task": "MOT",
+   "dataset": "sdmcar",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 6.48,
+   "n_boxes": 23841,
+   "frac_small_area": 1.0
+  },
+  "sdmcar/train/1-1": {
+   "task": "MOT",
+   "dataset": "sdmcar",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 4.9,
+   "n_boxes": 8110,
+   "frac_small_area": 1.0
+  },
+  "sdmcar/train/10-1": {
+   "task": "MOT",
+   "dataset": "sdmcar",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 10.49,
+   "n_boxes": 3961,
+   "frac_small_area": 1.0
+  },
+  "sdmcar/train/11-1": {
+   "task": "MOT",
+   "dataset": "sdmcar",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 7.42,
+   "n_boxes": 2508,
+   "frac_small_area": 1.0
+  },
+  "sdmcar/train/12-1": {
+   "task": "MOT",
+   "dataset": "sdmcar",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 11.0,
+   "n_boxes": 7389,
+   "frac_small_area": 1.0
+  },
+  "sdmcar/train/13-1": {
+   "task": "MOT",
+   "dataset": "sdmcar",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 10.95,
+   "n_boxes": 20743,
+   "frac_small_area": 1.0
+  },
+  "sdmcar/train/14-1": {
+   "task": "MOT",
+   "dataset": "sdmcar",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 10.49,
+   "n_boxes": 17775,
+   "frac_small_area": 1.0
+  },
+  "sdmcar/train/15-2": {
+   "task": "MOT",
+   "dataset": "sdmcar",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 5.48,
+   "n_boxes": 20955,
+   "frac_small_area": 1.0
+  },
+  "sdmcar/train/16-2": {
+   "task": "MOT",
+   "dataset": "sdmcar",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 10.49,
+   "n_boxes": 43442,
+   "frac_small_area": 1.0
+  },
+  "sdmcar/train/17-1": {
+   "task": "MOT",
+   "dataset": "sdmcar",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 7.35,
+   "n_boxes": 23924,
+   "frac_small_area": 1.0
+  },
+  "sdmcar/train/18-1": {
+   "task": "MOT",
+   "dataset": "sdmcar",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 5.48,
+   "n_boxes": 15605,
+   "frac_small_area": 1.0
+  },
+  "sdmcar/train/18-2": {
+   "task": "MOT",
+   "dataset": "sdmcar",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 6.0,
+   "n_boxes": 16359,
+   "frac_small_area": 1.0
+  },
+  "sdmcar/train/19-1": {
+   "task": "MOT",
+   "dataset": "sdmcar",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 6.32,
+   "n_boxes": 10563,
+   "frac_small_area": 1.0
+  },
+  "sdmcar/train/19-2": {
+   "task": "MOT",
+   "dataset": "sdmcar",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 7.0,
+   "n_boxes": 7861,
+   "frac_small_area": 1.0
+  },
+  "sdmcar/train/19-4": {
+   "task": "MOT",
+   "dataset": "sdmcar",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 7.48,
+   "n_boxes": 17490,
+   "frac_small_area": 1.0
+  },
+  "sdmcar/train/2-1": {
+   "task": "MOT",
+   "dataset": "sdmcar",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 4.9,
+   "n_boxes": 8101,
+   "frac_small_area": 1.0
+  },
+  "sdmcar/train/2-3": {
+   "task": "MOT",
+   "dataset": "sdmcar",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 6.93,
+   "n_boxes": 20142,
+   "frac_small_area": 1.0
+  },
+  "sdmcar/train/2-5": {
+   "task": "MOT",
+   "dataset": "sdmcar",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 3.46,
+   "n_boxes": 15229,
+   "frac_small_area": 1.0
+  },
+  "sdmcar/train/2-6": {
+   "task": "MOT",
+   "dataset": "sdmcar",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 6.48,
+   "n_boxes": 25956,
+   "frac_small_area": 1.0
+  },
+  "sdmcar/train/21-1": {
+   "task": "MOT",
+   "dataset": "sdmcar",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 5.48,
+   "n_boxes": 4685,
+   "frac_small_area": 1.0
+  },
+  "sdmcar/train/21-2": {
+   "task": "MOT",
+   "dataset": "sdmcar",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 6.0,
+   "n_boxes": 9692,
+   "frac_small_area": 1.0
+  },
+  "sdmcar/train/24-1": {
+   "task": "MOT",
+   "dataset": "sdmcar",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 6.93,
+   "n_boxes": 931,
+   "frac_small_area": 1.0
+  },
+  "sdmcar/train/24-2": {
+   "task": "MOT",
+   "dataset": "sdmcar",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 5.92,
+   "n_boxes": 1636,
+   "frac_small_area": 1.0
+  },
+  "sdmcar/train/28-1": {
+   "task": "MOT",
+   "dataset": "sdmcar",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 8.37,
+   "n_boxes": 321,
+   "frac_small_area": 1.0
+  },
+  "sdmcar/train/29-1": {
+   "task": "MOT",
+   "dataset": "sdmcar",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 6.0,
+   "n_boxes": 2269,
+   "frac_small_area": 1.0
+  },
+  "sdmcar/train/3-1": {
+   "task": "MOT",
+   "dataset": "sdmcar",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 5.29,
+   "n_boxes": 10221,
+   "frac_small_area": 1.0
+  },
+  "sdmcar/train/3-2": {
+   "task": "MOT",
+   "dataset": "sdmcar",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 5.48,
+   "n_boxes": 8269,
+   "frac_small_area": 1.0
+  },
+  "sdmcar/train/31-1": {
+   "task": "MOT",
+   "dataset": "sdmcar",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 6.32,
+   "n_boxes": 18933,
+   "frac_small_area": 1.0
+  },
+  "sdmcar/train/31-2": {
+   "task": "MOT",
+   "dataset": "sdmcar",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 6.32,
+   "n_boxes": 18746,
+   "frac_small_area": 1.0
+  },
+  "sdmcar/train/31-3": {
+   "task": "MOT",
+   "dataset": "sdmcar",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 6.32,
+   "n_boxes": 41493,
+   "frac_small_area": 1.0
+  },
+  "sdmcar/train/32-1": {
+   "task": "MOT",
+   "dataset": "sdmcar",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 5.29,
+   "n_boxes": 38221,
+   "frac_small_area": 1.0
+  },
+  "sdmcar/train/36-1": {
+   "task": "MOT",
+   "dataset": "sdmcar",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 7.0,
+   "n_boxes": 11568,
+   "frac_small_area": 1.0
+  },
+  "sdmcar/train/38-1": {
+   "task": "MOT",
+   "dataset": "sdmcar",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 5.92,
+   "n_boxes": 15719,
+   "frac_small_area": 1.0
+  },
+  "sdmcar/train/38-2": {
+   "task": "MOT",
+   "dataset": "sdmcar",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 4.47,
+   "n_boxes": 9393,
+   "frac_small_area": 1.0
+  },
+  "sdmcar/train/41-1": {
+   "task": "MOT",
+   "dataset": "sdmcar",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 5.0,
+   "n_boxes": 16168,
+   "frac_small_area": 1.0
+  },
+  "sdmcar/train/41-2": {
+   "task": "MOT",
+   "dataset": "sdmcar",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 4.9,
+   "n_boxes": 12213,
+   "frac_small_area": 1.0
+  },
+  "sdmcar/train/41-3": {
+   "task": "MOT",
+   "dataset": "sdmcar",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 4.9,
+   "n_boxes": 17696,
+   "frac_small_area": 1.0
+  },
+  "sdmcar/train/42-1": {
+   "task": "MOT",
+   "dataset": "sdmcar",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 8.77,
+   "n_boxes": 17938,
+   "frac_small_area": 1.0
+  },
+  "sdmcar/train/47-1": {
+   "task": "MOT",
+   "dataset": "sdmcar",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 5.29,
+   "n_boxes": 14359,
+   "frac_small_area": 1.0
+  },
+  "sdmcar/train/47-2": {
+   "task": "MOT",
+   "dataset": "sdmcar",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 5.0,
+   "n_boxes": 29010,
+   "frac_small_area": 1.0
+  },
+  "sdmcar/train/47-3": {
+   "task": "MOT",
+   "dataset": "sdmcar",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 5.0,
+   "n_boxes": 35889,
+   "frac_small_area": 1.0
+  },
+  "sdmcar/train/49-1": {
+   "task": "MOT",
+   "dataset": "sdmcar",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 6.71,
+   "n_boxes": 5327,
+   "frac_small_area": 1.0
+  },
+  "sdmcar/train/49-2": {
+   "task": "MOT",
+   "dataset": "sdmcar",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 7.35,
+   "n_boxes": 7900,
+   "frac_small_area": 1.0
+  },
+  "sdmcar/train/49-4": {
+   "task": "MOT",
+   "dataset": "sdmcar",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 8.37,
+   "n_boxes": 8884,
+   "frac_small_area": 1.0
+  },
+  "sdmcar/train/50-1": {
+   "task": "MOT",
+   "dataset": "sdmcar",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 6.0,
+   "n_boxes": 8081,
+   "frac_small_area": 0.988
+  },
+  "sdmcar/train/51-1": {
+   "task": "MOT",
+   "dataset": "sdmcar",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 6.48,
+   "n_boxes": 11869,
+   "frac_small_area": 1.0
+  },
+  "sdmcar/train/52-2": {
+   "task": "MOT",
+   "dataset": "sdmcar",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 6.0,
+   "n_boxes": 17037,
+   "frac_small_area": 1.0
+  },
+  "sdmcar/train/53-1": {
+   "task": "MOT",
+   "dataset": "sdmcar",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 6.0,
+   "n_boxes": 27804,
+   "frac_small_area": 1.0
+  },
+  "sdmcar/train/6-1": {
+   "task": "MOT",
+   "dataset": "sdmcar",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 5.92,
+   "n_boxes": 19406,
+   "frac_small_area": 1.0
+  },
+  "sdmcar/train/6-2": {
+   "task": "MOT",
+   "dataset": "sdmcar",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 5.92,
+   "n_boxes": 22429,
+   "frac_small_area": 1.0
+  },
+  "sdmcar/train/6-3": {
+   "task": "MOT",
+   "dataset": "sdmcar",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 6.93,
+   "n_boxes": 11178,
+   "frac_small_area": 1.0
+  },
+  "sdmcar/train/60-1": {
+   "task": "MOT",
+   "dataset": "sdmcar",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 5.92,
+   "n_boxes": 10055,
+   "frac_small_area": 1.0
+  },
+  "sdmcar/train/61-1": {
+   "task": "MOT",
+   "dataset": "sdmcar",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 7.48,
+   "n_boxes": 56573,
+   "frac_small_area": 1.0
+  },
+  "sdmcar/train/62-1": {
+   "task": "MOT",
+   "dataset": "sdmcar",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 9.0,
+   "n_boxes": 7640,
+   "frac_small_area": 1.0
+  },
+  "sdmcar/train/63-1": {
+   "task": "MOT",
+   "dataset": "sdmcar",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 5.29,
+   "n_boxes": 7581,
+   "frac_small_area": 1.0
+  },
+  "sdmcar/train/64-1": {
+   "task": "MOT",
+   "dataset": "sdmcar",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 7.48,
+   "n_boxes": 7802,
+   "frac_small_area": 1.0
+  },
+  "sdmcar/train/65-1": {
+   "task": "MOT",
+   "dataset": "sdmcar",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 4.9,
+   "n_boxes": 15290,
+   "frac_small_area": 1.0
+  },
+  "sdmcar/train/66-1": {
+   "task": "MOT",
+   "dataset": "sdmcar",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 6.93,
+   "n_boxes": 14482,
+   "frac_small_area": 1.0
+  },
+  "sdmcar/train/66-2": {
+   "task": "MOT",
+   "dataset": "sdmcar",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 7.48,
+   "n_boxes": 16754,
+   "frac_small_area": 1.0
+  },
+  "sdmcar/train/7-1": {
+   "task": "MOT",
+   "dataset": "sdmcar",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 4.9,
+   "n_boxes": 14526,
+   "frac_small_area": 1.0
+  },
+  "sdmcar/train/7-2": {
+   "task": "MOT",
+   "dataset": "sdmcar",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 4.9,
+   "n_boxes": 16366,
+   "frac_small_area": 1.0
+  },
+  "sdmcar/train/8-1": {
+   "task": "MOT",
+   "dataset": "sdmcar",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 7.48,
+   "n_boxes": 4372,
+   "frac_small_area": 1.0
+  },
+  "sdmcar/train/8-2": {
+   "task": "MOT",
+   "dataset": "sdmcar",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 7.0,
+   "n_boxes": 19035,
+   "frac_small_area": 1.0
+  },
+  "sdmcar/train/8-3": {
+   "task": "MOT",
+   "dataset": "sdmcar",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 7.0,
+   "n_boxes": 15223,
+   "frac_small_area": 1.0
+  },
+  "sdmcar/train/9-1": {
+   "task": "MOT",
+   "dataset": "sdmcar",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 4.47,
+   "n_boxes": 21117,
+   "frac_small_area": 1.0
+  },
+  "sdmcar/val/14-2": {
+   "task": "MOT",
+   "dataset": "sdmcar",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 8.0,
+   "n_boxes": 55996,
+   "frac_small_area": 1.0
+  },
+  "sdmcar/val/15-1": {
+   "task": "MOT",
+   "dataset": "sdmcar",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 4.9,
+   "n_boxes": 4703,
+   "frac_small_area": 1.0
+  },
+  "sdmcar/val/16-1": {
+   "task": "MOT",
+   "dataset": "sdmcar",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 10.95,
+   "n_boxes": 13821,
+   "frac_small_area": 1.0
+  },
+  "sdmcar/val/16-4": {
+   "task": "MOT",
+   "dataset": "sdmcar",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 10.49,
+   "n_boxes": 7065,
+   "frac_small_area": 1.0
+  },
+  "sdmcar/val/22-1": {
+   "task": "MOT",
+   "dataset": "sdmcar",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 6.48,
+   "n_boxes": 20232,
+   "frac_small_area": 1.0
+  },
+  "sdmcar/val/22-2": {
+   "task": "MOT",
+   "dataset": "sdmcar",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 8.0,
+   "n_boxes": 14948,
+   "frac_small_area": 1.0
+  },
+  "sdmcar/val/22-3": {
+   "task": "MOT",
+   "dataset": "sdmcar",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 9.95,
+   "n_boxes": 19467,
+   "frac_small_area": 1.0
+  },
+  "sdmcar/val/25-1": {
+   "task": "MOT",
+   "dataset": "sdmcar",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 4.9,
+   "n_boxes": 1577,
+   "frac_small_area": 1.0
+  },
+  "sdmcar/val/25-2": {
+   "task": "MOT",
+   "dataset": "sdmcar",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 5.48,
+   "n_boxes": 4737,
+   "frac_small_area": 1.0
+  },
+  "sdmcar/val/36-2": {
+   "task": "MOT",
+   "dataset": "sdmcar",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 6.0,
+   "n_boxes": 12315,
+   "frac_small_area": 1.0
+  },
+  "sdmcar/val/39-1": {
+   "task": "MOT",
+   "dataset": "sdmcar",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 4.9,
+   "n_boxes": 211,
+   "frac_small_area": 1.0
+  },
+  "sdmcar/val/4-1": {
+   "task": "MOT",
+   "dataset": "sdmcar",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 5.48,
+   "n_boxes": 2350,
+   "frac_small_area": 1.0
+  },
+  "sdmcar/val/5-1": {
+   "task": "MOT",
+   "dataset": "sdmcar",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 4.24,
+   "n_boxes": 35787,
+   "frac_small_area": 1.0
+  },
+  "sdmcar/val/67-1": {
+   "task": "MOT",
+   "dataset": "sdmcar",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 7.48,
+   "n_boxes": 12576,
+   "frac_small_area": 1.0
+  },
+  "sdmcar/val/70-1": {
+   "task": "MOT",
+   "dataset": "sdmcar",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 7.75,
+   "n_boxes": 23368,
+   "frac_small_area": 1.0
+  },
+  "viso/plane/039": {
+   "task": "MOT",
+   "dataset": "viso",
+   "category": "airplane",
+   "bucket": "small",
+   "median_sqrt_area_px": 30.0,
+   "n_boxes": 359,
+   "frac_small_area": 0.9833
+  },
+  "viso/plane/040": {
+   "task": "MOT",
+   "dataset": "viso",
+   "category": "airplane",
+   "bucket": "large",
+   "median_sqrt_area_px": 64.48,
+   "n_boxes": 250,
+   "frac_small_area": 0.0
+  },
+  "viso/plane/041": {
+   "task": "MOT",
+   "dataset": "viso",
+   "category": "airplane",
+   "bucket": "small",
+   "median_sqrt_area_px": 26.12,
+   "n_boxes": 324,
+   "frac_small_area": 0.9938
+  },
+  "viso/plane/042": {
+   "task": "MOT",
+   "dataset": "viso",
+   "category": "airplane",
+   "bucket": "large",
+   "median_sqrt_area_px": 40.25,
+   "n_boxes": 373,
+   "frac_small_area": 0.0107
+  },
+  "viso/plane/043": {
+   "task": "MOT",
+   "dataset": "viso",
+   "category": "airplane",
+   "bucket": "large",
+   "median_sqrt_area_px": 40.0,
+   "n_boxes": 358,
+   "frac_small_area": 0.0
+  },
+  "viso/plane/044": {
+   "task": "MOT",
+   "dataset": "viso",
+   "category": "airplane",
+   "bucket": "large",
+   "median_sqrt_area_px": 54.96,
+   "n_boxes": 604,
+   "frac_small_area": 0.1175
+  },
+  "viso/ship/045": {
+   "task": "MOT",
+   "dataset": "viso",
+   "category": "ship",
+   "bucket": "small",
+   "median_sqrt_area_px": 25.92,
+   "n_boxes": 884,
+   "frac_small_area": 0.9627
+  },
+  "viso/ship/047": {
+   "task": "MOT",
+   "dataset": "viso",
+   "category": "ship",
+   "bucket": "small",
+   "median_sqrt_area_px": 15.97,
+   "n_boxes": 300,
+   "frac_small_area": 1.0
+  },
+  "viso/train/046": {
+   "task": "MOT",
+   "dataset": "viso",
+   "category": "train",
+   "bucket": "large",
+   "median_sqrt_area_px": 36.66,
+   "n_boxes": 247,
+   "frac_small_area": 0.0243
+  },
+  "ootb/car_1": {
+   "task": "SOT",
+   "dataset": "ootb",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 21.67,
+   "n_boxes": 268,
+   "frac_small_area": 1.0
+  },
+  "ootb/car_10": {
+   "task": "SOT",
+   "dataset": "ootb",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 11.08,
+   "n_boxes": 220,
+   "frac_small_area": 1.0
+  },
+  "ootb/car_11": {
+   "task": "SOT",
+   "dataset": "ootb",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 12.73,
+   "n_boxes": 190,
+   "frac_small_area": 1.0
+  },
+  "ootb/car_12": {
+   "task": "SOT",
+   "dataset": "ootb",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 13.17,
+   "n_boxes": 300,
+   "frac_small_area": 1.0
+  },
+  "ootb/car_13": {
+   "task": "SOT",
+   "dataset": "ootb",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 13.17,
+   "n_boxes": 151,
+   "frac_small_area": 1.0
+  },
+  "ootb/car_14": {
+   "task": "SOT",
+   "dataset": "ootb",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 14.41,
+   "n_boxes": 299,
+   "frac_small_area": 1.0
+  },
+  "ootb/car_15": {
+   "task": "SOT",
+   "dataset": "ootb",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 14.72,
+   "n_boxes": 200,
+   "frac_small_area": 1.0
+  },
+  "ootb/car_16": {
+   "task": "SOT",
+   "dataset": "ootb",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 8.55,
+   "n_boxes": 677,
+   "frac_small_area": 1.0
+  },
+  "ootb/car_17": {
+   "task": "SOT",
+   "dataset": "ootb",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 19.29,
+   "n_boxes": 200,
+   "frac_small_area": 1.0
+  },
+  "ootb/car_18": {
+   "task": "SOT",
+   "dataset": "ootb",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 15.42,
+   "n_boxes": 200,
+   "frac_small_area": 1.0
+  },
+  "ootb/car_19": {
+   "task": "SOT",
+   "dataset": "ootb",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 14.31,
+   "n_boxes": 460,
+   "frac_small_area": 1.0
+  },
+  "ootb/car_2": {
+   "task": "SOT",
+   "dataset": "ootb",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 20.27,
+   "n_boxes": 750,
+   "frac_small_area": 1.0
+  },
+  "ootb/car_20": {
+   "task": "SOT",
+   "dataset": "ootb",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 17.36,
+   "n_boxes": 310,
+   "frac_small_area": 1.0
+  },
+  "ootb/car_21": {
+   "task": "SOT",
+   "dataset": "ootb",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 19.63,
+   "n_boxes": 491,
+   "frac_small_area": 1.0
+  },
+  "ootb/car_22": {
+   "task": "SOT",
+   "dataset": "ootb",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 11.9,
+   "n_boxes": 491,
+   "frac_small_area": 1.0
+  },
+  "ootb/car_23": {
+   "task": "SOT",
+   "dataset": "ootb",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 7.76,
+   "n_boxes": 450,
+   "frac_small_area": 1.0
+  },
+  "ootb/car_24": {
+   "task": "SOT",
+   "dataset": "ootb",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 11.67,
+   "n_boxes": 139,
+   "frac_small_area": 1.0
+  },
+  "ootb/car_25": {
+   "task": "SOT",
+   "dataset": "ootb",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 7.77,
+   "n_boxes": 300,
+   "frac_small_area": 1.0
+  },
+  "ootb/car_26": {
+   "task": "SOT",
+   "dataset": "ootb",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 15.78,
+   "n_boxes": 300,
+   "frac_small_area": 1.0
+  },
+  "ootb/car_27": {
+   "task": "SOT",
+   "dataset": "ootb",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 24.66,
+   "n_boxes": 200,
+   "frac_small_area": 1.0
+  },
+  "ootb/car_28": {
+   "task": "SOT",
+   "dataset": "ootb",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 24.58,
+   "n_boxes": 200,
+   "frac_small_area": 0.78
+  },
+  "ootb/car_29": {
+   "task": "SOT",
+   "dataset": "ootb",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 14.74,
+   "n_boxes": 200,
+   "frac_small_area": 1.0
+  },
+  "ootb/car_3": {
+   "task": "SOT",
+   "dataset": "ootb",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 12.19,
+   "n_boxes": 500,
+   "frac_small_area": 1.0
+  },
+  "ootb/car_30": {
+   "task": "SOT",
+   "dataset": "ootb",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 14.32,
+   "n_boxes": 260,
+   "frac_small_area": 1.0
+  },
+  "ootb/car_31": {
+   "task": "SOT",
+   "dataset": "ootb",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 12.07,
+   "n_boxes": 200,
+   "frac_small_area": 1.0
+  },
+  "ootb/car_32": {
+   "task": "SOT",
+   "dataset": "ootb",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 11.12,
+   "n_boxes": 200,
+   "frac_small_area": 1.0
+  },
+  "ootb/car_33": {
+   "task": "SOT",
+   "dataset": "ootb",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 10.47,
+   "n_boxes": 200,
+   "frac_small_area": 1.0
+  },
+  "ootb/car_34": {
+   "task": "SOT",
+   "dataset": "ootb",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 12.32,
+   "n_boxes": 200,
+   "frac_small_area": 1.0
+  },
+  "ootb/car_35": {
+   "task": "SOT",
+   "dataset": "ootb",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 11.21,
+   "n_boxes": 200,
+   "frac_small_area": 1.0
+  },
+  "ootb/car_36": {
+   "task": "SOT",
+   "dataset": "ootb",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 8.72,
+   "n_boxes": 200,
+   "frac_small_area": 1.0
+  },
+  "ootb/car_37": {
+   "task": "SOT",
+   "dataset": "ootb",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 9.25,
+   "n_boxes": 173,
+   "frac_small_area": 1.0
+  },
+  "ootb/car_38": {
+   "task": "SOT",
+   "dataset": "ootb",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 7.84,
+   "n_boxes": 250,
+   "frac_small_area": 1.0
+  },
+  "ootb/car_39": {
+   "task": "SOT",
+   "dataset": "ootb",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 8.55,
+   "n_boxes": 171,
+   "frac_small_area": 1.0
+  },
+  "ootb/car_4": {
+   "task": "SOT",
+   "dataset": "ootb",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 12.44,
+   "n_boxes": 166,
+   "frac_small_area": 1.0
+  },
+  "ootb/car_40": {
+   "task": "SOT",
+   "dataset": "ootb",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 7.48,
+   "n_boxes": 171,
+   "frac_small_area": 1.0
+  },
+  "ootb/car_41": {
+   "task": "SOT",
+   "dataset": "ootb",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 10.82,
+   "n_boxes": 250,
+   "frac_small_area": 1.0
+  },
+  "ootb/car_42": {
+   "task": "SOT",
+   "dataset": "ootb",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 8.55,
+   "n_boxes": 250,
+   "frac_small_area": 1.0
+  },
+  "ootb/car_43": {
+   "task": "SOT",
+   "dataset": "ootb",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 8.97,
+   "n_boxes": 200,
+   "frac_small_area": 1.0
+  },
+  "ootb/car_44": {
+   "task": "SOT",
+   "dataset": "ootb",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 8.65,
+   "n_boxes": 200,
+   "frac_small_area": 1.0
+  },
+  "ootb/car_45": {
+   "task": "SOT",
+   "dataset": "ootb",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 11.24,
+   "n_boxes": 170,
+   "frac_small_area": 1.0
+  },
+  "ootb/car_5": {
+   "task": "SOT",
+   "dataset": "ootb",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 14.18,
+   "n_boxes": 164,
+   "frac_small_area": 1.0
+  },
+  "ootb/car_6": {
+   "task": "SOT",
+   "dataset": "ootb",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 19.81,
+   "n_boxes": 300,
+   "frac_small_area": 1.0
+  },
+  "ootb/car_7": {
+   "task": "SOT",
+   "dataset": "ootb",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 12.17,
+   "n_boxes": 300,
+   "frac_small_area": 1.0
+  },
+  "ootb/car_8": {
+   "task": "SOT",
+   "dataset": "ootb",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 10.83,
+   "n_boxes": 300,
+   "frac_small_area": 1.0
+  },
+  "ootb/car_9": {
+   "task": "SOT",
+   "dataset": "ootb",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 15.25,
+   "n_boxes": 147,
+   "frac_small_area": 1.0
+  },
+  "ootb/plane_1": {
+   "task": "SOT",
+   "dataset": "ootb",
+   "category": "plane",
+   "bucket": "large",
+   "median_sqrt_area_px": 45.62,
+   "n_boxes": 750,
+   "frac_small_area": 0.0
+  },
+  "ootb/plane_10": {
+   "task": "SOT",
+   "dataset": "ootb",
+   "category": "plane",
+   "bucket": "large",
+   "median_sqrt_area_px": 80.86,
+   "n_boxes": 500,
+   "frac_small_area": 0.0
+  },
+  "ootb/plane_11": {
+   "task": "SOT",
+   "dataset": "ootb",
+   "category": "plane",
+   "bucket": "large",
+   "median_sqrt_area_px": 58.81,
+   "n_boxes": 200,
+   "frac_small_area": 0.0
+  },
+  "ootb/plane_12": {
+   "task": "SOT",
+   "dataset": "ootb",
+   "category": "plane",
+   "bucket": "large",
+   "median_sqrt_area_px": 62.94,
+   "n_boxes": 200,
+   "frac_small_area": 0.0
+  },
+  "ootb/plane_13": {
+   "task": "SOT",
+   "dataset": "ootb",
+   "category": "plane",
+   "bucket": "large",
+   "median_sqrt_area_px": 52.47,
+   "n_boxes": 750,
+   "frac_small_area": 0.0
+  },
+  "ootb/plane_14": {
+   "task": "SOT",
+   "dataset": "ootb",
+   "category": "plane",
+   "bucket": "large",
+   "median_sqrt_area_px": 48.27,
+   "n_boxes": 320,
+   "frac_small_area": 0.0
+  },
+  "ootb/plane_15": {
+   "task": "SOT",
+   "dataset": "ootb",
+   "category": "plane",
+   "bucket": "large",
+   "median_sqrt_area_px": 50.37,
+   "n_boxes": 260,
+   "frac_small_area": 0.0
+  },
+  "ootb/plane_16": {
+   "task": "SOT",
+   "dataset": "ootb",
+   "category": "plane",
+   "bucket": "large",
+   "median_sqrt_area_px": 51.96,
+   "n_boxes": 90,
+   "frac_small_area": 0.0
+  },
+  "ootb/plane_17": {
+   "task": "SOT",
+   "dataset": "ootb",
+   "category": "plane",
+   "bucket": "large",
+   "median_sqrt_area_px": 44.47,
+   "n_boxes": 280,
+   "frac_small_area": 0.0
+  },
+  "ootb/plane_18": {
+   "task": "SOT",
+   "dataset": "ootb",
+   "category": "plane",
+   "bucket": "large",
+   "median_sqrt_area_px": 55.31,
+   "n_boxes": 200,
+   "frac_small_area": 0.0
+  },
+  "ootb/plane_19": {
+   "task": "SOT",
+   "dataset": "ootb",
+   "category": "plane",
+   "bucket": "large",
+   "median_sqrt_area_px": 59.45,
+   "n_boxes": 250,
+   "frac_small_area": 0.0
+  },
+  "ootb/plane_2": {
+   "task": "SOT",
+   "dataset": "ootb",
+   "category": "plane",
+   "bucket": "large",
+   "median_sqrt_area_px": 60.27,
+   "n_boxes": 296,
+   "frac_small_area": 0.0
+  },
+  "ootb/plane_20": {
+   "task": "SOT",
+   "dataset": "ootb",
+   "category": "plane",
+   "bucket": "large",
+   "median_sqrt_area_px": 58.8,
+   "n_boxes": 200,
+   "frac_small_area": 0.0
+  },
+  "ootb/plane_21": {
+   "task": "SOT",
+   "dataset": "ootb",
+   "category": "plane",
+   "bucket": "large",
+   "median_sqrt_area_px": 115.49,
+   "n_boxes": 125,
+   "frac_small_area": 0.0
+  },
+  "ootb/plane_22": {
+   "task": "SOT",
+   "dataset": "ootb",
+   "category": "plane",
+   "bucket": "large",
+   "median_sqrt_area_px": 42.38,
+   "n_boxes": 320,
+   "frac_small_area": 0.0
+  },
+  "ootb/plane_23": {
+   "task": "SOT",
+   "dataset": "ootb",
+   "category": "plane",
+   "bucket": "large",
+   "median_sqrt_area_px": 75.12,
+   "n_boxes": 200,
+   "frac_small_area": 0.0
+  },
+  "ootb/plane_24": {
+   "task": "SOT",
+   "dataset": "ootb",
+   "category": "plane",
+   "bucket": "large",
+   "median_sqrt_area_px": 55.49,
+   "n_boxes": 200,
+   "frac_small_area": 0.0
+  },
+  "ootb/plane_25": {
+   "task": "SOT",
+   "dataset": "ootb",
+   "category": "plane",
+   "bucket": "large",
+   "median_sqrt_area_px": 32.35,
+   "n_boxes": 200,
+   "frac_small_area": 0.0
+  },
+  "ootb/plane_3": {
+   "task": "SOT",
+   "dataset": "ootb",
+   "category": "plane",
+   "bucket": "large",
+   "median_sqrt_area_px": 37.46,
+   "n_boxes": 500,
+   "frac_small_area": 0.0
+  },
+  "ootb/plane_4": {
+   "task": "SOT",
+   "dataset": "ootb",
+   "category": "plane",
+   "bucket": "small",
+   "median_sqrt_area_px": 28.32,
+   "n_boxes": 750,
+   "frac_small_area": 1.0
+  },
+  "ootb/plane_5": {
+   "task": "SOT",
+   "dataset": "ootb",
+   "category": "plane",
+   "bucket": "large",
+   "median_sqrt_area_px": 36.89,
+   "n_boxes": 325,
+   "frac_small_area": 0.0
+  },
+  "ootb/plane_6": {
+   "task": "SOT",
+   "dataset": "ootb",
+   "category": "plane",
+   "bucket": "large",
+   "median_sqrt_area_px": 62.07,
+   "n_boxes": 358,
+   "frac_small_area": 0.0
+  },
+  "ootb/plane_7": {
+   "task": "SOT",
+   "dataset": "ootb",
+   "category": "plane",
+   "bucket": "large",
+   "median_sqrt_area_px": 37.6,
+   "n_boxes": 180,
+   "frac_small_area": 0.0
+  },
+  "ootb/plane_8": {
+   "task": "SOT",
+   "dataset": "ootb",
+   "category": "plane",
+   "bucket": "large",
+   "median_sqrt_area_px": 38.16,
+   "n_boxes": 300,
+   "frac_small_area": 0.0
+  },
+  "ootb/plane_9": {
+   "task": "SOT",
+   "dataset": "ootb",
+   "category": "plane",
+   "bucket": "large",
+   "median_sqrt_area_px": 78.07,
+   "n_boxes": 250,
+   "frac_small_area": 0.0
+  },
+  "ootb/ship_1": {
+   "task": "SOT",
+   "dataset": "ootb",
+   "category": "ship",
+   "bucket": "small",
+   "median_sqrt_area_px": 22.32,
+   "n_boxes": 320,
+   "frac_small_area": 1.0
+  },
+  "ootb/ship_10": {
+   "task": "SOT",
+   "dataset": "ootb",
+   "category": "ship",
+   "bucket": "large",
+   "median_sqrt_area_px": 32.23,
+   "n_boxes": 300,
+   "frac_small_area": 0.3467
+  },
+  "ootb/ship_11": {
+   "task": "SOT",
+   "dataset": "ootb",
+   "category": "ship",
+   "bucket": "small",
+   "median_sqrt_area_px": 18.79,
+   "n_boxes": 300,
+   "frac_small_area": 1.0
+  },
+  "ootb/ship_12": {
+   "task": "SOT",
+   "dataset": "ootb",
+   "category": "ship",
+   "bucket": "small",
+   "median_sqrt_area_px": 18.59,
+   "n_boxes": 300,
+   "frac_small_area": 1.0
+  },
+  "ootb/ship_13": {
+   "task": "SOT",
+   "dataset": "ootb",
+   "category": "ship",
+   "bucket": "small",
+   "median_sqrt_area_px": 25.89,
+   "n_boxes": 300,
+   "frac_small_area": 1.0
+  },
+  "ootb/ship_14": {
+   "task": "SOT",
+   "dataset": "ootb",
+   "category": "ship",
+   "bucket": "small",
+   "median_sqrt_area_px": 12.16,
+   "n_boxes": 320,
+   "frac_small_area": 1.0
+  },
+  "ootb/ship_15": {
+   "task": "SOT",
+   "dataset": "ootb",
+   "category": "ship",
+   "bucket": "small",
+   "median_sqrt_area_px": 14.79,
+   "n_boxes": 320,
+   "frac_small_area": 1.0
+  },
+  "ootb/ship_16": {
+   "task": "SOT",
+   "dataset": "ootb",
+   "category": "ship",
+   "bucket": "small",
+   "median_sqrt_area_px": 12.48,
+   "n_boxes": 320,
+   "frac_small_area": 1.0
+  },
+  "ootb/ship_17": {
+   "task": "SOT",
+   "dataset": "ootb",
+   "category": "ship",
+   "bucket": "small",
+   "median_sqrt_area_px": 12.95,
+   "n_boxes": 320,
+   "frac_small_area": 1.0
+  },
+  "ootb/ship_18": {
+   "task": "SOT",
+   "dataset": "ootb",
+   "category": "ship",
+   "bucket": "small",
+   "median_sqrt_area_px": 10.29,
+   "n_boxes": 200,
+   "frac_small_area": 1.0
+  },
+  "ootb/ship_19": {
+   "task": "SOT",
+   "dataset": "ootb",
+   "category": "ship",
+   "bucket": "small",
+   "median_sqrt_area_px": 6.99,
+   "n_boxes": 200,
+   "frac_small_area": 1.0
+  },
+  "ootb/ship_2": {
+   "task": "SOT",
+   "dataset": "ootb",
+   "category": "ship",
+   "bucket": "small",
+   "median_sqrt_area_px": 19.78,
+   "n_boxes": 300,
+   "frac_small_area": 1.0
+  },
+  "ootb/ship_20": {
+   "task": "SOT",
+   "dataset": "ootb",
+   "category": "ship",
+   "bucket": "small",
+   "median_sqrt_area_px": 18.86,
+   "n_boxes": 200,
+   "frac_small_area": 1.0
+  },
+  "ootb/ship_21": {
+   "task": "SOT",
+   "dataset": "ootb",
+   "category": "ship",
+   "bucket": "small",
+   "median_sqrt_area_px": 14.92,
+   "n_boxes": 200,
+   "frac_small_area": 1.0
+  },
+  "ootb/ship_22": {
+   "task": "SOT",
+   "dataset": "ootb",
+   "category": "ship",
+   "bucket": "small",
+   "median_sqrt_area_px": 13.46,
+   "n_boxes": 200,
+   "frac_small_area": 1.0
+  },
+  "ootb/ship_23": {
+   "task": "SOT",
+   "dataset": "ootb",
+   "category": "ship",
+   "bucket": "small",
+   "median_sqrt_area_px": 11.5,
+   "n_boxes": 200,
+   "frac_small_area": 1.0
+  },
+  "ootb/ship_24": {
+   "task": "SOT",
+   "dataset": "ootb",
+   "category": "ship",
+   "bucket": "small",
+   "median_sqrt_area_px": 13.39,
+   "n_boxes": 200,
+   "frac_small_area": 1.0
+  },
+  "ootb/ship_25": {
+   "task": "SOT",
+   "dataset": "ootb",
+   "category": "ship",
+   "bucket": "small",
+   "median_sqrt_area_px": 11.25,
+   "n_boxes": 200,
+   "frac_small_area": 1.0
+  },
+  "ootb/ship_26": {
+   "task": "SOT",
+   "dataset": "ootb",
+   "category": "ship",
+   "bucket": "small",
+   "median_sqrt_area_px": 9.86,
+   "n_boxes": 200,
+   "frac_small_area": 1.0
+  },
+  "ootb/ship_27": {
+   "task": "SOT",
+   "dataset": "ootb",
+   "category": "ship",
+   "bucket": "small",
+   "median_sqrt_area_px": 9.64,
+   "n_boxes": 200,
+   "frac_small_area": 1.0
+  },
+  "ootb/ship_28": {
+   "task": "SOT",
+   "dataset": "ootb",
+   "category": "ship",
+   "bucket": "small",
+   "median_sqrt_area_px": 25.44,
+   "n_boxes": 150,
+   "frac_small_area": 1.0
+  },
+  "ootb/ship_29": {
+   "task": "SOT",
+   "dataset": "ootb",
+   "category": "ship",
+   "bucket": "small",
+   "median_sqrt_area_px": 9.5,
+   "n_boxes": 200,
+   "frac_small_area": 1.0
+  },
+  "ootb/ship_3": {
+   "task": "SOT",
+   "dataset": "ootb",
+   "category": "ship",
+   "bucket": "large",
+   "median_sqrt_area_px": 42.95,
+   "n_boxes": 300,
+   "frac_small_area": 0.0
+  },
+  "ootb/ship_30": {
+   "task": "SOT",
+   "dataset": "ootb",
+   "category": "ship",
+   "bucket": "small",
+   "median_sqrt_area_px": 6.46,
+   "n_boxes": 200,
+   "frac_small_area": 1.0
+  },
+  "ootb/ship_4": {
+   "task": "SOT",
+   "dataset": "ootb",
+   "category": "ship",
+   "bucket": "small",
+   "median_sqrt_area_px": 16.96,
+   "n_boxes": 500,
+   "frac_small_area": 1.0
+  },
+  "ootb/ship_5": {
+   "task": "SOT",
+   "dataset": "ootb",
+   "category": "ship",
+   "bucket": "small",
+   "median_sqrt_area_px": 21.87,
+   "n_boxes": 326,
+   "frac_small_area": 1.0
+  },
+  "ootb/ship_6": {
+   "task": "SOT",
+   "dataset": "ootb",
+   "category": "ship",
+   "bucket": "small",
+   "median_sqrt_area_px": 25.42,
+   "n_boxes": 320,
+   "frac_small_area": 1.0
+  },
+  "ootb/ship_7": {
+   "task": "SOT",
+   "dataset": "ootb",
+   "category": "ship",
+   "bucket": "small",
+   "median_sqrt_area_px": 29.12,
+   "n_boxes": 300,
+   "frac_small_area": 1.0
+  },
+  "ootb/ship_8": {
+   "task": "SOT",
+   "dataset": "ootb",
+   "category": "ship",
+   "bucket": "small",
+   "median_sqrt_area_px": 29.38,
+   "n_boxes": 300,
+   "frac_small_area": 1.0
+  },
+  "ootb/ship_9": {
+   "task": "SOT",
+   "dataset": "ootb",
+   "category": "ship",
+   "bucket": "small",
+   "median_sqrt_area_px": 20.73,
+   "n_boxes": 327,
+   "frac_small_area": 1.0
+  },
+  "ootb/train_1": {
+   "task": "SOT",
+   "dataset": "ootb",
+   "category": "train",
+   "bucket": "large",
+   "median_sqrt_area_px": 49.52,
+   "n_boxes": 405,
+   "frac_small_area": 0.0
+  },
+  "ootb/train_10": {
+   "task": "SOT",
+   "dataset": "ootb",
+   "category": "train",
+   "bucket": "large",
+   "median_sqrt_area_px": 52.54,
+   "n_boxes": 120,
+   "frac_small_area": 0.0
+  },
+  "ootb/train_2": {
+   "task": "SOT",
+   "dataset": "ootb",
+   "category": "train",
+   "bucket": "large",
+   "median_sqrt_area_px": 83.19,
+   "n_boxes": 200,
+   "frac_small_area": 0.0
+  },
+  "ootb/train_3": {
+   "task": "SOT",
+   "dataset": "ootb",
+   "category": "train",
+   "bucket": "large",
+   "median_sqrt_area_px": 122.62,
+   "n_boxes": 120,
+   "frac_small_area": 0.0
+  },
+  "ootb/train_4": {
+   "task": "SOT",
+   "dataset": "ootb",
+   "category": "train",
+   "bucket": "large",
+   "median_sqrt_area_px": 39.74,
+   "n_boxes": 120,
+   "frac_small_area": 0.0
+  },
+  "ootb/train_5": {
+   "task": "SOT",
+   "dataset": "ootb",
+   "category": "train",
+   "bucket": "large",
+   "median_sqrt_area_px": 42.9,
+   "n_boxes": 120,
+   "frac_small_area": 0.0
+  },
+  "ootb/train_6": {
+   "task": "SOT",
+   "dataset": "ootb",
+   "category": "train",
+   "bucket": "large",
+   "median_sqrt_area_px": 40.58,
+   "n_boxes": 250,
+   "frac_small_area": 0.0
+  },
+  "ootb/train_7": {
+   "task": "SOT",
+   "dataset": "ootb",
+   "category": "train",
+   "bucket": "large",
+   "median_sqrt_area_px": 96.98,
+   "n_boxes": 120,
+   "frac_small_area": 0.0
+  },
+  "ootb/train_8": {
+   "task": "SOT",
+   "dataset": "ootb",
+   "category": "train",
+   "bucket": "large",
+   "median_sqrt_area_px": 50.06,
+   "n_boxes": 120,
+   "frac_small_area": 0.0
+  },
+  "ootb/train_9": {
+   "task": "SOT",
+   "dataset": "ootb",
+   "category": "train",
+   "bucket": "large",
+   "median_sqrt_area_px": 150.91,
+   "n_boxes": 120,
+   "frac_small_area": 0.0
+  },
+  "satsot/car_01": {
+   "task": "SOT",
+   "dataset": "satsot",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 8.77,
+   "n_boxes": 705,
+   "frac_small_area": 1.0
+  },
+  "satsot/car_02": {
+   "task": "SOT",
+   "dataset": "satsot",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 11.96,
+   "n_boxes": 200,
+   "frac_small_area": 1.0
+  },
+  "satsot/car_03": {
+   "task": "SOT",
+   "dataset": "satsot",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 11.49,
+   "n_boxes": 580,
+   "frac_small_area": 1.0
+  },
+  "satsot/car_04": {
+   "task": "SOT",
+   "dataset": "satsot",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 9.49,
+   "n_boxes": 295,
+   "frac_small_area": 1.0
+  },
+  "satsot/car_05": {
+   "task": "SOT",
+   "dataset": "satsot",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 9.49,
+   "n_boxes": 200,
+   "frac_small_area": 1.0
+  },
+  "satsot/car_06": {
+   "task": "SOT",
+   "dataset": "satsot",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 6.48,
+   "n_boxes": 313,
+   "frac_small_area": 1.0
+  },
+  "satsot/car_07": {
+   "task": "SOT",
+   "dataset": "satsot",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 6.0,
+   "n_boxes": 130,
+   "frac_small_area": 1.0
+  },
+  "satsot/car_08": {
+   "task": "SOT",
+   "dataset": "satsot",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 6.48,
+   "n_boxes": 220,
+   "frac_small_area": 1.0
+  },
+  "satsot/car_09": {
+   "task": "SOT",
+   "dataset": "satsot",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 7.48,
+   "n_boxes": 188,
+   "frac_small_area": 1.0
+  },
+  "satsot/car_10": {
+   "task": "SOT",
+   "dataset": "satsot",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 6.0,
+   "n_boxes": 200,
+   "frac_small_area": 1.0
+  },
+  "satsot/car_11": {
+   "task": "SOT",
+   "dataset": "satsot",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 13.42,
+   "n_boxes": 200,
+   "frac_small_area": 1.0
+  },
+  "satsot/car_12": {
+   "task": "SOT",
+   "dataset": "satsot",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 8.94,
+   "n_boxes": 277,
+   "frac_small_area": 1.0
+  },
+  "satsot/car_13": {
+   "task": "SOT",
+   "dataset": "satsot",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 4.47,
+   "n_boxes": 261,
+   "frac_small_area": 1.0
+  },
+  "satsot/car_14": {
+   "task": "SOT",
+   "dataset": "satsot",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 7.0,
+   "n_boxes": 200,
+   "frac_small_area": 1.0
+  },
+  "satsot/car_15": {
+   "task": "SOT",
+   "dataset": "satsot",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 10.39,
+   "n_boxes": 254,
+   "frac_small_area": 1.0
+  },
+  "satsot/car_16": {
+   "task": "SOT",
+   "dataset": "satsot",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 7.48,
+   "n_boxes": 220,
+   "frac_small_area": 1.0
+  },
+  "satsot/car_17": {
+   "task": "SOT",
+   "dataset": "satsot",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 8.49,
+   "n_boxes": 750,
+   "frac_small_area": 1.0
+  },
+  "satsot/car_18": {
+   "task": "SOT",
+   "dataset": "satsot",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 7.48,
+   "n_boxes": 300,
+   "frac_small_area": 1.0
+  },
+  "satsot/car_19": {
+   "task": "SOT",
+   "dataset": "satsot",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 9.95,
+   "n_boxes": 200,
+   "frac_small_area": 1.0
+  },
+  "satsot/car_20": {
+   "task": "SOT",
+   "dataset": "satsot",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 10.58,
+   "n_boxes": 320,
+   "frac_small_area": 1.0
+  },
+  "satsot/car_21": {
+   "task": "SOT",
+   "dataset": "satsot",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 15.97,
+   "n_boxes": 100,
+   "frac_small_area": 1.0
+  },
+  "satsot/car_22": {
+   "task": "SOT",
+   "dataset": "satsot",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 6.0,
+   "n_boxes": 500,
+   "frac_small_area": 1.0
+  },
+  "satsot/car_23": {
+   "task": "SOT",
+   "dataset": "satsot",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 14.49,
+   "n_boxes": 220,
+   "frac_small_area": 1.0
+  },
+  "satsot/car_24": {
+   "task": "SOT",
+   "dataset": "satsot",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 13.67,
+   "n_boxes": 199,
+   "frac_small_area": 1.0
+  },
+  "satsot/car_25": {
+   "task": "SOT",
+   "dataset": "satsot",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 9.95,
+   "n_boxes": 500,
+   "frac_small_area": 1.0
+  },
+  "satsot/car_26": {
+   "task": "SOT",
+   "dataset": "satsot",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 6.48,
+   "n_boxes": 313,
+   "frac_small_area": 1.0
+  },
+  "satsot/car_27": {
+   "task": "SOT",
+   "dataset": "satsot",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 6.48,
+   "n_boxes": 200,
+   "frac_small_area": 1.0
+  },
+  "satsot/car_28": {
+   "task": "SOT",
+   "dataset": "satsot",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 4.95,
+   "n_boxes": 326,
+   "frac_small_area": 1.0
+  },
+  "satsot/car_29": {
+   "task": "SOT",
+   "dataset": "satsot",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 7.0,
+   "n_boxes": 200,
+   "frac_small_area": 1.0
+  },
+  "satsot/car_30": {
+   "task": "SOT",
+   "dataset": "satsot",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 6.0,
+   "n_boxes": 180,
+   "frac_small_area": 1.0
+  },
+  "satsot/car_31": {
+   "task": "SOT",
+   "dataset": "satsot",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 13.75,
+   "n_boxes": 200,
+   "frac_small_area": 1.0
+  },
+  "satsot/car_32": {
+   "task": "SOT",
+   "dataset": "satsot",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 10.95,
+   "n_boxes": 300,
+   "frac_small_area": 1.0
+  },
+  "satsot/car_33": {
+   "task": "SOT",
+   "dataset": "satsot",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 10.58,
+   "n_boxes": 200,
+   "frac_small_area": 1.0
+  },
+  "satsot/car_34": {
+   "task": "SOT",
+   "dataset": "satsot",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 5.66,
+   "n_boxes": 293,
+   "frac_small_area": 1.0
+  },
+  "satsot/car_35": {
+   "task": "SOT",
+   "dataset": "satsot",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 6.0,
+   "n_boxes": 320,
+   "frac_small_area": 1.0
+  },
+  "satsot/car_36": {
+   "task": "SOT",
+   "dataset": "satsot",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 10.95,
+   "n_boxes": 300,
+   "frac_small_area": 1.0
+  },
+  "satsot/car_37": {
+   "task": "SOT",
+   "dataset": "satsot",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 12.23,
+   "n_boxes": 200,
+   "frac_small_area": 1.0
+  },
+  "satsot/car_38": {
+   "task": "SOT",
+   "dataset": "satsot",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 5.92,
+   "n_boxes": 310,
+   "frac_small_area": 1.0
+  },
+  "satsot/car_39": {
+   "task": "SOT",
+   "dataset": "satsot",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 15.3,
+   "n_boxes": 312,
+   "frac_small_area": 1.0
+  },
+  "satsot/car_40": {
+   "task": "SOT",
+   "dataset": "satsot",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 5.92,
+   "n_boxes": 326,
+   "frac_small_area": 1.0
+  },
+  "satsot/car_41": {
+   "task": "SOT",
+   "dataset": "satsot",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 12.49,
+   "n_boxes": 300,
+   "frac_small_area": 1.0
+  },
+  "satsot/car_42": {
+   "task": "SOT",
+   "dataset": "satsot",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 13.75,
+   "n_boxes": 200,
+   "frac_small_area": 1.0
+  },
+  "satsot/car_43": {
+   "task": "SOT",
+   "dataset": "satsot",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 10.82,
+   "n_boxes": 290,
+   "frac_small_area": 1.0
+  },
+  "satsot/car_44": {
+   "task": "SOT",
+   "dataset": "satsot",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 15.43,
+   "n_boxes": 200,
+   "frac_small_area": 1.0
+  },
+  "satsot/car_45": {
+   "task": "SOT",
+   "dataset": "satsot",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 8.0,
+   "n_boxes": 320,
+   "frac_small_area": 1.0
+  },
+  "satsot/car_46": {
+   "task": "SOT",
+   "dataset": "satsot",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 12.73,
+   "n_boxes": 200,
+   "frac_small_area": 1.0
+  },
+  "satsot/car_47": {
+   "task": "SOT",
+   "dataset": "satsot",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 6.0,
+   "n_boxes": 300,
+   "frac_small_area": 1.0
+  },
+  "satsot/car_48": {
+   "task": "SOT",
+   "dataset": "satsot",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 11.83,
+   "n_boxes": 750,
+   "frac_small_area": 1.0
+  },
+  "satsot/car_49": {
+   "task": "SOT",
+   "dataset": "satsot",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 5.29,
+   "n_boxes": 358,
+   "frac_small_area": 1.0
+  },
+  "satsot/car_50": {
+   "task": "SOT",
+   "dataset": "satsot",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 12.49,
+   "n_boxes": 320,
+   "frac_small_area": 1.0
+  },
+  "satsot/car_51": {
+   "task": "SOT",
+   "dataset": "satsot",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 15.46,
+   "n_boxes": 320,
+   "frac_small_area": 1.0
+  },
+  "satsot/car_52": {
+   "task": "SOT",
+   "dataset": "satsot",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 11.66,
+   "n_boxes": 169,
+   "frac_small_area": 1.0
+  },
+  "satsot/car_53": {
+   "task": "SOT",
+   "dataset": "satsot",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 5.29,
+   "n_boxes": 200,
+   "frac_small_area": 1.0
+  },
+  "satsot/car_54": {
+   "task": "SOT",
+   "dataset": "satsot",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 8.0,
+   "n_boxes": 299,
+   "frac_small_area": 1.0
+  },
+  "satsot/car_55": {
+   "task": "SOT",
+   "dataset": "satsot",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 17.0,
+   "n_boxes": 320,
+   "frac_small_area": 1.0
+  },
+  "satsot/car_56": {
+   "task": "SOT",
+   "dataset": "satsot",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 5.0,
+   "n_boxes": 300,
+   "frac_small_area": 1.0
+  },
+  "satsot/car_57": {
+   "task": "SOT",
+   "dataset": "satsot",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 12.33,
+   "n_boxes": 200,
+   "frac_small_area": 1.0
+  },
+  "satsot/car_58": {
+   "task": "SOT",
+   "dataset": "satsot",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 5.29,
+   "n_boxes": 274,
+   "frac_small_area": 1.0
+  },
+  "satsot/car_59": {
+   "task": "SOT",
+   "dataset": "satsot",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 13.27,
+   "n_boxes": 200,
+   "frac_small_area": 1.0
+  },
+  "satsot/car_60": {
+   "task": "SOT",
+   "dataset": "satsot",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 13.0,
+   "n_boxes": 320,
+   "frac_small_area": 1.0
+  },
+  "satsot/car_61": {
+   "task": "SOT",
+   "dataset": "satsot",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 12.37,
+   "n_boxes": 440,
+   "frac_small_area": 1.0
+  },
+  "satsot/car_62": {
+   "task": "SOT",
+   "dataset": "satsot",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 15.72,
+   "n_boxes": 298,
+   "frac_small_area": 1.0
+  },
+  "satsot/car_63": {
+   "task": "SOT",
+   "dataset": "satsot",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 14.14,
+   "n_boxes": 686,
+   "frac_small_area": 1.0
+  },
+  "satsot/car_64": {
+   "task": "SOT",
+   "dataset": "satsot",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 7.07,
+   "n_boxes": 358,
+   "frac_small_area": 1.0
+  },
+  "satsot/car_65": {
+   "task": "SOT",
+   "dataset": "satsot",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 17.29,
+   "n_boxes": 255,
+   "frac_small_area": 1.0
+  },
+  "satsot/plane_01": {
+   "task": "SOT",
+   "dataset": "satsot",
+   "category": "plane",
+   "bucket": "small",
+   "median_sqrt_area_px": 29.29,
+   "n_boxes": 325,
+   "frac_small_area": 1.0
+  },
+  "satsot/plane_02": {
+   "task": "SOT",
+   "dataset": "satsot",
+   "category": "plane",
+   "bucket": "large",
+   "median_sqrt_area_px": 37.95,
+   "n_boxes": 358,
+   "frac_small_area": 0.0
+  },
+  "satsot/plane_03": {
+   "task": "SOT",
+   "dataset": "satsot",
+   "category": "plane",
+   "bucket": "small",
+   "median_sqrt_area_px": 29.5,
+   "n_boxes": 180,
+   "frac_small_area": 1.0
+  },
+  "satsot/plane_04": {
+   "task": "SOT",
+   "dataset": "satsot",
+   "category": "plane",
+   "bucket": "large",
+   "median_sqrt_area_px": 40.42,
+   "n_boxes": 300,
+   "frac_small_area": 0.0
+  },
+  "satsot/plane_05": {
+   "task": "SOT",
+   "dataset": "satsot",
+   "category": "plane",
+   "bucket": "small",
+   "median_sqrt_area_px": 22.98,
+   "n_boxes": 300,
+   "frac_small_area": 1.0
+  },
+  "satsot/plane_06": {
+   "task": "SOT",
+   "dataset": "satsot",
+   "category": "plane",
+   "bucket": "small",
+   "median_sqrt_area_px": 18.97,
+   "n_boxes": 300,
+   "frac_small_area": 1.0
+  },
+  "satsot/plane_07": {
+   "task": "SOT",
+   "dataset": "satsot",
+   "category": "plane",
+   "bucket": "large",
+   "median_sqrt_area_px": 67.0,
+   "n_boxes": 250,
+   "frac_small_area": 0.0
+  },
+  "satsot/plane_08": {
+   "task": "SOT",
+   "dataset": "satsot",
+   "category": "plane",
+   "bucket": "large",
+   "median_sqrt_area_px": 58.33,
+   "n_boxes": 500,
+   "frac_small_area": 0.0
+  },
+  "satsot/plane_09": {
+   "task": "SOT",
+   "dataset": "satsot",
+   "category": "plane",
+   "bucket": "large",
+   "median_sqrt_area_px": 41.81,
+   "n_boxes": 200,
+   "frac_small_area": 0.0
+  },
+  "satsot/ship_01": {
+   "task": "SOT",
+   "dataset": "satsot",
+   "category": "ship",
+   "bucket": "small",
+   "median_sqrt_area_px": 14.42,
+   "n_boxes": 327,
+   "frac_small_area": 1.0
+  },
+  "satsot/ship_02": {
+   "task": "SOT",
+   "dataset": "satsot",
+   "category": "ship",
+   "bucket": "small",
+   "median_sqrt_area_px": 18.33,
+   "n_boxes": 282,
+   "frac_small_area": 1.0
+  },
+  "satsot/ship_03": {
+   "task": "SOT",
+   "dataset": "satsot",
+   "category": "ship",
+   "bucket": "small",
+   "median_sqrt_area_px": 25.1,
+   "n_boxes": 320,
+   "frac_small_area": 1.0
+  },
+  "satsot/ship_04": {
+   "task": "SOT",
+   "dataset": "satsot",
+   "category": "ship",
+   "bucket": "small",
+   "median_sqrt_area_px": 22.63,
+   "n_boxes": 300,
+   "frac_small_area": 1.0
+  },
+  "satsot/ship_05": {
+   "task": "SOT",
+   "dataset": "satsot",
+   "category": "ship",
+   "bucket": "small",
+   "median_sqrt_area_px": 22.45,
+   "n_boxes": 320,
+   "frac_small_area": 1.0
+  },
+  "satsot/train_01": {
+   "task": "SOT",
+   "dataset": "satsot",
+   "category": "train",
+   "bucket": "large",
+   "median_sqrt_area_px": 35.69,
+   "n_boxes": 120,
+   "frac_small_area": 0.0
+  },
+  "satsot/train_02": {
+   "task": "SOT",
+   "dataset": "satsot",
+   "category": "train",
+   "bucket": "large",
+   "median_sqrt_area_px": 167.06,
+   "n_boxes": 120,
+   "frac_small_area": 0.0
+  },
+  "satsot/train_03": {
+   "task": "SOT",
+   "dataset": "satsot",
+   "category": "train",
+   "bucket": "large",
+   "median_sqrt_area_px": 165.44,
+   "n_boxes": 120,
+   "frac_small_area": 0.0
+  },
+  "satsot/train_04": {
+   "task": "SOT",
+   "dataset": "satsot",
+   "category": "train",
+   "bucket": "large",
+   "median_sqrt_area_px": 78.34,
+   "n_boxes": 120,
+   "frac_small_area": 0.0
+  },
+  "satsot/train_05": {
+   "task": "SOT",
+   "dataset": "satsot",
+   "category": "train",
+   "bucket": "large",
+   "median_sqrt_area_px": 139.01,
+   "n_boxes": 120,
+   "frac_small_area": 0.0
+  },
+  "satsot/train_06": {
+   "task": "SOT",
+   "dataset": "satsot",
+   "category": "train",
+   "bucket": "large",
+   "median_sqrt_area_px": 884.38,
+   "n_boxes": 120,
+   "frac_small_area": 0.0
+  },
+  "satsot/train_07": {
+   "task": "SOT",
+   "dataset": "satsot",
+   "category": "train",
+   "bucket": "large",
+   "median_sqrt_area_px": 73.68,
+   "n_boxes": 120,
+   "frac_small_area": 0.0
+  },
+  "satsot/train_08": {
+   "task": "SOT",
+   "dataset": "satsot",
+   "category": "train",
+   "bucket": "small",
+   "median_sqrt_area_px": 27.66,
+   "n_boxes": 120,
+   "frac_small_area": 0.9417
+  },
+  "satsot/train_09": {
+   "task": "SOT",
+   "dataset": "satsot",
+   "category": "train",
+   "bucket": "large",
+   "median_sqrt_area_px": 113.84,
+   "n_boxes": 120,
+   "frac_small_area": 0.0
+  },
+  "satsot/train_10": {
+   "task": "SOT",
+   "dataset": "satsot",
+   "category": "train",
+   "bucket": "large",
+   "median_sqrt_area_px": 98.52,
+   "n_boxes": 120,
+   "frac_small_area": 0.0
+  },
+  "satsot/train_11": {
+   "task": "SOT",
+   "dataset": "satsot",
+   "category": "train",
+   "bucket": "large",
+   "median_sqrt_area_px": 268.53,
+   "n_boxes": 120,
+   "frac_small_area": 0.0
+  },
+  "satsot/train_12": {
+   "task": "SOT",
+   "dataset": "satsot",
+   "category": "train",
+   "bucket": "large",
+   "median_sqrt_area_px": 59.59,
+   "n_boxes": 120,
+   "frac_small_area": 0.0
+  },
+  "satsot/train_13": {
+   "task": "SOT",
+   "dataset": "satsot",
+   "category": "train",
+   "bucket": "large",
+   "median_sqrt_area_px": 76.86,
+   "n_boxes": 120,
+   "frac_small_area": 0.0
+  },
+  "satsot/train_14": {
+   "task": "SOT",
+   "dataset": "satsot",
+   "category": "train",
+   "bucket": "large",
+   "median_sqrt_area_px": 39.24,
+   "n_boxes": 120,
+   "frac_small_area": 0.0
+  },
+  "satsot/train_15": {
+   "task": "SOT",
+   "dataset": "satsot",
+   "category": "train",
+   "bucket": "large",
+   "median_sqrt_area_px": 71.93,
+   "n_boxes": 120,
+   "frac_small_area": 0.0
+  },
+  "satsot/train_16": {
+   "task": "SOT",
+   "dataset": "satsot",
+   "category": "train",
+   "bucket": "large",
+   "median_sqrt_area_px": 39.53,
+   "n_boxes": 120,
+   "frac_small_area": 0.1417
+  },
+  "satsot/train_17": {
+   "task": "SOT",
+   "dataset": "satsot",
+   "category": "train",
+   "bucket": "large",
+   "median_sqrt_area_px": 78.12,
+   "n_boxes": 120,
+   "frac_small_area": 0.0
+  },
+  "satsot/train_18": {
+   "task": "SOT",
+   "dataset": "satsot",
+   "category": "train",
+   "bucket": "large",
+   "median_sqrt_area_px": 77.73,
+   "n_boxes": 120,
+   "frac_small_area": 0.0
+  },
+  "satsot/train_19": {
+   "task": "SOT",
+   "dataset": "satsot",
+   "category": "train",
+   "bucket": "large",
+   "median_sqrt_area_px": 88.23,
+   "n_boxes": 120,
+   "frac_small_area": 0.0
+  },
+  "satsot/train_20": {
+   "task": "SOT",
+   "dataset": "satsot",
+   "category": "train",
+   "bucket": "large",
+   "median_sqrt_area_px": 39.59,
+   "n_boxes": 120,
+   "frac_small_area": 0.0
+  },
+  "satsot/train_21": {
+   "task": "SOT",
+   "dataset": "satsot",
+   "category": "train",
+   "bucket": "large",
+   "median_sqrt_area_px": 35.5,
+   "n_boxes": 120,
+   "frac_small_area": 0.025
+  },
+  "satsot/train_22": {
+   "task": "SOT",
+   "dataset": "satsot",
+   "category": "train",
+   "bucket": "large",
+   "median_sqrt_area_px": 42.89,
+   "n_boxes": 120,
+   "frac_small_area": 0.0
+  },
+  "satsot/train_23": {
+   "task": "SOT",
+   "dataset": "satsot",
+   "category": "train",
+   "bucket": "large",
+   "median_sqrt_area_px": 58.79,
+   "n_boxes": 120,
+   "frac_small_area": 0.0
+  },
+  "satsot/train_24": {
+   "task": "SOT",
+   "dataset": "satsot",
+   "category": "train",
+   "bucket": "large",
+   "median_sqrt_area_px": 36.0,
+   "n_boxes": 250,
+   "frac_small_area": 0.0
+  },
+  "satsot/train_25": {
+   "task": "SOT",
+   "dataset": "satsot",
+   "category": "train",
+   "bucket": "large",
+   "median_sqrt_area_px": 77.31,
+   "n_boxes": 200,
+   "frac_small_area": 0.0
+  },
+  "satsot/train_26": {
+   "task": "SOT",
+   "dataset": "satsot",
+   "category": "train",
+   "bucket": "large",
+   "median_sqrt_area_px": 34.27,
+   "n_boxes": 200,
+   "frac_small_area": 0.01
+  },
+  "sv248s/01/000000": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car-large",
+   "bucket": "small",
+   "median_sqrt_area_px": 8.18,
+   "n_boxes": 490,
+   "frac_small_area": 1.0
+  },
+  "sv248s/01/000001": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 4.3,
+   "n_boxes": 351,
+   "frac_small_area": 1.0
+  },
+  "sv248s/01/000002": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 5.18,
+   "n_boxes": 490,
+   "frac_small_area": 1.0
+  },
+  "sv248s/01/000003": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car-large",
+   "bucket": "small",
+   "median_sqrt_area_px": 10.07,
+   "n_boxes": 490,
+   "frac_small_area": 1.0
+  },
+  "sv248s/01/000004": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 4.7,
+   "n_boxes": 461,
+   "frac_small_area": 1.0
+  },
+  "sv248s/01/000005": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 5.05,
+   "n_boxes": 486,
+   "frac_small_area": 1.0
+  },
+  "sv248s/01/000006": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 4.3,
+   "n_boxes": 326,
+   "frac_small_area": 1.0
+  },
+  "sv248s/01/000007": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 4.22,
+   "n_boxes": 490,
+   "frac_small_area": 1.0
+  },
+  "sv248s/01/000008": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 4.27,
+   "n_boxes": 490,
+   "frac_small_area": 1.0
+  },
+  "sv248s/01/000009": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 4.43,
+   "n_boxes": 341,
+   "frac_small_area": 1.0
+  },
+  "sv248s/01/000010": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 4.9,
+   "n_boxes": 490,
+   "frac_small_area": 1.0
+  },
+  "sv248s/01/000011": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 4.09,
+   "n_boxes": 350,
+   "frac_small_area": 1.0
+  },
+  "sv248s/01/000012": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car-large",
+   "bucket": "small",
+   "median_sqrt_area_px": 14.16,
+   "n_boxes": 490,
+   "frac_small_area": 1.0
+  },
+  "sv248s/01/000013": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 4.84,
+   "n_boxes": 270,
+   "frac_small_area": 1.0
+  },
+  "sv248s/01/000014": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "ship",
+   "bucket": "small",
+   "median_sqrt_area_px": 10.03,
+   "n_boxes": 490,
+   "frac_small_area": 1.0
+  },
+  "sv248s/01/000015": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 3.98,
+   "n_boxes": 438,
+   "frac_small_area": 1.0
+  },
+  "sv248s/01/000016": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 6.9,
+   "n_boxes": 490,
+   "frac_small_area": 1.0
+  },
+  "sv248s/01/000017": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car-large",
+   "bucket": "small",
+   "median_sqrt_area_px": 8.59,
+   "n_boxes": 490,
+   "frac_small_area": 1.0
+  },
+  "sv248s/01/000018": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 4.88,
+   "n_boxes": 294,
+   "frac_small_area": 1.0
+  },
+  "sv248s/01/000019": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 5.45,
+   "n_boxes": 490,
+   "frac_small_area": 1.0
+  },
+  "sv248s/01/000020": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car-large",
+   "bucket": "small",
+   "median_sqrt_area_px": 9.61,
+   "n_boxes": 490,
+   "frac_small_area": 1.0
+  },
+  "sv248s/01/000021": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 7.27,
+   "n_boxes": 490,
+   "frac_small_area": 1.0
+  },
+  "sv248s/01/000022": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 6.34,
+   "n_boxes": 490,
+   "frac_small_area": 1.0
+  },
+  "sv248s/01/000023": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 5.42,
+   "n_boxes": 490,
+   "frac_small_area": 1.0
+  },
+  "sv248s/01/000024": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 4.65,
+   "n_boxes": 500,
+   "frac_small_area": 1.0
+  },
+  "sv248s/01/000025": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "ship",
+   "bucket": "small",
+   "median_sqrt_area_px": 6.6,
+   "n_boxes": 383,
+   "frac_small_area": 1.0
+  },
+  "sv248s/01/000026": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car-large",
+   "bucket": "small",
+   "median_sqrt_area_px": 11.93,
+   "n_boxes": 490,
+   "frac_small_area": 1.0
+  },
+  "sv248s/01/000027": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 3.9,
+   "n_boxes": 383,
+   "frac_small_area": 1.0
+  },
+  "sv248s/01/000028": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 4.83,
+   "n_boxes": 324,
+   "frac_small_area": 1.0
+  },
+  "sv248s/01/000029": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "ship",
+   "bucket": "small",
+   "median_sqrt_area_px": 14.87,
+   "n_boxes": 490,
+   "frac_small_area": 1.0
+  },
+  "sv248s/01/000030": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 3.72,
+   "n_boxes": 443,
+   "frac_small_area": 1.0
+  },
+  "sv248s/01/000031": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 4.21,
+   "n_boxes": 486,
+   "frac_small_area": 1.0
+  },
+  "sv248s/01/000032": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 3.39,
+   "n_boxes": 448,
+   "frac_small_area": 1.0
+  },
+  "sv248s/01/000033": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 3.9,
+   "n_boxes": 471,
+   "frac_small_area": 1.0
+  },
+  "sv248s/01/000034": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 4.1,
+   "n_boxes": 289,
+   "frac_small_area": 1.0
+  },
+  "sv248s/01/000035": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 3.9,
+   "n_boxes": 490,
+   "frac_small_area": 1.0
+  },
+  "sv248s/01/000036": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 5.24,
+   "n_boxes": 262,
+   "frac_small_area": 1.0
+  },
+  "sv248s/01/000037": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car-large",
+   "bucket": "small",
+   "median_sqrt_area_px": 6.7,
+   "n_boxes": 423,
+   "frac_small_area": 1.0
+  },
+  "sv248s/01/000038": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car-large",
+   "bucket": "small",
+   "median_sqrt_area_px": 7.66,
+   "n_boxes": 297,
+   "frac_small_area": 1.0
+  },
+  "sv248s/01/000039": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car-large",
+   "bucket": "small",
+   "median_sqrt_area_px": 7.51,
+   "n_boxes": 490,
+   "frac_small_area": 1.0
+  },
+  "sv248s/01/000040": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 3.7,
+   "n_boxes": 490,
+   "frac_small_area": 1.0
+  },
+  "sv248s/01/000041": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 4.95,
+   "n_boxes": 429,
+   "frac_small_area": 1.0
+  },
+  "sv248s/01/000042": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 5.08,
+   "n_boxes": 490,
+   "frac_small_area": 1.0
+  },
+  "sv248s/01/000043": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 3.2,
+   "n_boxes": 490,
+   "frac_small_area": 1.0
+  },
+  "sv248s/01/000044": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 3.04,
+   "n_boxes": 372,
+   "frac_small_area": 1.0
+  },
+  "sv248s/01/000045": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 4.41,
+   "n_boxes": 490,
+   "frac_small_area": 1.0
+  },
+  "sv248s/01/000046": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 5.63,
+   "n_boxes": 291,
+   "frac_small_area": 1.0
+  },
+  "sv248s/02/000000": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 5.05,
+   "n_boxes": 355,
+   "frac_small_area": 1.0
+  },
+  "sv248s/02/000001": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 4.93,
+   "n_boxes": 750,
+   "frac_small_area": 1.0
+  },
+  "sv248s/02/000002": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 5.48,
+   "n_boxes": 669,
+   "frac_small_area": 1.0
+  },
+  "sv248s/02/000003": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 6.35,
+   "n_boxes": 542,
+   "frac_small_area": 1.0
+  },
+  "sv248s/02/000004": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 4.69,
+   "n_boxes": 591,
+   "frac_small_area": 1.0
+  },
+  "sv248s/02/000005": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 4.67,
+   "n_boxes": 580,
+   "frac_small_area": 1.0
+  },
+  "sv248s/02/000006": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 6.49,
+   "n_boxes": 750,
+   "frac_small_area": 1.0
+  },
+  "sv248s/02/000007": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 6.69,
+   "n_boxes": 735,
+   "frac_small_area": 1.0
+  },
+  "sv248s/02/000008": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 7.45,
+   "n_boxes": 750,
+   "frac_small_area": 1.0
+  },
+  "sv248s/02/000009": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 7.21,
+   "n_boxes": 729,
+   "frac_small_area": 1.0
+  },
+  "sv248s/02/000010": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 5.31,
+   "n_boxes": 750,
+   "frac_small_area": 1.0
+  },
+  "sv248s/02/000011": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 5.05,
+   "n_boxes": 565,
+   "frac_small_area": 1.0
+  },
+  "sv248s/02/000012": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 5.89,
+   "n_boxes": 354,
+   "frac_small_area": 1.0
+  },
+  "sv248s/02/000013": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 6.0,
+   "n_boxes": 649,
+   "frac_small_area": 1.0
+  },
+  "sv248s/02/000014": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 3.97,
+   "n_boxes": 750,
+   "frac_small_area": 1.0
+  },
+  "sv248s/02/000015": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car-large",
+   "bucket": "small",
+   "median_sqrt_area_px": 7.49,
+   "n_boxes": 601,
+   "frac_small_area": 1.0
+  },
+  "sv248s/02/000016": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 4.1,
+   "n_boxes": 721,
+   "frac_small_area": 1.0
+  },
+  "sv248s/02/000017": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 4.35,
+   "n_boxes": 700,
+   "frac_small_area": 1.0
+  },
+  "sv248s/02/000018": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 4.85,
+   "n_boxes": 672,
+   "frac_small_area": 1.0
+  },
+  "sv248s/02/000020": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 6.91,
+   "n_boxes": 509,
+   "frac_small_area": 1.0
+  },
+  "sv248s/02/000021": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 6.22,
+   "n_boxes": 481,
+   "frac_small_area": 1.0
+  },
+  "sv248s/02/000022": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 6.54,
+   "n_boxes": 272,
+   "frac_small_area": 1.0
+  },
+  "sv248s/02/000023": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 6.67,
+   "n_boxes": 642,
+   "frac_small_area": 1.0
+  },
+  "sv248s/02/000024": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 6.13,
+   "n_boxes": 628,
+   "frac_small_area": 1.0
+  },
+  "sv248s/02/000025": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 6.24,
+   "n_boxes": 398,
+   "frac_small_area": 1.0
+  },
+  "sv248s/02/000027": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 6.02,
+   "n_boxes": 750,
+   "frac_small_area": 1.0
+  },
+  "sv248s/02/000028": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 5.78,
+   "n_boxes": 624,
+   "frac_small_area": 1.0
+  },
+  "sv248s/02/000029": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 5.72,
+   "n_boxes": 487,
+   "frac_small_area": 1.0
+  },
+  "sv248s/02/000030": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 6.09,
+   "n_boxes": 750,
+   "frac_small_area": 1.0
+  },
+  "sv248s/02/000031": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 4.94,
+   "n_boxes": 512,
+   "frac_small_area": 1.0
+  },
+  "sv248s/02/000032": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 6.05,
+   "n_boxes": 750,
+   "frac_small_area": 1.0
+  },
+  "sv248s/02/000033": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 6.6,
+   "n_boxes": 750,
+   "frac_small_area": 1.0
+  },
+  "sv248s/02/000034": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 5.64,
+   "n_boxes": 750,
+   "frac_small_area": 1.0
+  },
+  "sv248s/02/000036": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 5.31,
+   "n_boxes": 431,
+   "frac_small_area": 1.0
+  },
+  "sv248s/02/000037": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 5.15,
+   "n_boxes": 690,
+   "frac_small_area": 1.0
+  },
+  "sv248s/02/000038": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 5.4,
+   "n_boxes": 306,
+   "frac_small_area": 1.0
+  },
+  "sv248s/02/000039": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 4.75,
+   "n_boxes": 750,
+   "frac_small_area": 1.0
+  },
+  "sv248s/02/000040": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 4.92,
+   "n_boxes": 750,
+   "frac_small_area": 1.0
+  },
+  "sv248s/02/000041": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 5.34,
+   "n_boxes": 330,
+   "frac_small_area": 1.0
+  },
+  "sv248s/03/000000": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 4.76,
+   "n_boxes": 747,
+   "frac_small_area": 1.0
+  },
+  "sv248s/03/000001": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 5.36,
+   "n_boxes": 648,
+   "frac_small_area": 1.0
+  },
+  "sv248s/03/000002": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 4.96,
+   "n_boxes": 695,
+   "frac_small_area": 1.0
+  },
+  "sv248s/03/000003": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 4.94,
+   "n_boxes": 580,
+   "frac_small_area": 1.0
+  },
+  "sv248s/03/000004": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 5.78,
+   "n_boxes": 747,
+   "frac_small_area": 1.0
+  },
+  "sv248s/03/000006": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car-large",
+   "bucket": "small",
+   "median_sqrt_area_px": 9.95,
+   "n_boxes": 747,
+   "frac_small_area": 1.0
+  },
+  "sv248s/03/000007": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car-large",
+   "bucket": "small",
+   "median_sqrt_area_px": 9.43,
+   "n_boxes": 747,
+   "frac_small_area": 1.0
+  },
+  "sv248s/03/000008": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 9.03,
+   "n_boxes": 747,
+   "frac_small_area": 1.0
+  },
+  "sv248s/03/000010": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car-large",
+   "bucket": "small",
+   "median_sqrt_area_px": 11.17,
+   "n_boxes": 711,
+   "frac_small_area": 1.0
+  },
+  "sv248s/03/000011": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car-large",
+   "bucket": "small",
+   "median_sqrt_area_px": 10.32,
+   "n_boxes": 747,
+   "frac_small_area": 1.0
+  },
+  "sv248s/03/000012": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car-large",
+   "bucket": "small",
+   "median_sqrt_area_px": 10.04,
+   "n_boxes": 747,
+   "frac_small_area": 1.0
+  },
+  "sv248s/03/000013": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 4.64,
+   "n_boxes": 608,
+   "frac_small_area": 1.0
+  },
+  "sv248s/03/000014": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car-large",
+   "bucket": "small",
+   "median_sqrt_area_px": 9.53,
+   "n_boxes": 747,
+   "frac_small_area": 1.0
+  },
+  "sv248s/03/000015": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car-large",
+   "bucket": "small",
+   "median_sqrt_area_px": 9.59,
+   "n_boxes": 420,
+   "frac_small_area": 1.0
+  },
+  "sv248s/03/000016": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car-large",
+   "bucket": "small",
+   "median_sqrt_area_px": 6.78,
+   "n_boxes": 299,
+   "frac_small_area": 1.0
+  },
+  "sv248s/03/000017": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car-large",
+   "bucket": "small",
+   "median_sqrt_area_px": 7.51,
+   "n_boxes": 571,
+   "frac_small_area": 1.0
+  },
+  "sv248s/03/000018": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car-large",
+   "bucket": "small",
+   "median_sqrt_area_px": 10.92,
+   "n_boxes": 747,
+   "frac_small_area": 1.0
+  },
+  "sv248s/03/000019": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car-large",
+   "bucket": "small",
+   "median_sqrt_area_px": 10.31,
+   "n_boxes": 727,
+   "frac_small_area": 1.0
+  },
+  "sv248s/03/000020": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car-large",
+   "bucket": "small",
+   "median_sqrt_area_px": 9.62,
+   "n_boxes": 738,
+   "frac_small_area": 1.0
+  },
+  "sv248s/03/000021": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 4.33,
+   "n_boxes": 638,
+   "frac_small_area": 1.0
+  },
+  "sv248s/03/000022": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 5.89,
+   "n_boxes": 433,
+   "frac_small_area": 1.0
+  },
+  "sv248s/03/000023": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car-large",
+   "bucket": "small",
+   "median_sqrt_area_px": 6.95,
+   "n_boxes": 418,
+   "frac_small_area": 1.0
+  },
+  "sv248s/03/000024": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car-large",
+   "bucket": "small",
+   "median_sqrt_area_px": 6.28,
+   "n_boxes": 536,
+   "frac_small_area": 1.0
+  },
+  "sv248s/03/000025": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car-large",
+   "bucket": "small",
+   "median_sqrt_area_px": 9.45,
+   "n_boxes": 747,
+   "frac_small_area": 1.0
+  },
+  "sv248s/03/000026": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car-large",
+   "bucket": "small",
+   "median_sqrt_area_px": 9.2,
+   "n_boxes": 747,
+   "frac_small_area": 1.0
+  },
+  "sv248s/03/000027": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car-large",
+   "bucket": "small",
+   "median_sqrt_area_px": 8.69,
+   "n_boxes": 747,
+   "frac_small_area": 1.0
+  },
+  "sv248s/03/000028": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car-large",
+   "bucket": "small",
+   "median_sqrt_area_px": 12.15,
+   "n_boxes": 663,
+   "frac_small_area": 1.0
+  },
+  "sv248s/03/000029": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 5.67,
+   "n_boxes": 450,
+   "frac_small_area": 1.0
+  },
+  "sv248s/03/000030": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 5.87,
+   "n_boxes": 489,
+   "frac_small_area": 1.0
+  },
+  "sv248s/03/000031": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 4.81,
+   "n_boxes": 648,
+   "frac_small_area": 1.0
+  },
+  "sv248s/03/000032": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 5.83,
+   "n_boxes": 723,
+   "frac_small_area": 1.0
+  },
+  "sv248s/03/000033": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 5.77,
+   "n_boxes": 747,
+   "frac_small_area": 1.0
+  },
+  "sv248s/03/000034": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car-large",
+   "bucket": "small",
+   "median_sqrt_area_px": 11.38,
+   "n_boxes": 747,
+   "frac_small_area": 1.0
+  },
+  "sv248s/03/000035": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car-large",
+   "bucket": "small",
+   "median_sqrt_area_px": 9.1,
+   "n_boxes": 747,
+   "frac_small_area": 1.0
+  },
+  "sv248s/03/000036": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 4.53,
+   "n_boxes": 404,
+   "frac_small_area": 1.0
+  },
+  "sv248s/03/000037": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car-large",
+   "bucket": "small",
+   "median_sqrt_area_px": 6.54,
+   "n_boxes": 564,
+   "frac_small_area": 1.0
+  },
+  "sv248s/03/000038": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car-large",
+   "bucket": "small",
+   "median_sqrt_area_px": 10.32,
+   "n_boxes": 747,
+   "frac_small_area": 1.0
+  },
+  "sv248s/03/000039": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car-large",
+   "bucket": "small",
+   "median_sqrt_area_px": 11.91,
+   "n_boxes": 747,
+   "frac_small_area": 1.0
+  },
+  "sv248s/03/000040": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car-large",
+   "bucket": "small",
+   "median_sqrt_area_px": 9.93,
+   "n_boxes": 728,
+   "frac_small_area": 1.0
+  },
+  "sv248s/04/000000": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "plane",
+   "bucket": "small",
+   "median_sqrt_area_px": 31.6,
+   "n_boxes": 748,
+   "frac_small_area": 0.6725
+  },
+  "sv248s/04/000001": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "plane",
+   "bucket": "small",
+   "median_sqrt_area_px": 27.83,
+   "n_boxes": 748,
+   "frac_small_area": 1.0
+  },
+  "sv248s/04/000002": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "plane",
+   "bucket": "small",
+   "median_sqrt_area_px": 24.52,
+   "n_boxes": 748,
+   "frac_small_area": 1.0
+  },
+  "sv248s/04/000003": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "plane",
+   "bucket": "small",
+   "median_sqrt_area_px": 25.18,
+   "n_boxes": 748,
+   "frac_small_area": 1.0
+  },
+  "sv248s/04/000004": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 4.64,
+   "n_boxes": 713,
+   "frac_small_area": 1.0
+  },
+  "sv248s/04/000005": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 4.82,
+   "n_boxes": 733,
+   "frac_small_area": 1.0
+  },
+  "sv248s/04/000006": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 7.08,
+   "n_boxes": 738,
+   "frac_small_area": 1.0
+  },
+  "sv248s/04/000007": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 5.49,
+   "n_boxes": 673,
+   "frac_small_area": 1.0
+  },
+  "sv248s/04/000008": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 4.58,
+   "n_boxes": 646,
+   "frac_small_area": 1.0
+  },
+  "sv248s/04/000009": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 4.44,
+   "n_boxes": 477,
+   "frac_small_area": 1.0
+  },
+  "sv248s/04/000010": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 4.71,
+   "n_boxes": 737,
+   "frac_small_area": 1.0
+  },
+  "sv248s/04/000011": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car-large",
+   "bucket": "small",
+   "median_sqrt_area_px": 6.63,
+   "n_boxes": 689,
+   "frac_small_area": 1.0
+  },
+  "sv248s/04/000012": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 4.34,
+   "n_boxes": 733,
+   "frac_small_area": 1.0
+  },
+  "sv248s/04/000013": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 5.06,
+   "n_boxes": 748,
+   "frac_small_area": 1.0
+  },
+  "sv248s/04/000014": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 4.72,
+   "n_boxes": 606,
+   "frac_small_area": 1.0
+  },
+  "sv248s/04/000015": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 4.12,
+   "n_boxes": 605,
+   "frac_small_area": 1.0
+  },
+  "sv248s/04/000016": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 5.54,
+   "n_boxes": 748,
+   "frac_small_area": 1.0
+  },
+  "sv248s/04/000017": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 6.17,
+   "n_boxes": 522,
+   "frac_small_area": 1.0
+  },
+  "sv248s/04/000018": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 5.86,
+   "n_boxes": 403,
+   "frac_small_area": 1.0
+  },
+  "sv248s/04/000019": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 5.6,
+   "n_boxes": 693,
+   "frac_small_area": 1.0
+  },
+  "sv248s/04/000020": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 5.78,
+   "n_boxes": 676,
+   "frac_small_area": 1.0
+  },
+  "sv248s/04/000021": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 4.14,
+   "n_boxes": 748,
+   "frac_small_area": 1.0
+  },
+  "sv248s/04/000022": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 4.74,
+   "n_boxes": 748,
+   "frac_small_area": 1.0
+  },
+  "sv248s/04/000023": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 4.53,
+   "n_boxes": 557,
+   "frac_small_area": 1.0
+  },
+  "sv248s/04/000024": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 5.46,
+   "n_boxes": 478,
+   "frac_small_area": 1.0
+  },
+  "sv248s/04/000025": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 5.6,
+   "n_boxes": 508,
+   "frac_small_area": 1.0
+  },
+  "sv248s/04/000026": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 6.57,
+   "n_boxes": 277,
+   "frac_small_area": 1.0
+  },
+  "sv248s/04/000027": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 4.86,
+   "n_boxes": 684,
+   "frac_small_area": 1.0
+  },
+  "sv248s/04/000028": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 5.14,
+   "n_boxes": 748,
+   "frac_small_area": 1.0
+  },
+  "sv248s/04/000029": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 5.33,
+   "n_boxes": 583,
+   "frac_small_area": 1.0
+  },
+  "sv248s/04/000030": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 5.93,
+   "n_boxes": 748,
+   "frac_small_area": 1.0
+  },
+  "sv248s/04/000031": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 4.76,
+   "n_boxes": 413,
+   "frac_small_area": 1.0
+  },
+  "sv248s/04/000032": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 4.99,
+   "n_boxes": 574,
+   "frac_small_area": 1.0
+  },
+  "sv248s/04/000033": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 5.1,
+   "n_boxes": 575,
+   "frac_small_area": 1.0
+  },
+  "sv248s/04/000034": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 5.43,
+   "n_boxes": 748,
+   "frac_small_area": 1.0
+  },
+  "sv248s/04/000035": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 5.68,
+   "n_boxes": 626,
+   "frac_small_area": 1.0
+  },
+  "sv248s/04/000036": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 6.01,
+   "n_boxes": 457,
+   "frac_small_area": 1.0
+  },
+  "sv248s/04/000037": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 4.94,
+   "n_boxes": 748,
+   "frac_small_area": 1.0
+  },
+  "sv248s/04/000038": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 4.58,
+   "n_boxes": 653,
+   "frac_small_area": 1.0
+  },
+  "sv248s/04/000039": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "plane",
+   "bucket": "large",
+   "median_sqrt_area_px": 40.43,
+   "n_boxes": 748,
+   "frac_small_area": 0.0
+  },
+  "sv248s/05/000000": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 4.09,
+   "n_boxes": 580,
+   "frac_small_area": 1.0
+  },
+  "sv248s/05/000001": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 4.77,
+   "n_boxes": 749,
+   "frac_small_area": 1.0
+  },
+  "sv248s/05/000002": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 5.84,
+   "n_boxes": 711,
+   "frac_small_area": 1.0
+  },
+  "sv248s/05/000003": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 5.54,
+   "n_boxes": 749,
+   "frac_small_area": 1.0
+  },
+  "sv248s/05/000006": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car-large",
+   "bucket": "small",
+   "median_sqrt_area_px": 20.94,
+   "n_boxes": 749,
+   "frac_small_area": 1.0
+  },
+  "sv248s/05/000007": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 7.76,
+   "n_boxes": 749,
+   "frac_small_area": 1.0
+  },
+  "sv248s/05/000008": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 7.67,
+   "n_boxes": 747,
+   "frac_small_area": 1.0
+  },
+  "sv248s/05/000009": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 7.67,
+   "n_boxes": 616,
+   "frac_small_area": 1.0
+  },
+  "sv248s/05/000010": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 7.63,
+   "n_boxes": 749,
+   "frac_small_area": 1.0
+  },
+  "sv248s/05/000011": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 6.19,
+   "n_boxes": 749,
+   "frac_small_area": 1.0
+  },
+  "sv248s/05/000012": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 6.6,
+   "n_boxes": 749,
+   "frac_small_area": 1.0
+  },
+  "sv248s/05/000013": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 8.39,
+   "n_boxes": 740,
+   "frac_small_area": 1.0
+  },
+  "sv248s/05/000014": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 8.38,
+   "n_boxes": 749,
+   "frac_small_area": 1.0
+  },
+  "sv248s/05/000015": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 6.54,
+   "n_boxes": 749,
+   "frac_small_area": 1.0
+  },
+  "sv248s/05/000016": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 7.74,
+   "n_boxes": 749,
+   "frac_small_area": 1.0
+  },
+  "sv248s/05/000017": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 6.46,
+   "n_boxes": 661,
+   "frac_small_area": 1.0
+  },
+  "sv248s/05/000018": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 5.41,
+   "n_boxes": 749,
+   "frac_small_area": 1.0
+  },
+  "sv248s/05/000019": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 7.73,
+   "n_boxes": 749,
+   "frac_small_area": 1.0
+  },
+  "sv248s/05/000020": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 6.45,
+   "n_boxes": 749,
+   "frac_small_area": 1.0
+  },
+  "sv248s/05/000021": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 5.88,
+   "n_boxes": 749,
+   "frac_small_area": 1.0
+  },
+  "sv248s/05/000022": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 6.04,
+   "n_boxes": 632,
+   "frac_small_area": 1.0
+  },
+  "sv248s/05/000023": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car-large",
+   "bucket": "small",
+   "median_sqrt_area_px": 16.46,
+   "n_boxes": 723,
+   "frac_small_area": 1.0
+  },
+  "sv248s/05/000024": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 5.69,
+   "n_boxes": 515,
+   "frac_small_area": 1.0
+  },
+  "sv248s/05/000025": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 6.25,
+   "n_boxes": 460,
+   "frac_small_area": 1.0
+  },
+  "sv248s/05/000026": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 5.94,
+   "n_boxes": 564,
+   "frac_small_area": 1.0
+  },
+  "sv248s/05/000027": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 6.09,
+   "n_boxes": 683,
+   "frac_small_area": 1.0
+  },
+  "sv248s/05/000028": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 8.77,
+   "n_boxes": 749,
+   "frac_small_area": 1.0
+  },
+  "sv248s/05/000029": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 6.32,
+   "n_boxes": 749,
+   "frac_small_area": 1.0
+  },
+  "sv248s/05/000030": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 5.59,
+   "n_boxes": 649,
+   "frac_small_area": 1.0
+  },
+  "sv248s/05/000031": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 11.67,
+   "n_boxes": 748,
+   "frac_small_area": 1.0
+  },
+  "sv248s/05/000032": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 5.44,
+   "n_boxes": 749,
+   "frac_small_area": 1.0
+  },
+  "sv248s/05/000033": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 5.54,
+   "n_boxes": 749,
+   "frac_small_area": 1.0
+  },
+  "sv248s/05/000034": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 6.71,
+   "n_boxes": 748,
+   "frac_small_area": 1.0
+  },
+  "sv248s/05/000035": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 5.53,
+   "n_boxes": 748,
+   "frac_small_area": 1.0
+  },
+  "sv248s/05/000036": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 6.68,
+   "n_boxes": 748,
+   "frac_small_area": 1.0
+  },
+  "sv248s/05/000037": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 5.0,
+   "n_boxes": 749,
+   "frac_small_area": 1.0
+  },
+  "sv248s/05/000038": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 6.53,
+   "n_boxes": 749,
+   "frac_small_area": 1.0
+  },
+  "sv248s/05/000039": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 9.87,
+   "n_boxes": 749,
+   "frac_small_area": 1.0
+  },
+  "sv248s/06/000000": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "plane",
+   "bucket": "large",
+   "median_sqrt_area_px": 55.67,
+   "n_boxes": 499,
+   "frac_small_area": 0.0
+  },
+  "sv248s/06/000001": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 4.83,
+   "n_boxes": 499,
+   "frac_small_area": 1.0
+  },
+  "sv248s/06/000002": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 5.46,
+   "n_boxes": 499,
+   "frac_small_area": 1.0
+  },
+  "sv248s/06/000003": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 4.29,
+   "n_boxes": 499,
+   "frac_small_area": 1.0
+  },
+  "sv248s/06/000004": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 5.32,
+   "n_boxes": 499,
+   "frac_small_area": 1.0
+  },
+  "sv248s/06/000005": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 4.69,
+   "n_boxes": 499,
+   "frac_small_area": 1.0
+  },
+  "sv248s/06/000007": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 4.83,
+   "n_boxes": 486,
+   "frac_small_area": 1.0
+  },
+  "sv248s/06/000008": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 5.59,
+   "n_boxes": 499,
+   "frac_small_area": 1.0
+  },
+  "sv248s/06/000009": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 5.03,
+   "n_boxes": 499,
+   "frac_small_area": 1.0
+  },
+  "sv248s/06/000010": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 5.82,
+   "n_boxes": 499,
+   "frac_small_area": 1.0
+  },
+  "sv248s/06/000011": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 5.09,
+   "n_boxes": 499,
+   "frac_small_area": 1.0
+  },
+  "sv248s/06/000012": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 5.08,
+   "n_boxes": 499,
+   "frac_small_area": 1.0
+  },
+  "sv248s/06/000013": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 4.94,
+   "n_boxes": 499,
+   "frac_small_area": 1.0
+  },
+  "sv248s/06/000014": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 4.92,
+   "n_boxes": 475,
+   "frac_small_area": 1.0
+  },
+  "sv248s/06/000016": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 4.82,
+   "n_boxes": 460,
+   "frac_small_area": 1.0
+  },
+  "sv248s/06/000017": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 4.27,
+   "n_boxes": 470,
+   "frac_small_area": 1.0
+  },
+  "sv248s/06/000018": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 4.54,
+   "n_boxes": 470,
+   "frac_small_area": 1.0
+  },
+  "sv248s/06/000019": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 4.52,
+   "n_boxes": 490,
+   "frac_small_area": 1.0
+  },
+  "sv248s/06/000020": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 4.89,
+   "n_boxes": 490,
+   "frac_small_area": 1.0
+  },
+  "sv248s/06/000021": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 4.28,
+   "n_boxes": 490,
+   "frac_small_area": 1.0
+  },
+  "sv248s/06/000022": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 3.85,
+   "n_boxes": 372,
+   "frac_small_area": 1.0
+  },
+  "sv248s/06/000023": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 4.19,
+   "n_boxes": 490,
+   "frac_small_area": 1.0
+  },
+  "sv248s/06/000024": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 5.69,
+   "n_boxes": 499,
+   "frac_small_area": 1.0
+  },
+  "sv248s/06/000025": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 3.84,
+   "n_boxes": 490,
+   "frac_small_area": 1.0
+  },
+  "sv248s/06/000026": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 4.59,
+   "n_boxes": 489,
+   "frac_small_area": 1.0
+  },
+  "sv248s/06/000028": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 4.77,
+   "n_boxes": 499,
+   "frac_small_area": 1.0
+  },
+  "sv248s/06/000029": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 4.92,
+   "n_boxes": 441,
+   "frac_small_area": 1.0
+  },
+  "sv248s/06/000030": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 4.49,
+   "n_boxes": 490,
+   "frac_small_area": 1.0
+  },
+  "sv248s/06/000031": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 5.11,
+   "n_boxes": 490,
+   "frac_small_area": 1.0
+  },
+  "sv248s/06/000032": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 5.21,
+   "n_boxes": 490,
+   "frac_small_area": 1.0
+  },
+  "sv248s/06/000033": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 6.66,
+   "n_boxes": 499,
+   "frac_small_area": 1.0
+  },
+  "sv248s/06/000034": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 5.37,
+   "n_boxes": 475,
+   "frac_small_area": 1.0
+  },
+  "sv248s/06/000035": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 6.02,
+   "n_boxes": 490,
+   "frac_small_area": 1.0
+  },
+  "sv248s/06/000036": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 5.63,
+   "n_boxes": 499,
+   "frac_small_area": 1.0
+  },
+  "sv248s/06/000037": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 4.89,
+   "n_boxes": 475,
+   "frac_small_area": 1.0
+  },
+  "sv248s/06/000038": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 5.55,
+   "n_boxes": 499,
+   "frac_small_area": 1.0
+  },
+  "sv248s/06/000039": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 5.29,
+   "n_boxes": 499,
+   "frac_small_area": 1.0
+  },
+  "sv248s/06/000040": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 6.65,
+   "n_boxes": 499,
+   "frac_small_area": 1.0
+  },
+  "sv248s/06/000041": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 4.67,
+   "n_boxes": 480,
+   "frac_small_area": 1.0
+  },
+  "sv248s/06/000042": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 4.22,
+   "n_boxes": 490,
+   "frac_small_area": 1.0
+  },
+  "sv248s/06/000043": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 6.38,
+   "n_boxes": 499,
+   "frac_small_area": 1.0
+  },
+  "sv248s/06/000044": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 5.3,
+   "n_boxes": 499,
+   "frac_small_area": 1.0
+  },
+  "sv248s/06/000045": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 4.96,
+   "n_boxes": 499,
+   "frac_small_area": 1.0
+  },
+  "sv248s/06/000046": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 4.58,
+   "n_boxes": 490,
+   "frac_small_area": 1.0
+  },
+  "sv248s/06/000047": {
+   "task": "SOT",
+   "dataset": "sv248s",
+   "category": "car",
+   "bucket": "small",
+   "median_sqrt_area_px": 4.9,
+   "n_boxes": 352,
+   "frac_small_area": 1.0
+  }
+ }
+}
