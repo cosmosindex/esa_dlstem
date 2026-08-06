@@ -101,7 +101,15 @@
 
 
 \author{%
-Anonymous Author(s) \\ Affiliation withheld for double-blind review \\ }
+Ziwen Cheng \\ CosmosIndex\\ Munich, Germany\\
+  % examples of more authors
+   \And
+Sirui Wang \\ CosmosIndex \\ Munich, Germany\\
+  \And
+Gordon Campbell \\ European Space Agency\\
+   \And
+Yuanyuan Wang \thanks{corresponding author. yuanyuan.wang@cosmos-index.com}\\
+CosmosIndex \\ Munich, Germany\\ }
   % \texttt{email} \\
   % \And
   % Coauthor \\
@@ -123,40 +131,29 @@ Anonymous Author(s) \\ Affiliation withheld for double-blind review \\ }
 
 
 \begin{abstract}
-Spaceborne videos is a rapidly emerging field, yet it is
+Detection and tracking with spaceborne video is a rapidly emerging field, yet it is
 currently fragmented by disparate datasets that vary in quality, annotation
 style, and sensory focus. We introduce Space-tracker, a unified, large-scale,
 and multi-sensory benchmark dataset created through the strategic merging and
 curation of \textit{nine} existing spaceborne and aerial datasets, such as SatSOT,
 SV248S, and OOTB. Space-tracker addresses the ``paradigm gap'' in remote sensing
-by providing a single point of access to multi-task annotations for object detection, single-object tracking, and multi-object tracking across multimodal video sequences. Our main contribution lies in the unification of labels and attributes, where we have harmonized diverse formats into a consistent COCO-style framework and applied 18 fine-grained attributes to classify challenges in spaceborne video benchmarks, such as tiny targets,
-%($\sqrt{w \cdot h} < 8$ px, often featureless and near the sensor noise floor),
-non-stationary backgrounds, long-duration
-occlusion, and severe motion blur from low-frame-rate high-velocity acquisition. By benchmarking seven state-of-the-art single-object trackers and seven state-of-the-art multi-object trackers, including large Foundation Models, we provide a comprehensive evaluation, in particular for small objects.
+by providing a single point of access to multi-task annotations for object detection, single-object tracking, and multi-object tracking across multimodal video sequences. Our main contribution lies in the unification of labels and attributes, where we have harmonized diverse formats into a consistent COCO-style framework and applied 18 fine-grained attributes to classify challenges in spaceborne video benchmarks, such as tiny targets, non-stationary backgrounds, long-duration occlusion, and severe motion blur from low-frame-rate high-velocity acquisition. By benchmarking seven state-of-the-art single-object trackers and seven state-of-the-art multi-object trackers, including large Foundation Models, we provide a comprehensive evaluation, in particular for small objects. Our code is avaialbe at \url{https://anonymous.4open.science/r/59C2}.
 \end{abstract}
 
 
+% 我们的benchmark是否可以提出一个新的 research question:"Modern CV motion
 % segmentation methods, developed on driving / generic video, generalize to
+% spaceborne video — to what extent, and where do they break?" 这个问题在 CV
+% 顶会基本没人系统地回答过,因为没有合适的 benchmark。这就是你为什么要建这个
+% benchmark 的 narrative —— 不是"another remote sensing dataset",而是"the
 % missing testbed for CV motion methods in a domain they've never been tested
+% on"。
 \section{Introduction}
 \label{sec:introduction}
 \noindent\textbf{Motivation.}
-The rapid advancement of space technology has brought us to a new era of Earth
-observation, transitioning from static imagery to real-time dynamic monitoring.
-The emergence of high-resolution video satellite constellations—such as Jilin-1 and SkySat has made it possible to gaze continuously at specific ground areas with high temporal resolution. This shift from static snapshots to continuous video streams provides rich spatiotemporal information that was previously inaccessible, representing one of the current frontiers in remote sensing.
+The development of high-resolution video satellite constellations, such as Jilin-1 and SkySat, has shifted Earth observation from static imaging toward continuous dynamic monitoring. By enabling persistent observation of specific ground areas with high temporal resolution, spaceborne video provides spatiotemporal information that is unavailable in single-frame imagery and has become an important frontier in remote sensing.
 
-The motivation for Space-tracker stems from the extreme scarcity and
-fragmentation of high-quality spaceborne video data. While numerous specialized
-datasets have been released—some focusing on specific platforms (e.g., Jilin-1),
-others on single categories (e.g., ships), and some only on thermal
-imagery—there is no unified standard that allows researchers to develop and
-evaluate universal trackers. First, the "small object" problem remains the
-primary bottleneck; targets in satellite videos are often reduced to
-near-featureless bright spots, making texture-based discrimination nearly
-impossible. Second, existing datasets use inconsistent annotation formats (HBB, OBB, or polygons) and diverse attribute definitions, which hinders the training of robust, generalizable models. %Third, there is a lack of multi-sensory consistency; many tracking pipelines assume perfect RGB conditions, yet real-world spaceborne applications require the ability to switch between visible and thermal modalities seamlessly. 
-Space-tracker is motivated by the need to standardize these diverse streams into a single, high-precision
-benchmark that enables the community to tackle the unique geometric and
-radiometric challenges of the spaceborne domain under a unified protocol.
+Space-tracker is motivated by the scarcity and fragmentation of high-quality spaceborne video data. Existing datasets are often specialized by platform, such as Jilin-1, or by object category, such as ships, leaving no unified benchmark for developing and evaluating general-purpose trackers across spaceborne scenarios. The main difficulty is the small-object regime: targets in satellite videos are often reduced to near-featureless bright spots, making texture-based discrimination unreliable. This challenge is further amplified by inconsistent annotation formats, including HBBs, OBBs, and polygons, and by incompatible attribute definitions across datasets. Space-tracker addresses these limitations by standardizing heterogeneous spaceborne video sources into a high-precision benchmark with unified annotations, attributes, and evaluation protocols, enabling systematic study of the geometric and radiometric challenges of spaceborne tracking.
 
 \noindent\textbf{Contribution of this paper.}
 The primary contributions of this work are summarized as follows:
@@ -168,71 +165,26 @@ addresses the extreme scarcity and fragmentation of high-quality spaceborne data
 \noindent\textit{Harmonized Multi-Task and Multi-Sensory Annotations.} Unlike previous benchmarks limited to single tasks or sensors, Space-tracker supports a multi-task framework encompassing object detection, single-object tracking
 (SOT), and multi-object tracking (MOT). We have harmonized all labels into a consistent COCO-style format and unified the attribute tagging system across the merged datasets. Furthermore, we integrate multimodal sequences, enabling researchers to develop trackers that generalize across visible and thermal spectra for all-weather monitoring.
 
-\noindent\textit{Comprehensive Benchmarking of seven SOTA Models.} We provide an extensive evaluation of the current state of the art, benchmarking \hl{XX} backbone
-models and \hl{XX} trackers across four major paradigms: traditional Discriminative Correlation Filters (DCF), deep Siamese networks, modern spatiotemporal Transformers, and Geospatial Foundation Models like SAM2. Our analysis offers
+\noindent\textit{Comprehensive Benchmarking of seven SOTA Models.} We provide an extensive evaluation of the current state of the art, benchmarking 13 trackers across four major paradigms: traditional Discriminative Correlation Filters (DCF), deep Siamese networks, modern spatiotemporal Transformers, and Foundation Models like SAM3. Our analysis offers
 new insights into how these architectures handle small objects and long-term occlusions in non-stationary backgrounds.
 
 \section{Related Work}
-%Early visual tracking methods are dominated by correlation-filter-based
-%approaches that exploit the circulant structure for efficient learning.
-%\citet{henriques2015kcf} propose Kernelized Correlation Filters (KCF),
-%achieving high efficiency but relying on local appearance modeling, which is
-%brittle in the presence of background clutter and becomes unreliable when the
-%target is extremely small.
 
-\noindent\textbf{Generic Visual Object Tracking.} Siamese trackers cast tracking as similarity learning. SiamFC~\citep{bertinetto2016siamfc} introduces a fully convolutional Siamese framework for real-time tracking, followed by region-proposal and deeper-backbone variants that improve localization accuracy~\citep{li2018siamrpn,li2019siamrpn++}. SiamRPN++~\citep{li2019siamrpn++} remains a representative Siamese tracker and is used as a strong classical baseline in our experiments.
+\noindent\textbf{Generic Visual Object Tracking.} Siamese trackers formulate tracking as similarity learning. SiamFC~\citep{bertinetto2016siamfc} introduces a fully convolutional Siamese framework for real-time tracking, followed by region-proposal and deeper-backbone variants that improve localization accuracy~\citep{li2018siamrpn,li2019siamrpn++}. SiamRPN++~\citep{li2019siamrpn++} remains a representative Siamese tracker and is used as a classical baseline in our experiments. Transformer-based trackers further improve tracking by modeling global context and long-range dependencies. OSTrack~\citep{ye2022joint} unifies feature extraction and relation modeling in a one-stream architecture, while ODTrack~\citep{zheng2024odtrack} incorporates object-discovery cues and LoRAT-g378~\citep{lin2024tracking} represents a recent large-scale tracker with strong generalization. These methods perform well on natural-video benchmarks, but their robustness in spaceborne videos, especially for objects smaller than a few dozen pixels, remains underexplored.
 
-Transformer-based trackers later became dominant by modeling global context and long-range dependencies. \hl{STARK}~\citep{yan2021stark} performs direct box prediction, while OSTrack~\citep{ye2022joint} unifies feature extraction and relation modeling in a one-stream architecture. Recent methods further explore object discovery and large-scale tracking: ODTrack~\citep{zheng2024odtrack} incorporates object-discovery cues, and LoRAT-g378~\citep{lin2024tracking} represents a recent large-scale tracker with strong generalization. Although these trackers perform well on natural-video benchmarks, their robustness in spaceborne videos, especially for objects smaller than a few dozen pixels, remains underexplored.
+Vision foundation models have also influenced recent tracking research. SAM~2~\citep{ravi2024sam} extends promptable segmentation to images and videos, SAMURAI~\citep{yang2026samurai} adapts SAM-style representations for tracking, and SAM~3~\citep{carion2026sam3} further advances foundation-model-based object understanding. These models are primarily developed on natural-image and natural-video data, where objects usually have clear boundaries and sufficient spatial support. Spaceborne targets, however, are often small, low-contrast, and weakly textured, making this setting a direct test of whether foundation-model-based trackers can generalize to the extreme small-object regime.
 
-Vision foundation models have also reshaped tracking. SAM~2~\citep{ravi2024sam} extends promptable segmentation to images and videos, SAMURAI~\citep{yang2026samurai} adapts SAM-style representations for tracking, and SAM~3~\citep{carion2026sam3} further advances foundation-model-based object understanding. These models generalize well in natural-image and natural-video domains, but spaceborne targets are often small, low-contrast, and weakly textured. Our benchmark therefore tests whether foundation-model-based trackers can generalize to the extreme small-object regime.
+\noindent\textbf{Satellite Video Object Tracking.} Satellite video tracking differs from natural-video tracking in object scale, imaging geometry, platform motion, and background complexity. Targets are often represented by only a few pixels, with weak appearance cues and low contrast against structured backgrounds. Existing satellite tracking methods address these challenges by adapting conventional tracking architectures to the spaceborne domain. Correlation-filter-based methods incorporate motion modeling to improve robustness in satellite videos~\citep{lin2024motion}. Siamese-based approaches introduce high-resolution representations and motion fitting strategies~\citep{ruan2022deep,shao2021hrsiam}. More recent Transformer-based methods model spatio-temporal dependencies in satellite imagery~\citep{lai2023target}. While these methods improve tracking under satellite imaging conditions, their evaluation is often tied to specific datasets or task settings, making it difficult to compare them under a unified protocol.
 
-\noindent\textbf{Satellite Video Object Tracking.} Satellite video tracking
-poses unique challenges, including extremely small object sizes, %\hl{often below $30$ pixels}, 
-low contrast, weak appearance cues, complex platform motion, and
-background clutter. Early satellite tracking approaches extend correlation
-filters with motion modeling to improve robustness in satellite videos
-\citep{lin2024motion}. Siamese-based methods have also been adapted to this
-domain by incorporating high-resolution representations and motion fitting
-strategies \citep{ruan2022deep, shao2021hrsiam}. More recently,
-Transformer-based approaches have been explored to capture spatio-temporal
-dependencies in satellite imagery \citep{lai2023target}.
+\noindent\textbf{Benchmarks for Satellite Detection and Tracking.} Generic tracking benchmarks such as OTB~\citep{wu2013otb} and LaSOT~\citep{fan2019lasot} mainly focus on natural videos and do not capture the scale, motion, and imaging constraints of satellite videos. In the satellite SOT setting, SatSOT~\citep{satSOT2022} introduces a densely annotated benchmark for satellite video tracking, SV248S~\citep{Li2022SV248S} expands the scale of satellite SOT evaluation, and OOTB~\citep{CHEN2024212ootb} provides oriented annotations to study the role of OBBs in aerial object localization. Satellite MOT benchmarks provide denser frame-level annotations and larger numbers of object instances. AIR-MOT~\citep{He2022TGraM} and VISO~\citep{yin2021viso} are early Jilin-1 VNIR benchmarks for multi-object tracking, containing 100 and 47 sequences with 317{,}569 and 844{,}345 object labels, respectively. More recent datasets further increase scale and category coverage: SAT-MTB~\citep{Li2023SATMTB} contains 249 sequences and 1{,}118{,}584 labels, RsCarData~\citep{Xiao2024HiEUM} provides 77 Jilin-1 sequences with 848{,}786 vehicle labels, and SDM-Car~\citep{Zhang2024SDMCar} introduces 99 Luojia 3-01 sequences with 1{,}522{,}577 labels.
 
-Despite these advances, existing satellite-tracking studies are often evaluated
-against limited benchmarks and do not fully meet the requirements of modern
-spaceborne video understanding. In particular, existing benchmarks remain
-insufficient in three aspects: they often focus on either detection or tracking
-rather than a unified detection-and-tracking setting; many annotations rely on
-axis-aligned bounding boxes and lack oriented bounding boxes (OBBs), which are
-critical for objects with arbitrary orientations in aerial views; and their
-scenario diversity, object categories, motion patterns, and imaging conditions
-remain limited. These limitations make it difficult to systematically evaluate
-both classical trackers and recent foundation models in the extremely
-small-object regime.
-
-\noindent\textbf{Benchmarks for Satellite Detection and Tracking.} Existing
-tracking benchmarks such as OTB~\citep{wu2013otb} and
-LaSOT~\citep{fan2019lasot}mainly focus on natural videos and do not capture the
-unique challenges of satellite imagery. In the satellite domain,
-SatSOT~\citep{satSOT2022} introduces a densely annotated benchmark for satellite
-video single-object tracking, and SV248S~\citep{Li2022SV248S} further expands
-the scale of satellite SOT evaluation. OOTB~\citep{CHEN2024212ootb} provides an
-oriented tracking benchmark and highlights the importance of oriented bounding
-boxes (OBBs) for aerial object localization. \hl{MOT benchmark datasets should be also mentioned?}
-
-Despite these efforts, existing datasets exhibit several key limitations: (1)
-extremely small object regime: most benchmarks do not explicitly small target
-objects, which are common in spaceborne videos; (2) task fragmentation: datasets
-are typically designed for either detection or tracking, lacking a unified
-benchmark for joint evaluation; (3) lack of oriented annotations: most datasets
-rely on axis-aligned bounding boxes and lack OBBs,
-which are critical for accurately localizing objects with arbitrary orientations
-in aerial views; and (4) limited diversity: existing datasets cover a limited
-range of scenarios, object categories, motion patterns, and imaging conditions,
-restricting their ability to evaluate model generalization.
-
+Despite these efforts, existing satellite video benchmarks remain fragmented across task definitions, platforms, categories, annotation formats, and evaluation protocols. Most datasets are designed for either detection, SOT, or MOT, rather than supporting unified evaluation across tasks. Many annotations rely on horizontal bounding boxes, while oriented bounding boxes are essential for localizing objects with arbitrary orientations in aerial views. Existing benchmarks also vary in attribute definitions and do not consistently characterize the extreme small-object regime, although this regime is central to spaceborne tracking. Space-tracker addresses these limitations by consolidating heterogeneous satellite video resources into a unified benchmark with standardized annotations, task protocols, and attribute definitions for satellite detection and tracking.
 
 
 \section{Our Dataset}
+% For Sirui,说到这里，我们就不得不提在我们的数据集中object detection只在SAT-MTB上的部分sequences上支持，而且只有ship, plane, train被标注。这一点你要在这部分提到，后面我会说到这一点。而且你要说清楚这个object detection是包含静态物体的标注，其他数据集都有MOT标注，但是标注的都是场景中的动态物体，没有标注静态物体。
+% For Sirui, 注意viso数据集的car类被rscardata重新标注
+\input{tables/spaceborne_video_datasets_table.tex}
 \label{sec:dataset}
 \noindent\textbf{Design principle.}
 Space-tracker is constructed under multiple main principles:  1) Multi-modality: The dataset covers imagery from multiple platforms and constellations, including Jilin-1 sub-meter RGB, SkySat, and the International Space Station (ISS). %, and spans both visible--near-infrared (VNIR) and thermal infrared (TIR) modalities. 
@@ -251,37 +203,42 @@ limited spatial extent and weak visual content pose substantial challenges to tr
 \end{comment}
 
 \noindent \textit{Data and annotation unification.}
-We standardize all source datasets with a unified pipeline: videos are split into frame sequences, metadata are stored in a common structure, and XML, JSON, and coordinate-only annotations are converted to a shared COCO-style format with unified box conventions and class IDs. Annotation coverage differs by task and source. In SOT, each sequence contains one target, so labels are bounded by the number of frames; absent or occluded targets retain the original conventions, e.g., \texttt{none} in SatSOT and invisibility flags in SV248S. Converted annotations are manually inspected to fix box misalignment and add missing large-object labels, such as cattle and specific vehicles.
+We standardize all source datasets with a unified pipeline: videos are split into frame sequences, metadata are stored in a common structure, and XML, JSON, and coordinate-only annotations are converted to a shared COCO-style format with unified box conventions and class IDs. %Annotation coverage differs by task and source. In SOT, each sequence contains one target, so labels are bounded by the number of frames; absent or occluded targets retain the original conventions, e.g., \texttt{none} in SatSOT and invisibility flags in SV248S. Converted annotations are manually inspected to fix box misalignment and add missing large-object labels, such as cattle and specific vehicles.
 
-\noindent \textit{Attribute unification.} SatSOT, SV248S, and OOTB provide 11, 10, and 12 attributes for their annotations, respectively, with overlapping but inconsistent definitions. We align them into 18 fine-grained attributes. For example, Partial occlusion (PO) and full occlusion (FO) are mapped to a shared ``occlusion'' attribute for consistent attribute-level evaluation. The final taxonomy captures spaceborne-specific failure modes: Small Object (SO) is dominant; Similar Appearance (SA) and Dense Similarity (DS) occur when vehicles, lane markings, manhole covers, or bright pixels collapse into similar few-pixel blobs; Background Cluster (BCL) in SV248S denotes target-background merging for at least 10 frames. Motion ambiguity is represented by Isotropic Motion (IM), for nearby objects moving similarly, and Anisotropic Motion (AM), for strong opposite motion. Long-Term Occlusion (LTO) is caused by persistent structures such as overpasses, shadows, and canopies, with SV248S defining it as at least 50 occluded frames. Out-of-Normal (OON) aspect ratio captures elongated targets such as trains, while Natural Disturbance (ND) and Background Jitter (BJT) capture cloud, haze, and platform-induced jitter. These attributes characterize a regime where appearance and motion cues are often insufficient, enabling evaluation beyond aggregate accuracy.
+\noindent \textit{Attribute unification.} The annotations of some existing datasets contain additional attributes. For example SatSOT, SV248S, and OOTB provide 11, 10, and 12 attributes for their annotations, respectively. The attributes are overlapping but with inconsistent definitions.  We align them into 18 fine-grained attributes. For example, Partial occlusion (PO) and full occlusion (FO) are mapped to a shared ``occlusion'' attribute for consistent attribute-level evaluation. The final merged attribute list can be seen in Tab. \ref{tab:attributes_taxonomy} in the Appendix. %The taxonomy captures spaceborne-specific failure modes. 
+%Small Object (SO) is dominant; Similar Appearance (SA) and Dense Similarity (DS) occur when vehicles, lane markings, manhole covers, or bright pixels collapse into similar few-pixel blobs; Background Cluster (BCL) in SV248S denotes target-background merging for at least 10 frames. Motion ambiguity is represented by Isotropic Motion (IM), for nearby objects moving similarly, and Anisotropic Motion (AM), for strong opposite motion. Long-Term Occlusion (LTO) is caused by persistent structures such as overpasses, shadows, and canopies, with SV248S defining it as at least 50 occluded frames. Out-of-Normal (OON) aspect ratio captures elongated targets such as trains, while Natural Disturbance (ND) and Background Jitter (BJT) capture cloud, haze, and platform-induced jitter. These attributes characterize a regime where appearance and motion cues are often insufficient, enabling evaluation beyond aggregate accuracy.
 
-\noindent\textit{Defining small object.}
-We unified the small object attribute across all the dataset by defining it by the square root of the bounding box area \(s=\sqrt{\mathrm{area}}\). Across seven trackers on OOTB, SatSOT, and SV248S, evaluated with \(2\)-pixel bins over \(s\in[0,32]\) px, performance is poor for \(s<8\) px (\(\mathrm{SR}<0.3\)) and moderate for \(8\le s<16\) px (\(\mathrm{SR}\approx0.3\text{--}0.5\)). We therefore define \emph{small} objects as \(s<8\) px and \emph{medium-sized} objects as \(8\le s<16\) px, using fixed thresholds for comparable size-stratified evaluation. Under this definition, \(63.1\%\) of Space-tracker-SOT annotations are small, while SV248S reaches \(80.3\%\). SV248S sensitivity at larger scales mainly reflects sparse bin support, with fewer than 200 frames per bin beyond \(18\) px.
+\noindent\textit{Small object definition.}
+As small object is the main focus of our benchmark dataset, we unified the inconsistent definition among all the dataset and tailored to spaceborne videos. We analyzed object size in spaceborne videos, and inspected the performance of the selected detection and tracking algorithms. Analysis found that most of the objects in spaceborne videos are less than 32*32 pixel (except trains), with cars being the smallest objects typically smaller than 8*8 pixel. Since 32*32 is already considered as small object in typical definition, a more strict definition is required in order to reflect the specific challenges in spaceborne videos. Fig.~\ref{fig:bbox_size_analysis} shows the model performance vs. object size \(s=\sqrt{\mathrm{area}}\). Across seven trackers on OOTB, SatSOT, and SV248S, the performance starts to degrade significantly around 8 pixel (\(\mathrm{SR}<0.3\)). %and moderate for \(8\le s<16\) px (\(\mathrm{SR}\approx0.3\text{--}0.5\)). 
+We therefore define small objects as \(s<8\) pixel. %and \emph{medium-sized} objects as \(8\le s<16\) px, using fixed thresholds for comparable size-stratified evaluation. Under this definition, \(63.1\%\) of Space-tracker-SOT annotations are small, while SV248S reaches \(80.3\%\). SV248S sensitivity at larger scales mainly reflects sparse bin support, with fewer than 200 frames per bin beyond \(18\) px.
 
 \begin{figure}[H]
-    \centering
-    \begin{subfigure}[t]{0.49\linewidth}
+    %\centering
+    %\begin{subfigure}[t]{0.49\linewidth}
         \centering
-        \includegraphics[width=\linewidth]{plots/sr_npr_vs_bbox_size_unified.pdf}
-        \caption{SOT performance versus object scale.}
-        \label{fig:sr_npr_vs_bbox_size}
-    \end{subfigure}
-    \hfill
-    \begin{subfigure}[t]{0.49\linewidth}
-        \centering
-        \includegraphics[width=\linewidth]{plots/mot_bbox_size_scatter.pdf}
-        \caption{MOT bounding-box width versus height by class.}
-        \label{fig:mot_bbox_size_scatter}
-    \end{subfigure}
-    \caption{Empirical justification for the $s=8\,$px small-object boundary used in Space-tracker.
-    \textbf{(a)} Mean Success AUC (SR) and Normalised Precision AUC (NPR) versus $s=\sqrt{\mathrm{area}}$ on the Space-tracker SOT split. Each point is the equal-weight mean across OOTB, SatSOT, and SV248S of the per-bin mean over the seven evaluated trackers; the faint grey histogram shows the combined frame-count density pooled across the three datasets, and the vertical dashed line at $s=8\,$px marks the small-object boundary used elsewhere in the paper.
-    \textbf{(b)} Width--height scatter of bounding boxes pooled across the five Space-tracker MOT datasets (AIR-MOT, VISO, RsCarData, SDM-Car, SAT-MTB), colored by object class. Up to $3{,}000$ points are subsampled per class to balance visual density; the legend reports the true per-class totals. Dashed lines and the shaded corner mark the same $s=8\,$px boundary, showing that the bulk of \emph{Car} annotations falls in the small-object regime, while \emph{Airplane}, \emph{Ship}, and \emph{Train} populate progressively larger scales.}
+        \includegraphics[width=0.9\linewidth]{plots/sr_npr_vs_bbox_size_unified.pdf}
+        %\caption{SOT performance versus object scale.}
+        %\label{fig:sr_npr_vs_bbox_size}
+    %\end{subfigure}
+    %\hfill
+    %\begin{subfigure}[t]{0.49\linewidth}
+    %    \centering
+    %    \includegraphics[width=\linewidth]{plots/mot_bbox_size_scatter.png}
+    %    \caption{MOT bounding-box width versus height by class.}
+    %    \label{fig:mot_bbox_size_scatter}
+    %\end{subfigure}
+    %\caption{Empirical justification for the $s=8\,$px small-object boundary used in Space-tracker.
+    \caption{ Mean Success AUC (SR) and Normalised Precision AUC (NPR) versus $s=\sqrt{\mathrm{area}}$ on the Space-tracker SOT split. Each point is the equal-weight mean across OOTB, SatSOT, and SV248S of the per-bin mean over the seven evaluated trackers; the faint grey histogram shows the combined frame-count density pooled across the three datasets, and the vertical dashed line at $s=8\,$px marks the small-object boundary used elsewhere in the paper.}
+    %\textbf{(b)} Width--height scatter of bounding boxes pooled across the five Space-tracker MOT datasets (AIR-MOT, VISO, RsCarData, SDM-Car, SAT-MTB), colored by object class. Up to $3{,}000$ points are subsampled per class to balance visual density; the legend reports the true per-class totals. Dashed lines and the shaded corner mark the same $s=8\,$px boundary, showing that the bulk of \emph{Car} annotations falls in the small-object regime, while \emph{Airplane}, \emph{Ship}, and \emph{Train} populate progressively larger scales.}
     \label{fig:bbox_size_analysis}
 \end{figure}
 
-
-
-
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=\linewidth]{plots/sot_dataset_showcase.pdf}
+    \caption{Representative Space-tracker SOT sequences across two challenging attributes (\emph{Similar Object}, \emph{Occlusion}, rows) and the four object classes \emph{Car}, \emph{Train}, \emph{Plane}, and \emph{Ship} (columns). Green boxes denote ground truth (oriented for OOTB ship, axis-aligned otherwise). Frames are sampled from SatSOT, SV248S, and OOTB and illustrate the few-pixel scale and ambiguous appearance that characterise spaceborne tracking.}
+    \label{fig:sot_dataset_showcase}
+\end{figure}
 
 \begin{comment}
     
@@ -330,22 +287,17 @@ scarcity of labeled spaceborne data.
 %\noindent\textbf{Model Selection.}
 \subsection{Model Selection}
 \label{sec:model_selection}
-We organize our model selection by task. In the SOT setting the model is
-given the target template in the first frame and only has to follow it, so
-the comparison can focus purely on tracking quality. In the MOT setting
-nothing is given for free: the tracker has to first decide what to track,
-which means the choice of detector and the choice of associator are both
-part of the design. The two settings call for different selection logic
-and we cover them separately.
+%We organize our model selection by task. SOT and MOT require different model selection. In the SOT setting the model is given the target template in the first frame and only has to follow it, so the comparison can focus purely on tracking quality. In the MOT setting nothing is given for free: the tracker has to first decide what to track, which means the choice of detector and the choice of associator are both part of the design. The two settings call for different selection logic and we cover them separately.
+
+SOT and MOT require different model-selection criteria. In SOT, the target template is provided in the first frame, so evaluation can isolate tracking quality. In MOT, targets must first be detected and then tracked over time; thus both the detector and tracker are part of the model design. We therefore treat SOT and MOT separately.
 
 \noindent\textbf{Single Object Tracking.}
 For SOT we deliberately spread our choices across several methodological
-lines rather than pick only the most recent state of the art. What we want
-to see is how architectural progress, from classical supervised pipelines
+lines rather than pick only the most recent state of the art. With such selection, we are able to see how the architectural progress, from classical supervised pipelines
 through to modern foundation models, copes with the unusual demands of
 spaceborne video, where targets are often only a handful of pixels wide
 and frequently lack any discriminative texture. We organize the
-benchmarked methods into three trajectories.
+benchmarked methods into three catagories.
 
 \textit{Classical Siamese tracking.} SiamRPN++~\citep{li2019siamrpn++} is
 kept as the canonical Siamese baseline that established correlation-based
@@ -366,7 +318,8 @@ zero-shot generalization. Benchmarking them lets us probe whether
 features learned from massive natural image and video corpora actually
 carry over to targets that are only a few pixels across.
 
-\noindent\textbf{Two-stage Multi-Object Tracking.}
+\noindent\textbf{Multi Object Tracking.}
+\begin{comment}
 For MOT we deliberately restrict the benchmark to two-stage
 tracking-by-detection pipelines rather than end-to-end MOT models, and we
 want to spell out the reason here so it does not look like an arbitrary
@@ -393,9 +346,7 @@ dataset will make it easier for future work to train such models. For
 the present benchmark, however, two-stage MOT is the only setting in
 which we can give every method a fair chance, so that is what we focus
 on.
-
-A two-stage MOT pipeline needs a detector to feed it. As noted in
-Section~3, only a subset of our sequences carries object-detection
+\textit{Detector selection.} A two-stage MOT pipeline needs a detector to feed it. Only a subset of our sequences carries object-detection
 annotations, and even there the labels only cover the \textit{ship},
 \textit{plane} and \textit{train} categories. For the small moving
 targets that typically appear as bare light spots in satellite imagery
@@ -408,7 +359,7 @@ the held-out video sequences to produce the per-frame detections that
 feed into the tracker. Both routes share the same downstream interface,
 which keeps the comparison between trackers clean.
 
-On top of these detections we evaluate two generations of trackers. The
+\textit{Tracker selection.} On top of these detections we evaluate two generations of trackers. The
 first is the SORT family. SORT~\citep{bewley2016sort},
 ByteTrack~\citep{zhang2022bytetrack}, OC-SORT~\citep{cao2023ocsort},
 BoT-SORT and BoT-SORT-ReID~\citep{aharon2022botsort} are all
@@ -421,68 +372,22 @@ is represented by TrackTrack~\citep{kim2025tracktrack}, a more recent
 learned tracker that goes beyond the SORT recipe and lets us measure how
 much of the gap between classical association and modern learning-based
 association actually transfers to satellite data.
+\end{comment}
+For MOT, the mainstream approach is either end-to-end or tracking-by-detection. For spaceborne videos, we restrict the benchmark to two-stage tracking-by-detection models. The reason is remainly due to the unavailability of end-to-end for spaceborne video, and the poor performance of existing models. Recent strong models, such as MASA~\citep{li2024masa}, which adapts SAM for any-category tracking, and MOTIP~\citep{gao2024motip} are trained on natural image and natural video data. In zero-shot satellite-video experiments, they fail at the detection stage and therefore cannot provide reliable tracking or classification. We observe the same limitation for text-promptable foundation models including Grounding DINO~\citep{liu2024groundingdino} and SAM~3, although SAM~3 can produce useful masks for larger objects.
 
-\subsection{Evaluation Metrics}
-\subhead{Single Object Tracking}
-We evaluate SOT trackers using four complementary metrics---Success Rate
-(SR), Normalized Precision (NPR), Precision (PR), and P@5---chosen to align
-with the dominant convention in modern generic-vision SOT
-benchmarks~\citep{muller2018trackingnet,fan2019lasot,huang2021got10k} while
-preserving the small-object diagnostic granularity required by satellite
-video. Detailed metric definitions are in Appendix A.2.1. For overall
-performance we report SR, NPR, and PR, capturing IoU-based overlap,
-scale-normalized localization, and
-pixel-level center accuracy respectively. For the \emph{small-object subset}---%
-sequences with median GT side length $\sqrt{w_t^{\mathrm{gt}} h_t^{\mathrm{gt}}} < 8$~px
-(the satellite analogue of COCO's $32$~px small-object
-cutoff~\citep{lin2014coco})---we replace PR with P@5, since PR's $[0,50]$~px
-integration range loses discriminative meaning once typical errors exceed the
-target's full extent. Higher is better for all four metrics.
+\textit{Detector selection.}
+A two-stage MOT pipeline requires per-frame detections. Detection annotations are available only for a subset of sequences and cover only \textit{ship}, \textit{plane}, and \textit{train}. For small moving targets, which often appear as bare bright spots in satellite imagery and dominate the \textit{car} category below roughly eight pixels, we use the current SOTA detector HiEUM~\citep{Xiao2024HiEUM}. For the remaining categories, we train an in-house detector on the Space-tracker detection training split and run it on the held-out video sequences. Both detector routes produce the same per-frame detection interface, keeping the tracker comparison controlled.
 
-\subhead{Object Detection} We evaluate detectors using mean Average
-Precision at IoU threshold $0.5$ ($\mathrm{mAP}_{50}$) as our primary ranking
-metric, complemented by class-agnostic $\mathrm{AP}_{\text{overall}}$ and
-operating-point Precision (P), Recall (R), and F1 at a fixed score threshold
-of $0.5$. We deliberately adopt single-threshold $\mathrm{mAP}_{50}$ rather than 
-the COCO-style $\mathrm{mAP}_{[.5:.95]}$ aggregate~\citep{lin2014coco}, since targets in
-spaceborne video are typically smaller than $20\times 20$ pixels, where
-strict IoU thresholds ($\geq 0.75$) tend to reflect sub-pixel localization
-noise rather than genuine detector capability; single-threshold
-$\mathrm{mAP}_{50}$ is also the prevailing convention in spaceborne
-small-object detection~\citep{Li2023SATMTB,He2022TGraM}.
-$\mathrm{AP}_{\text{overall}}$ merges predictions from all classes into a
-single foreground category before constructing the PR curve, isolating
-localization quality from the long-tailed class distribution typical of
-satellite video. P, R, and F1 at a fixed threshold reveal
-deployment-relevant behavior, such as over-confident false positives in
-cluttered backgrounds and missed dim or sub-pixel targets, which
-threshold-averaged AP tends to obscure. Higher is better for all five
-metrics.
-% Detailed metric definitions are in Appendix A.2.2.
+\textit{Tracker selection.}
+Given these detections, we evaluate two groups of MOT trackers. The first is the SORT family: SORT~\citep{bewley2016sort}, ByteTrack~\citep{zhang2022bytetrack}, OC-SORT~\citep{cao2023ocsort}, BoT-SORT, and BoT-SORT-ReID~\citep{aharon2022botsort}. These are Kalman-filter- and Hungarian-matching-based associators, with successive variants adding targeted improvements such as low-confidence box recovery, observation-centric updates, camera-motion compensation, and appearance ReID. They represent the classical tracking-by-detection baseline. The second group is represented by TrackTrack~\citep{kim2025tracktrack}, a recent learned tracker that goes beyond the SORT paradigm and tests whether gains from modern learning-based association transfer to satellite video.
 
-\subhead{Multi-Object Tracking} We evaluate MOT performance using a
-combination of HOTA-family, CLEAR-family, and Identity-family metrics
-computed under the standard MOTChallenge protocol at IoU $\geq 0.5$ via the
-TrackEval toolkit~\citep{luiten2021hota,bernardin2008clear,ristani2016idf1}.
-Detailed metric definitions are in Appendix A.2.3. As our primary ranking
-metric we adopt HOTA, defined as the geometric mean of Detection Accuracy
-(DetA) and Association Accuracy (AssA), since it explicitly disentangles
-the two failure modes most relevant to spaceborne tracking: missed or
-spurious detections of small targets (captured by DetA), and broken or
-swapped trajectories under prolonged occlusion and inter-object
-indistinguishability (captured by AssA). We additionally report DetA, AssA,
-and Localization Accuracy (LocA) to enable diagnostic decomposition of
-HOTA. To preserve comparability with prior spaceborne MOT
-literature~\citep{Li2023SATMTB,He2022TGraM}, we also report the
-legacy CLEAR metrics MOTA, MOTP, and IDsw, together with the Identity-based
-IDF1 score, which complements HOTA by emphasizing long-range identity
-preservation under a globally optimal one-to-one matching between
-predicted and ground-truth tracks. Higher is better for all metrics
-except IDsw, where lower is better.
+
 
 \subsection{Experiment protocol}
 %
-\subhead{Single Object Tracking} \minihead{Inference protocol} All trackers are evaluated under a strict
+\subhead{Single Object Tracking} 
+
+\minihead{Inference protocol} All trackers are evaluated under a strict
 one-shot protocol: the ground-truth bounding box is injected only at frame 0 of
 each video, and every subsequent frame is produced by the tracker's own temporal
 propagation, with no further GT correction. Each video is partitioned at the
@@ -526,31 +431,36 @@ Kalman motion model for re-prompting; and SAM~3 with the official release
 and temporal disambiguation enabled. For each tracker, we adopt the
 strongest variant available in its official public release.
 
-\subhead{Object detection} We train a Faster R-CNN~\citep{ren2015fasterrcnn} (ResNet-50~\citep{he2016resnet}\,+\,FPN, ImageNet-pretrained)
-end-to-end on the SAT-MTB~\citep{Li2023SATMTB} train split for the three foreground classes (\emph{airplane}, \emph{ship}, \emph{train}).
-Because spaceborne targets span a far narrower size range than natural-image objects (e.g., ships average $17$--$30$\,px on a side), 
-we retune two components that are normally left at their COCO defaults: 
-(i) the FPN \emph{anchor pyramid}, whose per-level sizes and aspect ratios we tighten to match the empirical bounding-box statistics of SAT-MTB, 
-and (ii) the \emph{RPN and box-head matching thresholds}, which we relax from the standard $0.7/0.3$ and $0.5/0.5$ to be more permissive on positives, 
-recovering small-object recall that is otherwise lost to anchor under-coverage. Models are validated every epoch on a held-out $18$-sequence val split, 
-and the best checkpoint is selected by val mAP$_{50}$ with patience-$8$ early stopping; 
-the $40$-sequence test split is strictly held out throughout development. 
-For HiEUM~\citep{Xiao2024HiEUM} we evaluate the authors' released RsCarData-trained checkpoint off-the-shelf,
-without any cross-dataset fine-tuning, in order to probe out-of-domain generalization of a video-native detector.
-The resulting per-frame detections are additionally cached and reused as the shared input to all two-stage MOT trackers in \S\ref{sec:exp_mot_overall}.
-Full training and inference details are deferred to Appendix~\ref{app:protocol_det}.
 
-\subhead{Multi-Object Tracking (Tracking-by-Detection)} For fairness, every tracker in this paradigm consumes the same
-pre-cached frame-level detections, produced by HiEUM~\citep{Xiao2024HiEUM}
-on the car-only datasets and by a Faster~R-CNN~\citep{ren2015fasterrcnn}
-on the multi-class datasets. Differences in tracking metrics
-therefore reflect association behavior rather than detector quality.
-We keep each tracker's published MOT17/20 default hyperparameters
+
+\subhead{Multi-Object Tracking}
+We adopt the tracking-by-detection paradigm and share a single cache
+of per-frame detections across all trackers, so that differences in
+tracking metrics reflect association behavior rather than detector
+quality. Detections come from HiEUM~\citep{Xiao2024HiEUM} on the
+car-only datasets (the authors' RsCarData checkpoint, evaluated
+off-the-shelf) and from a Faster~R-CNN~\citep{ren2015fasterrcnn} that
+we train on SAT-MTB~\citep{Li2023SATMTB} for the multi-class datasets,
+after retuning the FPN anchor pyramid and the RPN/box-head matching
+thresholds to the smaller target sizes typical of spaceborne imagery.
+Across trackers we keep the published MOT17/20 default hyperparameters
 and depart from them in only three places, all motivated by the
 small-object, station-keeping setting: lower first-stage IoU
 thresholds, disabled global motion compensation, and per-tracker
-score floors. The full configuration, evaluation splits, and ReID
-setup are given in Appendix~\ref{appendix:mot-tbd}.
+score floors. Full training and tracker configurations, evaluation
+splits, and the ReID setup are deferred to
+Appendices~\ref{app:protocol_det} and~\ref{appendix:mot-tbd}.
+
+
+
+
+
+\subsection{Evaluation Metrics}
+\subhead{Object Detection} We evaluate detectors with $\mathrm{mAP}_{50}$, class-agnostic $\mathrm{AP}_{\text{overall}}$, and operating-point Precision (P), Recall (R), and F1 at score threshold $0.5$. We use $\mathrm{mAP}_{50}$ as the primary ranking metric because spaceborne targets are often below $20\times20$ pixels, where stricter COCO-style thresholds such as $0.75$ or above are dominated by sub-pixel box noise rather than semantic detection quality~\citep{lin2014coco}. This choice also follows common practice in spaceborne small-object detection~\citep{Li2023SATMTB,He2022TGraM}. $\mathrm{AP}_{\text{overall}}$ merges all categories into one foreground class to isolate localization from class imbalance, while P, R, and F1 expose threshold-dependent behavior such as false alarms in cluttered backgrounds and missed weak targets. Higher is better for all metrics.
+
+\subhead{Single Object Tracking} We evaluate SOT trackers with Success Rate (SR), Normalized Precision (NPR), Precision (PR), and P@5. SR measures overlap quality and reflects whether the predicted box covers the target; NPR normalizes center error by target scale and is therefore more stable across heterogeneous resolutions; PR measures absolute center accuracy and follows the convention of generic SOT benchmarks~\citep{muller2018trackingnet,fan2019lasot,huang2021got10k}. For the small-object subset, defined by median ground-truth side length $\sqrt{w_t^{\mathrm{gt}} h_t^{\mathrm{gt}}}<8$ px, we additionally report P@5. This stricter pixel-level metric is more informative than the standard PR integration range when the target itself occupies only a few pixels. Higher is better for all metrics, and detailed definitions are provided in Appendix~\ref{sec:appendix_eval_metrics}.
+
+\subhead{Multi-Object Tracking} We evaluate MOT under the MOTChallenge protocol at IoU $\geq0.5$ using TrackEval~\citep{luiten2021hota,bernardin2008clear,ristani2016idf1}. HOTA is used as the primary metric because it jointly evaluates detection and association, the two dominant sources of error in satellite MOT. We report DetA, AssA, and LocA to separate missed or false detections, trajectory association failures, and localization quality. For comparability with prior spaceborne MOT work~\citep{Li2023SATMTB,He2022TGraM}, we also report MOTA, MOTP, IDsw, and IDF1. MOTA reflects overall tracking errors, MOTP measures localization precision, IDsw counts identity switches, and IDF1 evaluates long-range identity preservation. Higher is better for all metrics except IDsw, where lower is better; detailed definitions are provided in Appendix~\ref{sec:appendix_eval_metrics}.
 
 \section{Experiment results}
 
@@ -558,8 +468,8 @@ setup are given in Appendix~\ref{appendix:mot-tbd}.
 
 \subhead{Overall performance}
 \label{sec:exp_sot_overall}
-On Space-Tracker-SOT, the seven trackers split into two clean tiers
-along whether they are built on top of a foundation model. SAM 3
+%On Space-Tracker-SOT, the seven trackers split into two clean tiers along whether they are built on top of a foundation model. 
+The overall performance can be seen in Tab.~\ref{tab:sot_results}. SAM 3
 leads every column of Tab.~\ref{tab:sot_results}, LoRAT-g378 is
 second on five of six metrics, and the SAM 2 family (SAM 2, SAMURAI)
 clusters immediately behind. SiamRPN++ and the two natural-video
@@ -589,7 +499,7 @@ automatically transfer to the sub-8-pixel regime and can regress.
 The tiny split is therefore released as a first-class evaluation
 target rather than a stress test.
 
-Fig.~\ref{fig:sr_npr_vs_bbox_size} shows the same trend
+Fig.~\ref{fig:bbox_size_analysis} shows the same trend
 continuously, with a sharp drop between two and four pixels below
 which current trackers are not directly applicable.
 
@@ -603,14 +513,14 @@ the supplementary. Three findings emerge that the global ranking of
 Tab.~\ref{tab:sot_results} hides.
 
 \minihead{Classical perturbations are no longer the
-bottleneck.}
+bottleneck}
 On IV, BC, and DEF, SAM 3 reaches SR $0.477$, $0.466$, and $0.568$,
 and the gap to LoRAT-g378 is at most three SR points. These are the
 perturbations the natural-video tracking community has worked on for
 over a decade, and web-scale pretraining apparently carries the
 gains cleanly across to satellite frames.
 
-\minihead{Long occlusion overturns the SAM 3 ranking.}
+\minihead{Long occlusion overturns the SAM 3 ranking}
 OCC is the lowest-scoring unified attribute for every tracker, and
 SAM 3 drops 20 SR points from its DEF score on it. The duration
 breakdown in Tab.~\ref{tab:sot_occlusion_subtypes} is the more
@@ -625,13 +535,13 @@ grounding, while LoRAT's transformer correlation holds onto a more
 stable template across long gaps.
 
 \minihead{Tiny scale plus isotropic motion is where dedicated
-temporal modeling earns its only win.}
+temporal modeling earns its only win}
 Once appearance reduces to a few-pixel blob, surrounding motion is
 the only cue left, and on tiny IM that cue is locally homogeneous.
 LoRAT-g378 collapses from whole SR $0.386$ to $0.074$, an $81\%$
 loss, while ODTrack, which trails almost everywhere else, holds
-$0.216$ and finishes second only to SAM 3 ($0.308$). On tiny AM,
-where surrounding motion is heterogeneous, SAM 3 recovers to SR
+$0.216$ and finishes second only to SAM~3 ($0.308$). On tiny AM,
+where surrounding motion is heterogeneous, SAM~3 recovers to SR
 $0.490$. This is the only slice in our evaluation where
 appearance-only foundation models lose more than dedicated temporal
 models do.
@@ -641,9 +551,9 @@ spaceborne regime: classical perturbations are essentially solved,
 long occlusion and tiny-plus-isotropic motion are not, and which
 tracker to pick depends on which slice you care about.
 
-\subhead{Qualitative comparison}
+% \subhead{Qualitative comparison}
 
-\subhead{Multi-Object Tracking}
+\subsection{Multi-Object Tracking}
 
 \minihead{Overall performance}
 \label{sec:exp_mot_overall}
@@ -710,7 +620,7 @@ why a 2016 tracker tops the table.
 \section{Conclusion and Discussion}
 We introduced Space-tracker, the first unified and curated "million-scale"
 benchmark dataset designed for the detection and tracking of small targets in
-spaceborne videos. By merging XX disparate datasets into a consistent COCO-style
+spaceborne videos. By merging 9 disparate datasets into a consistent COCO-style
 framework, we provide a singular diagnostic platform to address the unique
 geometric and radiometric constraints of the aerospace domain. Our primary
 contribution lies in the unification of 12 fine-grained attributes, such as
@@ -749,21 +659,14 @@ to automatically hide this section in the anonymized submission.
 
 \appendix
 
-\section{Technical appendices and supplementary material}
-\subsection{Dataset Overview}
-The eight datasets that make up Space-tracker span a wide range of frame
-resolutions, reflecting the heterogeneity of the underlying spaceborne and
-aerial sources. SOT crops are highly heterogeneous: SatSOT and OOTB cover roughly
-$0.05$\,MP up to $8$\,MP per sequence, while SV248S concentrates around the
-$0.05$--$0.5$\,MP band. MOT datasets are markedly more uniform: AIR-MOT-100,
-RsCarData, SDM-Car and SAT-MTB cluster between $1$\,MP and $4$\,MP, with VISO
-extending the lower end down to roughly $0.05$\,MP. Figure~\ref{fig:dataset_resolutions}
-shows the per-sequence $(W, H)$ joint distribution on log-log axes, with dashed
-iso-megapixel curves for reference.
+\section{Technical appendices}
+
+\begin{comment}
+    
 
 \begin{figure}[t]
   \centering
-  \includegraphics[width=\linewidth]{plots/dataset_resolutions.pdf}
+  \includegraphics[width=\linewidth]{plots/dataset_resolutions.png}
   \caption{Per-sequence frame resolutions across Space-tracker. Each marker is
   one sequence; dashed lines are iso-megapixel ($W\!\times\!H$) contours.
   \textbf{Left:} SOT benchmarks (OOTB, SatSOT, SV248S). \textbf{Right:} MOT
@@ -772,7 +675,7 @@ iso-megapixel curves for reference.
   $1$--$4$\,MP.}
   \label{fig:dataset_resolutions}
 \end{figure}
-
+\end{comment}
 
 \subsection{Evaluation Metrics}
 \label{sec:appendix_eval_metrics}
@@ -976,15 +879,47 @@ datasets (e.g., AIR-MOT, SAT-MTB) we additionally report per-class HOTA,
 DetA, and AssA, computed by restricting both predictions and ground
 truth to the relevant class before evaluation.
 
-\subsection{Object detection protocol}
+\subsection{Experiment protocol}
+
+\subsubsection{Object detection protocol}
 \label{app:protocol_det}
+We train a Faster R-CNN~\citep{ren2015fasterrcnn} (ResNet-50~\citep{he2016resnet}\,+\,FPN, ImageNet-pretrained)
+end-to-end on the SAT-MTB~\citep{Li2023SATMTB} train split for the three foreground classes (\emph{airplane}, \emph{ship}, \emph{train}).
+Because spaceborne targets span a far narrower size range than natural-image objects (e.g., ships average $17$--$30$\,px on a side),
+we retune two components that are normally left at their COCO defaults:
+(i) the FPN \emph{anchor pyramid}, whose per-level sizes and aspect ratios we tighten to match the empirical bounding-box statistics of SAT-MTB,
+and (ii) the \emph{RPN and box-head matching thresholds}, which we relax from the standard $0.7/0.3$ and $0.5/0.5$ to be more permissive on positives,
+recovering small-object recall that is otherwise lost to anchor under-coverage.
+Models are validated every epoch on a held-out $18$-sequence val split,
+and the best checkpoint is selected by val mAP$_{50}$ with patience-$8$ early stopping;
+the $40$-sequence test split is strictly held out throughout development.
+For HiEUM~\citep{Xiao2024HiEUM} we evaluate the authors' released RsCarData-trained checkpoint off-the-shelf,
+without any cross-dataset fine-tuning, in order to probe out-of-domain generalization of a video-native detector.
+Per-frame detections from both detectors are additionally cached and reused as the shared input to every two-stage MOT tracker in \S\ref{sec:exp_mot_overall}.
+Per-detector implementation specifics follow.
+
 \minihead{Faster R-CNN}
-We use the \texttt{torchvision} \texttt{fasterrcnn\_resnet50\_fpn} (V1) implementation with three trainable backbone stages and a $C{=}4$ classification head (3 foreground + background). The FPN anchor pyramid is set to sizes $\{8,16\},\{24,48\},\{64,96\},\{128,192\},\{256,384\}$ with aspect ratios $\{0.5,1,2\}$, and matching thresholds are relaxed to $\tau^{\text{rpn}}_{\text{fg/bg}}{=}0.5/0.2$ and $\tau^{\text{box}}_{\text{fg/bg}}{=}0.4/0.3$. RPN proposals are capped at $4000/2000$ pre/post-NMS during training. Inputs are resized by \texttt{GeneralizedRCNNTransform} to short side $1024$, long side $\le 1333$. The augmentation pipeline is $\texttt{PadIfNeeded}(1024)\!\to\!\texttt{RandomCrop}(1024)\!\to\!\text{HFlip}(p{=}0.5)\!\to\!\text{VFlip}(p{=}0.2)\!\to\!\texttt{RandomBrightnessContrast}(\pm 15\%, p{=}0.3)$, with bounding-box \emph{min\_visibility}$\,=\,0.1$. Optimization uses AdamW (lr $5{\times}10^{-4}$, weight decay $10^{-4}$), $3$-epoch linear warm-up followed by cosine annealing for up to $30$ epochs, batch size $4$, and $16$-bit mixed precision. At inference we use \emph{score\_thresh}$\,{=}\,0.05$, \emph{nms\_thresh}$\,{=}\,0.5$, and at most $300$ detections per image; for the MOT detection cache the long-side cap is raised to $2304$\,px to preserve native-resolution recall.
+We use the \texttt{torchvision} \texttt{fasterrcnn\_resnet50\_fpn} (V1) implementation with three trainable backbone stages and a $C{=}4$ classification head (3 foreground plus background).
+The FPN anchor pyramid is set to sizes $\{8,16\},\{24,48\},\{64,96\},\{128,192\},\{256,384\}$ with aspect ratios $\{0.5,1,2\}$,
+and matching thresholds are relaxed to $\tau^{\text{rpn}}_{\text{fg/bg}}{=}0.5/0.2$ and $\tau^{\text{box}}_{\text{fg/bg}}{=}0.4/0.3$.
+RPN proposals are capped at $4000/2000$ pre/post-NMS during training.
+Inputs are resized by \texttt{GeneralizedRCNNTransform} to short side $1024$, long side $\le 1333$.
+The augmentation pipeline is $\texttt{PadIfNeeded}(1024)\!\to\!\texttt{RandomCrop}(1024)\!\to\!\text{HFlip}(p{=}0.5)\!\to\!\text{VFlip}(p{=}0.2)\!\to\!\texttt{RandomBrightnessContrast}(\pm 15\%, p{=}0.3)$,
+with bounding-box \emph{min\_visibility}$\,=\,0.1$.
+Optimization uses AdamW (lr $5{\times}10^{-4}$, weight decay $10^{-4}$),
+$3$-epoch linear warm-up followed by cosine annealing for up to $30$ epochs, batch size $4$, and $16$-bit mixed precision.
+At inference we use \emph{score\_thresh}$\,{=}\,0.05$, \emph{nms\_thresh}$\,{=}\,0.5$, and at most $300$ detections per image;
+for the MOT detection cache the long-side cap is raised to $2304$\,px to preserve native-resolution recall.
 
 \minihead{HiEUM}
-We use the authors' released checkpoint \texttt{model\_best.pth} trained on RsCarData; no cross-dataset fine-tuning is performed. The architectural hyperparameters are baked into the checkpoint and held fixed at $L{=}3$ transformer layers, clip length $T{=}20$, input size $1024{\times}1024$. Clips are sampled with stride $1$ and batch size $1$. Detection caching uses \emph{score\_thresh}$\,{=}\,0.05$, NMS IoU $0.1$, and at most $128$ detections per frame. Following the original protocol, matches are scored by centroid Euclidean distance with a $5$\,px threshold; the reported best-F1 number is obtained by sweeping the score threshold over $\{0.10, 0.15, 0.20, 0.25, 0.30, 0.32, 0.34, 0.35\}$.
+We use the authors' released checkpoint \texttt{model\_best.pth} trained on RsCarData; no cross-dataset fine-tuning is performed.
+The architectural hyperparameters are baked into the checkpoint and held fixed at $L{=}3$ transformer layers, clip length $T{=}20$, input size $1024{\times}1024$.
+Clips are sampled with stride $1$ and batch size $1$.
+Detection caching uses \emph{score\_thresh}$\,{=}\,0.05$, NMS IoU $0.1$, and at most $128$ detections per frame.
+Following the original protocol, matches are scored by centroid Euclidean distance with a $5$\,px threshold;
+the reported best-F1 number is obtained by sweeping the score threshold over $\{0.10, 0.15, 0.20, 0.25, 0.30, 0.32, 0.34, 0.35\}$.
 
-\section{MOT (Tracking-by-Detection): Full Protocol}
+\subsubsection{MOT protocol}
 \label{appendix:mot-tbd}
 
 \paragraph{Cached detections and evaluation splits.}
@@ -1065,8 +1000,8 @@ TrackTrack    & 0.10            & \texttt{(det/init/match/tai)=(.30/.40/.70/.45)
 \texttt{det\_thresh}$=0.30$, so we set the upstream floor to $0.0$
 to prevent double-thresholding.}
 \end{table}
-
-\subsection{Per-dataset SOT results}
+\subsection{Results}
+\subsubsection{SOT performance per-dataset}
 Tab.~\ref{tab:sot_results_whole} and Tab.~\ref{tab:sot_results_tiny} provide the
 per-dataset breakdown that underlies the macro-of-macro means in
 Tab.~\ref{tab:sot_results}.
@@ -1075,12 +1010,12 @@ Tab.~\ref{tab:sot_results}.
 
 \input{tables/SOT/whole_dataset/sot_whole_dataset_tiny_table}   % tiny-object subset
 
-\input{tables/SOT/unified_attributes_table}
+% \input{tables/SOT/unified_attributes_table}
 
 \input{tables/SOT/whole_dataset/split_attributes_table}
 
 
-\subsection{Per-attribute performance (whole datasets and tiny frames)}
+\subsubsection{SOT performance per attribute}
 Tab.~\ref{tab:sot_attributes} reports per-tracker SR / NPR / PR under our
 unified attribute taxonomy on the whole datasets, with the occlusion
 duration sub-type breakdown shown in Tab.~\ref{tab:sot_occlusion_subtypes}.
@@ -1101,77 +1036,6 @@ Tab.~\ref{tab:sot_attributes_tiny_occlusion}.
 \input{tables/SOT/whole_dataset/sot_attributes_table_tiny}
 
 
-\subsection{Performance analysis w.r.t. object attributes}
-The model performance w.r.t to different object attributes on the dataset SV248S
-is shown in Tab.~\ref{tab:sot_attributes_sv248s}. We can conclude the following
-findings.
-\begin{itemize}
-    \item \textbf{LoRAT-g378 dominates among pretrained trackers.}
-    It ranks first on most attributes, with an especially commanding margin
-    over other pretrained baselines on \emph{Natural Disturbance} (ND) and
-    \emph{Slow Motion} (SM).
-    \item \textbf{SAM~3 excels under occlusion.} On both
-    \emph{Continuous Occlusion} (CO) and \emph{Long-Term Occlusion} (LTO),
-    SAM~3 attains the top score across all three metrics. This suggests
-    that the memory-bank mechanism of the SAM family confers a zero-shot
-    advantage in recovering targets after prolonged occlusion -- a regime
-    in which discriminatively trained trackers typically drift.
-    \item \textbf{Counterexample on Background Cluster (BCL).}
-    The pretrained LoRAT-g378 and OSTrack-384 outperform the zero-shot
-    SAM~3 here, indicating that under the dense, visually homogeneous
-    backgrounds characteristic of satellite video, supervised fine-tuning
-    on remote-sensing data can still matter more than zero-shot
-    generalization.
-\end{itemize}
-
-\input{tables/sot_attributes_sv248s_table}
-The model performance w.r.t to different object attributes on the dataset SatSot
-is shown in Tab.~\ref{tab:sot_attributes_satsot}. We can conclude the following
-findings.
-\begin{itemize}
-    \item \textbf{Tiny Object (TO).} SAM~3 is the only tracker to achieve
-    non-trivial performance (SR $0.248$), while all other methods remain
-    below $0.14$. This aligns with the central motivation of our benchmark
-    -- small-object tracking is the defining challenge of spaceborne
-    video -- and demonstrates that SAM~3's zero-shot capability transfers
-    unexpectedly well to this regime.
-    \item \textbf{Illumination Variation (IV).} The classical
-    SiamRPN++ and the transformer-based OSTrack-384 rank first and second,
-    whereas all SAM-based trackers collapse. This counterexample indicates
-    that zero-shot foundation models are not uniformly robust across
-    remote-sensing challenges, and remain particularly vulnerable to
-    drastic illumination changes.
-    \item \textbf{Conventional challenges (POC, ROT, SOB).} The ordering
-    is consistently SAM~3 $\gg$ LoRAT-g378 $\gg$ the remaining trackers,
-    indicating that SAM~3 already surpasses the strongest pretrained
-    baseline on standard tracking difficulties.
-\end{itemize}
- \input{tables/sot_attributes_satsot_table}
-The model performance w.r.t to different object attributes on the dataset OOTB
-is shown in Tab.~\ref{tab:sot_attributes_ootb}. We can conclude the following
-findings.
-\begin{itemize}
-    \item \textbf{Isotropic Motion (IM).} The three SAM-family trackers
-    (SAM~2, SAMURAI, and SAM~3) overwhelmingly outperform every pretrained
-    tracker on both NPR and PR, with PR exceeding $0.85$ while the best
-    pretrained tracker reaches only $0.54$. Combined with the analogous
-    dominance of SAM~3 on \emph{Long-Term Occlusion} (LTO) in SV248S,
-    this suggests that the temporal memory mechanism of the SAM family
-    is particularly well suited to predictable trajectories such as
-    uniform motion.
-    \item \textbf{Full Occlusion (FO).} LoRAT-g378 surprisingly
-    surpasses all SAM-based trackers, in contrast to the SV248S LTO
-    result where SAM~3 led. This discrepancy likely reflects a
-    qualitative difference between brief full occlusion in OOTB and
-    prolonged occlusion in SV248S, and indicates that the memory-based
-    recovery strategy of SAM-family trackers requires a sufficiently
-    long temporal context to be effective.
-    \item \textbf{Motion Blur (MB).} The pretrained trackers
-    OSTrack-384 and LoRAT-g378 substantially outperform all zero-shot
-    models, suggesting that discriminative feature learning under
-    motion blur still benefits from in-domain supervision.
-\end{itemize}
-  \input{tables/sot_attributes_ootb_table}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

@@ -1,0 +1,105 @@
+\section*{NeurIPS Paper Checklist}
+
+
+\begin{enumerate}
+
+\item {\bf Claims}
+    \item[] Question: Do the main claims made in the abstract and introduction accurately reflect the paper's contributions and scope?
+   
+    \item[] Answer: \answerYes{}
+    \item[] Justification: The abstract and introduction state the paper's scope as a benchmark and empirical evaluation for spaceborne visual tracking. The claimed contributions are supported by the dataset construction, annotation protocol, attribute taxonomy, and experimental results described in our manuscript.
+
+\item {\bf Limitations}
+    \item[] Question: Does the paper discuss the limitations of the work performed by the authors?
+    \item[] Answer: \answerYes{}
+    \item[] Justification: The paper discusses limitations of the benchmark, including heterogeneous source annotations, restricted object-detection coverage, and the fact that detection labels are only available for a subset of SAT-MTB sequences and categories. These limitations are described in the dataset and discussion sections.
+
+
+\item {\bf Theory assumptions and proofs}
+    \item[] Question: For each theoretical result, does the paper provide the full set of assumptions and a complete (and correct) proof?
+    \item[] Answer: \answerNA{}
+    \item[] Justification: The paper does not introduce theoretical results, theorems, or formal proofs. Its contributions are dataset construction, annotation unification, benchmark design, and empirical evaluation.
+
+
+    \item {\bf Experimental result reproducibility}
+    \item[] Question: Does the paper fully disclose all the information needed to reproduce the main experimental results of the paper to the extent that it affects the main claims and/or conclusions of the paper (regardless of whether the code and data are provided or not)?
+    \\item[] Answer: \answerYes{}
+    \item[] Justification: The paper specifies the evaluated datasets, benchmark splits, metrics, target-size definitions, attribute taxonomy, and evaluated trackers. The preprocessing and evaluation protocols are described in the dataset and experimental sections, enabling reproduction of the main benchmark results.
+
+
+
+\item {\bf Open access to data and code}
+    \item[] Question: Does the paper provide open access to the data and code, with sufficient instructions to faithfully reproduce the main experimental results, as described in supplemental material?
+    \item[] Answer: \answerYes{}
+    \item[] Justification: We provide the processed benchmark annotations, evaluation scripts, and instructions for reproducing the main results in the supplemental material. For source datasets that are governed by their original terms, we provide access instructions and cite the original dataset releases rather than redistributing restricted assets.
+
+
+
+\item {\bf Experimental setting/details}
+    \item[] Question: Does the paper specify all the training and test details (e.g., data splits, hyperparameters, how they were chosen, type of optimizer) necessary to understand the results?
+    \item[] Answer: \answerYes{}
+    \item[] Justification: The paper reports the benchmark protocol, evaluated trackers, evaluation metrics, target-size partition, and attribute-level evaluation settings. Since the experiments mainly evaluate existing trackers, tracker-specific configurations follow the official implementations unless otherwise stated.
+
+
+\item {\bf Experiment statistical significance}
+    \item[] Question: Does the paper report error bars suitably and correctly defined or other appropriate information about the statistical significance of the experiments?
+    \item[] Answer: \answerYes{}
+    \item[] Justification: The paper specifies the evaluated datasets, benchmark splits, metrics, target-size definitions, attribute taxonomy, and evaluated trackers. The preprocessing and evaluation protocols are described in the dataset and experimental sections, enabling reproduction of the main benchmark results.
+
+
+\item {\bf Experiments compute resources}
+    \item[] Question: For each experiment, does the paper provide sufficient information on the computer resources (type of compute workers, memory, time of execution) needed to reproduce the experiments?
+    \item[] Answer: \answerYes{}
+    \item[] Justification: The paper and supplemental material report the compute environment used for evaluation, including GPU type, CPU/memory configuration, and approximate runtime. The experiments evaluate existing trackers rather than training new large models from scratch.
+
+    
+\item {\bf Code of ethics}
+    \item[] Question: Does the research conducted in the paper conform, in every respect, with the NeurIPS Code of Ethics \url{https://neurips.cc/public/EthicsGuidelines}?
+    \item[] Answer: \answerYes{}
+    \item[] Justification: The research uses publicly available remote-sensing datasets and benchmark annotations, follows the original dataset terms, and does not involve human subjects, private personal data, or interactive deployment. Potential dual-use risks are discussed in the broader impact statement.
+
+
+
+\item {\bf Broader impacts}
+    \item[] Question: Does the paper discuss both potential positive societal impacts and negative societal impacts of the work performed?
+    \item[] Answer: \answerYes{}
+    \item[] Justification: The paper discusses positive impacts such as improving evaluation for remote sensing, transportation monitoring, disaster response, and environmental observation. It also acknowledges potential negative impacts, including misuse for surveillance or sensitive monitoring, and emphasizes that the benchmark is intended for research evaluation.
+
+    
+\item {\bf Safeguards}
+    \item[] Question: Does the paper describe safeguards that have been put in place for responsible release of data or models that have a high risk for misuse (e.g., pre-trained language models, image generators, or scraped datasets)?
+    \item[] Answer: \answerYes{}
+    \item[] Justification: The paper releases benchmark annotations and evaluation tools rather than a deployed surveillance system or generative model. We respect the access conditions of the original datasets, document task coverage and category limitations, and avoid claiming deployment readiness for sensitive operational use.
+
+
+\item {\bf Licenses for existing assets}
+    \item[] Question: Are the creators or original owners of assets (e.g., code, data, models), used in the paper, properly credited and are the license and terms of use explicitly mentioned and properly respected?
+    \item[] Answer: \answerYes{}
+    \item[] Justification: All source datasets and evaluated trackers are cited in the paper, including SatSOT, SV248S, OOTB, SAT-MTB, and the baseline tracking methods. The paper and supplemental material describe the use of existing assets and preserve the terms of the original releases.
+
+
+\item {\bf New assets}
+    \item[] Question: Are new assets introduced in the paper well documented and is the documentation provided alongside the assets?
+   \item[] Answer: \answerYes{}
+    \item[] Justification: The paper introduces a unified benchmark with standardized annotations, task definitions, object-size regimes, and a new attribute taxonomy. Documentation for data organization, annotation format, task coverage, and evaluation protocol is provided in the paper and supplemental material.
+
+
+\item {\bf Crowdsourcing and research with human subjects}
+    \item[] Question: For crowdsourcing experiments and research with human subjects, does the paper include the full text of instructions given to participants and screenshots, if applicable, as well as details about compensation (if any)? 
+    \item[] Answer: \answerNA{}
+    \item[] Justification: The paper does not involve crowdsourcing experiments or research with human subjects. Annotation refinement was performed as part of dataset curation and did not involve participant studies.
+
+
+\item {\bf Institutional review board (IRB) approvals or equivalent for research with human subjects}
+    \item[] Question: Does the paper describe potential risks incurred by study participants, whether such risks were disclosed to the subjects, and whether Institutional Review Board (IRB) approvals (or an equivalent approval/review based on the requirements of your country or institution) were obtained?
+     \item[] Answer: \answerNA{}
+    \item[] Justification: The paper does not involve human subjects, participant studies, or personal data collection. Therefore, IRB approval or equivalent human-subjects review is not applicable.
+
+
+\item {\bf Declaration of LLM usage}
+    \item[] Question: Does the paper describe the usage of LLMs if it is an important, original, or non-standard component of the core methods in this research? Note that if the LLM is used only for writing, editing, or formatting purposes and does \emph{not} impact the core methodology, scientific rigor, or originality of the research, declaration is not required.
+    %this research? 
+    \item[] Answer: \answerNA{} % Replace by \answerYes{}, \answerNo{}, or \answerNA{}.
+    \item[] Justification: LLM is used for writing, editing, or formatting purposes, as well as for assisting the implementation of existing methods. The core methodology and originality of the research remain with the authors.
+
+\end{enumerate}
