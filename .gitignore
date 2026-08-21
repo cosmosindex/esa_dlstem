@@ -118,3 +118,6 @@ docs/figures/**/*.mp4
 
 # Review-tool auto-snapshots (written on every action)
 docs/annotation_review/backups/
+
+# Paper working directory (manuscript source, plots, tables) — kept local only
+NeurIPS 2026/
