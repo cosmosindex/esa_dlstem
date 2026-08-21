@@ -121,3 +121,6 @@ docs/annotation_review/backups/
 
 # Paper working directory (manuscript source, plots, tables) — kept local only
 NeurIPS 2026/
+
+# SOT/MOT result dumps feeding the paper figures — kept local only
+docs/NeurIPS_results/
