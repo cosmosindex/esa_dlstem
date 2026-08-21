@@ -20,6 +20,7 @@ from __future__ import annotations
 import argparse
 import csv
 import json
+import os
 import re
 import sys
 from collections import defaultdict
@@ -32,6 +33,9 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from datasets.ootb import OOTBDataset
 from datasets.satsot import SatSOTDataset
 from datasets.sv248s import SV248SDataset
+
+# Experiment dumps live outside the repo; point SOT_EXP_ROOT at your own copy.
+_EXP_ROOT = os.environ.get("SOT_EXP_ROOT", "/work/anon/experiments/NeurIPS")
 
 
 SUCCESS_THRESHOLDS = np.linspace(0.0, 1.0, 21)
@@ -116,7 +120,7 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument(
         "--root",
-        default="/work/anon/experiments/NeurIPS/SOT_whole_dataset_04_22",
+        default=f"{_EXP_ROOT}/SOT_whole_dataset_04_22",
     )
     ap.add_argument(
         "--out",

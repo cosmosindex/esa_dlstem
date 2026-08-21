@@ -25,7 +25,7 @@ Outputs: ``<root>/<tracker>/<run>/test_metrics_per_seq.json`` (per run) and
 Usage::
 
     micromamba run -n esa_dlstem python tools/reaggregate_sot_per_sequence.py \
-        --root /work/anon/experiments/NeurIPS/SOT_whole_dataset_04_22
+        --root $SOT_EXP_ROOT/SOT_whole_dataset_04_22
 """
 
 from __future__ import annotations
@@ -33,12 +33,16 @@ from __future__ import annotations
 import argparse
 import csv
 import json
+import os
 import re
 from collections import defaultdict
 from pathlib import Path
 from statistics import median
 
 import numpy as np
+
+# Experiment dumps live outside the repo; point SOT_EXP_ROOT at your own copy.
+_EXP_ROOT = os.environ.get("SOT_EXP_ROOT", "/work/anon/experiments/NeurIPS")
 
 
 # Curve thresholds — see module docstring.
@@ -392,7 +396,7 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument(
         "--root",
-        default="/work/anon/experiments/NeurIPS/SOT_whole_dataset_04_22",
+        default=f"{_EXP_ROOT}/SOT_whole_dataset_04_22",
         help="Experiment root containing <tracker>/<run>/ subdirs.",
     )
     ap.add_argument(

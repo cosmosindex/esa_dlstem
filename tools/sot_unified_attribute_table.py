@@ -1,7 +1,7 @@
 """
 Per-attribute SOT performance under our unified attribute taxonomy.
 
-Unified attributes (see ``Formatting Instructions For NeurIPS 2026/tables/SOT/
+Unified attributes (see ``NeurIPS 2026/tables/SOT/
 whole_dataset/split_attributes_table.tex``) span SatSOT / SV248S / OOTB and
 sometimes consolidate several native dataset labels into one (e.g. OCC unifies
 SatSOT POC/FOC, SV248S STO/LTO/CO, OOTB PO/FO).
@@ -31,6 +31,7 @@ from __future__ import annotations
 import argparse
 import csv
 import json
+import os
 import re
 import sys
 from collections import defaultdict
@@ -43,6 +44,9 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from datasets.ootb import OOTBDataset
 from datasets.satsot import SatSOTDataset
 from datasets.sv248s import SV248SDataset
+
+# Experiment dumps live outside the repo; point SOT_EXP_ROOT at your own copy.
+_EXP_ROOT = os.environ.get("SOT_EXP_ROOT", "/work/anon/experiments/NeurIPS")
 
 
 # --- Curve thresholds (per-sequence aggregation, PR over [0, 50]) ---
@@ -168,7 +172,7 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument(
         "--root",
-        default="/work/anon/experiments/NeurIPS/SOT_whole_dataset_04_22",
+        default=f"{_EXP_ROOT}/SOT_whole_dataset_04_22",
     )
     ap.add_argument(
         "--out",

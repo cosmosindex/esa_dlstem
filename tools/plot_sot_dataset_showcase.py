@@ -19,7 +19,7 @@ sys.path.insert(0, str(Path(__file__).parent))
 from plot_style import apply_neurips_style  # noqa: E402
 
 DATA_ROOT = Path("/data/ESA_DLSTEM_2025/data/trafic")
-OUT_DIR = Path(__file__).resolve().parents[1] / "Formatting Instructions For NeurIPS 2026" / "plots"
+OUT_DIR = Path(__file__).resolve().parents[1] / "NeurIPS 2026" / "plots"
 
 GT_GREEN = "#21d04a"
 LINE_W = 1.0

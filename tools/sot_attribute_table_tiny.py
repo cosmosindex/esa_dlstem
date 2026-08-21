@@ -34,6 +34,7 @@ from __future__ import annotations
 import argparse
 import csv
 import json
+import os
 import re
 import sys
 from collections import defaultdict
@@ -46,6 +47,9 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from datasets.ootb import OOTBDataset
 from datasets.satsot import SatSOTDataset
 from datasets.sv248s import SV248SDataset
+
+# Experiment dumps live outside the repo; point SOT_EXP_ROOT at your own copy.
+_EXP_ROOT = os.environ.get("SOT_EXP_ROOT", "/work/anon/experiments/NeurIPS")
 
 
 # --- Curve thresholds (consistent with main table; micro-pooled here) ---
@@ -311,7 +315,7 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument(
         "--root",
-        default="/work/anon/experiments/NeurIPS/SOT_whole_dataset_04_22",
+        default=f"{_EXP_ROOT}/SOT_whole_dataset_04_22",
     )
     ap.add_argument("--out", default=None)
     ap.add_argument("--tex", default=None,
@@ -523,7 +527,7 @@ def main():
     # ---------- LaTeX emission ----------
     tex_path = Path(args.tex) if args.tex else (
         Path(__file__).resolve().parents[1]
-        / "Formatting Instructions For NeurIPS 2026"
+        / "NeurIPS 2026"
         / "tables" / "SOT" / "whole_dataset"
         / "sot_attributes_table_tiny.tex"
     )

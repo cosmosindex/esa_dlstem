@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import shutil
 from pathlib import Path
 
@@ -33,15 +34,14 @@ mpl.rcParams.update({
     "ps.fonttype":       42,
 })
 
-DEFAULT_SUMMARY = Path(
-    "/work/anon/experiments/NeurIPS/SOT_whole_dataset_04_22/analysis/perf_vs_bbox_size_bin2/summary.json"
-)
-DEFAULT_OUT_DIR = Path(
-    "/home/anon/code/esa_dlstem/docs/NeurIPS_results/SOT/attributes"
-)
-PAPER_PLOTS_DIR = Path(
-    "/home/anon/code/esa_dlstem/Formatting Instructions For NeurIPS 2026/plots"
-)
+_REPO_ROOT = Path(__file__).resolve().parents[1]
+# Experiment dumps live outside the repo; point SOT_EXP_ROOT at your own copy.
+_EXP_ROOT = Path(os.environ.get("SOT_EXP_ROOT", "/work/anon/experiments/NeurIPS"))
+
+DEFAULT_SUMMARY = (_EXP_ROOT / "SOT_whole_dataset_04_22" / "analysis"
+                   / "perf_vs_bbox_size_bin2" / "summary.json")
+DEFAULT_OUT_DIR = _REPO_ROOT / "docs" / "NeurIPS_results" / "SOT" / "attributes"
+PAPER_PLOTS_DIR = _REPO_ROOT / "NeurIPS 2026" / "plots"
 
 DATASET_ORDER = ("OOTB", "SatSOT", "SV248S")
 

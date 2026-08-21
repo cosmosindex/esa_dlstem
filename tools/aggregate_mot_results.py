@@ -15,9 +15,8 @@ from pathlib import Path
 DEFAULT_HOTA_CSV = Path(
     "/data/ESA_DLSTEM_2025/experiments/MOT/tracker_20260427/hota_summary.csv"
 )
-DEFAULT_OUT_DIR = Path(
-    "/home/anon/code/esa_dlstem/Formatting Instructions For NeurIPS 2026/tables/MOT"
-)
+_REPO_ROOT = Path(__file__).resolve().parents[1]
+DEFAULT_OUT_DIR = _REPO_ROOT / "NeurIPS 2026" / "tables" / "MOT"
 
 # (display_name, citation_key, venue) — preserves the publication order.
 TRACKER_META = [

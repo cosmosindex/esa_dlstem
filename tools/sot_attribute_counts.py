@@ -15,6 +15,7 @@ from __future__ import annotations
 
 import argparse
 import csv
+import os
 import sys
 from pathlib import Path
 
@@ -23,6 +24,9 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from datasets.ootb import OOTBDataset
 from datasets.satsot import SatSOTDataset
 from datasets.sv248s import SV248SDataset
+
+# Experiment dumps live outside the repo; point SOT_EXP_ROOT at your own copy.
+_EXP_ROOT = os.environ.get("SOT_EXP_ROOT", "/work/anon/experiments/NeurIPS")
 
 
 DATASET_ROOTS = {
@@ -103,7 +107,7 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument(
         "--out",
-        default="/work/anon/experiments/NeurIPS/SOT_whole_dataset_04_22/"
+        default=f"{_EXP_ROOT}/SOT_whole_dataset_04_22/"
                 "analysis/unified_attributes/attribute_counts.csv",
     )
     args = ap.parse_args()
