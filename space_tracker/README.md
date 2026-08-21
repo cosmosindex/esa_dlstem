@@ -9,7 +9,7 @@ Unified satellite-video tracking benchmark. Two parallel surfaces:
 
 This directory ships:
 
-- **`space_tracker.json`** — SOT manifest cataloguing 463 sequences (relative paths to imagery / GT, native + unified + full-taxonomy attribute labels, sequence-level scale stats, tiny flag). ~260 KB; safe to commit and diff. Pinned by Croissant metadata — see `croissant.json`.
+- **`space_tracker.json`** — SOT manifest cataloguing 463 sequences (relative paths to imagery / GT, native + unified + full-taxonomy attribute labels, sequence-level scale stats, tiny flag). ~260 KB; safe to commit and diff.
 - **`space_tracker_mot.json`** — MOT manifest cataloguing 491 sequences (relative paths, per-dataset native GT format tag, image-source mode, resolution, track count, official split). ~280 KB.
 - **`manifest.py`** / **`manifest_mot.py`** — JSON loaders + filtering APIs.
 - **`data.py`** / **`data_mot.py`** — per-frame loaders bridging the manifest to on-disk imagery and GT for each source dataset.
