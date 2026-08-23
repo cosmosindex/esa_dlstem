@@ -25,7 +25,7 @@ modified.
 Usage::
 
     python tools/audit_mot_labels.py --dataset satmtb --skip-label car \\
-        --out-dir /work/anon/experiments/label_audit
+        --out-dir $WORK_ROOT/experiments/label_audit
     python tools/audit_mot_labels.py --dataset satmtb \\
         --out-dir ... --emit-overrides reviewed.csv
 """

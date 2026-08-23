@@ -68,10 +68,37 @@ _ALLCLASS_MAPS = {
 }
 
 _MOTION_TBD = ("sort", "bytetrack", "ocsort", "botsort")
+# Appearance-aware TBD: consume a FastReID embedding per GT box, cached by
+# ``cache_gt_feats_mot.py`` (their update signature differs from the motion ones).
+_REID_TBD = ("botsort_reid", "tracktrack")
+_FEAT_DIM = 2048
+
+# Oracle-only override: TrackTrack's ``min_box_area`` is an OUTPUT filter that
+# would delete every satellite car (5px -> area 25) before association is even
+# scored. The oracle isolates association, so the filter is disabled here; every
+# other hyperparameter stays at the wrapper default, exactly like the motion TBDs.
+_REID_KWARGS = {
+    "botsort_reid": {"feat_dim": _FEAT_DIM},
+    "tracktrack":   {"feat_dim": _FEAT_DIM, "min_box_area": 0.0},
+}
 
 
 def _safe_video_id(video_id: str) -> str:
     return video_id.replace("/", "_")
+
+
+def _load_feat_cache(cache_dir: Path, video_id: str) -> dict[int, np.ndarray]:
+    """{frame_id: [N, D] feats}, rows in GT annotation order (see cache_gt_feats_mot)."""
+    z = np.load(cache_dir / f"{_safe_video_id(video_id)}.npz")
+    flat_frame = z["flat_frame"]
+    feats = z["feats"].astype(np.float32)
+    out: dict[int, np.ndarray] = {}
+    if not len(flat_frame):
+        return out
+    starts = np.concatenate(([0], np.where(np.diff(flat_frame) != 0)[0] + 1, [len(flat_frame)]))
+    for s, e in zip(starts[:-1], starts[1:]):
+        out[int(flat_frame[s])] = feats[s:e]
+    return out
 
 
 def _build_dataset(name: str, split: str = "test"):
@@ -82,16 +109,41 @@ def _build_dataset(name: str, split: str = "test"):
     return cls(root=root, split=split, mode="detection", class_map=cmap, **extra)
 
 
+def _update_reid(tracker, name: str, gt_boxes: np.ndarray, feats: np.ndarray) -> np.ndarray:
+    """One frame for an appearance-aware tracker; GT boxes carry score 1.0."""
+    scores = np.ones(len(gt_boxes), dtype=np.float32)
+    if name == "botsort_reid":
+        return tracker.update_with_feats(gt_boxes, scores, feats)
+    # TrackTrack: [N, 6+D] = x1,y1,x2,y2,score,_pad,*feat
+    if len(gt_boxes):
+        dets = np.concatenate([gt_boxes, scores[:, None],
+                               np.zeros((len(gt_boxes), 1), dtype=np.float32),
+                               feats], axis=1).astype(np.float32)
+    else:
+        dets = np.zeros((0, 6 + feats.shape[1] if feats.size else 6 + _FEAT_DIM),
+                        dtype=np.float32)
+    return tracker.update_with_feats(dets, dets)
+
+
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--tracker", required=True, choices=_MOTION_TBD,
-                    help="motion-based TBD tracker (appearance-free)")
+    ap.add_argument("--tracker", required=True, choices=_MOTION_TBD + _REID_TBD,
+                    help="TBD tracker; the appearance-aware ones need --feat-cache")
     ap.add_argument("--dataset", required=True, choices=list(_DATASET_TABLE))
     ap.add_argument("--tracker-kwargs", default="{}",
                     help="JSON dict of tracker constructor kwargs (default {}).")
+    ap.add_argument("--feat-cache", default=None,
+                    help="dir of per-video FastReID .npz on GT boxes "
+                         "(cache_gt_feats_mot.py); required for botsort_reid/tracktrack")
     args = ap.parse_args()
 
-    tracker_kwargs = json.loads(args.tracker_kwargs)
+    use_reid = args.tracker in _REID_TBD
+    if use_reid and not args.feat_cache:
+        ap.error(f"--feat-cache is required for {args.tracker}")
+    feat_dir = Path(args.feat_cache) if args.feat_cache else None
+
+    tracker_kwargs = dict(_REID_KWARGS.get(args.tracker, {}))
+    tracker_kwargs.update(json.loads(args.tracker_kwargs))
     dataset_key = args.dataset
 
     exp_root = os.environ.get("EXPERIMENT_ROOT", "/work/anon/experiments")
@@ -113,7 +165,8 @@ def main():
     n_frames_total = 0
 
     for v_idx, video in enumerate(dataset.videos, 1):
-        tracker.reset()
+        tracker.reset(vid_name=_safe_video_id(video.video_id)) if use_reid else tracker.reset()
+        feats_by_fid = _load_feat_cache(feat_dir, video.video_id) if use_reid else {}
         mot_lines: list[str] = []
         v_gt = v_out = 0
 
@@ -128,7 +181,16 @@ def main():
             else:
                 dets = np.zeros((0, 5), dtype=np.float32)
 
-            tracks = tracker.update(dets, frame_id=fid)
+            if use_reid:
+                feats = feats_by_fid.get(int(fid),
+                                         np.zeros((0, _FEAT_DIM), dtype=np.float32))
+                if len(feats) != len(gt_boxes):
+                    raise RuntimeError(
+                        f"feat cache misaligned for {video.video_id} frame {fid}: "
+                        f"{len(feats)} feats vs {len(gt_boxes)} GT boxes")
+                tracks = _update_reid(tracker, args.tracker, gt_boxes, feats)
+            else:
+                tracks = tracker.update(dets, frame_id=fid)
             if len(tracks):
                 tracks = np.asarray(tracks, dtype=np.float32).reshape(-1, 6)
                 v_out += len(tracks)

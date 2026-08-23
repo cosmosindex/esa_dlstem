@@ -28,8 +28,8 @@ from __future__ import annotations
 import cv2
 import numpy as np
 
-from .gtsource import (DRAWN, FILLED, RECOVERED, REVIEWED, Obj, frame_objects,
-                       raw_geometry)
+from .gtsource import (DRAWN, FILLED, RECOVERED, REVIEWED, Obj, raw_geometry,
+                       visible_objects)
 from .paths import sequence_by_id
 from .render import (CATEGORY_SHORT, _draw_box, _placeholder, _read_frame,
                      _tile_placeholder)
@@ -69,11 +69,8 @@ def frame_view(seq_id: str, frame_id: int, decisions=None,
     if img is None:
         return _placeholder(f"frame {frame_id} not readable"), 1.0
 
-    deleted = decisions.deleted(seq_id) if decisions else set()
     raw = raw_geometry(seq_id) if show_raw else {}
-    for o in frame_objects(seq_id, frame_id, decisions):
-        if o.key in deleted:
-            continue
+    for o in visible_objects(seq_id, frame_id, decisions):
         before = raw.get(o.key, {}).get(frame_id)
         if before is not None:
             _draw_box(img, np.asarray(before, float), COLOR_RAW, 1)
@@ -102,10 +99,8 @@ def grid_objects(seq_id: str, frame_id: int, decisions=None,
     frames watching one tile, and sorting by anything frame-dependent (size,
     position) would shuffle the wall under them.
     """
-    deleted = decisions.deleted(seq_id) if decisions else set()
-    objs = [o for o in frame_objects(seq_id, frame_id, decisions)
-            if o.key not in deleted
-            and (categories is None or o.category in categories)
+    objs = [o for o in visible_objects(seq_id, frame_id, decisions)
+            if (categories is None or o.category in categories)
             and (provenances is None or o.provenance in provenances)]
     return sorted(objs, key=lambda o: (o.category, o.track_id))
 

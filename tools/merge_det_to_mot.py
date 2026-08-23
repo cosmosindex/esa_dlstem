@@ -43,6 +43,7 @@ from __future__ import annotations
 import argparse
 import csv
 import json
+import os
 import sys
 from collections import Counter, defaultdict
 from pathlib import Path
@@ -54,6 +55,10 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from interactive_review.core.batch_refined import load_refined
 from interactive_review.core.paths import manifest, satmtb_det_dir
 from interactive_review.core.tracks import TrackKey, load_det_tracks, load_mot_frames
+
+#: Experiment/scratch root. Real paths are machine-specific, so they are
+#: never written into the repository — set ``WORK_ROOT`` to point at yours.
+WORK = Path(os.environ.get("WORK_ROOT", "/work/anon"))
 
 CLS_ID = {"car": 0, "airplane": 1, "ship": 2, "train": 3}
 #: Categories a det track may be merged under. car is excluded by policy, not
@@ -222,11 +227,11 @@ def main() -> None:
     ap.add_argument("--out", type=Path, required=True,
                     help="output root; mirrors each sequence's gt_path")
     ap.add_argument("--refined-dir", type=Path,
-                    default=Path("/work/anon/experiments/satmtb_sam3_refine"),
+                    default=WORK / "experiments" / "satmtb_sam3_refine",
                     help="output of tools/refine_satmtb_sam3.py; pass '' to keep "
                          "original geometry")
     ap.add_argument("--fill-dir", type=Path,
-                    default=Path("/work/anon/experiments/satmtb_hole_fill"),
+                    default=WORK / "experiments" / "satmtb_hole_fill",
                     help="output of tools/fill_holey_tracks.py; adds the frames a "
                          "recovered static track skipped")
     ap.add_argument("--dataset", default="satmtb",

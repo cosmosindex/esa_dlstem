@@ -21,6 +21,7 @@ Usage::
 from __future__ import annotations
 
 import argparse
+import os
 import subprocess
 import sys
 from collections import Counter
@@ -34,6 +35,10 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from space_tracker.data_mot import iter_mot_frames
 from space_tracker.manifest_mot import MOTManifest
 from tools.analyze_size_split import MOT_ROOTS, REPO
+
+#: Experiment/scratch root. Real paths are machine-specific, so they are
+#: never written into the repository — set ``WORK_ROOT`` to point at yours.
+WORK = Path(os.environ.get("WORK_ROOT", "/work/anon"))
 
 # BGR, one per unified category
 COLOURS = {
@@ -89,7 +94,7 @@ def main() -> None:
     ap.add_argument("--dataset", required=True, choices=sorted(MOT_ROOTS))
     ap.add_argument("--video", required=True, help="manifest video_id, e.g. car/18")
     ap.add_argument("--out-dir", type=Path,
-                    default=Path("/work/anon/experiments/car_mot_qualitative"))
+                    default=WORK / "experiments" / "car_mot_qualitative")
     ap.add_argument("--out-name", default=None,
                     help="basename without extension (default: <dataset>_<video>_gt_allclass)")
     ap.add_argument("--fps", type=float, default=12.0)

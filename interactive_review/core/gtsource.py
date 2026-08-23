@@ -19,6 +19,13 @@ Three layers, lowest first:
 ``reviewed``
     Per-frame corrections a human made in the UI, plus tracks drawn by hand.
     Always wins.
+``relabelled``
+    A track whose *category* the dataset got wrong — SAT-MTB labels three ships
+    in ``car/18`` ``airplane``. Applied in :func:`load_frames` rather than in
+    :func:`frame_objects`, because a category change changes :attr:`Obj.key` and
+    a dozen call sites here and in :mod:`.merge` match tracks by that key;
+    applying it any later would leave them looking up a key that no longer
+    exists and silently finding nothing.
 
 Provenance travels with every box, because the reviewer's attention should go
 where the annotation is newest: a box recovered from detection XML and one that
@@ -40,9 +47,46 @@ from space_tracker.data_mot import _parse_gt
 
 from .paths import MOT_ROOTS, sequence_by_id
 
+#: Experiment/scratch root. Real paths are machine-specific, so they are
+#: never written into the repository — set ``WORK_ROOT`` to point at yours.
+WORK = Path(os.environ.get("WORK_ROOT", "/work/anon"))
+
 #: Root of ``tools/merge_det_to_mot.py`` output. Unset -> raw ground truth only.
 MERGED_ROOT = Path(os.environ.get("SPACE_TRACKER_MERGED",
-                                  "/work/anon/space_tracker_mot_merged"))
+                                  str(WORK / "space_tracker_mot_merged")))
+
+#: ``{seq id: {original track key: corrected category}}``, injected by
+#: :func:`set_label_overrides`. A module-level registry rather than an argument
+#: because :func:`load_frames` is cached on ``seq_id`` alone and is read by call
+#: sites that never see a :class:`~.vdecisions.SequenceDecisions` —
+#: :func:`track_frames` and :func:`~.vrender.size_outliers` among them.
+_LABELS: dict[str, dict[str, str]] = {}
+
+
+def _relabelled_key(key: str, labels: dict[str, str]) -> str:
+    """``key`` as it reads once ``labels`` is applied. Unchanged if it is not in."""
+    category = labels.get(key)
+    return key if category is None else f"{category}:{key.split(':', 1)[1]}"
+
+
+def set_label_overrides(seq_id: str, labels: dict[str, str]) -> None:
+    """Install the label layer for one sequence, invalidating what it changes.
+
+    Called from :func:`frame_objects`, which every surface goes through, so the
+    registry cannot drift out of step with the review document. The caches are
+    only dropped when the labels actually differ, so the steady state — every
+    frame render, of every sequence — costs one dict comparison.
+    """
+    labels = {k: v for k, v in (labels or {}).items()}
+    if _LABELS.get(seq_id, {}) == labels:
+        return
+    if labels:
+        _LABELS[seq_id] = labels
+    else:
+        _LABELS.pop(seq_id, None)
+    load_frames.cache_clear()
+    raw_geometry.cache_clear()
+
 
 #: Where a box came from. Drives colour in every view.
 ORIGINAL = "original"      # shipped with the dataset
@@ -101,7 +145,7 @@ def _filled_frames(seq_id: str) -> set[tuple[int, int]]:
     the MOT track ids the merged file uses.
     """
     fill_dir = Path(os.environ.get("SPACE_TRACKER_FILL",
-                                   "/work/anon/experiments/satmtb_hole_fill"))
+                                   str(WORK / "experiments" / "satmtb_hole_fill")))
     path = fill_dir / (seq_id.replace("/", "_") + ".json")
     prov = MERGED_ROOT / "provenance" / (seq_id.replace("/", "_") + ".json")
     if not (path.is_file() and prov.is_file()):
@@ -121,18 +165,23 @@ def _filled_frames(seq_id: str) -> set[tuple[int, int]]:
 def load_frames(seq_id: str) -> dict[int, list[Obj]]:
     """Completed ground truth of one sequence as ``{frame id: [Obj, ...]}``.
 
-    Merged where a merged file exists, raw otherwise. Human corrections are
-    *not* applied here — they are a session-lifetime layer that
-    :func:`frame_objects` adds, so this stays cacheable.
+    Merged where a merged file exists, raw otherwise. Human *geometry*
+    corrections are not applied here — they are a session-lifetime layer that
+    :func:`frame_objects` adds, so this stays cacheable. Category corrections
+    are, via :data:`_LABELS`, because they change the key everything else
+    matches on; :func:`set_label_overrides` drops this cache when they change.
     """
     seq = sequence_by_id(seq_id)
     root = MERGED_ROOT if merged_available(seq_id) else MOT_ROOTS[seq.dataset]
     prov = _provenance(seq_id) if root is MERGED_ROOT else {}
     filled = _filled_frames(seq_id) if root is MERGED_ROOT else set()
+    labels = _LABELS.get(seq_id, {})
 
     out: dict[int, list[Obj]] = {}
     for fid, objs in _parse_gt(seq, root).items():
-        out[fid] = [Obj(o.track_id, o.category, o.bbox_xyxy.astype(np.float64),
+        out[fid] = [Obj(o.track_id,
+                        labels.get(f"{o.category}:{o.track_id}", o.category),
+                        o.bbox_xyxy.astype(np.float64),
                         FILLED if (o.track_id, fid) in filled
                         else prov.get(o.track_id, ORIGINAL))
                     for o in objs]
@@ -141,6 +190,8 @@ def load_frames(seq_id: str) -> dict[int, list[Obj]]:
 
 def frame_objects(seq_id: str, frame_id: int, decisions=None) -> list[Obj]:
     """Objects on one frame with human corrections and additions applied."""
+    if decisions is not None:
+        set_label_overrides(seq_id, decisions.labels(seq_id))
     objs = [Obj(o.track_id, o.category, o.box.copy(), o.provenance)
             for o in load_frames(seq_id).get(frame_id, [])]
     if decisions is None:
@@ -159,6 +210,22 @@ def frame_objects(seq_id: str, frame_id: int, decisions=None) -> list[Obj]:
         category, tid = key.split(":", 1)
         objs.append(Obj(int(tid), category, np.asarray(box, float), DRAWN))
     return objs
+
+
+def visible_objects(seq_id: str, frame_id: int, decisions=None) -> list[Obj]:
+    """:func:`frame_objects` minus the tracks the reviewer deleted.
+
+    Every surface that shows a reviewer their own work goes through here.
+    Deletion is a flag, not a removal — a hand-drawn track has to be restorable
+    and a dataset track is not ours to erase — so "is this deleted" has to be
+    asked at each draw site, and asking it separately in four of them is exactly
+    how the annotation canvas came to keep painting tracks that had been deleted.
+    Only :mod:`interactive_review.export`, which has to count what it dropped,
+    calls :func:`frame_objects` directly.
+    """
+    deleted = decisions.deleted(seq_id) if decisions else set()
+    return [o for o in frame_objects(seq_id, frame_id, decisions)
+            if o.key not in deleted]
 
 
 @lru_cache(maxsize=4)
@@ -194,7 +261,12 @@ def raw_geometry(seq_id: str) -> dict[str, dict[int, list[float]]]:
             key = f"{a['category']}:{a['new_track_id']}"
             out[key] = {int(f): [float(v) for v in b]
                         for f, b in zip(track.frame_ids, track.boxes)}
-    return out
+    # Re-keyed to match what the reviewer is looking at. Both halves above are
+    # built from the dataset's own category, so a relabelled track would be
+    # filed under a key no caller can ask for — and `area_ratio` would report
+    # "no pre-SAM 3 geometry" for exactly the tracks a relabel drew attention to.
+    labels = _LABELS.get(seq_id, {})
+    return {_relabelled_key(k, labels): v for k, v in out.items()}
 
 
 def area_ratio(seq_id: str, key: str, decisions=None) -> float | None:

@@ -20,7 +20,8 @@ Schema (``version: 1``)::
           "watched":  false,
           "boxes":    {"airplane:12": {"41": [x1, y1, x2, y2]}},
           "drawn":    {"ship:9001":   {"1":  [x1, y1, x2, y2]}},
-          "deleted":  ["airplane:37"]
+          "deleted":  ["airplane:37"],
+          "labels":   {"airplane:104": "ship"}
         }
       }
     }
@@ -28,7 +29,17 @@ Schema (``version: 1``)::
 ``boxes`` corrects existing tracks one frame at a time — sparse on purpose, so
 fixing 1 frame of 283 leaves the other 282 on the batch geometry. ``drawn``
 holds tracks annotated from nothing, which have no lower layer to fall back to.
-``deleted`` removes a track the reviewer judges spurious.
+``deleted`` removes a track the reviewer judges spurious. ``labels`` corrects
+the *category* of a track the dataset got wrong — SAT-MTB calls three ships in
+``car/18`` ``airplane`` — and is keyed by the track's **original** key, so the
+override survives being applied to its own output and a re-run reaches the same
+answer.
+
+A relabelled track changes key: ``airplane:104`` becomes ``ship:104``, because
+:attr:`~.gtsource.Obj.key` is built from the category and every other layer here
+is keyed by it. :meth:`set_label` therefore moves that track's entries in
+``boxes``, ``drawn`` and ``deleted`` across with it — leaving them behind would
+silently detach a reviewer's per-frame fixes from the track they fix.
 
 ``watched`` and ``status`` are deliberately fragile: any edit clears both, so an
 acceptance always refers to exactly the annotation that was played back.
@@ -92,7 +103,7 @@ class SequenceDecisions:
         return self._data["sequences"].setdefault(seq_id, {
             "status": None, "note": "", "reviewer": self.reviewer,
             "updated": None, "watched": False, "tags": [],
-            "boxes": {}, "drawn": {}, "deleted": [],
+            "boxes": {}, "drawn": {}, "deleted": [], "labels": {},
         })
 
     def get(self, seq_id: str) -> dict:
@@ -110,6 +121,33 @@ class SequenceDecisions:
 
     def deleted(self, seq_id: str) -> set[str]:
         return set(self.get(seq_id).get("deleted") or [])
+
+    def labels(self, seq_id: str) -> dict[str, str]:
+        """``{original track key: corrected category}``.
+
+        Keyed by the key the dataset ships, not the one the override produces,
+        so applying the layer twice is the same as applying it once.
+        """
+        return dict(self.get(seq_id).get("labels") or {})
+
+    def current_key(self, seq_id: str, original_key: str) -> str:
+        """What ``original_key`` reads as once the label layer is applied."""
+        category = self.labels(seq_id).get(original_key)
+        if category is None:
+            return original_key
+        return f"{category}:{original_key.split(':', 1)[1]}"
+
+    def original_key(self, seq_id: str, key: str) -> str:
+        """Inverse of :meth:`current_key` — the dataset's own key for a track.
+
+        The UI only ever holds the current key, and the override table is
+        indexed by the original one, so every mutation has to come back through
+        here first.
+        """
+        for orig in self.labels(seq_id):
+            if self.current_key(seq_id, orig) == key:
+                return orig
+        return key
 
     # -- mutation -----------------------------------------------------------
 
@@ -136,8 +174,23 @@ class SequenceDecisions:
         self._touch(e)
 
     def new_drawn_key(self, seq_id: str, category: str) -> str:
-        """Next free key for a hand-drawn track in this sequence."""
-        used = {int(k.split(":", 1)[1]) for k in self.get(seq_id).get("drawn", {})}
+        """Next free key for a hand-drawn track in this sequence.
+
+        An id is free only when nothing in this sequence still refers to it, and
+        ``deleted`` refers to it just as much as ``drawn`` does. The two go out
+        of step whenever a track's geometry is removed while its deletion flag
+        stays — a merge dissolving it, :func:`~.merge.strike_overlaps` taking its
+        last frame, a trim emptying it. Handing that id out again gives the next
+        track the previous one's deletion: it is written, it is in the file, and
+        it is filtered out of every view the reviewer has. They see a track they
+        just drew simply not appear, with nothing to undo.
+
+        Ids are cheap and reviewers do not count them, so the fix is to skip any
+        id either layer still mentions.
+        """
+        e = self.get(seq_id)
+        used = {int(k.split(":", 1)[1]) for k in e.get("drawn", {})}
+        used |= {int(k.split(":", 1)[1]) for k in (e.get("deleted") or [])}
         n = DRAWN_ID_BASE
         while n in used:
             n += 1
@@ -149,6 +202,15 @@ class SequenceDecisions:
         if boxes:
             e["drawn"][key] = {str(f): [round(float(v), 2) for v in b]
                                for f, b in sorted(boxes.items())}
+            # Drawing geometry under a key is a statement that this track should
+            # exist, and it overrides a deletion the same key carried before.
+            # Belt and braces with `new_drawn_key`: that stops an id being
+            # reissued while deleted, this stops one that slipped through — or
+            # one the reviewer reused deliberately — from being invisible.
+            marked = set(e.get("deleted") or [])
+            if key in marked:
+                marked.discard(key)
+                e["deleted"] = sorted(marked)
         else:
             e["drawn"].pop(key, None)
         self._touch(e)
@@ -159,6 +221,80 @@ class SequenceDecisions:
         keys.add(key) if deleted else keys.discard(key)
         e["deleted"] = sorted(keys)
         self._touch(e)
+
+    def set_label(self, seq_id: str, key: str, category: str | None) -> str:
+        """Correct the category of one track. Returns the key it now reads as.
+
+        ``category=None`` reverts to whatever the dataset says. Passing the
+        dataset's own category does the same thing, so a reviewer who relabels
+        back by hand does not leave a no-op override behind.
+
+        The track's own key changes with its category, so its entries in the
+        other three layers move with it. A hand-drawn track has no dataset
+        category to revert to, so relabelling one simply re-keys it.
+        """
+        e = self._entry(seq_id)
+        orig = self.original_key(seq_id, key)
+        was = self.current_key(seq_id, orig)
+        original_category, tid = orig.split(":", 1)
+
+        labels = dict(e.get("labels") or {})
+        if category is None or category == original_category:
+            labels.pop(orig, None)
+        else:
+            labels[orig] = category
+        e["labels"] = labels
+        now = self.current_key(seq_id, orig)
+
+        if now != was:
+            for layer in ("boxes", "drawn"):
+                frames = (e.get(layer) or {}).pop(was, None)
+                if frames:
+                    e.setdefault(layer, {})[now] = frames
+            marked = set(e.get("deleted") or [])
+            if was in marked:
+                marked.discard(was)
+                marked.add(now)
+                e["deleted"] = sorted(marked)
+        self._touch(e)
+        return now
+
+    def purge_drawn(self, seq_id: str, keys=None) -> dict[str, int]:
+        """Erase hand-drawn tracks outright — geometry, fixes, deletion flag.
+
+        :meth:`set_deleted` is a flag and is meant to be one: a dataset track is
+        not ours to erase, and a bulk judgement like "these 25 are static" has to
+        be reversible. This is the other operation, for a track the reviewer drew
+        themselves, looked at, and judged worthless. It cannot be undone, which
+        is why it is not what the Delete button does.
+
+        ``keys`` defaults to every drawn track currently marked deleted. Anything
+        that is not a hand-drawn track is skipped — the dataset's own boxes stay
+        whatever happens here.
+
+        The freed track id is handed out again by :meth:`new_drawn_key`, so a
+        note that refers to "9001" may refer to a different object afterwards.
+
+        Returns ``{"tracks": n, "boxes": n}``.
+        """
+        e = self._entry(seq_id)
+        drawn = e.get("drawn") or {}
+        marked = set(e.get("deleted") or [])
+        if keys is None:
+            keys = [k for k in drawn if k in marked]
+        out = {"tracks": 0, "boxes": 0}
+        for key in list(keys):
+            if key not in drawn:
+                continue
+            out["tracks"] += 1
+            out["boxes"] += len(drawn[key])
+            drawn.pop(key, None)
+            e.get("boxes", {}).pop(key, None)
+            marked.discard(key)
+        if out["tracks"]:
+            e["deleted"] = sorted(marked)
+            self._touch(e)
+        return out
 
     def tags(self, seq_id: str) -> list[str]:
         return list(self.get(seq_id).get("tags") or [])
@@ -199,7 +335,8 @@ class SequenceDecisions:
 
     def is_touched(self, seq_id: str) -> bool:
         e = self.get(seq_id)
-        return bool(e.get("boxes") or e.get("drawn") or e.get("deleted"))
+        return bool(e.get("boxes") or e.get("drawn") or e.get("deleted")
+                    or e.get("labels"))
 
     def edit_counts(self, seq_id: str) -> dict[str, int]:
         e = self.get(seq_id)
@@ -209,6 +346,7 @@ class SequenceDecisions:
             "tracks_drawn": len(e.get("drawn") or {}),
             "boxes_drawn": sum(len(v) for v in (e.get("drawn") or {}).values()),
             "tracks_deleted": len(e.get("deleted") or []),
+            "tracks_relabelled": len(e.get("labels") or {}),
         }
 
     def stats(self) -> Counter:
@@ -216,7 +354,8 @@ class SequenceDecisions:
         for e in self._data["sequences"].values():
             if e.get("status"):
                 c[e["status"]] += 1
-            if e.get("boxes") or e.get("drawn") or e.get("deleted"):
+            if (e.get("boxes") or e.get("drawn") or e.get("deleted")
+                    or e.get("labels")):
                 c["edited"] += 1
             if e.get("tags"):
                 c["tagged"] += 1

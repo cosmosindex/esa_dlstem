@@ -37,6 +37,7 @@ import argparse
 import json
 import shutil
 import sys
+import tempfile
 from pathlib import Path
 
 import numpy as np
@@ -232,6 +233,11 @@ def _run_trackeval(workspace: Path, tracker_keys):
             "AssA": float(np.mean(h["AssA"])), "LocA": float(np.mean(h["LocA"])),
             "MOTA": float(cl["MOTA"]), "IDF1": float(idn["IDF1"]),
             "IDsw": int(cl["IDSW"]), "MT": int(cl["MT"]), "ML": int(cl["ML"]),
+            # Raw CLEAR counts — D8 §4.3 argues operational consequence from
+            # FN (missed animals) and IDsw, not from the MOTA summary.
+            "MOTP": float(cl["MOTP"]), "TP": int(cl["CLR_TP"]),
+            "FP": int(cl["CLR_FP"]), "FN": int(cl["CLR_FN"]),
+            "GT_Dets": int(cl["CLR_TP"] + cl["CLR_FN"]),
         }
     return out
 
@@ -397,14 +403,15 @@ def render_markdown(overall, per_class, greedy, n_videos, n_frames, out_md):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--workspace", default=None,
-                    help="TrackEval scratch dir (default: a scratchpad tmp)")
+                    help="TrackEval scratch dir (default: a fresh temp dir)")
     ap.add_argument("--out-json",
                     default="docs/use_case_results/birdsai_tracking_sam3gt_hota.json")
     args = ap.parse_args()
 
+    # TrackEval needs a materialised MOTChallenge tree; it is pure scratch, so
+    # default to a fresh temp dir rather than a fixed path on one machine.
     workspace = Path(args.workspace) if args.workspace else \
-        Path("/tmp/claude-405600010/-home-ziwen-code-esa-dlstem/"
-             "e1aabca2-3aa9-4420-bfed-ec8e0e46ff72/scratchpad/birdsai_hota_ws")
+        Path(tempfile.mkdtemp(prefix="birdsai_hota_ws_"))
     if workspace.exists():
         shutil.rmtree(workspace)
     workspace.mkdir(parents=True)

@@ -33,6 +33,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import sys
 import time
 from collections import defaultdict
@@ -46,6 +47,10 @@ from interactive_review.core.paths import sequence_by_id
 from interactive_review.core.render import _read_frame
 from interactive_review.core.sam3refine import _accept, get_tracker
 from interactive_review.core.tracks import TrackKey, load_det_tracks
+
+#: Experiment/scratch root. Real paths are machine-specific, so they are
+#: never written into the repository — set ``WORK_ROOT`` to point at yours.
+WORK = Path(os.environ.get("WORK_ROOT", "/work/anon"))
 
 
 def interpolate(frame_ids: list[int], boxes: np.ndarray,
@@ -70,13 +75,13 @@ def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__,
                                  formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--merged", type=Path,
-                    default=Path("/work/anon/space_tracker_mot_merged"),
+                    default=WORK / "space_tracker_mot_merged",
                     help="output of merge_det_to_mot.py; its provenance/ says "
                          "which recovered tracks have holes")
     ap.add_argument("--out", type=Path,
-                    default=Path("/work/anon/experiments/satmtb_hole_fill"))
+                    default=WORK / "experiments" / "satmtb_hole_fill")
     ap.add_argument("--refined-dir", type=Path,
-                    default=Path("/work/anon/experiments/satmtb_sam3_refine"))
+                    default=WORK / "experiments" / "satmtb_sam3_refine")
     ap.add_argument("--max-coverage", type=float, default=0.99,
                     help="treat a recovered track as holey below this coverage")
     ap.add_argument("--dry-run", action="store_true",

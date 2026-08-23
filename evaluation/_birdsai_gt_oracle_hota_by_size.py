@@ -29,6 +29,8 @@ from evaluation.compute_hota_by_size import _eval_bin, _safe_video_id
 BIRDSAI_ROOT = "/data/ESA_DLSTEM_2025/data/wild_animal/BIRDSAI"
 CANON = {0: "human", 1: "elephant", 2: "giraffe", 3: "lion", 4: "unknown"}
 EDGES = [0.0, 14.0, 20.0, 28.0, 38.0, 50.0, float("inf")]
+# Small-object cut used by the paper figure: same first three edges, capped at
+# 32 px so the plotted range matches Exp2 (`--bins 0,14,20,28,32`).
 TRACKERS = ["sort", "ocsort", "bytetrack", "botsort", "botsort_reid", "tracktrack"]
 
 
@@ -81,7 +83,15 @@ def main():
     ap.add_argument("--annotations", default="annotations_sam3")
     ap.add_argument("--workspace", default="/tmp/birdsai_hota_size_ws")
     ap.add_argument("--output", default="docs/use_case_results/birdsai_gt_oracle_assa_vs_size.csv")
+    ap.add_argument("--bins", default=None,
+                    help="comma list of sqrt_area edges, e.g. 0,14,20,28,32 "
+                         f"(default {','.join(f'{e:g}' for e in EDGES)})")
     args = ap.parse_args()
+
+    edges = EDGES
+    if args.bins:
+        edges = [float("inf") if x.strip() in ("inf", "Inf") else float(x)
+                 for x in args.bins.split(",")]
 
     import shutil
     ws = Path(args.workspace)
@@ -100,9 +110,9 @@ def main():
                        [0.0, float("inf")], 0, ws):
         r["size_bin"] = "all"; r["bin_idx"] = -1
         all_rows.append(r)
-    for bi in range(len(EDGES) - 1):
+    for bi in range(len(edges) - 1):
         all_rows.extend(_eval_bin("birdsai", methods, runs, videos, track_sizes,
-                                  EDGES, bi, ws))
+                                  edges, bi, ws))
 
     cols = ["dataset", "method", "size_bin", "bin_idx", "n_gt_tracks",
             "n_gt_boxes", "HOTA", "DetA", "AssA", "IDF1", "IDsw", "MOTA"]

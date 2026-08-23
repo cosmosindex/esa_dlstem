@@ -23,6 +23,7 @@ trip here is a signal worth looking at, not routine noise.
 
 from __future__ import annotations
 
+from contextlib import contextmanager
 from dataclasses import dataclass, field
 from typing import Callable
 
@@ -47,6 +48,34 @@ def get_tracker():
         from models.sam3 import SAM3Tracker
         _tracker = SAM3Tracker()
     return _tracker
+
+
+@contextmanager
+def sam3_autocast():
+    """Run SAM 3 under bf16 autocast, in *this* thread.
+
+    SAM 3 enters an autocast context in its own constructor and keeps it open
+    for the life of the process (``sam3_tracking_predictor.py``: ``self
+    .bf16_context.__enter__()  # keep using for the entire model process``).
+    That works for a script, and is wrong here: ``torch.autocast`` state is
+    thread-local, while Gradio dispatches every callback onto an anyio worker
+    thread. The model gets built on whichever worker happened to touch it
+    first, and the next call arrives on a different one with no autocast in
+    effect — fp32 activations meeting bf16 weights, which surfaces as
+    ``mat1 and mat2 must have the same dtype``. Whether it fires depends on
+    thread scheduling, so it looks intermittent.
+
+    Entering it explicitly around each inference call makes the thread the
+    model runs on irrelevant. Nesting is harmless when the caller does happen
+    to be the constructing thread.
+    """
+    import torch
+
+    if torch.cuda.is_available():
+        with torch.autocast(device_type="cuda", dtype=torch.bfloat16):
+            yield
+    else:
+        yield
 
 
 def unload_tracker() -> None:
@@ -155,11 +184,12 @@ def refine_track(track: Track, progress: Callable[[float, str], None] | None = N
             continue
 
         stats["boxes"] += 1
-        sam.init_video([frame])
-        sam.add_prompts(0, np.asarray([box], np.float32),
-                        labels=np.zeros(1, np.int64), obj_ids=[0])
-        outs = sam.propagate()
-        sam.reset_state()
+        with sam3_autocast():
+            sam.init_video([frame])
+            sam.add_prompts(0, np.asarray([box], np.float32),
+                            labels=np.zeros(1, np.int64), obj_ids=[0])
+            outs = sam.propagate()
+            sam.reset_state()
 
         refined = None
         if outs and len(outs[0]["boxes"]):
@@ -215,11 +245,12 @@ def propagate_track(track: Track, prompt_frame: int | None = None,
 
     if progress is not None:
         progress(0.3, "SAM 3 propagating")
-    sam.init_video(frames)
-    sam.add_prompts(kept.index(anchor), np.asarray([anchor_box], np.float32),
-                    labels=np.zeros(1, np.int64), obj_ids=[0])
-    outs = sam.propagate()
-    sam.reset_state()
+    with sam3_autocast():
+        sam.init_video(frames)
+        sam.add_prompts(kept.index(anchor), np.asarray([anchor_box], np.float32),
+                        labels=np.zeros(1, np.int64), obj_ids=[0])
+        outs = sam.propagate()
+        sam.reset_state()
 
     stats = {"boxes": 0, "refined": 0, "kept_empty": 0, "kept_iou": 0,
              "kept_grow": 0, "kept_shrink": 0, "new": 0}

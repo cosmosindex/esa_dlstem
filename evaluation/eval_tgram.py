@@ -35,6 +35,7 @@ from __future__ import annotations
 import sys
 from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+sys.path.insert(0, str(Path(__file__).resolve().parent))   # sibling helpers
 
 import argparse
 import json
@@ -78,7 +79,9 @@ from datasets.satmtb import SATMTBDataset
 from datasets.sdmcar import SDMCarDataset
 from datasets.viso import VISODataset
 
-_REPO = Path(__file__).resolve().parent
+from _jdt_class_tagger import ClassTagger, MODEL_TO_DATASET_CLASS
+
+_REPO = Path(__file__).resolve().parent.parent   # repo root (this file is in evaluation/)
 _TGRAM_LIB = str(_REPO / "TGraM" / "src" / "lib")
 _TGRAM_NETWORKS = str(_REPO / "TGraM" / "src" / "lib" / "models" / "networks")
 
@@ -113,6 +116,12 @@ _DATASET_TABLE = {
     "airmot":    (AIRMOTDataset, "/data/ESA_DLSTEM_2025/data/trafic/AIR-MOT-100", {}),
     "viso_no_car": (VISODataset, "/data/ESA_DLSTEM_2025/data/trafic/VISO",
                     {"categories": ["plane", "ship", "train"]}),
+    # Non-car splits, named to match compute_hota_multiclass._DATASET_TABLE so a
+    # per-class run drops straight into the airplane/ship/train benchmark.
+    "satmtb_nocar": (SATMTBDataset, "/data/ESA_DLSTEM_2025/data/trafic/SAT-MTB",
+                     {"task": "mot", "categories": ["airplane", "ship", "train"]}),
+    "viso_nocar":   (VISODataset, "/data/ESA_DLSTEM_2025/data/trafic/VISO",
+                     {"categories": ["plane", "ship", "train"]}),
 }
 
 # 4-class union model: per-dataset class maps (every category non-negative so
@@ -120,22 +129,36 @@ _DATASET_TABLE = {
 # `_SAM3_CLASS_MAPS`). Integer values are irrelevant downstream (TrackEval pools
 # every track as one foreground class); only "present vs dropped" matters.
 _ALLCLASS_MAPS = {
-    "rscardata":   {"car": 0},
-    "satmtb":      {"airplane": 0, "car": 1, "ship": 2, "train": 3},
-    "sdmcar":      {"car": 0},
-    "airmot":      {"airplane": 0, "ship": 1},
-    "viso_no_car": {"plane": 0, "ship": 1, "train": 2},
+    "rscardata":    {"car": 0},
+    "satmtb":       {"airplane": 0, "car": 1, "ship": 2, "train": 3},
+    "sdmcar":       {"car": 0},
+    "airmot":       {"airplane": 0, "ship": 1},
+    "viso_no_car":  {"plane": 0, "ship": 1, "train": 2},
+    "satmtb_nocar": {"airplane": 0, "ship": 1, "train": 2},
+    "viso_nocar":   {"plane": 0, "ship": 1, "train": 2},
 }
 
 # Per-dataset eval input size (the native-res training bucket from train_union).
 _ALLCLASS_INPUT = {
     "rscardata": (1024, 1024), "satmtb": (1024, 1024), "sdmcar": (1920, 1088),
     "airmot": (1920, 1088), "viso_no_car": (1472, 768),
+    "satmtb_nocar": (1024, 1024), "viso_nocar": (1472, 768),
+}
+
+# Eval split per dataset. The non-car TbD rows score VISO / AIR-MOT on *all*
+# sequences because Faster R-CNN never saw them, but FairMOT/TGraM trained on
+# both (`union_all.json` train includes airmot + viso_no_car), so a JDT run must
+# stay on the test split or it would be scored on its own training sequences.
+_DATASET_SPLIT = {
+    "satmtb_nocar": "test",
+    "viso_nocar":   "test",
+    "airmot":       "test",
 }
 
 
-def _build_dataset(name: str, split: str = "test", all_class: bool = False):
+def _build_dataset(name: str, split: str | None = None, all_class: bool = False):
     cls, root, extra = _DATASET_TABLE[name]
+    split = split or _DATASET_SPLIT.get(name, "test")
     kwargs = dict(extra)
     if all_class:
         cmap = _ALLCLASS_MAPS[name]
@@ -265,18 +288,31 @@ def main():
                     help="4-class union model: surface all GT classes + pool "
                          "every predicted class as one foreground track "
                          "(class-agnostic HOTA, matches compute_hota).")
+    ap.add_argument("--per-class", action="store_true",
+                    help="Additionally dump mot_format/<class>/<video>.txt by "
+                         "majority-voting each track's decoded class, so "
+                         "compute_hota_multiclass.py can score per class. "
+                         "Implies --all-class.")
     ap.add_argument("--gt-oracle", action="store_true",
                     help="Experiment 2 (association vs size): feed GT boxes as "
                          "detections, sample the model's ReID at GT centres, run "
                          "unchanged association. Isolates association from "
                          "detection. Implies --all-class (uses the 4-class union "
                          "model + all GT classes for full size range).")
+    ap.add_argument("--split", default=None,
+                    help="override the per-dataset eval split (qualitative runs "
+                         "only — the benchmark rows must stay on the default).")
+    ap.add_argument("--videos", default=None,
+                    help="comma-separated video_ids to restrict the run to "
+                         "(qualitative single-sequence dumps).")
     args = ap.parse_args()
     with open(args.config) as f:
         cfg = yaml.safe_load(f)
 
     gt_oracle   = args.gt_oracle
-    all_class   = args.all_class or gt_oracle or int(cfg.get("num_classes", 1)) == 4
+    per_class   = args.per_class
+    all_class   = (args.all_class or per_class or gt_oracle
+                   or int(cfg.get("num_classes", 1)) == 4)
     dataset_key = args.dataset or cfg["dataset"]
     checkpoint  = args.checkpoint or cfg["checkpoint"]
     arch        = cfg.get("arch", "tgrammbseg")
@@ -304,6 +340,11 @@ def main():
     experiment_dir = Path(f"{exp_root}/{run_name}_{datetime.now():%Y%m%d_%H%M%S}")
     experiment_dir.mkdir(parents=True, exist_ok=True)
     mot_dir = experiment_dir / "mot_format"; mot_dir.mkdir(exist_ok=True)
+    # compute_hota_multiclass.py reads mot_format/<class>/<video>.txt, with the
+    # class names this dataset annotates.
+    dataset_classes = list(_ALLCLASS_MAPS[dataset_key].keys()) if per_class else []
+    for _c in dataset_classes:
+        (mot_dir / _c).mkdir(exist_ok=True)
 
     print("=" * 60)
     print(f"TGraM eval on {dataset_key}  (test split, records-only)")
@@ -314,7 +355,14 @@ def main():
     print(f"output: {experiment_dir}")
     print("=" * 60)
 
-    dataset = _build_dataset(dataset_key, all_class=all_class)
+    dataset = _build_dataset(dataset_key, split=args.split, all_class=all_class)
+    if args.videos:
+        keep = {v.strip() for v in args.videos.split(",") if v.strip()}
+        dataset.videos = [v for v in dataset.videos if v.video_id in keep]
+        missing = keep - {v.video_id for v in dataset.videos}
+        if missing:
+            raise SystemExit(f"--videos not found in split: {sorted(missing)}")
+        print(f"restricted to {len(dataset.videos)} video(s): {sorted(keep)}")
 
     # ---- build the TGraM tracker (after our datasets are imported) ----
     _activate_tgram_lib()
@@ -359,6 +407,10 @@ def main():
                 d[:, 2:4] = transform_preds(
                     d[:, 2:4], meta["c"], meta["s"],
                     (meta["out_width"], meta["out_height"]))
+                # Stash the full [K, 6] (col 5 = decoded class) for ClassTagger.
+                # The returned dict keeps the stock 5 columns, so association is
+                # bit-for-bit unchanged.
+                self.last_dets6 = d.astype(np.float32)
                 return {1: d[:, :5].astype(np.float32)}
 
         TrackerCls = JDETrackerPooled
@@ -379,9 +431,11 @@ def main():
         tracker = TrackerCls(opt, frame_rate=frame_rate)
         last_gt_to_pred = {}
         prev_chw = []                                  # rolling previous-frame buffer
+        tagger = ClassTagger() if per_class else None
 
         vd_tp = vd_fp = vd_fn = vt_tp = vt_fp = vt_fn = v_idsw = v_gt = 0
         mot_lines = []
+        mot_rows: list[tuple[int, str]] = []   # (track_id, line) for per-class split
 
         for fid in video.frame_ids:
             frame_rgb = dataset._load_frame(video, fid)
@@ -408,6 +462,10 @@ def main():
             pred_ids = np.asarray(pid, dtype=np.int64)
             pred_scores = np.asarray(psc, dtype=np.float32)
 
+            if tagger is not None:
+                tagger.vote(pred_boxes, pred_ids,
+                            getattr(tracker, "last_dets6", None), conf_thres)
+
             gt_boxes, gt_tids = gt[fid]["boxes"], gt[fid]["track_ids"]
             matches = _greedy_match(gt_boxes, pred_boxes, metric, iou_thr, dist_thr)
             tp_d = len(matches)
@@ -423,11 +481,37 @@ def main():
 
             for j in range(len(pred_boxes)):
                 x1, y1, x2, y2 = pred_boxes[j]
-                mot_lines.append(
-                    f"{int(fid)},{int(pred_ids[j])},{x1:.2f},{y1:.2f},"
-                    f"{x2 - x1:.2f},{y2 - y1:.2f},{float(pred_scores[j]):.4f},-1,-1,-1")
+                line = (f"{int(fid)},{int(pred_ids[j])},{x1:.2f},{y1:.2f},"
+                        f"{x2 - x1:.2f},{y2 - y1:.2f},"
+                        f"{float(pred_scores[j]):.4f},-1,-1,-1")
+                mot_lines.append(line)
+                if per_class:
+                    mot_rows.append((int(pred_ids[j]), line))
 
-        (mot_dir / f"{_safe_video_id(video.video_id)}.txt").write_text("\n".join(mot_lines))
+        safe_id = _safe_video_id(video.video_id)
+        (mot_dir / f"{safe_id}.txt").write_text("\n".join(mot_lines))
+
+        if per_class:
+            # Route each track's rows to its majority class. Tracks labelled with
+            # a class this dataset does not annotate (e.g. a "car" peak inside a
+            # SAT-MTB airplane sequence) are correctly dropped from every
+            # per-class file — they are not airplane/ship/train tracks.
+            rename = MODEL_TO_DATASET_CLASS.get(dataset_key, {})
+            per_cls_lines: dict[str, list[str]] = {c: [] for c in dataset_classes}
+            n_unlabelled = 0
+            for tid, line in mot_rows:
+                label = tagger.label(tid)
+                if label is None:
+                    n_unlabelled += 1
+                    continue
+                label = rename.get(label, label)
+                if label in per_cls_lines:
+                    per_cls_lines[label].append(line)
+            for cname, lines in per_cls_lines.items():
+                (mot_dir / cname / f"{safe_id}.txt").write_text("\n".join(lines))
+            if n_unlabelled:
+                print(f"      [per-class] {n_unlabelled} rows from tracks that "
+                      f"never matched a detection (no class vote) — dropped")
 
         v_prec = vd_tp / max(vd_tp + vd_fp, 1)
         v_rec = vd_tp / max(vd_tp + vd_fn, 1)

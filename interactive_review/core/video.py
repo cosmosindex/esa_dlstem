@@ -21,7 +21,7 @@ from typing import Callable
 
 import cv2
 
-from .gtsource import MERGED_ROOT, frame_objects
+from .gtsource import MERGED_ROOT, visible_objects
 from .paths import MOT_ROOTS, sequence_by_id
 from .render import _read_frame
 from .vrender import COLOR_BY_PROVENANCE, label_of
@@ -53,6 +53,10 @@ def _fingerprint(seq_id: str, decisions) -> str:
         parts.append(json.dumps(decisions.get(seq_id).get("boxes") or {}, sort_keys=True))
         parts.append(json.dumps(decisions.get(seq_id).get("drawn") or {}, sort_keys=True))
         parts.append(json.dumps(sorted(decisions.deleted(seq_id))))
+        # Relabelling changes both the colour-free label drawn on every box and
+        # the identity the reviewer is signing off. Leaving it out would reuse a
+        # video that still calls three ships `A104`, `A105`, `A109`.
+        parts.append(json.dumps(decisions.labels(seq_id), sort_keys=True))
     return hashlib.sha1("|".join(parts).encode()).hexdigest()[:16]
 
 
@@ -79,22 +83,28 @@ def render_sequence_video(
 ) -> Path:
     """Render the sequence with its completed ground truth drawn.
 
-    Returns the path to an H.264 MP4 the browser can play inline. A video
-    already rendered from identical inputs is reused: re-watching a sequence is
-    a normal part of the loop, and re-decoding 319 PNGs to produce the same file
-    is pure latency.
+    Returns the path to an H.264 MP4 the browser can play inline, named for the
+    fingerprint of everything it shows. A video already rendered from identical
+    inputs is reused — re-watching a sequence is a normal part of the loop, and
+    re-decoding 319 PNGs to produce the same file is pure latency — while any
+    edit produces a different name, and so a different URL that no browser cache
+    can answer from.
     """
     seq = sequence_by_id(seq_id)
     base = seq.frame_index_base
     frame_ids = list(range(base, base + seq.n_frames))
-    deleted = decisions.deleted(seq_id) if decisions else set()
 
-    out_path = out_path or (VIDEO_CACHE / f"{seq_id.replace('/', '_')}.mp4")
-    out_path.parent.mkdir(parents=True, exist_ok=True)
-    stamp_path = out_path.with_suffix(".stamp")
+    # The fingerprint is in the *filename*, not in a sidecar next to a fixed one.
+    # A fixed name meant every render of a sequence produced the same path, so
+    # Gradio served it under the same URL and the browser replayed whatever it
+    # had cached — the reviewer draws a track, the file on disk gains it, and
+    # the <video> element keeps showing the version without it, permanently.
+    # Server-side invalidation cannot fix that; only a URL that changes can.
+    stem = seq_id.replace("/", "_")
     stamp = _fingerprint(seq_id, decisions)
-    if reuse and out_path.is_file() and stamp_path.is_file() \
-            and stamp_path.read_text().strip() == stamp:
+    out_path = out_path or (VIDEO_CACHE / f"{stem}_{stamp}.mp4")
+    out_path.parent.mkdir(parents=True, exist_ok=True)
+    if reuse and out_path.is_file() and out_path.stat().st_size > 0:
         if progress is not None:
             progress(1.0, "already rendered")
         return out_path
@@ -126,9 +136,7 @@ def render_sequence_video(
                 if img is None:
                     continue
 
-                for o in frame_objects(seq_id, fid, decisions):
-                    if o.key in deleted:
-                        continue
+                for o in visible_objects(seq_id, fid, decisions):
                     _draw(img, o.box,
                           COLOR_BY_PROVENANCE.get(o.provenance, (200, 200, 200)),
                           1, label_of(o) if labels else None, ring_below)
@@ -153,7 +161,17 @@ def render_sequence_video(
         if writer is not None:
             writer.release()
 
-    stamp_path.write_text(stamp + "\n")
+    # Every edit to a sequence leaves one of these behind, and a 300-frame
+    # SAT-MTB render is ~1.6 MB. Only this sequence's own stale renders go, and
+    # only after the new one is written.
+    for old_render in VIDEO_CACHE.glob(f"{stem}_*.mp4"):
+        if old_render != out_path:
+            old_render.unlink(missing_ok=True)
+            old_render.with_suffix(".stamp").unlink(missing_ok=True)
+    # Left by the fixed-name scheme this replaced.
+    (VIDEO_CACHE / f"{stem}.mp4").unlink(missing_ok=True)
+    (VIDEO_CACHE / f"{stem}.stamp").unlink(missing_ok=True)
+
     if progress is not None:
         progress(1.0, "done")
     return out_path

@@ -44,16 +44,16 @@ Two scoring passes on the *same* tracks + *same* GT:
 
 ## Mean across the three detectors (ranking)
 
-Macro mean over the 3 detector backbones (rate metrics averaged; IDsw/MT/ML summed) — a single ranking of the trackers.
+Macro mean over the 3 detector backbones (rate metrics averaged, IDsw summed) — a single ranking of the trackers.
 
-| Tracker | HOTA | DetA | AssA | MOTA | IDF1 | ΣIDsw | ΣMT | ΣML |
-|---|---:|---:|---:|---:|---:|---:|---:|---:|
-| TrackTrack | **0.190** | **0.219** | **0.167** | **+0.123** | **0.193** | **2,220** | 18 | **211** |
-| BoT-SORT+ReID | 0.161 | 0.216 | 0.121 | -0.005 | 0.141 | 10,180 | 16 | 217 |
-| OC-SORT | 0.149 | 0.208 | 0.108 | +0.039 | 0.137 | 4,790 | 15 | 219 |
-| SORT | 0.140 | 0.196 | 0.103 | -0.283 | 0.119 | 7,694 | **25** | **211** |
-| ByteTrack | 0.117 | 0.190 | 0.074 | +0.081 | 0.103 | 8,773 | 14 | 227 |
-| BoT-SORT | 0.110 | 0.204 | 0.064 | -0.028 | 0.089 | 15,521 | 15 | 220 |
+| Tracker | HOTA | DetA | AssA | IDF1 | ΣIDsw |
+|---|---:|---:|---:|---:|---:|
+| TrackTrack | **0.190** | 0.219 | **0.167** | 0.193 | **2,220** |
+| BoT-SORT+ReID | 0.161 | 0.216 | 0.121 | 0.141 | 10,180 |
+| OC-SORT | 0.149 | 0.208 | 0.108 | 0.137 | 4,790 |
+| SORT | 0.140 | 0.196 | 0.103 | 0.119 | 7,694 |
+| ByteTrack | 0.117 | 0.190 | 0.074 | 0.103 | 8,773 |
+| BoT-SORT | 0.110 | 0.204 | 0.064 | 0.089 | 15,521 |
 
 ## Detection-level F1 — greedy per-class matcher (rows = tracker)
 

@@ -1,21 +1,37 @@
-"""The work list: every space-tracker MOT sequence, once.
+"""The work list: every in-scope space-tracker MOT sequence, once.
 
-The unit is a video. 491 sequences across 5 datasets go past the reviewer in a
-fixed order, each carrying the one thing that determines what is asked of them:
+The unit is a video. 367 sequences across 4 datasets go past the reviewer in a
+fixed order, each carrying the one thing that determines what is asked of them.
 
-``check``
-    A completed ground truth exists — SAT-MTB after ``merge_det_to_mot.py``, and
-    AIR-MOT, which is the only dataset that already annotates static objects.
-    The question is whether the boxes are right.
-``annotate``
-    The ground truth is movers-only and there is no second source to recover
-    from. Only VISO's 9 non-car sequences: static objects have to be drawn, with
-    SAM 3 doing the drawing.
+Two rules decide what is in scope, and both drop work rather than delete it:
+AIR-MOT is unlicensed for redistribution, and only the small-object half of the
+remaining sequences is queued — see :data:`UNLICENSED_DATASETS` and
+:func:`is_small`. That removes all 69 AIR-MOT sequences, 50 SAT-MTB (the
+airplane/ship/train sequences whose objects are tens of pixels across) and 5 of
+VISO's 9. Everything already decided on them stays in ``review.json``.
+
+The mode is where the ground truth came from, not a permission: annotation is
+open everywhere, and both modes end in "add what is missing with SAM 3". What it
+changes is what to expect — whether there is completed geometry to scrutinise
+first, or a blank movers-only track list to fill.
+
+``check`` (104)
+    A second source already completed this ground truth — SAT-MTB non-car after
+    ``merge_det_to_mot.py``, which restored 842 static tracks from detection XML.
+    So the boxes come from a pipeline and are worth scrutinising, and the merge
+    recovered only what detection could see: what it missed still has to be drawn.
+``annotate`` (263)
+    The ground truth is movers-only and no second source recovered anything:
+    VISO's 4 non-car sequences, and every all-car sequence. The merge recovered
+    no car track anywhere — detection XML does not resolve cars — so an all-car
+    sequence is never "check".
 ``view_only``
-    Pure car sequences. Static cars are 4.9-6.5 px and not separable from road
-    texture in one frame, so nothing is added and no geometry is edited — the
-    sequence is watched and signed off so that "every video was looked at" is
-    true rather than nearly true.
+    Off by default, ``car_view_only=True`` to restore. All-car sequences used to
+    be watched and signed off but never edited, on the grounds that a parked car
+    is 4.9-6.5 px and not separable from road texture in one frame. That is still
+    true of parked cars and false of moving ones, which the movers-only ground
+    truth also misses plenty of — so the sequences are open for annotation and
+    the judgement is made per object rather than per dataset.
 
 Sequences that mix car with plane/ship are ``check``: their plane/ship becomes
 all-object while car stays movers-only, which is why results are reported per
@@ -24,24 +40,62 @@ category and never as one number.
 
 from __future__ import annotations
 
+import json
 from dataclasses import dataclass
+from functools import lru_cache
 
 from .gtsource import merged_available
-from .paths import manifest
+from .paths import SIZE_SPLIT, manifest
 
 CHECK, ANNOTATE, VIEW_ONLY = "check", "annotate", "view_only"
 
 MODE_QUESTION = {
-    CHECK: "**Are the boxes right?** Every object that should be here is here — "
-           "step the frames, scan the grid, fix what is wrong.",
-    ANNOTATE: "**What is missing?** This dataset annotates only moving objects "
-              "and has no second source. Draw the static ones with SAM 3.",
+    CHECK: "**Are the boxes right, and what is still missing?** A second source "
+           "restored the static tracks here, so the geometry is the first thing "
+           "to check — step the frames, scan the grid, fix what is wrong. It "
+           "recovered only what detection could see: add the rest with SAM 3.",
+    ANNOTATE: "**What is missing?** Movers-only ground truth with no second "
+              "source to recover from — draw what it left out with SAM 3. On an "
+              "all-car sequence a parked car is 4.9-6.5 px and may not be "
+              "resolvable at all: annotate what you can actually see, and leave "
+              "the rest.",
     VIEW_ONLY: "**Watch and sign off.** Car only: static cars are below what any "
                "single-frame annotation can resolve, so nothing here is edited.",
 }
 
 #: Datasets whose ground truth already covers static objects.
 ALL_OBJECT_DATASETS = ("airmot",)
+
+#: Held out of the queue. AIR-MOT is not licensed for redistribution, so nothing
+#: annotated on it can ship with the release and reviewing it buys nothing. Its
+#: decisions stay in ``review.json`` untouched — this hides the sequences, it
+#: does not discard the 69 that were already signed off. Name it in
+#: ``datasets`` to get it back.
+UNLICENSED_DATASETS = ("airmot",)
+
+#: Sequence-level size bucket, read from ``docs/size_split/size_split.json``: a
+#: sequence is small when the median ``sqrt(w * h)`` over its GT boxes is <= 32 px
+#: (COCO's small-object threshold). The results this annotation feeds are about
+#: small objects, so the queue is the small half by default. The boundary is read
+#: from the split file rather than recomputed, so the queue and the size-split
+#: experiments cannot drift apart.
+SMALL = "small"
+
+
+@lru_cache(maxsize=1)
+def _size_buckets() -> dict[str, str]:
+    with open(SIZE_SPLIT) as f:
+        return {k: v["bucket"] for k, v in json.load(f)["sequences"].items()}
+
+
+def is_small(seq_id: str) -> bool:
+    """Whether ``seq_id`` falls in the small-object half.
+
+    A sequence missing from the split counts as small: that is a stale-file
+    problem, and dropping it silently would leave the queue quietly incomplete
+    with nothing to notice it by.
+    """
+    return _size_buckets().get(seq_id, SMALL) == SMALL
 
 
 @dataclass(frozen=True)
@@ -59,29 +113,76 @@ class Item:
         return f"{self.seq_id}  ({self.category}, {self.n_frames}f, {self.mode})"
 
 
-def mode_for(seq) -> str:
-    """Which of the three jobs this sequence asks for."""
+def mode_for(seq, *, car_view_only: bool = False) -> str:
+    """Which of the three jobs this sequence asks for.
+
+    ``car_view_only`` restores the old behaviour where an all-car sequence was
+    watched and signed off but never edited. It is off by default: a static car
+    is 4.9-6.5 px and still not annotatable from one frame, but *moving* cars in
+    these sequences are, and the movers-only ground truth misses plenty of them
+    — so the sequences are opened for annotation and the reviewer decides, per
+    object, what is resolvable.
+    """
     cats = set(seq.categories_in_seq or [seq.category])
     if cats <= {"car"}:
-        return VIEW_ONLY
+        # Not routed through `merged_available` below: the merge wrote a file for
+        # every SAT-MTB sequence but recovered no car track in any of them —
+        # detection XML does not resolve cars — so that test would answer CHECK,
+        # "the ground truth is complete", over one that is still movers-only.
+        return VIEW_ONLY if car_view_only else ANNOTATE
     if seq.dataset in ALL_OBJECT_DATASETS or merged_available(seq.id):
         return CHECK
     return ANNOTATE
 
 
 def build_queue(datasets: tuple[str, ...] | None = None,
-                modes: tuple[str, ...] | None = None) -> list[Item]:
-    """Every sequence, ordered by dataset then id.
+                modes: tuple[str, ...] | None = None,
+                *,
+                small_only: bool = True,
+                exclude_datasets: tuple[str, ...] = UNLICENSED_DATASETS,
+                car_view_only: bool = False,
+                sequences: tuple[str, ...] | None = None,
+                ) -> list[Item]:
+    """Every in-scope sequence, ordered by dataset then id.
 
     Deliberately not sorted by "interestingness": the reviewer's place in a
     fixed order is itself state, and a queue that reordered itself as decisions
     accumulated would make "where did I get to" unanswerable.
+
+    ``small_only`` keeps the small-object half (:func:`is_small`).
+    ``exclude_datasets`` is overridden for any dataset named in ``datasets``, so
+    asking for a held-out dataset by name returns it rather than an empty queue.
+
+    ``sequences`` names sequence ids outright and is the whole queue when given:
+    every other filter is bypassed, on the same principle that naming a held-out
+    dataset returns it. The size filter is a *sequence*-level median, and a
+    sequence whose median is large can still carry small objects — 37 of the 55
+    held out that way do — so there has to be a way to ask for those by name
+    without reopening the 55.
     """
+    if sequences:
+        want_ids = set(sequences)
+        by_id = {seq.id: seq for seq in manifest().sequences}
+        missing = sorted(want_ids - by_id.keys())
+        if missing:
+            raise SystemExit("no such sequence: " + ", ".join(missing))
+        return sorted(
+            (Item(seq.id, seq.dataset, seq.category,
+                  mode_for(seq, car_view_only=car_view_only), seq.n_frames)
+             for sid, seq in by_id.items() if sid in want_ids),
+            key=lambda i: (i.dataset, i.seq_id))
+
+    wanted = set(datasets) if datasets else None
+    dropped = set(exclude_datasets) - (wanted or set())
     items = []
     for seq in manifest().sequences:
-        if datasets and seq.dataset not in datasets:
+        if wanted is not None and seq.dataset not in wanted:
             continue
-        mode = mode_for(seq)
+        if seq.dataset in dropped:
+            continue
+        if small_only and not is_small(seq.id):
+            continue
+        mode = mode_for(seq, car_view_only=car_view_only)
         if modes and mode not in modes:
             continue
         items.append(Item(seq.id, seq.dataset, seq.category, mode, seq.n_frames))
