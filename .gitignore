@@ -10,32 +10,16 @@ __pycache__/
 wandb
 yolo11n.pt
 runs
-DL-STEM-APATR-0001.aux
-.gitignore
-DL-STEM-APATR-0001.fdb_latexmk
-.gitignore
-DL-STEM-APATR-0001.fls
-.gitignore
-DL-STEM-APATR-0001.log
-.gitignore
-DL-STEM-TS-0001.aux
-DL-STEM-TS-0001.fdb_latexmk
-.gitignore
-DL-STEM-TS-0001.fls
 .gitignore
 .gitignore
-DL-STEM-APATR-0001.synctex.gz
-DL-STEM-TS-0001.log
 .gitignore
-DL-STEM-APATR-0001.pdf
 .gitignore
-DL-STEM-TS-0001.pdf
-DL-STEM-TS-0001.synctex.gz
-DL-STEM-TS-0001.blg
-DL-STEM-TS-0001.bbl
+.gitignore
+.gitignore
+.gitignore
+.gitignore
+.gitignore
 texput.log
-reports/DL-STEM-APATR-0001.blg
-reports/DL-STEM-APATR-0001.bbl
 .DS_Store
 .claude/skills/add-sot-tracker/SKILL.md
 logs/sv248s_sot/20260417_083151/lorat.log
@@ -124,3 +108,11 @@ NeurIPS 2026/
 
 # SOT/MOT result dumps feeding the paper figures — kept local only
 docs/NeurIPS_results/
+
+# Review-tool runtime log and the dated auto-backups written beside review.json
+.review_app.log
+docs/annotation_review/*.bak_*
+
+# Use-case / deliverable working folder (evidence pack, report tables, the
+# benchmarking scripts that produced them) — kept local, never committed
+deliverables/
