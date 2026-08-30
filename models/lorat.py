@@ -7,7 +7,7 @@ the init frame, then for every subsequent frame builds a search-region crop
 around the last prediction and runs a single joint forward pass through the
 ViT to get a score map + per-cell bounding box.
 
-Source: `/home/anon/code/esa_dlstem/LoRAT` (ECCV 2024 official repo).
+Source: `<repo>/LoRAT` (ECCV 2024 official repo).
 
 Integration quirks
 ------------------

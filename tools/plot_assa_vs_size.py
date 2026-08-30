@@ -34,9 +34,10 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from plot_style import apply_neurips_style  # noqa: E402
 
 import matplotlib.pyplot as plt  # noqa: E402
+from project_paths import DATA_ROOT
 
 REPO = Path(__file__).resolve().parent.parent
-ROOT = Path("/data/ESA_DLSTEM_2025/experiments/MOT/exp2_oracle_20260608")
+ROOT = Path(f"{DATA_ROOT}/experiments/MOT/exp2_oracle_20260608")
 CSV = ROOT / "assa_vs_size_le32.csv"
 OUT_DIR = REPO / "docs" / "figures"
 

@@ -6,7 +6,7 @@
 # precision/recall comparable across datasets.
 
 dataset: SAT-MTB
-dataset_root: /data/ESA_DLSTEM_2025/data/trafic/SAT-MTB
+dataset_root: ${DATA_ROOT}/data/trafic/SAT-MTB
 class_map:
   car: 0
 

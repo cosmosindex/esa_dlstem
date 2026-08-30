@@ -31,6 +31,9 @@ from pathlib import Path
 
 import cv2
 import numpy as np
+import os as _os, sys as _sys
+_sys.path.insert(0, _os.path.dirname(_os.path.dirname(_os.path.abspath(__file__))))
+from project_paths import DATA_ROOT, REPO_ROOT
 
 
 TRACKERS = ["siamrpn", "ostrack", "odtrack", "lorat", "sam2", "samurai", "sam3"]
@@ -49,9 +52,9 @@ TRACKER_COLORS: dict[str, tuple[int, int, int]] = {
 GT_COLOR = (0, 255, 0)  # green (BGR)
 
 DATASET_ROOTS = {
-    "ootb":   Path("/data/ESA_DLSTEM_2025/data/trafic/OOTB"),
-    "satsot": Path("/data/ESA_DLSTEM_2025/data/trafic/SatSOT"),
-    "sv248s": Path("/data/ESA_DLSTEM_2025/data/trafic/SV248S"),
+    "ootb":   Path(f"{DATA_ROOT}/data/trafic/OOTB"),
+    "satsot": Path(f"{DATA_ROOT}/data/trafic/SatSOT"),
+    "sv248s": Path(f"{DATA_ROOT}/data/trafic/SV248S"),
 }
 
 OCC_SUBTYPES = {"POC", "FOC", "STO", "LTO", "CO"}
@@ -322,11 +325,11 @@ replaced with ``_``).
 def main() -> None:
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument("--manifest",
-                   default="/home/anon/code/esa_dlstem/space_tracker/space_tracker.json")
+                   default=f"{REPO_ROOT}/space_tracker/space_tracker.json")
     p.add_argument("--run-root", required=True,
                    help="e.g. /work/anon/experiments/NeurIPS/SOT_whole_dataset_20260518")
     p.add_argument("--output", required=True,
-                   help="e.g. /data/ESA_DLSTEM_2025/experiments/SOT_combined_viz_20260518")
+                   help="e.g. $DATA_ROOT/experiments/SOT_combined_viz_20260518")
     p.add_argument("--workers", type=int, default=8)
     p.add_argument("--limit", type=int, default=None,
                    help="Cap frames (smoke test)")

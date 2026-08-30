@@ -5,7 +5,7 @@
 # expect IDF1 / IDsw to degrade at clip_len=32.
 
 dataset: AIR-MOT
-dataset_root: /data/ESA_DLSTEM_2025/data/trafic/AIR-MOT-100
+dataset_root: ${DATA_ROOT}/data/trafic/AIR-MOT-100
 # Normalize the run-dir slug so compute_hota.py's regex picks it up
 # (the dataset_name lower-case form would be "air-mot" with a hyphen).
 run_name_suffix: airmot

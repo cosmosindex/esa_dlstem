@@ -20,7 +20,7 @@ Usage:
   python tools/raft_filter_tracklets.py \\
       --run-dir /data/.../sam3_text_rscardata_<TS> \\
       --dataset RsCarData \\
-      --dataset-root /data/ESA_DLSTEM_2025/data/trafic/RsCarData \\
+      --dataset-root $DATA_ROOT/data/trafic/RsCarData \\
       --tau 0.5 --agg p80
 """
 from __future__ import annotations

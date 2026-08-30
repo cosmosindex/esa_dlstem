@@ -45,13 +45,13 @@ from datetime import datetime
 from pathlib import Path
 
 import numpy as np
-import yaml
 
 from datasets.airmot import AIRMOTDataset
 from datasets.space_tracker_mot import SpaceTrackerMOTDataset
 from datasets.satmtb import SATMTBDataset
 from datasets.viso import VISODataset
 from models.trackers import build_tracker
+from project_paths import DATA_ROOT, load_config
 
 
 # Default class-id schema, matching FasterRCNN's training config.
@@ -66,7 +66,7 @@ _DATASET_TABLE = {
     # name → (display, cls, root, build_kwargs, class_map)
     "spacetracker_nocar": (
         "Space-Tracker-MOT", SpaceTrackerMOTDataset,
-        "/data/ESA_DLSTEM_2025/release/space_tracker",
+        f"{DATA_ROOT}/release/space_tracker",
         {"complete_only": True},
         _FRCN_CLASS_MAP_SPACETRACKER,
     ),
@@ -77,25 +77,25 @@ _DATASET_TABLE = {
     # training set HiEUM was retrained on.
     "spacetracker_car": (
         "Space-Tracker-MOT", SpaceTrackerMOTDataset,
-        "/data/ESA_DLSTEM_2025/release/space_tracker",
+        f"{DATA_ROOT}/release/space_tracker",
         {"complete_only": False, "categories": ["car"]},
         {"car": 1},
     ),
     "satmtb_nocar": (
         "SAT-MTB", SATMTBDataset,
-        "/data/ESA_DLSTEM_2025/data/trafic/SAT-MTB",
+        f"{DATA_ROOT}/data/trafic/SAT-MTB",
         {"task": "mot", "categories": ["airplane", "ship", "train"]},
         _FRCN_CLASS_MAP_AIRPLANE_SHIP_TRAIN,
     ),
     "viso_nocar": (
         "VISO", VISODataset,
-        "/data/ESA_DLSTEM_2025/data/trafic/VISO",
+        f"{DATA_ROOT}/data/trafic/VISO",
         {"categories": ["plane", "ship", "train"]},
         _FRCN_CLASS_MAP_VISO,
     ),
     "airmot": (
         "AIR-MOT-100", AIRMOTDataset,
-        "/data/ESA_DLSTEM_2025/data/trafic/AIR-MOT-100",
+        f"{DATA_ROOT}/data/trafic/AIR-MOT-100",
         {},
         _FRCN_CLASS_MAP_AIRMOT,
     ),
@@ -249,7 +249,7 @@ def main():
     ap.add_argument("--config", required=True)
     args = ap.parse_args()
     with open(args.config) as f:
-        cfg = yaml.safe_load(f)
+        cfg = load_config(f)
 
     dataset_key  = cfg["dataset"]
     tracker_name = cfg["tracker"]

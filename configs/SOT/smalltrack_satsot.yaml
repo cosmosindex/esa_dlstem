@@ -5,7 +5,7 @@
 # Usage: CHECKPOINT_ROOT=... python evaluation/eval_smalltrack.py --config configs/SOT/smalltrack_satsot.yaml
 
 dataset: SatSOT
-dataset_root: /data/ESA_DLSTEM_2025/data/trafic/SatSOT
+dataset_root: ${DATA_ROOT}/data/trafic/SatSOT
 class_map:
   car: 0
   plane: 1

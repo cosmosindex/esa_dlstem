@@ -14,12 +14,12 @@
 
 # ----- Dataset roots ------------------------------------------------------
 datasets:
-  LMOD:      /data/ESA_DLSTEM_2025/data/trafic/LMOD
-  SAT-MTB:   /data/ESA_DLSTEM_2025/data/trafic/SAT-MTB
-  VISO:      /data/ESA_DLSTEM_2025/data/trafic/VISO
-  RsCarData: /data/ESA_DLSTEM_2025/data/trafic/RsCarData
-  SDM-Car:   /data/ESA_DLSTEM_2025/data/trafic/SDM-Car
-  AIR-MOT:   /data/ESA_DLSTEM_2025/data/trafic/AIR-MOT-100
+  LMOD:      ${DATA_ROOT}/data/trafic/LMOD
+  SAT-MTB:   ${DATA_ROOT}/data/trafic/SAT-MTB
+  VISO:      ${DATA_ROOT}/data/trafic/VISO
+  RsCarData: ${DATA_ROOT}/data/trafic/RsCarData
+  SDM-Car:   ${DATA_ROOT}/data/trafic/SDM-Car
+  AIR-MOT:   ${DATA_ROOT}/data/trafic/AIR-MOT-100
 
 per_dataset_kwargs:
   # SAT-MTB: load MOT-format annotations so `car` rows come through

@@ -34,6 +34,7 @@ from datasets.airmot import AIRMOTDataset
 from datasets.satmtb import SATMTBDataset
 from datasets.viso import VISODataset
 from datasets.space_tracker_mot import SpaceTrackerMOTDataset
+from project_paths import DATA_ROOT
 
 
 # Dataset (cls, root, build_kwargs, split, class_map name → id, class_id used in GT files)
@@ -41,7 +42,7 @@ _DATASET_TABLE = {
     # Released benchmark, non-car test split. 2-class: `train` has no val/test
     # GT at all, so the detector was never trained on it.
     "spacetracker_nocar": (
-        SpaceTrackerMOTDataset, "/data/ESA_DLSTEM_2025/release/space_tracker",
+        SpaceTrackerMOTDataset, f"{DATA_ROOT}/release/space_tracker",
         {"complete_only": True},
         "test",
         {"airplane": 1, "ship": 2},
@@ -50,7 +51,7 @@ _DATASET_TABLE = {
     # selection can be measured without touching the test split -- every run
     # scored against this entry is a training decision, never a reported number.
     "spacetracker_nocar_val": (
-        SpaceTrackerMOTDataset, "/data/ESA_DLSTEM_2025/release/space_tracker",
+        SpaceTrackerMOTDataset, f"{DATA_ROOT}/release/space_tracker",
         {"complete_only": True},
         "val",
         {"airplane": 1, "ship": 2},
@@ -59,25 +60,25 @@ _DATASET_TABLE = {
     # objects only and was never completed with static ones, so the completeness
     # filter (correct for airplane/ship) would leave 2 of 48 sequences.
     "spacetracker_car": (
-        SpaceTrackerMOTDataset, "/data/ESA_DLSTEM_2025/release/space_tracker",
+        SpaceTrackerMOTDataset, f"{DATA_ROOT}/release/space_tracker",
         {"complete_only": False, "categories": ["car"]},
         "test",
         {"car": 1},
     ),
     "satmtb_nocar": (
-        SATMTBDataset, "/data/ESA_DLSTEM_2025/data/trafic/SAT-MTB",
+        SATMTBDataset, f"{DATA_ROOT}/data/trafic/SAT-MTB",
         {"task": "mot", "categories": ["airplane", "ship", "train"]},
         "test",
         {"airplane": 1, "ship": 2, "train": 3},
     ),
     "viso_nocar": (
-        VISODataset, "/data/ESA_DLSTEM_2025/data/trafic/VISO",
+        VISODataset, f"{DATA_ROOT}/data/trafic/VISO",
         {"categories": ["plane", "ship", "train"]},
         "no_split",
         {"plane": 1, "ship": 2, "train": 3},
     ),
     "airmot": (
-        AIRMOTDataset, "/data/ESA_DLSTEM_2025/data/trafic/AIR-MOT-100",
+        AIRMOTDataset, f"{DATA_ROOT}/data/trafic/AIR-MOT-100",
         {},
         "no_split",
         {"airplane": 1, "ship": 2},

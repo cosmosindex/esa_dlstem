@@ -3,7 +3,7 @@
 # discovers instances per frame. Track IDs reset at each clip boundary.
 
 dataset: SAT-MTB
-dataset_root: /data/ESA_DLSTEM_2025/data/trafic/SAT-MTB
+dataset_root: ${DATA_ROOT}/data/trafic/SAT-MTB
 # Normalize slug for compute_hota.py regex (dataset.lower() = "sat-mtb").
 run_name_suffix: satmtb
 class_map:

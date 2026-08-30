@@ -29,6 +29,17 @@ export SPACE_TRACKER_ROOT=/path/to/space_tracker    # where you unpacked the dow
 python -m space_tracker --verify                    # check the package is complete
 ```
 
+No installation path is hard-coded anywhere in this repository. To rerun the
+benchmark rather than just read the release, set the two roots the configs and
+scripts resolve against — `${DATA_ROOT}` in a config expands at load time, so no
+config needs editing per machine:
+
+```bash
+export DATA_ROOT=/path/to/data        # data/<dataset>, release/space_tracker, experiments/Detection
+export EXPERIMENT_ROOT=/path/to/runs  # where training and evaluation write
+export CHECKPOINT_ROOT=/path/to/ckpts # pretrained tracker / detector weights
+```
+
 ```python
 from space_tracker import SpaceTracker
 

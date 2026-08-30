@@ -4,7 +4,7 @@
 # OBB handling: see configs/SOT/ostrack_ootb.yaml — identical protocol (OOTB v1.0).
 
 dataset: OOTB
-dataset_root: /data/ESA_DLSTEM_2025/data/trafic/OOTB
+dataset_root: ${DATA_ROOT}/data/trafic/OOTB
 class_map:
   car: 0
   plane: 1

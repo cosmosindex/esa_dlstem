@@ -4,7 +4,7 @@
 # would discard almost everything (0.5 leaves 0.5% of detections).
 dataset: spacetracker_car
 tracker: botsort
-cache_dir: /data/ESA_DLSTEM_2025/experiments/Detection/hieum_dets_cache_st_best/spacetracker_car
+cache_dir: ${DATA_ROOT}/experiments/Detection/hieum_dets_cache_st_best/spacetracker_car
 score_floor: 0.26
 match_metric: centroid
 centroid_dist_thresh: 5.0

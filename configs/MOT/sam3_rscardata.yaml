@@ -4,7 +4,7 @@
 # sam3_viso_no_car.yaml + run_sam3_raft_viso.sh.
 
 dataset: RsCarData
-dataset_root: /data/ESA_DLSTEM_2025/data/trafic/RsCarData
+dataset_root: ${DATA_ROOT}/data/trafic/RsCarData
 
 class_map:
   car: 0

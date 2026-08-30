@@ -11,8 +11,8 @@ Writes a markdown report to `docs/bbox_stats_report_sv248s.md` following the
 same format as `docs/bbox_stats_report_trafic.md`.
 
 Usage:
-    micromamba run -n esa_dlstem python tools/analyze_sv248s_bbox.py \
-        [--root /data/ESA_DLSTEM_2025/data/trafic/SV248S] \
+    python tools/analyze_sv248s_bbox.py \
+        [--root $DATA_ROOT/data/trafic/SV248S] \
         [--out docs/bbox_stats_report_sv248s.md]
 """
 
@@ -28,6 +28,7 @@ import sys
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from datasets.sv248s import SV248SDataset
+from project_paths import DATA_ROOT
 
 SMALL_THRESH = 32 * 32  # area < 1024 px² → "small"
 
@@ -205,7 +206,7 @@ def build_report(per_cat, per_split_cat, extreme, state_counts) -> str:
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--root", default="/data/ESA_DLSTEM_2025/data/trafic/SV248S")
+    ap.add_argument("--root", default=f"{DATA_ROOT}/data/trafic/SV248S")
     ap.add_argument("--out", default="docs/bbox_stats_report_sv248s.md")
     args = ap.parse_args()
 

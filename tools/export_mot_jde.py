@@ -42,11 +42,12 @@ from datasets.satmtb import SATMTBDataset          # noqa: E402
 from datasets.airmot import AIRMOTDataset          # noqa: E402
 from datasets.viso import VISODataset              # noqa: E402
 from datasets.space_tracker_mot import SpaceTrackerMOTDataset  # noqa: E402
+from project_paths import DATA_ROOT
 
 # Default car-only root kept for back-compat; the all-class export should be
-# run with JDE_ROOT=/data/ESA_DLSTEM_2025/data/fairmot_jde_all so it does NOT
+# run with JDE_ROOT=$DATA_ROOT/data/fairmot_jde_all so it does NOT
 # clobber the car-only export that backs the completed FairMOT/TGraM models.
-JDE_ROOT = os.environ.get("JDE_ROOT", "/data/ESA_DLSTEM_2025/data/fairmot_jde")
+JDE_ROOT = os.environ.get("JDE_ROOT", f"{DATA_ROOT}/data/fairmot_jde")
 # Resolved from this file's location so the path is neither machine-specific
 # nor tied to the anonymised placeholder; override with FAIRMOT_CFG_DIR.
 CFG_DIR = os.environ.get(
@@ -81,19 +82,19 @@ DATASETS = {
     "rscardata": dict(
         ext="jpg", key="rscardata",
         build=lambda split: RsCarDataset(
-            root="/data/ESA_DLSTEM_2025/data/trafic/RsCarData",
+            root=f"{DATA_ROOT}/data/trafic/RsCarData",
             split=split, mode="detection", class_map={"car": 0}),
     ),
     "sdmcar": dict(
         ext="jpg", key="sdmcar",
         build=lambda split: SDMCarDataset(
-            root="/data/ESA_DLSTEM_2025/data/trafic/SDM-Car",
+            root=f"{DATA_ROOT}/data/trafic/SDM-Car",
             split=split, mode="detection", class_map={"car": 0}),
     ),
     "satmtb": dict(
         ext="png", key="satmtb",
         build=lambda split: SATMTBDataset(
-            root="/data/ESA_DLSTEM_2025/data/trafic/SAT-MTB",
+            root=f"{DATA_ROOT}/data/trafic/SAT-MTB",
             split=split, mode="detection", task="mot",
             categories=["car", "airplane", "ship", "train"],
             class_map=CANON),
@@ -101,7 +102,7 @@ DATASETS = {
     "airmot": dict(
         ext="jpg", key="airmot",
         build=lambda split: AIRMOTDataset(
-            root="/data/ESA_DLSTEM_2025/data/trafic/AIR-MOT-100",
+            root=f"{DATA_ROOT}/data/trafic/AIR-MOT-100",
             split=split, class_map={"airplane": 1, "ship": 2}),
     ),
     # Space-Tracker MOT release, non-car classes only. `complete_only=True`
@@ -112,14 +113,14 @@ DATASETS = {
     "spacetracker_nocar": dict(
         ext=None, key="spacetracker_nocar",     # ext varies per sequence
         build=lambda split: SpaceTrackerMOTDataset(
-            root="/data/ESA_DLSTEM_2025/release/space_tracker",
+            root=f"{DATA_ROOT}/release/space_tracker",
             split=split, mode="detection", class_map=NOCAR_MAP,
             complete_only=True),
     ),
     "viso_no_car": dict(
         ext="jpg", key="viso_no_car",
         build=lambda split: VISODataset(
-            root="/data/ESA_DLSTEM_2025/data/trafic/VISO",
+            root=f"{DATA_ROOT}/data/trafic/VISO",
             split=split, categories=["plane", "ship", "train"],
             class_map={"plane": 1, "ship": 2, "train": 3}),
     ),

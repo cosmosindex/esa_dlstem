@@ -46,9 +46,9 @@ import shutil
 import time
 
 import numpy as np
-import yaml
 
 from models.trackers import build_tracker
+from project_paths import load_config
 
 BENCHMARK = "spacetracker_car_car-test"
 
@@ -79,7 +79,7 @@ def tracker_kwargs(name: str, config_dir: Path) -> dict:
     inert by construction; they are dropped rather than left in place at values
     that would silently mean something different here.
     """
-    cfg = yaml.safe_load((config_dir / f"{name}_spacetracker_car.yaml").read_text())
+    cfg = load_config(config_dir / f"{name}_spacetracker_car.yaml")
     kw = dict(cfg.get("tracker_kwargs") or {})
     for k in list(kw):
         if "thresh" in k and ("track_high" in k or "track_low" in k

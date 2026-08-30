@@ -8,7 +8,7 @@ cross-correlation. This wrapper uses the SenseTime pysot repo's
 clean per-frame `init(img, bbox) / track(img)` API, so there is almost no
 glue needed.
 
-Source: `/home/anon/code/esa_dlstem/pysot` (SenseTime pysot).
+Source: `<repo>/pysot` (SenseTime pysot).
 
 Integration quirks
 ------------------

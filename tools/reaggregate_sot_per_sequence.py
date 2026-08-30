@@ -24,7 +24,7 @@ Outputs: ``<root>/<tracker>/<run>/test_metrics_per_seq.json`` (per run) and
 
 Usage::
 
-    micromamba run -n esa_dlstem python tools/reaggregate_sot_per_sequence.py \
+    python tools/reaggregate_sot_per_sequence.py \
         --root $SOT_EXP_ROOT/SOT_whole_dataset_04_22
 """
 
@@ -40,6 +40,9 @@ from pathlib import Path
 from statistics import median
 
 import numpy as np
+import os as _os, sys as _sys
+_sys.path.insert(0, _os.path.dirname(_os.path.dirname(_os.path.abspath(__file__))))
+from project_paths import DATA_ROOT
 
 # Experiment dumps live outside the repo; point SOT_EXP_ROOT at your own copy.
 _EXP_ROOT = os.environ.get("SOT_EXP_ROOT", "/work/anon/experiments/NeurIPS")
@@ -55,9 +58,9 @@ TINY_SQRT_AREA_THRESH = 8.0   # sequence-level cutoff: median sqrt(area) < 8 px
 DATASETS = ("ootb", "satsot", "sv248s")
 
 DATASET_ROOTS = {
-    "ootb":   Path("/data/ESA_DLSTEM_2025/data/trafic/OOTB"),
-    "satsot": Path("/data/ESA_DLSTEM_2025/data/trafic/SatSOT"),
-    "sv248s": Path("/data/ESA_DLSTEM_2025/data/trafic/SV248S"),
+    "ootb":   Path(f"{DATA_ROOT}/data/trafic/OOTB"),
+    "satsot": Path(f"{DATA_ROOT}/data/trafic/SatSOT"),
+    "sv248s": Path(f"{DATA_ROOT}/data/trafic/SV248S"),
 }
 
 

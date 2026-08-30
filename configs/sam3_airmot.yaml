@@ -2,7 +2,7 @@
 # Usage: python eval_sam3.py --config configs/sam3_airmot.yaml
 
 dataset: AIR-MOT
-dataset_root: /data/ESA_DLSTEM_2025/data/trafic/AIR-MOT-100
+dataset_root: ${DATA_ROOT}/data/trafic/AIR-MOT-100
 class_map:
   airplane: 0
   ship: 1

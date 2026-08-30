@@ -44,15 +44,16 @@ from datasets.satmtb import SATMTBDataset
 from datasets.sdmcar import SDMCarDataset
 from datasets.viso import VISODataset
 from models.trackers import build_tracker
+from project_paths import DATA_ROOT
 
 
 _DATASET_TABLE = {
-    "rscardata": (RsCarDataset, "/data/ESA_DLSTEM_2025/data/trafic/RsCarData", {}),
-    "satmtb":    (SATMTBDataset, "/data/ESA_DLSTEM_2025/data/trafic/SAT-MTB",
+    "rscardata": (RsCarDataset, f"{DATA_ROOT}/data/trafic/RsCarData", {}),
+    "satmtb":    (SATMTBDataset, f"{DATA_ROOT}/data/trafic/SAT-MTB",
                   {"task": "mot"}),
-    "sdmcar":    (SDMCarDataset, "/data/ESA_DLSTEM_2025/data/trafic/SDM-Car", {}),
-    "airmot":    (AIRMOTDataset, "/data/ESA_DLSTEM_2025/data/trafic/AIR-MOT-100", {}),
-    "viso_no_car": (VISODataset, "/data/ESA_DLSTEM_2025/data/trafic/VISO",
+    "sdmcar":    (SDMCarDataset, f"{DATA_ROOT}/data/trafic/SDM-Car", {}),
+    "airmot":    (AIRMOTDataset, f"{DATA_ROOT}/data/trafic/AIR-MOT-100", {}),
+    "viso_no_car": (VISODataset, f"{DATA_ROOT}/data/trafic/VISO",
                     {"categories": ["plane", "ship", "train"]}),
 }
 

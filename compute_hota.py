@@ -48,6 +48,7 @@ from datasets.rscardata import RsCarDataset
 from datasets.satmtb import SATMTBDataset
 from datasets.sdmcar import SDMCarDataset
 from datasets.viso import VISODataset
+from project_paths import DATA_ROOT
 
 
 # For SAM3 + HOTA we evaluate every dataset's car/plane/ship/train
@@ -65,14 +66,14 @@ _SAM3_CLASS_MAPS = {
 }
 
 _DATASET_TABLE = {
-    "rscardata":   (RsCarDataset, "/data/ESA_DLSTEM_2025/data/trafic/RsCarData", {}),
-    "satmtb":      (SATMTBDataset, "/data/ESA_DLSTEM_2025/data/trafic/SAT-MTB",
+    "rscardata":   (RsCarDataset, f"{DATA_ROOT}/data/trafic/RsCarData", {}),
+    "satmtb":      (SATMTBDataset, f"{DATA_ROOT}/data/trafic/SAT-MTB",
                     {"task": "mot"}),
-    "sdmcar":      (SDMCarDataset, "/data/ESA_DLSTEM_2025/data/trafic/SDM-Car", {}),
-    "airmot":      (AIRMOTDataset, "/data/ESA_DLSTEM_2025/data/trafic/AIR-MOT-100", {}),
+    "sdmcar":      (SDMCarDataset, f"{DATA_ROOT}/data/trafic/SDM-Car", {}),
+    "airmot":      (AIRMOTDataset, f"{DATA_ROOT}/data/trafic/AIR-MOT-100", {}),
     # VISO non-car split — used by the SAM3 + RAFT pipeline as the
     # "everything except car" half; the car half comes from rscardata.
-    "viso_no_car": (VISODataset, "/data/ESA_DLSTEM_2025/data/trafic/VISO",
+    "viso_no_car": (VISODataset, f"{DATA_ROOT}/data/trafic/VISO",
                     {"categories": ["plane", "ship", "train"]}),
     # viso_combined is materialised in main() by merging the GT + tracker
     # dirs of viso_no_car and rscardata; no standalone dataset class.

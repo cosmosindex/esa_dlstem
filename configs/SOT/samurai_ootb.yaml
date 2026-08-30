@@ -2,7 +2,7 @@
 # Usage: python eval_samurai.py --config configs/SOT/samurai_ootb.yaml
 
 dataset: OOTB
-dataset_root: /data/ESA_DLSTEM_2025/data/trafic/OOTB
+dataset_root: ${DATA_ROOT}/data/trafic/OOTB
 class_map:
   car: 0
   plane: 1

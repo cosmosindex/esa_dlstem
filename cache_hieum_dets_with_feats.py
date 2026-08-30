@@ -6,7 +6,7 @@ Reads an existing per-video JSON produced by ``cache_hieum_dets.py``
 frames, runs the upstream TrackTrack FastReID SBS-S50 model on each
 detection's bounding box crop, and writes a NumPy ``.npz`` file::
 
-    /data/ESA_DLSTEM_2025/experiments/Detection/hieum_dets_with_feats_cache/<dataset>/<safe_vid>.npz
+    $DATA_ROOT/experiments/Detection/hieum_dets_with_feats_cache/<dataset>/<safe_vid>.npz
 
 with arrays::
 
@@ -55,13 +55,14 @@ from fastreid.emb_computer import EmbeddingComputer  # noqa: E402
 from datasets.rscardata import RsCarDataset  # noqa: E402
 from datasets.satmtb import SATMTBDataset  # noqa: E402
 from datasets.sdmcar import SDMCarDataset  # noqa: E402
+from project_paths import DATA_ROOT
 
 
 _DATASET_TABLE = {
-    "rscardata": (RsCarDataset, "/data/ESA_DLSTEM_2025/data/trafic/RsCarData", {}),
-    "satmtb":    (SATMTBDataset, "/data/ESA_DLSTEM_2025/data/trafic/SAT-MTB",
+    "rscardata": (RsCarDataset, f"{DATA_ROOT}/data/trafic/RsCarData", {}),
+    "satmtb":    (SATMTBDataset, f"{DATA_ROOT}/data/trafic/SAT-MTB",
                   {"task": "mot", "categories": ["car"]}),
-    "sdmcar":    (SDMCarDataset, "/data/ESA_DLSTEM_2025/data/trafic/SDM-Car", {}),
+    "sdmcar":    (SDMCarDataset, f"{DATA_ROOT}/data/trafic/SDM-Car", {}),
 }
 
 
@@ -140,11 +141,11 @@ def main():
                         choices=sorted(_DATASET_TABLE.keys()))
     parser.add_argument("--split", default="test")
     parser.add_argument(
-        "--in-dir", default="/data/ESA_DLSTEM_2025/experiments/Detection/hieum_dets_cache",
+        "--in-dir", default=f"{DATA_ROOT}/experiments/Detection/hieum_dets_cache",
         help="Source detection cache root (per-dataset subdir).",
     )
     parser.add_argument(
-        "--out-dir", default="/data/ESA_DLSTEM_2025/experiments/Detection/hieum_dets_with_feats_cache",
+        "--out-dir", default=f"{DATA_ROOT}/experiments/Detection/hieum_dets_with_feats_cache",
         help="Output cache root (per-dataset subdir).",
     )
     parser.add_argument(

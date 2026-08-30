@@ -19,7 +19,7 @@ Pure offline — no GPU (torchmetrics runs on CPU).
 
 Run (after evaluation/eval_satmtb_detect_dump.py):
     EXPERIMENT_ROOT=/work/anon/experiments \
-        micromamba run -n esa_dlstem python tools/plot_satmtb_size_trend.py
+        python tools/plot_satmtb_size_trend.py
 """
 from __future__ import annotations
 

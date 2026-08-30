@@ -3,7 +3,7 @@
 # Single-class dataset (all objects are cars).
 
 dataset: SDM-Car
-dataset_root: /data/ESA_DLSTEM_2025/data/trafic/SDM-Car
+dataset_root: ${DATA_ROOT}/data/trafic/SDM-Car
 class_map:
   car: 0
 

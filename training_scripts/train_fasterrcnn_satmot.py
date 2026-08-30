@@ -30,7 +30,6 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from datetime import datetime
 
 import torch
-import yaml
 import lightning as L
 from torch.utils.data import ConcatDataset
 from lightning.pytorch.loggers import WandbLogger
@@ -47,11 +46,7 @@ from transforms import (
     build_satmot_train_transform,
     build_satmot_eval_transform,
 )
-
-
-def load_config(path: str) -> dict:
-    with open(path) as f:
-        return yaml.safe_load(f)
+from project_paths import load_config
 
 
 class FrameEpochCallback(L.Callback):

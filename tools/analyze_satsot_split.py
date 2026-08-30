@@ -13,7 +13,7 @@ plane 9 / ship 5), so the recommended variant is the hybrid one that pre-
 assigns tiny classes round-robin so every split still gets ≥1 plane and ship.
 
 Usage:
-    python tools/analyze_satsot_split.py [--root /data/ESA_DLSTEM_2025/data/trafic/SatSOT]
+    python tools/analyze_satsot_split.py [--root $DATA_ROOT/data/trafic/SatSOT]
 """
 
 from __future__ import annotations
@@ -26,6 +26,9 @@ from collections import defaultdict
 from pathlib import Path
 
 import numpy as np
+import os as _os, sys as _sys
+_sys.path.insert(0, _os.path.dirname(_os.path.dirname(_os.path.abspath(__file__))))
+from project_paths import DATA_ROOT
 
 ATTR_NAMES = ["ARC", "BC", "BJT", "DEF", "FOC", "IV", "LQ", "POC", "ROT", "SOB", "TO"]
 SPLITS = ("train", "val", "test")
@@ -304,7 +307,7 @@ def summarise(seqs: list[dict], split_map: dict[str, str], title: str) -> None:
 
 def main() -> None:
     ap = argparse.ArgumentParser()
-    ap.add_argument("--root", default="/data/ESA_DLSTEM_2025/data/trafic/SatSOT", type=Path)
+    ap.add_argument("--root", default=f"{DATA_ROOT}/data/trafic/SatSOT", type=Path)
     args = ap.parse_args()
 
     seqs = load_satsot(args.root)

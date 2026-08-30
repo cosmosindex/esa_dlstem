@@ -39,16 +39,17 @@ from datasets.rscardata import RsCarDataset
 from datasets.satmtb import SATMTBDataset, _MOT_CLASS_MAP
 from datasets.sdmcar import SDMCarDataset
 from datasets.viso import VISODataset
+from project_paths import DATA_ROOT
 
 
 MANIFEST_VERSION = "1.0"
 
 DATASET_ROOTS = {
-    "airmot":    Path("/data/ESA_DLSTEM_2025/data/trafic/AIR-MOT-100"),
-    "satmtb":    Path("/data/ESA_DLSTEM_2025/data/trafic/SAT-MTB"),
-    "viso":      Path("/data/ESA_DLSTEM_2025/data/trafic/VISO"),
-    "sdmcar":    Path("/data/ESA_DLSTEM_2025/data/trafic/SDM-Car"),
-    "rscardata": Path("/data/ESA_DLSTEM_2025/data/trafic/RsCarData"),
+    "airmot":    Path(f"{DATA_ROOT}/data/trafic/AIR-MOT-100"),
+    "satmtb":    Path(f"{DATA_ROOT}/data/trafic/SAT-MTB"),
+    "viso":      Path(f"{DATA_ROOT}/data/trafic/VISO"),
+    "sdmcar":    Path(f"{DATA_ROOT}/data/trafic/SDM-Car"),
+    "rscardata": Path(f"{DATA_ROOT}/data/trafic/RsCarData"),
 }
 
 # Public-facing dataset info block. Mirrors the SOT manifest's structure.

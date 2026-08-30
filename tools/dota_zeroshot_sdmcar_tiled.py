@@ -35,6 +35,7 @@ if str(_REPO) not in sys.path:
     sys.path.insert(0, str(_REPO))
 
 from datasets.sdmcar import SDMCarDataset
+from project_paths import DATA_ROOT
 
 KEEP_CLASSES = {4: "small-vehicle", 5: "large-vehicle"}
 
@@ -141,7 +142,7 @@ def main():
                     default="/work/anon/checkpoints/mmrotate/"
                             "rotated_faster_rcnn_r50_fpn_1x_dota_le90.pth")
     ap.add_argument("--dataset-root",
-                    default="/data/ESA_DLSTEM_2025/data/trafic/SDM-Car")
+                    default=f"{DATA_ROOT}/data/trafic/SDM-Car")
     ap.add_argument("--score-thr", type=float, default=0.05)
     ap.add_argument("--iou-thr", type=float, default=0.3)
     ap.add_argument("--nms-iou", type=float, default=0.3)

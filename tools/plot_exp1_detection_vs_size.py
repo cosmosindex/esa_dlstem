@@ -29,9 +29,10 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from plot_style import apply_neurips_style  # noqa: E402
 
 import matplotlib.pyplot as plt  # noqa: E402
+from project_paths import REPO_ROOT
 
-CSV = Path("/home/anon/code/esa_dlstem/docs/figures/exp1_detection_recall_by_size.csv")
-OUT_DIR = Path("/home/anon/code/esa_dlstem/docs/figures")
+CSV = Path(f"{REPO_ROOT}/docs/figures/exp1_detection_recall_by_size.csv")
+OUT_DIR = Path(f"{REPO_ROOT}/docs/figures")
 MIN_GT = 50  # drop bins with too few GT boxes (size outliers / noise)
 
 BIN_LABELS = ["<5", "5-8", "8-12", "12-20", "20-40", ">=40"]

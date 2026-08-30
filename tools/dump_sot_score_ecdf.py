@@ -15,7 +15,7 @@ distribution, or to draw an ECDF. This walks the same tau=0 dumps and writes:
 
 Usage:
     python tools/dump_sot_score_ecdf.py --runs /work/anon/experiments/SOT_tau0 \
-        --release /data/ESA_DLSTEM_2025/release/space_tracker \
+        --release $DATA_ROOT/release/space_tracker \
         --out docs/space_tracker/sot_tau
 """
 

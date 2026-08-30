@@ -76,6 +76,7 @@ def _stub_eval_deps():
 _stub_eval_deps()
 
 from masa.apis import inference_masa, init_masa, build_test_pipeline  # noqa: E402
+from project_paths import DATA_ROOT
 
 
 def _safe_video_id(video_id: str) -> str:
@@ -107,7 +108,7 @@ def main():
                                  formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--det-cache", required=True)
     ap.add_argument("--out-dir", required=True)
-    ap.add_argument("--release", default="/data/ESA_DLSTEM_2025/release/space_tracker")
+    ap.add_argument("--release", default=f"{DATA_ROOT}/release/space_tracker")
     ap.add_argument("--masa-config",
                     default=str(_PROJECT_ROOT / "masa" / "configs" / "masa-one"
                                 / "masa_r50_plug_and_play.py"))

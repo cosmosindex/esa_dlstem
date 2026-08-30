@@ -33,12 +33,12 @@ import sys
 from pathlib import Path
 
 import torch
-import yaml
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from datasets import SpaceTrackerMOTDataset
 from models import FasterRCNNDetector
+from project_paths import DATA_ROOT, load_config
 
 # MOTRv2 splits: its "train" tree holds our train split, "eval" holds test.
 SPLIT_TO_MODE = {"train": "train", "test": "eval"}
@@ -130,7 +130,7 @@ def main():
     ap.add_argument("--ckpt", required=True)
     ap.add_argument("--config", required=True)
     ap.add_argument("--motr-root", required=True)
-    ap.add_argument("--release", default="/data/ESA_DLSTEM_2025/release/space_tracker")
+    ap.add_argument("--release", default=f"{DATA_ROOT}/release/space_tracker")
     ap.add_argument("--score-thresh", type=float, default=0.05,
                     help="Keep the low-scoring tail: MOTRv2 is trained to cope "
                          "with false positives (--fp_ratio) and starving it of "
@@ -140,7 +140,7 @@ def main():
                     help="Smoke-test on the first N sequences of each split.")
     args = ap.parse_args()
 
-    cfg = yaml.safe_load(open(args.config))
+    cfg = load_config(args.config)
     device = torch.device(args.device)
     detector = build_detector(cfg, Path(args.ckpt), device)
     print(f"Loaded detector from {args.ckpt}")

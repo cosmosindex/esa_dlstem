@@ -3,7 +3,7 @@
 
 # --- Dataset ---
 dataset: SV248S
-dataset_root: /data/ESA_DLSTEM_2025/data/trafic/SV248S
+dataset_root: ${DATA_ROOT}/data/trafic/SV248S
 class_map:
   car: 0
   car-large: 1

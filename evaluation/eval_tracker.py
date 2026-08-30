@@ -38,28 +38,28 @@ from datetime import datetime
 from pathlib import Path
 
 import numpy as np
-import yaml
 
 from datasets.rscardata import RsCarDataset
 from datasets.satmtb import SATMTBDataset
 from datasets.sdmcar import SDMCarDataset
 from models.trackers import build_tracker
+from project_paths import DATA_ROOT, load_config
 
 
 _DATASET_TABLE = {
     "rscardata": (
         "RsCarData", RsCarDataset,
-        "/data/ESA_DLSTEM_2025/data/trafic/RsCarData",
+        f"{DATA_ROOT}/data/trafic/RsCarData",
         {},
     ),
     "satmtb": (
         "SAT-MTB", SATMTBDataset,
-        "/data/ESA_DLSTEM_2025/data/trafic/SAT-MTB",
+        f"{DATA_ROOT}/data/trafic/SAT-MTB",
         {"task": "mot", "categories": ["car"]},
     ),
     "sdmcar": (
         "SDM-Car", SDMCarDataset,
-        "/data/ESA_DLSTEM_2025/data/trafic/SDM-Car",
+        f"{DATA_ROOT}/data/trafic/SDM-Car",
         {},
     ),
 }
@@ -175,7 +175,7 @@ def main():
     parser.add_argument("--config", required=True)
     args = parser.parse_args()
     with open(args.config) as f:
-        cfg = yaml.safe_load(f)
+        cfg = load_config(f)
 
     dataset_key   = cfg["dataset"]
     tracker_name  = cfg["tracker"]

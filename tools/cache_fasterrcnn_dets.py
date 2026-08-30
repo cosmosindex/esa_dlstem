@@ -34,7 +34,6 @@ from pathlib import Path
 import numpy as np
 import torch
 from PIL import Image
-import yaml
 
 # Resolve the repo root from this file rather than hard-coding it: the
 # anonymised placeholder path does not exist on any real machine.
@@ -46,14 +45,15 @@ from datasets.satmtb import SATMTBDataset
 from datasets.viso import VISODataset
 from models import FasterRCNNDetector
 from lightning_modules import ObjectDetectionModule
+from project_paths import DATA_ROOT, load_config, REPO_ROOT
 
 
 _DEFAULT_CKPT = (
     "/work/anon/experiments/fasterrcnn_satmtb_hbb_20260430_075421/"
     "checkpoints/best-epoch=5-val_mAP=0.545.ckpt"
 )
-_DEFAULT_CONFIG = "/home/anon/code/esa_dlstem/configs/Detection/fasterrcnn_satmtb_hbb.yaml"
-_DEFAULT_OUT_ROOT = "/data/ESA_DLSTEM_2025/experiments/Detection/fasterrcnn_satmtb_hbb_dets_cache"
+_DEFAULT_CONFIG = f"{REPO_ROOT}/configs/Detection/fasterrcnn_satmtb_hbb.yaml"
+_DEFAULT_OUT_ROOT = f"{DATA_ROOT}/experiments/Detection/fasterrcnn_satmtb_hbb_dets_cache"
 
 
 def _safe_video_id(video_id: str) -> str:
@@ -68,7 +68,7 @@ def _build_dataset(name: str):
         # the sequences whose GT includes static objects -- the same filter the
         # detector was trained under, so evaluation is like-for-like.
         ds = SpaceTrackerMOTDataset(
-            root="/data/ESA_DLSTEM_2025/release/space_tracker",
+            root=f"{DATA_ROOT}/release/space_tracker",
             split="test",
             class_map={"airplane": 1, "ship": 2},
             complete_only=True,
@@ -76,7 +76,7 @@ def _build_dataset(name: str):
         return "Space-Tracker-MOT", ds
     if name == "satmtb_nocar":
         ds = SATMTBDataset(
-            root="/data/ESA_DLSTEM_2025/data/trafic/SAT-MTB",
+            root=f"{DATA_ROOT}/data/trafic/SAT-MTB",
             split="test",                                            # held-out only
             task="mot",
             categories=["airplane", "ship", "train"],
@@ -84,14 +84,14 @@ def _build_dataset(name: str):
         return "SAT-MTB", ds
     if name == "viso_nocar":
         ds = VISODataset(
-            root="/data/ESA_DLSTEM_2025/data/trafic/VISO",
+            root=f"{DATA_ROOT}/data/trafic/VISO",
             split="no_split",
             categories=["plane", "ship", "train"],
         )
         return "VISO", ds
     if name == "airmot":
         ds = AIRMOTDataset(
-            root="/data/ESA_DLSTEM_2025/data/trafic/AIR-MOT-100",
+            root=f"{DATA_ROOT}/data/trafic/AIR-MOT-100",
             split="no_split",
         )
         return "AIR-MOT-100", ds
@@ -106,7 +106,7 @@ def _load_frame_rgb(ds, video, frame_id: int) -> np.ndarray:
 
 def _load_module(ckpt_path: str, config_path: str, min_size: int, max_size: int) -> torch.nn.Module:
     with open(config_path) as f:
-        cfg = yaml.safe_load(f)
+        cfg = load_config(f)
 
     model = FasterRCNNDetector(
         num_classes=cfg["num_classes"],

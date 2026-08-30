@@ -19,7 +19,6 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 import torch
-import yaml
 import lightning as L
 from lightning.pytorch.loggers import WandbLogger
 from lightning.pytorch.callbacks import ModelCheckpoint, EarlyStopping
@@ -32,11 +31,7 @@ from lightning_modules import (
     DetectionVisualizationCallback,
 )
 from transforms import build_train_transform, build_eval_transform
-
-
-def load_config(path: str) -> dict:
-    with open(path) as f:
-        return yaml.safe_load(f)
+from project_paths import load_config
 
 
 def main():

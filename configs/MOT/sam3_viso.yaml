@@ -5,7 +5,7 @@
 # not "airplane") — class_map keys must match raw categories exactly.
 
 dataset: VISO
-dataset_root: /data/ESA_DLSTEM_2025/data/trafic/VISO
+dataset_root: ${DATA_ROOT}/data/trafic/VISO
 class_map:
   car: 0
   plane: 1

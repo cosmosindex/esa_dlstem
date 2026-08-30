@@ -2,7 +2,7 @@
 # Driver: eval_tracktrack.py (NOT eval_tracker.py — TrackTrack needs feats).
 dataset: rscardata
 tracker: tracktrack
-cache_dir: /data/ESA_DLSTEM_2025/experiments/Detection/hieum_dets_with_feats_cache/rscardata
+cache_dir: ${DATA_ROOT}/experiments/Detection/hieum_dets_with_feats_cache/rscardata
 
 # HiEUM cache score floor is 0.05; lift to 0.10 to match the other trackers.
 score_floor: 0.10

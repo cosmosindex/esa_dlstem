@@ -19,9 +19,12 @@ import argparse
 import csv
 from collections import defaultdict
 from pathlib import Path
+import os as _os, sys as _sys
+_sys.path.insert(0, _os.path.dirname(_os.path.dirname(_os.path.abspath(__file__))))
+from project_paths import DATA_ROOT
 
 DEFAULT_HOTA_CSV = Path(
-    "/data/ESA_DLSTEM_2025/experiments/MOT/tracker_satmtb_hbb_LATEST/hota_summary.csv"
+    f"{DATA_ROOT}/experiments/MOT/tracker_satmtb_hbb_LATEST/hota_summary.csv"
 )
 _REPO_ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_OUT_DIR = _REPO_ROOT / "NeurIPS 2026" / "tables" / "MOT"

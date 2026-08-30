@@ -37,6 +37,7 @@ from pathlib import Path
 import numpy as np
 
 from compute_hota_by_size import _build_dataset
+from project_paths import DATA_ROOT, REPO_ROOT
 
 # sqrt_area (px) bin edges — same as compute_hota_by_size (Exp2), so the two
 # experiments share an x-axis.
@@ -54,12 +55,12 @@ COARSE = ("airplane", "car", "ship", "train")   # label index -> class name
 SPECIALIST = {"car": "HiEUM", "airplane": "FasterRCNN",
               "ship": "FasterRCNN", "train": "FasterRCNN"}
 
-HIEUM_DIR = "/data/ESA_DLSTEM_2025/experiments/Detection/hieum_dets_cache/satmtb"
-FRCNN_DIR = "/data/ESA_DLSTEM_2025/experiments/Detection/fasterrcnn_satmtb_hbb_dets_cache/satmtb_nocar"
-FAIRMOT_GLOB = "/data/ESA_DLSTEM_2025/experiments/MOT/allclass_20260608/fairmot_all_satmtb_*/mot_format"
-TGRAM_GLOB = "/data/ESA_DLSTEM_2025/experiments/MOT/allclass_20260608/tgram_all_satmtb_*/mot_format"
+HIEUM_DIR = f"{DATA_ROOT}/experiments/Detection/hieum_dets_cache/satmtb"
+FRCNN_DIR = f"{DATA_ROOT}/experiments/Detection/fasterrcnn_satmtb_hbb_dets_cache/satmtb_nocar"
+FAIRMOT_GLOB = f"{DATA_ROOT}/experiments/MOT/allclass_20260608/fairmot_all_satmtb_*/mot_format"
+TGRAM_GLOB = f"{DATA_ROOT}/experiments/MOT/allclass_20260608/tgram_all_satmtb_*/mot_format"
 
-OUT_CSV = Path("/home/anon/code/esa_dlstem/docs/figures/exp1_detection_recall_by_size.csv")
+OUT_CSV = Path(f"{REPO_ROOT}/docs/figures/exp1_detection_recall_by_size.csv")
 
 # detector -> which classes it is scored on
 DETECTOR_CLASSES = {

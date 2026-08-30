@@ -27,7 +27,6 @@ from datetime import datetime
 from pathlib import Path
 
 import numpy as np
-import yaml
 
 from datasets.airmot import AIRMOTDataset
 from datasets.space_tracker_mot import SpaceTrackerMOTDataset
@@ -35,6 +34,7 @@ from datasets.satmtb import SATMTBDataset
 from datasets.viso import VISODataset
 from models.trackers import build_tracker
 from models.trackers.botsort_reid import BoTSortReIDTracker
+from project_paths import DATA_ROOT, load_config
 # eval_tracktrack.py uses ``build_tracker("tracktrack", ...)`` which returns
 # the upstream Tracker instance; we mirror that.
 
@@ -49,20 +49,20 @@ _DATASET_TABLE = {
     # never completed with static ones, so the completeness filter would leave
     # 2 of 48 sequences.
     "spacetracker_car": (SpaceTrackerMOTDataset,
-                     "/data/ESA_DLSTEM_2025/release/space_tracker",
+                     f"{DATA_ROOT}/release/space_tracker",
                      {"complete_only": False, "categories": ["car"]},
                      "test", {"car": 1}),
     "spacetracker_nocar": (SpaceTrackerMOTDataset,
-                     "/data/ESA_DLSTEM_2025/release/space_tracker",
+                     f"{DATA_ROOT}/release/space_tracker",
                      {"complete_only": True},
                      "test", {"airplane": 1, "ship": 2}),
-    "satmtb_nocar": (SATMTBDataset, "/data/ESA_DLSTEM_2025/data/trafic/SAT-MTB",
+    "satmtb_nocar": (SATMTBDataset, f"{DATA_ROOT}/data/trafic/SAT-MTB",
                      {"task": "mot", "categories": ["airplane", "ship", "train"]},
                      "test", _FRCN_AIRPLANE),
-    "viso_nocar":   (VISODataset, "/data/ESA_DLSTEM_2025/data/trafic/VISO",
+    "viso_nocar":   (VISODataset, f"{DATA_ROOT}/data/trafic/VISO",
                      {"categories": ["plane", "ship", "train"]},
                      "no_split", _FRCN_VISO),
-    "airmot":       (AIRMOTDataset, "/data/ESA_DLSTEM_2025/data/trafic/AIR-MOT-100",
+    "airmot":       (AIRMOTDataset, f"{DATA_ROOT}/data/trafic/AIR-MOT-100",
                      {}, "no_split", _FRCN_AIRMOT),
 }
 
@@ -239,7 +239,7 @@ def main():
     ap.add_argument("--config", required=True)
     args = ap.parse_args()
     with open(args.config) as f:
-        cfg = yaml.safe_load(f)
+        cfg = load_config(f)
 
     dataset_key  = cfg["dataset"]
     tracker_name = cfg["tracker"]

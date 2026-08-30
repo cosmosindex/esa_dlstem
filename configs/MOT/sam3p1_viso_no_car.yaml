@@ -11,7 +11,7 @@
 # Model version: SAM 3.1 (multiplex). See sam3_<ds>.yaml for the SAM 3 baseline.
 
 dataset: VISO
-dataset_root: /data/ESA_DLSTEM_2025/data/trafic/VISO
+dataset_root: ${DATA_ROOT}/data/trafic/VISO
 dataset_kwargs:
   categories: [plane, ship, train]
 # Distinguish from the full-VISO run dir; compute_hota.py and the RAFT

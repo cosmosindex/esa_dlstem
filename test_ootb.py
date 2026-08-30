@@ -31,11 +31,12 @@ from lightning_modules import (
     SOTEvalCallback,
 )
 from transforms import build_eval_transform
+from project_paths import DATA_ROOT
 
 # ---------------------------------------------------------------------------
 # Shared config
 # ---------------------------------------------------------------------------
-OOTB_ROOT = "/data/ESA_DLSTEM_2025/data/trafic/OOTB"
+OOTB_ROOT = f"{DATA_ROOT}/data/trafic/OOTB"
 IMG_SIZE = (640, 640)
 BATCH_SIZE = 8
 NUM_WORKERS = 0

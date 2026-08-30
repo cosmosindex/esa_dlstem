@@ -24,6 +24,7 @@ from lightning_modules import (
     DetectionVisualizationCallback,
 )
 from transforms import build_train_transform, build_eval_transform
+from project_paths import DATA_ROOT
 
 # ---------------------------------------------------------------------------
 # Config
@@ -34,7 +35,7 @@ CLASS_MAP = {"car": 1, "plane": 2, "ship": 3, "train": 4}
 NUM_CLASSES = len(CLASS_MAP) + 1  # 5 (including background)
 CLASS_NAMES = {v: k for k, v in CLASS_MAP.items()}  # {1: "car", 2: "plane", ...}
 
-OOTB_ROOT = "/data/ESA_DLSTEM_2025/data/trafic/OOTB"
+OOTB_ROOT = f"{DATA_ROOT}/data/trafic/OOTB"
 IMG_SIZE = (640, 640)
 
 RUN_NAME = "fasterrcnn-v2_ootb_trainable_backbone_layers"

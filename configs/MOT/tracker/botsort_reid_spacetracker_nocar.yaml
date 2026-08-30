@@ -2,7 +2,7 @@
 # Driver: eval_tracker_multiclass_reid.py (per-class tracker instance with appearance feats).
 dataset: spacetracker_nocar
 tracker: botsort_reid
-cache_dir: /data/ESA_DLSTEM_2025/experiments/Detection/spacetracker_nocar_feats_cache
+cache_dir: ${DATA_ROOT}/experiments/Detection/spacetracker_nocar_feats_cache
 score_floor: 0.10
 match_metric: centroid
 centroid_dist_thresh: 5.0

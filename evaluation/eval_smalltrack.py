@@ -27,7 +27,6 @@ from datetime import datetime
 
 import torch
 import lightning as L
-import yaml
 from lightning.pytorch.loggers import WandbLogger
 
 from models.smalltrack import SmallTrackTracker
@@ -39,11 +38,7 @@ from lightning_modules import (
     SAM2SOTEvalCallback,
 )
 from transforms import build_eval_transform
-
-
-def load_config(path: str) -> dict:
-    with open(path) as f:
-        return yaml.safe_load(f)
+from project_paths import load_config
 
 
 def main():

@@ -45,6 +45,7 @@ from datasets.rscardata import RsCarDataset
 from datasets.satmtb import SATMTBDataset
 from datasets.sdmcar import SDMCarDataset
 from datasets.viso import VISODataset
+from project_paths import DATA_ROOT
 
 #: Experiment/scratch root. Real paths are machine-specific, so they are
 #: never written into the repository — set ``WORK_ROOT`` to point at yours.
@@ -52,18 +53,18 @@ WORK = Path(os.environ.get("WORK_ROOT", "/work/anon"))
 
 # dataset key -> (class, root, extra-kwargs, class_map, default split)
 _DATASETS = {
-    "rscardata": (RsCarDataset, "/data/ESA_DLSTEM_2025/data/trafic/RsCarData",
+    "rscardata": (RsCarDataset, f"{DATA_ROOT}/data/trafic/RsCarData",
                   {}, {"car": 0}, "test"),
-    "satmtb": (SATMTBDataset, "/data/ESA_DLSTEM_2025/data/trafic/SAT-MTB",
+    "satmtb": (SATMTBDataset, f"{DATA_ROOT}/data/trafic/SAT-MTB",
                {"task": "mot", "categories": ["car"]}, {"car": 0}, "test"),
-    "sdmcar": (SDMCarDataset, "/data/ESA_DLSTEM_2025/data/trafic/SDM-Car",
+    "sdmcar": (SDMCarDataset, f"{DATA_ROOT}/data/trafic/SDM-Car",
                {}, {"car": 0}, "test"),
-    "airmot": (AIRMOTDataset, "/data/ESA_DLSTEM_2025/data/trafic/AIR-MOT-100",
+    "airmot": (AIRMOTDataset, f"{DATA_ROOT}/data/trafic/AIR-MOT-100",
                {}, {"airplane": 0, "ship": 1}, "test"),
-    "viso_nocar": (VISODataset, "/data/ESA_DLSTEM_2025/data/trafic/VISO",
+    "viso_nocar": (VISODataset, f"{DATA_ROOT}/data/trafic/VISO",
                    {"categories": ["plane", "ship", "train"]},
                    {"plane": 0, "ship": 1, "train": 2}, "test"),
-    "satmtb_nocar": (SATMTBDataset, "/data/ESA_DLSTEM_2025/data/trafic/SAT-MTB",
+    "satmtb_nocar": (SATMTBDataset, f"{DATA_ROOT}/data/trafic/SAT-MTB",
                      {"task": "mot", "categories": ["airplane", "ship", "train"]},
                      {"airplane": 0, "ship": 1, "train": 2}, "test"),
 }

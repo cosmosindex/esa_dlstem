@@ -1,7 +1,7 @@
 # SORT on SAT-MTB car-only test split.
 dataset: satmtb
 tracker: sort
-cache_dir: /data/ESA_DLSTEM_2025/experiments/Detection/hieum_dets_cache/satmtb
+cache_dir: ${DATA_ROOT}/experiments/Detection/hieum_dets_cache/satmtb
 score_floor: 0.25
 match_metric: centroid
 centroid_dist_thresh: 5.0

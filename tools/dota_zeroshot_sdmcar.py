@@ -25,7 +25,7 @@ Usage:
       --out-dir /work/anon/experiments/dota_zeroshot_sdmcar/test_1-2
 
 Run inside the mmrotate_dota env (mmrotate 1.0.0rc1 + mmdet 3.x +
-mmcv 2.x). The host esa_dlstem env's PyTorch 2.10/cu128 is incompatible
+mmcv 2.x). The host env's PyTorch 2.10/cu128 is incompatible
 with mmcv prebuilt wheels.
 """
 from __future__ import annotations
@@ -45,6 +45,7 @@ if str(_REPO) not in sys.path:
     sys.path.insert(0, str(_REPO))
 
 from datasets.sdmcar import SDMCarDataset
+from project_paths import DATA_ROOT
 
 # DOTA-v1.0 class id → name. Keep classes are the only ones we report.
 DOTA_CLASSES = {
@@ -125,7 +126,7 @@ def main():
                     default="/work/anon/checkpoints/mmrotate/"
                             "rotated_faster_rcnn_r50_fpn_1x_dota_le90.pth")
     ap.add_argument("--dataset-root",
-                    default="/data/ESA_DLSTEM_2025/data/trafic/SDM-Car")
+                    default=f"{DATA_ROOT}/data/trafic/SDM-Car")
     ap.add_argument("--score-thr", type=float, default=0.05)
     ap.add_argument("--iou-thr", type=float, default=0.3,
                     help="IoU threshold for the precision/recall summary.")

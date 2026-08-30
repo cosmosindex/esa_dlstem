@@ -5,7 +5,7 @@
 # botsort_reid_spacetracker_car.yaml in exactly one line: the cache.
 dataset: spacetracker_car
 tracker: botsort_reid
-cache_dir: /data/ESA_DLSTEM_2025/experiments/Detection/gt_car_feats_cache
+cache_dir: ${DATA_ROOT}/experiments/Detection/gt_car_feats_cache
 score_floor: 0.0            # oracle: every box scores 1.0, so any floor is inert
 match_metric: centroid
 centroid_dist_thresh: 5.0

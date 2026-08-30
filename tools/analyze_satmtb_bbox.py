@@ -39,8 +39,8 @@ Two box shapes coexist:
 Writes a markdown report to `docs/bbox_stats/bbox_stats_report_satmtb.md`.
 
 Usage:
-    micromamba run -n esa_dlstem python tools/analyze_satmtb_bbox.py \
-        [--root /data/ESA_DLSTEM_2025/data/trafic/SAT-MTB] \
+    python tools/analyze_satmtb_bbox.py \
+        [--root $DATA_ROOT/data/trafic/SAT-MTB] \
         [--out docs/bbox_stats/bbox_stats_report_satmtb.md] \
         [--tasks det_hbb det_obb mot seg]
 """
@@ -62,6 +62,7 @@ from datasets.satmtb import (
     FINE_TO_COARSE,
     SATMTBDataset,
 )
+from project_paths import DATA_ROOT
 
 SMALL_THRESH = 32 * 32  # area < 1024 px² → "small"
 
@@ -426,7 +427,7 @@ def build_report(by_task: dict[str, dict]) -> str:
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--root", default="/data/ESA_DLSTEM_2025/data/trafic/SAT-MTB")
+    ap.add_argument("--root", default=f"{DATA_ROOT}/data/trafic/SAT-MTB")
     ap.add_argument(
         "--out", default="docs/bbox_stats/bbox_stats_report_satmtb.md"
     )

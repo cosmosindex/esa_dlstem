@@ -36,12 +36,13 @@ sys.path.insert(0, str(REPO))
 from datasets.rscardata import RsCarDataset
 from datasets.satmtb import SATMTBDataset
 from datasets.sdmcar import SDMCarDataset
+from project_paths import DATA_ROOT
 
 # dataset key -> (class, root, extra-kwargs) — the project's car MOT benchmark
 _DATASETS = {
-    "rscardata": (RsCarDataset, "/data/ESA_DLSTEM_2025/data/trafic/RsCarData", {}),
-    "satmtb":    (SATMTBDataset, "/data/ESA_DLSTEM_2025/data/trafic/SAT-MTB", {"task": "mot", "categories": ["car"]}),
-    "sdmcar":    (SDMCarDataset, "/data/ESA_DLSTEM_2025/data/trafic/SDM-Car", {}),
+    "rscardata": (RsCarDataset, f"{DATA_ROOT}/data/trafic/RsCarData", {}),
+    "satmtb":    (SATMTBDataset, f"{DATA_ROOT}/data/trafic/SAT-MTB", {"task": "mot", "categories": ["car"]}),
+    "sdmcar":    (SDMCarDataset, f"{DATA_ROOT}/data/trafic/SDM-Car", {}),
 }
 
 TRAIL_LEN = 60

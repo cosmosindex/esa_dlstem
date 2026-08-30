@@ -16,6 +16,7 @@ _REPO_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(_REPO_ROOT))
 
 import compute_hota as ch
+from project_paths import DATA_ROOT
 
 # The all-class eval lifted SAT-MTB to 4 classes; the car-only benchmark
 # protocol keeps car only. ``class_map`` alone only gates which boxes are
@@ -26,7 +27,7 @@ ch._SAM3_CLASS_MAPS["satmtb"] = {"car": 0}
 _cls, _root, _extra = ch._DATASET_TABLE["satmtb"]
 ch._DATASET_TABLE["satmtb"] = (_cls, _root, {**_extra, "categories": ["car"]})
 
-ROOT = Path("/data/ESA_DLSTEM_2025/experiments/MOT/allclass_20260608")
+ROOT = Path(f"{DATA_ROOT}/experiments/MOT/allclass_20260608")
 WS = Path("/tmp/hota_ws_jdt_satmtb_caronly")
 OUT = _REPO_ROOT / "NeurIPS 2026" / "tables" / "MOT" / "_jdt_satmtb_caronly.csv"
 

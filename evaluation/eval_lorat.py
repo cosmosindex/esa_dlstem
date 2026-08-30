@@ -21,7 +21,6 @@ from datetime import datetime
 
 import torch
 import lightning as L
-import yaml
 from lightning.pytorch.loggers import WandbLogger
 
 from models.lorat import LoRATTracker
@@ -33,6 +32,7 @@ from lightning_modules import (
     SAM2SOTEvalCallback,
 )
 from transforms import build_eval_transform
+from project_paths import load_config
 
 
 
@@ -50,11 +50,6 @@ def _resolve(v):
         raise RuntimeError(f"unresolved variable in path: {out!r} "
                            "(set CHECKPOINT_ROOT / REPO_ROOT)")
     return out
-
-def load_config(path: str) -> dict:
-    with open(path) as f:
-        return yaml.safe_load(f)
-
 
 def main():
     parser = argparse.ArgumentParser(description="LoRAT evaluation")

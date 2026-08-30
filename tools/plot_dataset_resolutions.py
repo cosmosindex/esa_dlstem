@@ -16,11 +16,14 @@ import numpy as np
 from PIL import Image
 
 from plot_style import apply_neurips_style
+import os as _os, sys as _sys
+_sys.path.insert(0, _os.path.dirname(_os.path.dirname(_os.path.abspath(__file__))))
+from project_paths import DATA_ROOT, REPO_ROOT
 
 apply_neurips_style()
 
-DATA_ROOT = Path("/data/ESA_DLSTEM_2025/data/trafic")
-OUT_DIR = Path("/home/anon/code/esa_dlstem/docs/figures")
+DATA_ROOT = Path(f"{DATA_ROOT}/data/trafic")
+OUT_DIR = Path(f"{REPO_ROOT}/docs/figures")
 CACHE_PATH = OUT_DIR / "dataset_resolutions_cache.json"
 
 

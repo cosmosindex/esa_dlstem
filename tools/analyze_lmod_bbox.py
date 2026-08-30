@@ -18,8 +18,8 @@ Writes a markdown report to `docs/bbox_stats/bbox_stats_report_lmod.md`,
 formatted to mirror `bbox_stats_report_satmtb.md`.
 
 Usage:
-    micromamba run -n esa_dlstem python tools/analyze_lmod_bbox.py \
-        [--root /data/ESA_DLSTEM_2025/data/trafic/LMOD] \
+    python tools/analyze_lmod_bbox.py \
+        [--root $DATA_ROOT/data/trafic/LMOD] \
         [--out docs/bbox_stats/bbox_stats_report_lmod.md]
 """
 
@@ -35,6 +35,7 @@ import sys
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from datasets.lmod import LMODDataset
+from project_paths import DATA_ROOT
 
 SMALL_THRESH = 32 * 32  # area < 1024 px² → "small"
 
@@ -233,7 +234,7 @@ def build_report(per_cat, per_split_cat, seq_frame_counts) -> str:
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--root", default="/data/ESA_DLSTEM_2025/data/trafic/LMOD")
+    ap.add_argument("--root", default=f"{DATA_ROOT}/data/trafic/LMOD")
     ap.add_argument("--out", default="docs/bbox_stats/bbox_stats_report_lmod.md")
     args = ap.parse_args()
 

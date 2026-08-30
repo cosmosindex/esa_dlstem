@@ -33,8 +33,11 @@ import argparse
 import csv
 from collections import defaultdict
 from pathlib import Path
+import os as _os, sys as _sys
+_sys.path.insert(0, _os.path.dirname(_os.path.dirname(_os.path.abspath(__file__))))
+from project_paths import DATA_ROOT
 
-MOT_ROOT = Path("/data/ESA_DLSTEM_2025/experiments/MOT")
+MOT_ROOT = Path(f"{DATA_ROOT}/experiments/MOT")
 DEFAULT_TBD_CAR_CSV = MOT_ROOT / "tracker_20260427" / "hota_summary.csv"
 DEFAULT_NOCAR_CSV = None   # -> <out-dir>/_nocar_testsplit_hota.csv
 DEFAULT_JDT_CSV = MOT_ROOT / "allclass_20260608" / "hota_summary_allclass.csv"

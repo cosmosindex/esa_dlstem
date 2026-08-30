@@ -26,7 +26,7 @@ Outputs (under ``--out``):
 
 Usage::
 
-    micromamba run -n esa_dlstem python tools/sot_attribute_table_tiny.py
+    python tools/sot_attribute_table_tiny.py
 """
 
 from __future__ import annotations
@@ -47,6 +47,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from datasets.ootb import OOTBDataset
 from datasets.satsot import SatSOTDataset
 from datasets.sv248s import SV248SDataset
+from project_paths import DATA_ROOT
 
 # Experiment dumps live outside the repo; point SOT_EXP_ROOT at your own copy.
 _EXP_ROOT = os.environ.get("SOT_EXP_ROOT", "/work/anon/experiments/NeurIPS")
@@ -99,9 +100,9 @@ OCCLUSION_SUBTYPES: list[tuple[str, dict[str, list[str]]]] = [
 ]
 
 DATASET_ROOTS = {
-    "ootb":   "/data/ESA_DLSTEM_2025/data/trafic/OOTB",
-    "satsot": "/data/ESA_DLSTEM_2025/data/trafic/SatSOT",
-    "sv248s": "/data/ESA_DLSTEM_2025/data/trafic/SV248S",
+    "ootb":   f"{DATA_ROOT}/data/trafic/OOTB",
+    "satsot": f"{DATA_ROOT}/data/trafic/SatSOT",
+    "sv248s": f"{DATA_ROOT}/data/trafic/SV248S",
 }
 
 DATASET_TAGS = {

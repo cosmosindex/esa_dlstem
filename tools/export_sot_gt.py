@@ -52,13 +52,14 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from space_tracker.data import iter_frames
 from space_tracker.manifest import Manifest
+from project_paths import DATA_ROOT
 
 SOT_MANIFEST = Path(__file__).resolve().parents[1] / "space_tracker" / "space_tracker.json"
 
 DEFAULT_ROOTS = {
-    "ootb": "/data/ESA_DLSTEM_2025/data/trafic/OOTB",
-    "satsot": "/data/ESA_DLSTEM_2025/data/trafic/SatSOT",
-    "sv248s": "/data/ESA_DLSTEM_2025/data/trafic/SV248S",
+    "ootb": f"{DATA_ROOT}/data/trafic/OOTB",
+    "satsot": f"{DATA_ROOT}/data/trafic/SatSOT",
+    "sv248s": f"{DATA_ROOT}/data/trafic/SV248S",
 }
 
 UNIFIED_FORMAT = "sot_csv_unified"

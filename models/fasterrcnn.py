@@ -7,7 +7,6 @@ Optionally integrates ByteTrack for multi-object tracking at inference time.
 from pathlib import Path
 
 import numpy as np
-import yaml
 import torch
 import torch.nn as nn
 from torchvision.models.detection import (
@@ -18,6 +17,7 @@ from torchvision.models.detection import (
 )
 from torchvision.models.detection.faster_rcnn import FastRCNNPredictor
 from torchvision.models.detection.rpn import AnchorGenerator
+from project_paths import load_config
 
 
 class FasterRCNNDetector(nn.Module):
@@ -149,7 +149,7 @@ class FasterRCNNDetector(nn.Module):
         import ultralytics
 
         bt_yaml = Path(ultralytics.__file__).parent / "cfg" / "trackers" / "bytetrack.yaml"
-        cfg = IterableSimpleNamespace(**yaml.safe_load(bt_yaml.read_text()))
+        cfg = IterableSimpleNamespace(**load_config(bt_yaml))
         self._tracker = BYTETracker(cfg, frame_rate=30)
 
     def reset_tracker(self):

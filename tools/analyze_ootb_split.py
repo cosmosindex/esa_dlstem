@@ -11,7 +11,7 @@ multi-label iterative-stratification split that also targets balance across
 the 12 binary attributes.
 
 Usage:
-    python tools/analyze_ootb_split.py [--root /data/ESA_DLSTEM_2025/data/trafic/OOTB]
+    python tools/analyze_ootb_split.py [--root $DATA_ROOT/data/trafic/OOTB]
 """
 
 from __future__ import annotations
@@ -23,6 +23,9 @@ from collections import defaultdict
 from pathlib import Path
 
 import numpy as np
+import os as _os, sys as _sys
+_sys.path.insert(0, _os.path.dirname(_os.path.dirname(_os.path.abspath(__file__))))
+from project_paths import DATA_ROOT
 
 CAT_NAMES = ["car", "ship", "train", "plane"]
 ATTR_NAMES = ["DEF", "IPR", "PO", "FO", "IV", "MB", "BC", "OON", "SA", "LT", "IM", "AM"]
@@ -257,7 +260,7 @@ def summarise(seqs: list[dict], split_map: dict[str, str], title: str) -> None:
 
 def main() -> None:
     ap = argparse.ArgumentParser()
-    ap.add_argument("--root", default="/data/ESA_DLSTEM_2025/data/trafic/OOTB", type=Path)
+    ap.add_argument("--root", default=f"{DATA_ROOT}/data/trafic/OOTB", type=Path)
     args = ap.parse_args()
 
     seqs = load_ootb(args.root)

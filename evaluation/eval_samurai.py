@@ -37,6 +37,7 @@ from lightning_modules import (  # noqa: E402
     SAM2SOTEvalCallback,
 )
 from transforms import build_eval_transform  # noqa: E402
+from project_paths import load_config
 
 
 
@@ -54,11 +55,6 @@ def _resolve(v):
         raise RuntimeError(f"unresolved variable in path: {out!r} "
                            "(set CHECKPOINT_ROOT / REPO_ROOT)")
     return out
-
-def load_config(path: str) -> dict:
-    with open(path) as f:
-        return yaml.safe_load(f)
-
 
 def main():
     parser = argparse.ArgumentParser(description="SAMURAI evaluation")

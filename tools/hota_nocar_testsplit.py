@@ -32,11 +32,12 @@ _REPO_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(_REPO_ROOT))
 
 import compute_hota_multiclass as chm
+from project_paths import DATA_ROOT
 
 DEFAULT_JDT_ROOT = Path(
-    "/data/ESA_DLSTEM_2025/experiments/MOT/nocar_perclass_20260811")
+    f"{DATA_ROOT}/experiments/MOT/nocar_perclass_20260811")
 DEFAULT_TBD_ROOT = Path(
-    "/data/ESA_DLSTEM_2025/experiments/MOT/tracker_satmtb_hbb_20260505_183921")
+    f"{DATA_ROOT}/experiments/MOT/tracker_satmtb_hbb_20260505_183921")
 DEFAULT_OUTPUT = (_REPO_ROOT / "NeurIPS 2026" / "tables" / "MOT"
                   / "_nocar_testsplit_hota.csv")
 

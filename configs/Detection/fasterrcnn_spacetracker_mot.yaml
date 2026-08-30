@@ -28,7 +28,7 @@
 
 # ----- Dataset roots ------------------------------------------------------
 datasets:
-  Space-Tracker-MOT: /data/ESA_DLSTEM_2025/release/space_tracker
+  Space-Tracker-MOT: ${DATA_ROOT}/release/space_tracker
 
 per_dataset_kwargs:
   Space-Tracker-MOT:

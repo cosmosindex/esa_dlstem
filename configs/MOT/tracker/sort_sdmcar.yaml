@@ -1,7 +1,7 @@
 # SORT on SDM-Car test (small/dim cars at 1920×1080).
 dataset: sdmcar
 tracker: sort
-cache_dir: /data/ESA_DLSTEM_2025/experiments/Detection/hieum_dets_cache/sdmcar
+cache_dir: ${DATA_ROOT}/experiments/Detection/hieum_dets_cache/sdmcar
 score_floor: 0.25
 match_metric: centroid
 centroid_dist_thresh: 5.0

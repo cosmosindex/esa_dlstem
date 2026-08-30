@@ -14,7 +14,7 @@
 
 # ----- Dataset roots ------------------------------------------------------
 datasets:
-  SAT-MTB: /data/ESA_DLSTEM_2025/data/trafic/SAT-MTB
+  SAT-MTB: ${DATA_ROOT}/data/trafic/SAT-MTB
 
 per_dataset_kwargs:
   SAT-MTB:

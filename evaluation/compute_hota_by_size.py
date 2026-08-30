@@ -49,6 +49,7 @@ from datasets.rscardata import RsCarDataset
 from datasets.satmtb import SATMTBDataset
 from datasets.sdmcar import SDMCarDataset
 from datasets.viso import VISODataset
+from project_paths import DATA_ROOT
 
 
 # Per-dataset class maps — surface ALL GT classes (mirror eval_*_oracle).
@@ -60,11 +61,11 @@ _CLASS_MAPS = {
     "viso_no_car": {"plane": 0, "ship": 1, "train": 2},
 }
 _DATASET_TABLE = {
-    "rscardata":   (RsCarDataset, "/data/ESA_DLSTEM_2025/data/trafic/RsCarData", {}),
-    "satmtb":      (SATMTBDataset, "/data/ESA_DLSTEM_2025/data/trafic/SAT-MTB", {"task": "mot"}),
-    "sdmcar":      (SDMCarDataset, "/data/ESA_DLSTEM_2025/data/trafic/SDM-Car", {}),
-    "airmot":      (AIRMOTDataset, "/data/ESA_DLSTEM_2025/data/trafic/AIR-MOT-100", {}),
-    "viso_no_car": (VISODataset, "/data/ESA_DLSTEM_2025/data/trafic/VISO",
+    "rscardata":   (RsCarDataset, f"{DATA_ROOT}/data/trafic/RsCarData", {}),
+    "satmtb":      (SATMTBDataset, f"{DATA_ROOT}/data/trafic/SAT-MTB", {"task": "mot"}),
+    "sdmcar":      (SDMCarDataset, f"{DATA_ROOT}/data/trafic/SDM-Car", {}),
+    "airmot":      (AIRMOTDataset, f"{DATA_ROOT}/data/trafic/AIR-MOT-100", {}),
+    "viso_no_car": (VISODataset, f"{DATA_ROOT}/data/trafic/VISO",
                     {"categories": ["plane", "ship", "train"]}),
 }
 

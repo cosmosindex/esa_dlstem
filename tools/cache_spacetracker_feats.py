@@ -49,6 +49,7 @@ sys.path.insert(0, str(_TT_FASTREID_DIR))
 
 from datasets import SpaceTrackerMOTDataset  # noqa: E402
 from fastreid.emb_computer import EmbeddingComputer  # noqa: E402
+from project_paths import DATA_ROOT
 
 
 def _safe_video_id(video_id: str) -> str:
@@ -61,7 +62,7 @@ def main():
     ap.add_argument("--det-cache", required=True,
                     help="Directory of per-video detection JSONs")
     ap.add_argument("--out-dir", required=True)
-    ap.add_argument("--release", default="/data/ESA_DLSTEM_2025/release/space_tracker")
+    ap.add_argument("--release", default=f"{DATA_ROOT}/release/space_tracker")
     ap.add_argument("--fastreid-config",
                     default=str(_TT_FASTREID_DIR / "configs" / "MOT17" / "sbs_S50.yml"))
     ap.add_argument("--weights",

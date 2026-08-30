@@ -3,7 +3,7 @@
 # dataset level so HiEUM's car-only output is comparable.
 
 dataset: LMOD
-dataset_root: /data/ESA_DLSTEM_2025/data/trafic/LMOD
+dataset_root: ${DATA_ROOT}/data/trafic/LMOD
 class_map:
   car: 0
 

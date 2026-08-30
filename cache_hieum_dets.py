@@ -8,7 +8,7 @@ once per dataset, traversing the test split video-by-video (so the
 tracker can later see the whole video as one continuous stream rather
 than 20-frame clips), and writes one JSON per video::
 
-    /data/ESA_DLSTEM_2025/experiments/Detection/hieum_dets_cache/<dataset>/<safe_vid>.json
+    $DATA_ROOT/experiments/Detection/hieum_dets_cache/<dataset>/<safe_vid>.json
 
 with the schema::
 
@@ -47,6 +47,7 @@ from pathlib import Path
 import torch
 
 from models import HiEUMDetector
+from project_paths import DATA_ROOT
 
 
 # Dataset name → (registry key, dataset root, dataset class import path,
@@ -54,18 +55,18 @@ from models import HiEUMDetector
 _DATASET_TABLE = {
     "rscardata": (
         "RsCarData",
-        "/data/ESA_DLSTEM_2025/data/trafic/RsCarData",
+        f"{DATA_ROOT}/data/trafic/RsCarData",
         "datasets.rscardata", "RsCarDataset", {},
     ),
     "satmtb": (
         "SAT-MTB",
-        "/data/ESA_DLSTEM_2025/data/trafic/SAT-MTB",
+        f"{DATA_ROOT}/data/trafic/SAT-MTB",
         "datasets.satmtb", "SATMTBDataset",
         {"task": "mot", "categories": ["car"]},
     ),
     "sdmcar": (
         "SDM-Car",
-        "/data/ESA_DLSTEM_2025/data/trafic/SDM-Car",
+        f"{DATA_ROOT}/data/trafic/SDM-Car",
         "datasets.sdmcar", "SDMCarDataset", {},
     ),
     # The benchmark's own car split. The three entries above are the SOURCE
@@ -78,7 +79,7 @@ _DATASET_TABLE = {
     # never completed, and complete_only=True leaves just 2 of 48 sequences.
     "spacetracker_car": (
         "Space-Tracker-MOT",
-        "/data/ESA_DLSTEM_2025/release/space_tracker",
+        f"{DATA_ROOT}/release/space_tracker",
         "datasets.space_tracker_mot", "SpaceTrackerMOTDataset",
         {"categories": ["car"], "complete_only": False},
     ),
@@ -150,7 +151,7 @@ def main():
                             "HIEUM_CKPT",
                             "/work/anon/checkpoints/hieum/model_best.pth"))
     parser.add_argument("--output-dir",
-                        default="/data/ESA_DLSTEM_2025/experiments/Detection/hieum_dets_cache")
+                        default=f"{DATA_ROOT}/experiments/Detection/hieum_dets_cache")
     parser.add_argument("--score-floor", type=float, default=0.05,
                         help="Drop detections below this post-Soft-NMS score "
                              "before caching. Trackers can apply their own "

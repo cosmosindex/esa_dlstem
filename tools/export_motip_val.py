@@ -29,8 +29,9 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from PIL import Image
 
 import compute_hota_multiclass as chm
+from project_paths import DATA_ROOT
 
-JDE_IMAGES = Path("/data/ESA_DLSTEM_2025/data/spacetracker_jde_nocar/"
+JDE_IMAGES = Path(f"{DATA_ROOT}/data/spacetracker_jde_nocar/"
                   "spacetracker_nocar/images")
 
 

@@ -12,8 +12,9 @@ import numpy as np
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from datasets.ootb import ATTR_NAMES, OOTBDataset  # noqa: E402
+from project_paths import DATA_ROOT
 
-ROOT = Path("/data/ESA_DLSTEM_2025/data/trafic/OOTB")
+ROOT = Path(f"{DATA_ROOT}/data/trafic/OOTB")
 RATIOS = (0.8, 0.1, 0.1)
 SPLITS = ("train", "val", "test")
 

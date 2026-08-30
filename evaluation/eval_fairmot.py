@@ -47,7 +47,6 @@ from types import SimpleNamespace
 import cv2
 import numpy as np
 import torch
-import yaml
 
 # Parent-repo dataset classes FIRST, so all of our dataset code is imported and
 # resolved before we juggle sys.path for FairMOT's (colliding) top-level names.
@@ -59,6 +58,7 @@ from datasets.sdmcar import SDMCarDataset
 from datasets.viso import VISODataset
 
 from _jdt_class_tagger import ClassTagger, MODEL_TO_DATASET_CLASS
+from project_paths import DATA_ROOT, load_config
 
 _REPO = Path(__file__).resolve().parent.parent   # repo root (this file is in evaluation/)
 _FAIRMOT_LIB = str(_REPO / "FairMOT" / "src" / "lib")
@@ -87,23 +87,23 @@ def _activate_fairmot_lib():
 
 
 _DATASET_TABLE = {
-    "rscardata": (RsCarDataset, "/data/ESA_DLSTEM_2025/data/trafic/RsCarData", {}),
-    "satmtb":    (SATMTBDataset, "/data/ESA_DLSTEM_2025/data/trafic/SAT-MTB",
+    "rscardata": (RsCarDataset, f"{DATA_ROOT}/data/trafic/RsCarData", {}),
+    "satmtb":    (SATMTBDataset, f"{DATA_ROOT}/data/trafic/SAT-MTB",
                   {"task": "mot"}),
-    "sdmcar":    (SDMCarDataset, "/data/ESA_DLSTEM_2025/data/trafic/SDM-Car", {}),
-    "airmot":    (AIRMOTDataset, "/data/ESA_DLSTEM_2025/data/trafic/AIR-MOT-100", {}),
-    "viso_no_car": (VISODataset, "/data/ESA_DLSTEM_2025/data/trafic/VISO",
+    "sdmcar":    (SDMCarDataset, f"{DATA_ROOT}/data/trafic/SDM-Car", {}),
+    "airmot":    (AIRMOTDataset, f"{DATA_ROOT}/data/trafic/AIR-MOT-100", {}),
+    "viso_no_car": (VISODataset, f"{DATA_ROOT}/data/trafic/VISO",
                     {"categories": ["plane", "ship", "train"]}),
     # Non-car splits, named to match compute_hota_multiclass._DATASET_TABLE so a
     # per-class run drops straight into the airplane/ship/train benchmark.
-    "satmtb_nocar": (SATMTBDataset, "/data/ESA_DLSTEM_2025/data/trafic/SAT-MTB",
+    "satmtb_nocar": (SATMTBDataset, f"{DATA_ROOT}/data/trafic/SAT-MTB",
                      {"task": "mot", "categories": ["airplane", "ship", "train"]}),
-    "viso_nocar":   (VISODataset, "/data/ESA_DLSTEM_2025/data/trafic/VISO",
+    "viso_nocar":   (VISODataset, f"{DATA_ROOT}/data/trafic/VISO",
                      {"categories": ["plane", "ship", "train"]}),
     # The released benchmark's non-car test split -- the same 22 sequences the
     # tracking-by-detection rows are scored on, so JDT and TbD are comparable.
     "spacetracker_nocar": (SpaceTrackerMOTDataset,
-                     "/data/ESA_DLSTEM_2025/release/space_tracker",
+                     f"{DATA_ROOT}/release/space_tracker",
                      {"complete_only": True,
                       "categories": ["airplane", "ship"]}),
 }
@@ -286,7 +286,7 @@ def main():
                          "(qualitative single-sequence dumps).")
     args = ap.parse_args()
     with open(args.config) as f:
-        cfg = yaml.safe_load(f)
+        cfg = load_config(f)
 
     gt_oracle   = args.gt_oracle
     per_class   = args.per_class

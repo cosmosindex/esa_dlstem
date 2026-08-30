@@ -10,8 +10,8 @@ Writes a markdown report to `docs/bbox_stats_report_satsot.md` following the
 same format as `docs/bbox_stats_report_sv248s.md`.
 
 Usage:
-    micromamba run -n esa_dlstem python tools/analyze_satsot_bbox.py \
-        [--root /data/ESA_DLSTEM_2025/data/trafic/SatSOT] \
+    python tools/analyze_satsot_bbox.py \
+        [--root $DATA_ROOT/data/trafic/SatSOT] \
         [--out docs/bbox_stats_report_satsot.md]
 """
 
@@ -27,6 +27,7 @@ import sys
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from datasets.satsot import SatSOTDataset
+from project_paths import DATA_ROOT
 
 SMALL_THRESH = 32 * 32  # area < 1024 px² → "small"
 
@@ -202,7 +203,7 @@ def build_report(per_cat, per_split_cat, extreme, absent_counts) -> str:
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--root", default="/data/ESA_DLSTEM_2025/data/trafic/SatSOT")
+    ap.add_argument("--root", default=f"{DATA_ROOT}/data/trafic/SatSOT")
     ap.add_argument("--out", default="docs/bbox_stats_report_satsot.md")
     args = ap.parse_args()
 

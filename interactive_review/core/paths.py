@@ -11,9 +11,10 @@ from functools import lru_cache
 from pathlib import Path
 
 from space_tracker.manifest_mot import MOTManifest, MOTSequenceRecord
+from project_paths import DATA_ROOT
 
 REPO = Path(__file__).resolve().parents[2]
-DATA = Path(os.environ.get("SPACE_TRACKER_DATA", "/data/ESA_DLSTEM_2025/data/trafic"))
+DATA = Path(os.environ.get("SPACE_TRACKER_DATA", f"{DATA_ROOT}/data/trafic"))
 
 MOT_ROOTS = {
     "airmot":    DATA / "AIR-MOT-100",

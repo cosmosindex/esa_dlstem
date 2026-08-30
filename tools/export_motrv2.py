@@ -54,8 +54,9 @@ from PIL import Image
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from tools.export_mot_jde import DATASETS, source_image_path  # noqa: E402
+from project_paths import DATA_ROOT
 
-MOTR_ROOT = os.environ.get("MOTR_ROOT", "/data/ESA_DLSTEM_2025/data/motrv2")
+MOTR_ROOT = os.environ.get("MOTR_ROOT", f"{DATA_ROOT}/data/motrv2")
 
 
 def safe_id(video_id: str) -> str:

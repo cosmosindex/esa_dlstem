@@ -29,6 +29,7 @@ from lightning_modules import (
     SAM2SOTEvalCallback,
 )
 from transforms import build_eval_transform
+from project_paths import DATA_ROOT
 
 # ---------------------------------------------------------------------------
 # Config
@@ -37,7 +38,7 @@ from transforms import build_eval_transform
 CLASS_MAP = {"car": 0, "plane": 1, "ship": 2, "train": 3}
 CLASS_NAMES = {v: k for k, v in CLASS_MAP.items()}
 
-OOTB_ROOT = "/data/ESA_DLSTEM_2025/data/trafic/OOTB"
+OOTB_ROOT = f"{DATA_ROOT}/data/trafic/OOTB"
 IMG_SIZE = (640, 640)
 
 # SAM2 model (downloaded from HuggingFace on first run)

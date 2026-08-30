@@ -30,7 +30,7 @@ Usage::
     python tools/build_size_split.py \
         --out space_tracker/data/size_split.json \
         --stats-csv /tmp/size_split/per_sequence_size.csv \
-        --link-root /data/ESA_DLSTEM_2025/data/trafic/_size_split
+        --link-root $DATA_ROOT/data/trafic/_size_split
 """
 
 from __future__ import annotations

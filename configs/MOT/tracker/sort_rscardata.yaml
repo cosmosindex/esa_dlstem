@@ -1,7 +1,7 @@
 # SORT on RsCarData test (HiEUM dets cached upstream).
 dataset: rscardata
 tracker: sort
-cache_dir: /data/ESA_DLSTEM_2025/experiments/Detection/hieum_dets_cache/rscardata
+cache_dir: ${DATA_ROOT}/experiments/Detection/hieum_dets_cache/rscardata
 
 # Drop very-low-score HiEUM dets before feeding to the tracker. Score
 # floor in the HiEUM cache is already 0.05 — raise here per tracker if

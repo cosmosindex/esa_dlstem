@@ -2,7 +2,7 @@
 # Model: the non-car retrain (2026-08-24), NOT the earlier union model — that
 # one was trained on a union split which overlapped 60% of this test set.
 dataset: spacetracker_nocar
-checkpoint: /home/anon/code/esa_dlstem/FairMOT/exp/mot/fairmot_hrnet18_st_nocar/model_best.pth
+checkpoint: ${REPO_ROOT}/FairMOT/exp/mot/fairmot_hrnet18_st_nocar/model_best.pth
 arch: hrnet_18
 num_classes: 3              # checkpoint hm head is 3-channel (airplane, ship, train)
 conf_thres: 0.4

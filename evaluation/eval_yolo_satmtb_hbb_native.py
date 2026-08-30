@@ -29,7 +29,6 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 import torch
-import yaml
 import lightning as L
 from lightning.pytorch.loggers import WandbLogger
 
@@ -41,6 +40,7 @@ from lightning_modules import (
     DetectionVisualizationCallback,
 )
 from transforms import build_train_transform, build_eval_transform
+from project_paths import load_config
 
 
 def main():
@@ -56,7 +56,7 @@ def main():
     args = ap.parse_args()
 
     with open(args.config) as f:
-        cfg = yaml.safe_load(f)
+        cfg = load_config(f)
 
     torch.set_float32_matmul_precision("high")
 

@@ -1,6 +1,6 @@
 dataset: sdmcar
 tracker: botsort_reid
-cache_dir: /data/ESA_DLSTEM_2025/experiments/Detection/hieum_dets_with_feats_cache/sdmcar
+cache_dir: ${DATA_ROOT}/experiments/Detection/hieum_dets_with_feats_cache/sdmcar
 score_floor: 0.10
 match_metric: centroid
 centroid_dist_thresh: 5.0

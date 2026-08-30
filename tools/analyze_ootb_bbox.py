@@ -16,8 +16,8 @@ split used elsewhere in the project is reflected in the per-split tables.
 Writes a markdown report to `docs/bbox_stats_report_ootb.md`.
 
 Usage:
-    micromamba run -n esa_dlstem python tools/analyze_ootb_bbox.py \
-        [--root /data/ESA_DLSTEM_2025/data/trafic/OOTB] \
+    python tools/analyze_ootb_bbox.py \
+        [--root $DATA_ROOT/data/trafic/OOTB] \
         [--out docs/bbox_stats_report_ootb.md]
 """
 
@@ -34,6 +34,7 @@ import sys
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from datasets.ootb import OOTBDataset
+from project_paths import DATA_ROOT
 
 SMALL_THRESH = 32 * 32  # area < 1024 px² → "small"
 
@@ -243,7 +244,7 @@ def build_report(per_cat, per_split_cat, per_cat_aabb, extreme, seq_counts) -> s
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--root", default="/data/ESA_DLSTEM_2025/data/trafic/OOTB")
+    ap.add_argument("--root", default=f"{DATA_ROOT}/data/trafic/OOTB")
     ap.add_argument("--out", default="docs/bbox_stats_report_ootb.md")
     args = ap.parse_args()
 

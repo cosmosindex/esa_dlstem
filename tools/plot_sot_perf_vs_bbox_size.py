@@ -4,7 +4,7 @@ for OOTB, SatSOT, SV248S. One figure per dataset, 3 grouped bars per bin.
 
 Data sources:
   * Per-frame records:  <exp_root>/<model>/<run_dir>/per_image_metrics.json
-  * GT bboxes (pixels): /data/ESA_DLSTEM_2025/data/trafic/{OOTB,SatSOT,SV248S}
+  * GT bboxes (pixels): $DATA_ROOT/data/trafic/{OOTB,SatSOT,SV248S}
 
 Metric definitions (match lightning_modules/sot_metrics.py):
   * SR  = success_auc       : mean over t∈[0,1] step 0.05 of P(IoU ≥ t)
@@ -26,6 +26,9 @@ from pathlib import Path
 
 import matplotlib.pyplot as plt
 import numpy as np
+import os as _os, sys as _sys
+_sys.path.insert(0, _os.path.dirname(_os.path.dirname(_os.path.abspath(__file__))))
+from project_paths import DATA_ROOT
 
 # Experiment dumps live outside the repo; point SOT_EXP_ROOT at your own copy.
 _EXP_ROOT = os.environ.get("SOT_EXP_ROOT", "/work/anon/experiments/NeurIPS")
@@ -39,9 +42,9 @@ NORM_PRECISION_THRESHOLDS = np.linspace(0, 0.5, 21)   # NPR curve x-axis
 
 EXP_ROOT = Path(_EXP_ROOT) / "SOT_whole_dataset_04_22"
 DATA_ROOTS = {
-    "OOTB":   Path("/data/ESA_DLSTEM_2025/data/trafic/OOTB"),
-    "SatSOT": Path("/data/ESA_DLSTEM_2025/data/trafic/SatSOT"),
-    "SV248S": Path("/data/ESA_DLSTEM_2025/data/trafic/SV248S"),
+    "OOTB":   Path(f"{DATA_ROOT}/data/trafic/OOTB"),
+    "SatSOT": Path(f"{DATA_ROOT}/data/trafic/SatSOT"),
+    "SV248S": Path(f"{DATA_ROOT}/data/trafic/SV248S"),
 }
 # Folder → dataset name mapping used to bucket model runs.
 # Keys are lowercase tokens that appear in run-dir names.

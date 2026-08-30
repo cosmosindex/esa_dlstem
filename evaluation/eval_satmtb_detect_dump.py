@@ -33,7 +33,7 @@ threshold at 0.5.
 
 Run (after all three trainings finish):
     EXPERIMENT_ROOT=/work/anon/experiments CUDA_VISIBLE_DEVICES=0 \
-        micromamba run -n esa_dlstem python evaluation/eval_satmtb_detect_dump.py
+        python evaluation/eval_satmtb_detect_dump.py
 """
 from __future__ import annotations
 
@@ -47,11 +47,11 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 import numpy as np
 import torch
-import yaml
 
 from models import FasterRCNNDetector, YOLODetector, DINOv3Detector
 from lightning_modules import DetectionDataModule, DataModuleConfig
 from transforms import build_eval_transform, build_satmot_eval_transform
+from project_paths import load_config
 
 DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
 IMG = 1024
@@ -79,7 +79,7 @@ RUN_GLOB = {
 
 def load_yaml(p):
     with open(p) as f:
-        return yaml.safe_load(f)
+        return load_config(f)
 
 
 def newest_run(name: str) -> Path:

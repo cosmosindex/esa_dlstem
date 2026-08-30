@@ -30,6 +30,7 @@ sys.path.insert(0, str(REPO_ROOT))
 from datasets.ootb import OOTBDataset
 from datasets.satsot import SatSOTDataset
 from datasets.sv248s import SV248SDataset
+from project_paths import DATA_ROOT
 
 # Matches the tracker-run naming convention — run dirs end in a dataset tag
 # plus a timestamp.
@@ -38,9 +39,9 @@ _DATASET_TAG = re.compile(r"_(ootb|satsot|sv248s)_\d{8}_\d{6}$", re.IGNORECASE)
 _FRAME_RE = re.compile(r"^(.+)_frame\d+\.(?:jpg|jpeg|png)$", re.IGNORECASE)
 
 _DATASET_SPEC = {
-    "ootb":   (OOTBDataset,   "/data/ESA_DLSTEM_2025/data/trafic/OOTB"),
-    "satsot": (SatSOTDataset, "/data/ESA_DLSTEM_2025/data/trafic/SatSOT"),
-    "sv248s": (SV248SDataset, "/data/ESA_DLSTEM_2025/data/trafic/SV248S"),
+    "ootb":   (OOTBDataset,   f"{DATA_ROOT}/data/trafic/OOTB"),
+    "satsot": (SatSOTDataset, f"{DATA_ROOT}/data/trafic/SatSOT"),
+    "sv248s": (SV248SDataset, f"{DATA_ROOT}/data/trafic/SV248S"),
 }
 
 _NO_ATTR_FOLDER = "_no_attr"

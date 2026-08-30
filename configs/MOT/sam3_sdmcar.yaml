@@ -4,7 +4,7 @@
 # Single-class dataset (all objects are cars).
 
 dataset: SDM-Car
-dataset_root: /data/ESA_DLSTEM_2025/data/trafic/SDM-Car
+dataset_root: ${DATA_ROOT}/data/trafic/SDM-Car
 # Normalize slug for compute_hota.py regex (dataset.lower() = "sdm-car").
 run_name_suffix: sdmcar
 class_map:

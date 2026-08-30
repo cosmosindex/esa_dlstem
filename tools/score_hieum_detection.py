@@ -26,6 +26,7 @@ import sys
 from pathlib import Path
 
 import numpy as np
+from project_paths import DATA_ROOT
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
@@ -75,7 +76,7 @@ def main():
     ap_ = argparse.ArgumentParser(description=__doc__,
                                   formatter_class=argparse.RawDescriptionHelpFormatter)
     ap_.add_argument("--det-cache", required=True)
-    ap_.add_argument("--release", default="/data/ESA_DLSTEM_2025/release/space_tracker")
+    ap_.add_argument("--release", default=f"{DATA_ROOT}/release/space_tracker")
     ap_.add_argument("--split", default="test")
     ap_.add_argument("--iou", type=float, default=0.5)
     ap_.add_argument("--seq-subset", default=None,

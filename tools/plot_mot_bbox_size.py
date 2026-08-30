@@ -34,9 +34,10 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from plot_style import apply_neurips_style  # noqa: E402
 
 import matplotlib.pyplot as plt  # noqa: E402
+from project_paths import DATA_ROOT, REPO_ROOT
 
-ROOT = Path("/data/ESA_DLSTEM_2025/data/trafic")
-OUT_DIR = Path("/home/anon/code/esa_dlstem/docs/bbox_stats")
+ROOT = Path(f"{DATA_ROOT}/data/trafic")
+OUT_DIR = Path(f"{REPO_ROOT}/docs/bbox_stats")
 CACHE = Path("/tmp/mot_bbox_size_cache.pkl")  # delete to force re-parse
 
 CLASSES = ["car", "airplane", "ship", "train"]

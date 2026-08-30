@@ -1,4 +1,4 @@
-name: esa_dlstem
+name: space-tracker
 channels:
   - conda-forge
   - defaults

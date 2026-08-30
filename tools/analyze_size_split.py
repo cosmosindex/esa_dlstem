@@ -39,9 +39,10 @@ from space_tracker.data import iter_frames
 from space_tracker.data_mot import _parse_gt
 from space_tracker.manifest import Manifest
 from space_tracker.manifest_mot import MOTManifest
+from project_paths import DATA_ROOT
 
 REPO = Path(__file__).resolve().parents[1]
-DATA = Path("/data/ESA_DLSTEM_2025/data/trafic")
+DATA = Path(f"{DATA_ROOT}/data/trafic")
 
 SOT_ROOTS = {
     "ootb":   DATA / "OOTB",

@@ -31,15 +31,16 @@ from fastreid.emb_computer import EmbeddingComputer  # noqa: E402
 from datasets.airmot import AIRMOTDataset  # noqa: E402
 from datasets.satmtb import SATMTBDataset  # noqa: E402
 from datasets.viso import VISODataset  # noqa: E402
+from project_paths import DATA_ROOT
 
 
 _DATASET_TABLE = {
-    "satmtb_nocar": (SATMTBDataset, "/data/ESA_DLSTEM_2025/data/trafic/SAT-MTB",
+    "satmtb_nocar": (SATMTBDataset, f"{DATA_ROOT}/data/trafic/SAT-MTB",
                      {"task": "mot", "categories": ["airplane", "ship", "train"]},
                      "test"),
-    "viso_nocar":   (VISODataset, "/data/ESA_DLSTEM_2025/data/trafic/VISO",
+    "viso_nocar":   (VISODataset, f"{DATA_ROOT}/data/trafic/VISO",
                      {"categories": ["plane", "ship", "train"]}, "no_split"),
-    "airmot":       (AIRMOTDataset, "/data/ESA_DLSTEM_2025/data/trafic/AIR-MOT-100",
+    "airmot":       (AIRMOTDataset, f"{DATA_ROOT}/data/trafic/AIR-MOT-100",
                      {}, "no_split"),
 }
 
@@ -123,9 +124,9 @@ def main():
     ap.add_argument("--datasets", nargs="+",
                     default=["satmtb_nocar", "viso_nocar", "airmot"])
     ap.add_argument("--in-root",
-                    default="/data/ESA_DLSTEM_2025/experiments/Detection/fasterrcnn_satmtb_hbb_dets_cache")
+                    default=f"{DATA_ROOT}/experiments/Detection/fasterrcnn_satmtb_hbb_dets_cache")
     ap.add_argument("--out-root",
-                    default="/data/ESA_DLSTEM_2025/experiments/Detection/fasterrcnn_satmtb_hbb_dets_with_feats_cache")
+                    default=f"{DATA_ROOT}/experiments/Detection/fasterrcnn_satmtb_hbb_dets_with_feats_cache")
     ap.add_argument("--fastreid-config",
                     default=str(_TT_FASTREID_DIR / "configs" / "MOT17" / "sbs_S50.yml"))
     ap.add_argument("--fastreid-weight",

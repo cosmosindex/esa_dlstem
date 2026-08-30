@@ -11,7 +11,7 @@ multi-label iterative-stratification split that also targets balance across
 the 10 binary attributes.
 
 Usage:
-    python tools/analyze_sv248s_split.py [--root /data/ESA_DLSTEM_2025/data/trafic/SV248S]
+    python tools/analyze_sv248s_split.py [--root $DATA_ROOT/data/trafic/SV248S]
 """
 
 from __future__ import annotations
@@ -23,6 +23,9 @@ from collections import defaultdict
 from pathlib import Path
 
 import numpy as np
+import os as _os, sys as _sys
+_sys.path.insert(0, _os.path.dirname(_os.path.dirname(_os.path.abspath(__file__))))
+from project_paths import DATA_ROOT
 
 ATTR_NAMES = ["STO", "LTO", "DS", "IV", "BCH", "SM", "ND", "CO", "BCL", "IPR"]
 SPLITS = ("train", "val", "test")
@@ -292,7 +295,7 @@ def summarise(seqs: list[dict], split_map: dict[str, str], title: str) -> None:
 
 def main() -> None:
     ap = argparse.ArgumentParser()
-    ap.add_argument("--root", default="/data/ESA_DLSTEM_2025/data/trafic/SV248S", type=Path)
+    ap.add_argument("--root", default=f"{DATA_ROOT}/data/trafic/SV248S", type=Path)
     args = ap.parse_args()
 
     seqs = load_sv248s(args.root)

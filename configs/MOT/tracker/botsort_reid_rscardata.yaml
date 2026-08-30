@@ -2,7 +2,7 @@
 # Driver: eval_botsort_reid.py.
 dataset: rscardata
 tracker: botsort_reid
-cache_dir: /data/ESA_DLSTEM_2025/experiments/Detection/hieum_dets_with_feats_cache/rscardata
+cache_dir: ${DATA_ROOT}/experiments/Detection/hieum_dets_with_feats_cache/rscardata
 score_floor: 0.10
 match_metric: centroid
 centroid_dist_thresh: 5.0

@@ -46,14 +46,15 @@ from tools.reaggregate_sot_per_sequence import (
     _ootb_seq_areas, _satsot_seq_areas, _sv248s_seq_areas,
     TINY_SQRT_AREA_THRESH,
 )
+from project_paths import DATA_ROOT
 
 
 MANIFEST_VERSION = "1.1"
 
 DATASET_ROOTS = {
-    "ootb":   Path("/data/ESA_DLSTEM_2025/data/trafic/OOTB"),
-    "satsot": Path("/data/ESA_DLSTEM_2025/data/trafic/SatSOT"),
-    "sv248s": Path("/data/ESA_DLSTEM_2025/data/trafic/SV248S"),
+    "ootb":   Path(f"{DATA_ROOT}/data/trafic/OOTB"),
+    "satsot": Path(f"{DATA_ROOT}/data/trafic/SatSOT"),
+    "sv248s": Path(f"{DATA_ROOT}/data/trafic/SV248S"),
 }
 
 # Public download / paper hints for users who do NOT have the data yet.
