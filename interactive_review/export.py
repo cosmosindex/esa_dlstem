@@ -156,12 +156,12 @@ def main() -> None:
                          "scope and it is asked per *object*: a sequence whose "
                          "median object is large can still carry small ones, and "
                          "37 of the 55 held out by the sequence-level split do. "
-                         "Independent of docs/size_split/size_split.json, which "
+                         "Independent of space_tracker/data/size_split.json, which "
                          "stays frozen so the size-split experiments do not move")
     ap.add_argument("--queue-only", action="store_true",
                     help="export exactly the sequences the review covered: "
                          "licensed for redistribution and in the small-object "
-                         "half, read from docs/size_split/size_split.json so "
+                         "half, read from space_tracker/data/size_split.json so "
                          "this and the size-split experiments cannot drift "
                          "apart. This is the benchmark's own scope — a large "
                          "object is out of it whatever its annotation says")

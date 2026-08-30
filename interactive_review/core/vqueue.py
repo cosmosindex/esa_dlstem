@@ -73,7 +73,7 @@ ALL_OBJECT_DATASETS = ("airmot",)
 #: ``datasets`` to get it back.
 UNLICENSED_DATASETS = ("airmot",)
 
-#: Sequence-level size bucket, read from ``docs/size_split/size_split.json``: a
+#: Sequence-level size bucket, read from ``space_tracker/data/size_split.json``: a
 #: sequence is small when the median ``sqrt(w * h)`` over its GT boxes is <= 32 px
 #: (COCO's small-object threshold). The results this annotation feeds are about
 #: small objects, so the queue is the small half by default. The boundary is read

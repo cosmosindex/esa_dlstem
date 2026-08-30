@@ -242,7 +242,7 @@ def main() -> None:
                     help="report what would change, write nothing")
     ap.add_argument("--report", type=Path,
                     default=Path(__file__).resolve().parents[1]
-                    / "docs" / "static_annotation" / "merge_det_to_mot.csv")
+                    / "space_tracker" / "data" / "merge_det_to_mot.csv")
     ap.add_argument("--no-report", action="store_true")
     args = ap.parse_args()
 

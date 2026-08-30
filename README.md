@@ -70,15 +70,15 @@ Each is named by its released id, with the source sequence it came from.
 
 **`car_ootb_0033`** (`ootb/car_39`) — Background Clutter · Illumination Variation · Occlusion · Similar Object · Less Texture · Isotropic Motion — median target scale 8.6 px
 
-![car_ootb_0033 — BC · IV · OCC · SOB · LT · IM](docs/figures/attributes_videos/car_39_combined_trackers.gif)
+![car_ootb_0033 — BC · IV · OCC · SOB · LT · IM](assets/sot_car_ootb_0033.gif)
 
 **`car_ootb_0040`** (`ootb/car_45`) — Background Clutter · Illumination Variation · Motion Blur — 11.2 px
 
-![car_ootb_0040 — BC · IV · MB](docs/figures/attributes_videos/car_45_combined_trackers.gif)
+![car_ootb_0040 — BC · IV · MB](assets/sot_car_ootb_0040.gif)
 
 **`ship_ootb_0069`** (`ootb/ship_4`) — Background Clutter · Illumination Variation · Less Texture · Motion Blur — 17.0 px
 
-![ship_ootb_0069 — BC · IV · LT · MB](docs/figures/attributes_videos/ship_4_combined_trackers.gif)
+![ship_ootb_0069 — BC · IV · LT · MB](assets/sot_ship_ootb_0069.gif)
 
 ## The SOT attribute taxonomy
 

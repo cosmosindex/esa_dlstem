@@ -7,7 +7,7 @@ SDM-Car's OWN native train/val partitions. Those have nothing to do with the
 scene-disjoint Space-Tracker split, and the result was that **33 of the 48
 Space-Tracker car test sequences (68.8%) ended up in HiEUM's training set** --
 the same class of train/test overlap that forced the non-car JDT models to be
-retrained. Splits now come from `docs/space_tracker/splits.csv` via the release
+retrained. Splits now come from `space_tracker/splits.json` via the release
 manifest, and a sequence's membership is decided by its Space-Tracker split
 alone.
 
@@ -64,21 +64,18 @@ SPECS = [
 ]
 
 
-def load_split_map(release: Path, splits_csv: Path) -> dict[tuple[str, str], str]:
+def load_split_map(release: Path, splits_manifest: Path) -> dict[tuple[str, str], str]:
     """(source_dataset, source_sequence_id) -> space-tracker split.
 
     Keyed on the SOURCE identity rather than the release name, because that is
     what a source loader can produce: `video_id` "train/002" from the rscardata
     loader corresponds to release `source_sequence_id` "rscardata/train/002".
     """
-    import csv as _csv
     ann = json.loads((release / "mot" / "annotations"
                       / "space_tracker_mot.json").read_text())
-    split_of = {}
-    with open(splits_csv) as f:
-        for row in _csv.DictReader(f):
-            seq = row["sequence"]
-            split_of[seq.split("/", 1)[1] if "/" in seq else seq] = row["split"]
+    manifest = json.loads(Path(splits_manifest).read_text())
+    split_of = {name.split("/", 1)[1] if "/" in name else name: split
+                for name, split in manifest["splits"]["mot"].items()}
     out = {}
     for v in ann["videos"]:
         if v["category"] != "car":
@@ -191,15 +188,16 @@ def main():
     ap.add_argument("--seq-len", type=int, default=20)
     ap.add_argument("--jpg-quality", type=int, default=95)
     ap.add_argument("--release", default="/data/ESA_DLSTEM_2025/release/space_tracker")
-    ap.add_argument("--splits-csv", default=str(REPO / "docs" / "space_tracker" / "splits.csv"))
+    ap.add_argument("--splits-manifest",
+                    default=str(REPO / "space_tracker" / "splits.json"))
     args = ap.parse_args()
 
-    split_map = load_split_map(Path(args.release), Path(args.splits_csv))
+    split_map = load_split_map(Path(args.release), Path(args.splits_manifest))
     from collections import Counter
     print(f"split map: {len(split_map)} car sequences  "
           f"{dict(Counter(split_map.values()))}", flush=True)
     if not split_map:
-        raise SystemExit("empty split map -- check --release / --splits-csv")
+        raise SystemExit("empty split map -- check --release / --splits-manifest")
 
     out = Path(args.out)
     # train -> train_mot.json ; val -> test1024_mot.json (HiEUM's in-training val slot)

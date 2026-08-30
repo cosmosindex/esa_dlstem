@@ -22,7 +22,7 @@ exported.
 | rule | drops | why |
 |---|---|---|
 | licensed for redistribution | AIR-MOT, 69 | no licence was granted, so nothing annotated on it can ship |
-| small-object half | SAT-MTB 50, VISO 5 | the results this feeds are about small objects; a sequence is small when its median `sqrt(w·h)` is ≤ 32 px, read from `docs/size_split/size_split.json` so the queue and the size-split experiments cannot drift apart |
+| small-object half | SAT-MTB 50, VISO 5 | the results this feeds are about small objects; a sequence is small when its median `sqrt(w·h)` is ≤ 32 px, read from `space_tracker/data/size_split.json` so the queue and the size-split experiments cannot drift apart |
 
 `--all-sizes` puts the large half back, `--include-unlicensed` puts AIR-MOT back,
 and naming a held-out dataset in `--datasets` overrides its exclusion.

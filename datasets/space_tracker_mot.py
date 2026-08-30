@@ -9,7 +9,7 @@ Two filters matter and neither is cosmetic:
 
 **Split.** The release ships scene-disjoint train/val/test splits (283/40/80
 sequences) that are not yet stamped into the annotation JSON, so they are read
-from the split manifest (`docs/space_tracker/splits.csv` by default). Sequences
+from the split manifest (`space_tracker/splits.json` by default). Sequences
 sharing a parent scene are kept together, which is the whole point of that file.
 
 **Annotation completeness.** Outside SAT-MTB, the MOT ground truth labels only
@@ -21,7 +21,7 @@ that the very thing it must find is background. `complete_only=True` (the
 default for detector training) keeps just the completed sequences. Note that
 `car` is movers-only *by design* across the whole benchmark and can never be
 used to train a single-frame detector -- use a moving-object detector for the
-car half instead. See `docs/static_annotation/README.md`.
+car half instead. See the release notes in `space_tracker/README.md`.
 """
 
 from __future__ import annotations
@@ -39,8 +39,8 @@ import numpy as np
 from .base import BaseVideoDataset, VideoInfo
 
 _REPO_ROOT = Path(__file__).resolve().parent.parent
-_DEFAULT_SPLITS = _REPO_ROOT / "docs" / "space_tracker" / "splits.csv"
-_DEFAULT_MERGE_RECORD = _REPO_ROOT / "docs" / "static_annotation" / "merge_det_to_mot.csv"
+_DEFAULT_SPLITS = _REPO_ROOT / "space_tracker" / "splits.json"
+_DEFAULT_MERGE_RECORD = _REPO_ROOT / "space_tracker" / "data" / "merge_det_to_mot.csv"
 
 
 class SpaceTrackerMOTDataset(BaseVideoDataset):
@@ -50,7 +50,7 @@ class SpaceTrackerMOTDataset(BaseVideoDataset):
         split:         "train" / "val" / "test", or "no_split" for everything.
         complete_only: Keep only sequences whose annotation was completed with
                        static objects. Required for detector training.
-        splits_csv:    Split manifest; defaults to the in-repo one.
+        splits_manifest: Split manifest; defaults to the in-repo one.
         merge_csv:     Record of which sequences had detection XML merged in.
     """
 
@@ -66,13 +66,13 @@ class SpaceTrackerMOTDataset(BaseVideoDataset):
         class_map: Optional[dict[str, int]] = None,
         categories: Optional[list[str]] = None,
         complete_only: bool = True,
-        splits_csv: str | Path | None = None,
+        splits_manifest: str | Path | None = None,
         merge_csv: str | Path | None = None,
         frame_stride: int = 1,
     ):
         self.complete_only = complete_only
         self.frame_stride = max(1, int(frame_stride))
-        self.splits_csv = Path(splits_csv) if splits_csv else _DEFAULT_SPLITS
+        self.splits_manifest = Path(splits_manifest) if splits_manifest else _DEFAULT_SPLITS
         self.merge_csv = Path(merge_csv) if merge_csv else _DEFAULT_MERGE_RECORD
         # frame-level annotation cache, filled by _build_index
         self._ann: dict[str, dict[int, list[tuple[list[float], int, int]]]] = {}
@@ -128,16 +128,13 @@ class SpaceTrackerMOTDataset(BaseVideoDataset):
 
     def _load_split_map(self) -> dict[str, str]:
         """release sequence name → split."""
-        out: dict[str, str] = {}
-        if not self.splits_csv.exists():
-            return out
-        with open(self.splits_csv) as f:
-            for row in csv.DictReader(f):
-                if row.get("half") != "mot":
-                    continue
-                # `sequence` is "mot/<name>"
-                out[row["sequence"].split("/", 1)[1]] = row["split"]
-        return out
+        if not self.splits_manifest.exists():
+            return {}
+        with open(self.splits_manifest) as f:
+            manifest = json.load(f)
+        # Keys are "mot/<name>"; the SOT half of the manifest is not ours.
+        return {name.split("/", 1)[1]: split
+                for name, split in manifest["splits"]["mot"].items()}
 
     def _load_completed_source_ids(self) -> set[str]:
         """source_sequence_id values whose GT was completed with static objects."""

@@ -24,11 +24,11 @@ Two artefacts are produced:
 Usage::
 
     # manifest only
-    python tools/build_size_split.py --out docs/size_split/size_split.json
+    python tools/build_size_split.py --out space_tracker/data/size_split.json
 
     # manifest + symlink tree, reusing precomputed per-sequence stats
     python tools/build_size_split.py \
-        --out docs/size_split/size_split.json \
+        --out space_tracker/data/size_split.json \
         --stats-csv /tmp/size_split/per_sequence_size.csv \
         --link-root /data/ESA_DLSTEM_2025/data/trafic/_size_split
 """

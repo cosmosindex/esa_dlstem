@@ -32,8 +32,11 @@ archives, which unpack into the same root:
 
 Either half stands alone; take only the one you need.
 
-> **Where to get them.** The download link is on the project page,
-> <https://anonymous.4open.science/r/59C2/> (anonymised for review).
+> **Where to get them.** Both archives will be published as a **Google Drive**
+> folder, with an `md5sums.txt` beside them. The link is withheld while the
+> paper is under review and will be filled in here on acceptance; the project
+> page, <https://anonymous.4open.science/r/59C2/>, carries the code and the
+> annotation tool in the meantime.
 
 Unpack, then point the loader at the directory that holds `sot/` and `mot/`:
 
@@ -354,15 +357,20 @@ MOTTrack   track_id category_id category n_boxes is_small median_sqrt_area_px
 benchmark needs.
 
 The remaining modules — `manifest.py`, `data.py`, `manifest_mot.py`,
-`data_mot.py`, `benchmark.py`, `benchmark_mot.py`, `metrics.py`, and the two
-`space_tracker*.json` indexes beside them — are the **internal layer**: they
-index the *source* datasets in their original, mutually incompatible on-disk
-formats, and they exist because the annotation tool (`../interactive_review/`)
-and the build scripts (`../tools/build_space_tracker_release.py` and friends)
-work upstream of the release. They are imported lazily, so they cost nothing
-here, but their derived fields describe the source datasets rather than this
-benchmark, and their sequence counts (463 SOT, 491 MOT) are **not** the
-benchmark's. Do not quote them.
+`data_mot.py`, `benchmark.py`, `benchmark_mot.py`, `metrics.py` — are the
+**internal layer**: they index the *source* datasets in their original, mutually
+incompatible on-disk formats, and they exist because the annotation tool
+(`../interactive_review/`) and the build scripts
+(`../tools/build_space_tracker_release.py` and friends) work upstream of the
+release. They are imported lazily, so they cost nothing here.
+
+The two indexes they read, `space_tracker.json` and `space_tracker_mot.json`,
+are **not published**: their derived fields describe the source datasets rather
+than this benchmark, and their sequence counts (463 SOT, 491 MOT) are not the
+benchmark's. Rebuild them from the sources with
+`../tools/build_space_tracker_manifest.py` and
+`../tools/build_space_tracker_mot_manifest.py` if you need to re-run the build
+pipeline. Nothing in the released package depends on them.
 
 ---
 

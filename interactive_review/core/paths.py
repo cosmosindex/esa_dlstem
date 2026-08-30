@@ -24,8 +24,8 @@ MOT_ROOTS = {
 }
 
 MOT_MANIFEST = REPO / "space_tracker" / "space_tracker_mot.json"
-DET_VS_MOT_CSV = REPO / "docs" / "static_annotation" / "satmtb_det_vs_mot.csv"
-SIZE_SPLIT = REPO / "docs" / "size_split" / "size_split.json"
+DET_VS_MOT_CSV = REPO / "space_tracker" / "data" / "satmtb_det_vs_mot.csv"
+SIZE_SPLIT = REPO / "space_tracker" / "data" / "size_split.json"
 
 #: Where human decisions are written. One file, git-friendly, never touches raw
 #: data. Keyed by sequence — see :mod:`.vdecisions`.
