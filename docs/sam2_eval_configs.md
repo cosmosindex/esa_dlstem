@@ -12,8 +12,6 @@ python eval_sam2.py --config configs/<config_name>.yaml
 |---|---|---|---|
 | `configs/SOT/sam2_satsot.yaml` | SatSOT | native (`img_size: null`) | SOT |
 | `configs/SOT/sam2_ootb.yaml` | OOTB | 640x640 | SOT |
-| `configs/sam2_birdsai_mot.yaml` | BIRDSAI_MOT | 640x640 | MOT |
-| `configs/SOT/sam2_birdsai_sot.yaml` | BIRDSAI | 640x640 | SOT |
 
 ## Config Fields
 
@@ -57,7 +55,6 @@ wandb_entity: anonymous
 ## Key Design Decisions
 
 - **`img_size: null`** — no resize transform is applied; frames are fed at native resolution. Required for SatSOT where targets are already very small (~10 px) and resizing to 640x640 would distort aspect ratios across sequences (each has a different resolution).
-- **`img_size: [H, W]`** — applies `build_eval_transform(img_size)` (Albumentations `A.Resize`). Used for datasets like OOTB and BIRDSAI where a fixed input size is acceptable.
 - **`eval_mode: sot`** — attaches `SAM2SOTEvalCallback` (Success AUC, Precision@20) and sets `sot_mode=True` on visualization callback.
 - **`eval_mode: mot`** — visualization callback only (`sot_mode=False`); MOTA, IDF1, TP/FP/FN are computed internally by `SAM2EvaluationModule.on_test_epoch_end()`.
 
@@ -89,4 +86,3 @@ wandb_entity: anonymous
 The per-dataset eval scripts below are superseded by `eval_sam2.py` and kept for reference only:
 
 - `eval_sam2_ootb.py` → use `configs/SOT/sam2_ootb.yaml`
-- `eval_sam2_birdsai.py` → use `configs/sam2_birdsai_mot.yaml` or `configs/SOT/sam2_birdsai_sot.yaml`

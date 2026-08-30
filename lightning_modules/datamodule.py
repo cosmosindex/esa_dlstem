@@ -27,8 +27,7 @@ from torch.utils.data import ConcatDataset, DataLoader
 
 from datasets import detection_collate_fn
 from datasets.ootb import OOTBDataset
-from datasets.birdsai import BIRDSAIDataset
-from datasets.birdsai_mot import BIRDSAIMOTDataset
+from datasets.space_tracker_mot import SpaceTrackerMOTDataset
 from datasets.lmod import LMODDataset
 from datasets.irsatvideo import IRSatVideoDataset
 from datasets.satsot import SatSOTDataset
@@ -38,7 +37,14 @@ from datasets.viso import VISODataset
 from datasets.sv248s import SV248SDataset
 from datasets.sdmcar import SDMCarDataset
 from datasets.rscardata import RsCarDataset
-from datasets.fire_rgbt import FireRGBTDataset
+# Use-case datasets (thermal wildlife, wildfire) are not part of this benchmark
+# release; import them only when their loaders are present on disk.
+try:
+    from datasets.birdsai import BIRDSAIDataset
+    from datasets.birdsai_mot import BIRDSAIMOTDataset
+    from datasets.fire_rgbt import FireRGBTDataset
+except ImportError:  # loaders kept out of the released tree
+    BIRDSAIDataset = BIRDSAIMOTDataset = FireRGBTDataset = None
 
 # ---------------------------------------------------------------------------
 # Dataset registry — add new dataset classes here
@@ -46,8 +52,7 @@ from datasets.fire_rgbt import FireRGBTDataset
 
 _DATASET_REGISTRY: dict[str, type] = {
     "OOTB": OOTBDataset,
-    "BIRDSAI": BIRDSAIDataset,
-    "BIRDSAI_MOT": BIRDSAIMOTDataset,
+    "Space-Tracker-MOT": SpaceTrackerMOTDataset,
     "LMOD": LMODDataset,
     "IRSatVideo-LEO": IRSatVideoDataset,
     "SatSOT": SatSOTDataset,
@@ -57,8 +62,15 @@ _DATASET_REGISTRY: dict[str, type] = {
     "SV248S": SV248SDataset,
     "SDM-Car": SDMCarDataset,
     "RsCarData": RsCarDataset,
-    "FireRGBT": FireRGBTDataset,
 }
+
+_DATASET_REGISTRY.update({
+    key: cls
+    for key, cls in (("BIRDSAI", BIRDSAIDataset),
+                     ("BIRDSAI_MOT", BIRDSAIMOTDataset),
+                     ("FireRGBT", FireRGBTDataset))
+    if cls is not None
+})
 
 # ---------------------------------------------------------------------------
 # Config

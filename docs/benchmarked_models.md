@@ -15,8 +15,8 @@ trackers.
 
 ## 1. Detection
 
-**Datasets:** FireRGBT (RGB-T wildfire), BIRDSAI (TIR aerial wildlife),
-SAT-MTB det/HBB (satellite airplane/ship/train).
+**Datasets:** SAT-MTB det/HBB and the Space-Tracker detection split
+(satellite airplane / ship / train).
 **Primary metric:** mAP@0.5 (per-class AP).
 
 We benchmark three detectors that span the modern design spectrum, all trained
@@ -29,16 +29,12 @@ apples-to-apples:
 | **YOLO11l** | One-stage, anchor-free | The current one-stage real-time standard. Represents the deployment-oriented single-shot design; trained via a manual loop (Lightning's warmup-LR path explodes YOLO loss). |
 | **DINOv3 (ViT-B/16, frozen) + dense FCOS head** | Foundation-model features + lightweight head | Tests the "frozen foundation features + simple head" hypothesis: how far do self-supervised web-scale ViT features transfer to remote-sensing/thermal detection with only a 4.9M-param head trained. The in-repo DETR head collapses on frozen features + small data, so we use a dense FCOS head. |
 
-**Key finding across all three datasets:** the frozen DINOv3 detector *matches*
-the fine-tuned detectors on large / easy classes (e.g. FireRGBT smoke AP 0.93)
-but lags on tiny objects (fire/person, thermal wildlife) — a stride-16 frozen
+**Key finding:** the frozen DINOv3 detector *matches* the fine-tuned detectors
+on large / easy classes but lags badly on tiny objects — a stride-16 frozen
 feature map cannot localise small targets as well as a fine-tuned multi-scale
 detector. This is the central "frozen features vs. fine-tuned detector"
-narrative of the detection track.
-
-> Detailed comparisons: `docs/use_case_results/fire_detection_compare.md`,
-> `docs/use_case_results/birdsai_detection_sam3gt_compare.md`, and the SAT-MTB
-> detection comparison.
+narrative of the detection track, and it is why the tracking-by-detection
+pipeline uses the fine-tuned Faster R-CNN for its boxes.
 
 ---
 
@@ -86,8 +82,8 @@ unambiguously the strongest release; SiamRPN++ carries one footnote.**
 
 ## 3. Multi-Object Tracking (MOT)
 
-**Datasets:** RsCarData, SAT-MTB mot, SDM-Car (car); AIR-MOT, VISO, LMOD,
-BIRDSAI (multi-class / other).
+**Datasets:** RsCarData, SAT-MTB mot, SDM-Car (car); AIR-MOT, VISO, LMOD
+(multi-class / other).
 **Primary metrics:** HOTA (with its DetA × AssA decomposition), MOTA, IDF1, IDsw.
 
 **Hard rule (project-wide):** in MOT the model must perform detection on its own

@@ -29,8 +29,6 @@ from torch.utils.data import ConcatDataset, DataLoader
 
 from datasets import video_collate_fn
 from datasets.ootb import OOTBDataset
-from datasets.birdsai import BIRDSAIDataset
-from datasets.birdsai_mot import BIRDSAIMOTDataset
 from datasets.lmod import LMODDataset
 from datasets.irsatvideo import IRSatVideoDataset
 from datasets.satsot import SatSOTDataset
@@ -40,7 +38,14 @@ from datasets.viso import VISODataset
 from datasets.sv248s import SV248SDataset
 from datasets.sdmcar import SDMCarDataset
 from datasets.rscardata import RsCarDataset
-from datasets.fire_rgbt import FireRGBTDataset
+# Use-case datasets (thermal wildlife, wildfire) are not part of this benchmark
+# release; import them only when their loaders are present on disk.
+try:
+    from datasets.birdsai import BIRDSAIDataset
+    from datasets.birdsai_mot import BIRDSAIMOTDataset
+    from datasets.fire_rgbt import FireRGBTDataset
+except ImportError:  # loaders kept out of the released tree
+    BIRDSAIDataset = BIRDSAIMOTDataset = FireRGBTDataset = None
 
 # ---------------------------------------------------------------------------
 # Dataset registry — shared with DetectionDataModule; add new classes here
@@ -48,8 +53,6 @@ from datasets.fire_rgbt import FireRGBTDataset
 
 _DATASET_REGISTRY: dict[str, type] = {
     "OOTB": OOTBDataset,
-    "BIRDSAI": BIRDSAIDataset,
-    "BIRDSAI_MOT": BIRDSAIMOTDataset,
     "LMOD": LMODDataset,
     "IRSatVideo-LEO": IRSatVideoDataset,
     "SatSOT": SatSOTDataset,
@@ -59,12 +62,64 @@ _DATASET_REGISTRY: dict[str, type] = {
     "SV248S": SV248SDataset,
     "SDM-Car": SDMCarDataset,
     "RsCarData": RsCarDataset,
-    "FireRGBT": FireRGBTDataset,
 }
+
+_DATASET_REGISTRY.update({
+    key: cls
+    for key, cls in (("BIRDSAI", BIRDSAIDataset),
+                     ("BIRDSAI_MOT", BIRDSAIMOTDataset),
+                     ("FireRGBT", FireRGBTDataset))
+    if cls is not None
+})
 
 # ---------------------------------------------------------------------------
 # Config
 # ---------------------------------------------------------------------------
+
+
+def _apply_sequence_whitelist(ds, dataset_name: str):
+    """Restrict a dataset to the sequences listed in $SOT_SEQ_WHITELIST.
+
+    The source SOT datasets carry their own train/test splits, which are NOT the
+    release's scene-disjoint split. To evaluate on the released test sequences we
+    therefore load the full set and filter by name, driven by a file of
+    "<dataset>/<video_id>" lines. Filtering here rather than after inference is
+    what makes a subset ablation actually cheaper.
+
+    The clip index is rebuilt afterwards, otherwise it would still point at
+    videos that are no longer in the list.
+    """
+    import os
+    path = os.environ.get("SOT_SEQ_WHITELIST")
+    if not path:
+        return ds
+    key = dataset_name.lower()
+    wanted = set()
+    with open(path) as f:
+        for line in f:
+            line = line.strip()
+            if not line or "/" not in line:
+                continue
+            d, vid = line.split("/", 1)
+            if d.lower() == key:
+                wanted.add(vid)
+    if not wanted:
+        return ds
+    before = len(ds.videos)
+    ds.videos = [v for v in ds.videos if v.video_id in wanted]
+    if not ds.videos:
+        raise RuntimeError(
+            f"{dataset_name}: whitelist matched none of {before} sequences "
+            f"(first wanted: {sorted(wanted)[:3]})"
+        )
+    if ds.mode == "video":
+        ds._clip_index = []
+        ds._build_clip_index()
+    else:
+        ds._frame_index = [(vi, fid) for vi, v in enumerate(ds.videos)
+                           for fid in v.frame_ids]
+    print(f"[whitelist] {dataset_name}: {before} -> {len(ds.videos)} sequences")
+    return ds
 
 
 @dataclass
@@ -159,7 +214,9 @@ class SAM2DataModule(L.LightningDataModule):
                     f"Unknown dataset '{name}'. "
                     f"Registered: {list(_DATASET_REGISTRY.keys())}"
                 )
-            parts.append(cls(root=root, split=split, **kwargs))
+            ds = cls(root=root, split=split, **kwargs)
+            ds = _apply_sequence_whitelist(ds, name)
+            parts.append(ds)
         return ConcatDataset(parts)
 
     # ------------------------------------------------------------------
