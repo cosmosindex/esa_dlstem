@@ -35,7 +35,7 @@
     },
     "sv248s": {
       "name": "SV248S",
-      "paper": "Li et al., IEEE TGRS 2022",
+      "paper": "Li et al., IEEE GRSM 2022",
       "gt_format": "xywh_with_state",
       "gt_format_description": "Per-sequence: <ann_dir>/<seq_id>.rect (xywh per frame) and <ann_dir>/<seq_id>.state (per-frame flag: 0=visible, 1=invisible, 2=occluded). Sequences live at <video_dir>/sequences/<seq_id>/*.tiff with annotations at <video_dir>/annotations/<seq_id>.{rect,state,abs,poly,attr}.",
       "image_glob": "*.tiff"

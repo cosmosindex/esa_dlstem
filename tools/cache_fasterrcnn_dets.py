@@ -36,9 +36,12 @@ import torch
 from PIL import Image
 import yaml
 
-sys.path.insert(0, "/home/anon/code/esa_dlstem")
+# Resolve the repo root from this file rather than hard-coding it: the
+# anonymised placeholder path does not exist on any real machine.
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from datasets.airmot import AIRMOTDataset
+from datasets.space_tracker_mot import SpaceTrackerMOTDataset
 from datasets.satmtb import SATMTBDataset
 from datasets.viso import VISODataset
 from models import FasterRCNNDetector
@@ -60,6 +63,17 @@ def _safe_video_id(video_id: str) -> str:
 def _build_dataset(name: str):
     """Return (display_name, dataset_obj) — limited to sequences FasterRCNN
     has *not* seen at training time."""
+    if name == "spacetracker_nocar":
+        # The released benchmark, held-out test split only. complete_only keeps
+        # the sequences whose GT includes static objects -- the same filter the
+        # detector was trained under, so evaluation is like-for-like.
+        ds = SpaceTrackerMOTDataset(
+            root="/data/ESA_DLSTEM_2025/release/space_tracker",
+            split="test",
+            class_map={"airplane": 1, "ship": 2},
+            complete_only=True,
+        )
+        return "Space-Tracker-MOT", ds
     if name == "satmtb_nocar":
         ds = SATMTBDataset(
             root="/data/ESA_DLSTEM_2025/data/trafic/SAT-MTB",

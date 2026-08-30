@@ -1,0 +1,19 @@
+# bytetrack on spacetracker_car (Space-Tracker-MOT car). HiEUM cached dets, single class.
+# score_floor 0.26 = HiEUM's F1-optimal operating point. NOT the 0.25 used for
+# non-car: HiEUM's scores top out at 0.66, so a threshold tuned for Faster R-CNN
+# would discard almost everything (0.5 leaves 0.5% of detections).
+dataset: spacetracker_car
+tracker: bytetrack
+cache_dir: /data/ESA_DLSTEM_2025/experiments/Detection/hieum_dets_cache_st_best/spacetracker_car
+score_floor: 0.26
+match_metric: centroid
+centroid_dist_thresh: 5.0
+iou_thresh: 0.5
+tracker_kwargs:
+  track_thresh: 0.268      # quantile-matched to FRCNN's 0.30, not copied
+  track_buffer: 30
+  match_thresh: 0.9        # cost limit on (1-IoU): 0.9 == accept IoU>=0.1,
+                           # matching sort/ocsort. The MOT17 default 0.5 demands
+                           # IoU>=0.5, unreachable between few-pixel car boxes.
+  mot20: false
+  frame_rate: 30

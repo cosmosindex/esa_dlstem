@@ -48,6 +48,7 @@ import numpy as np
 import yaml
 
 from datasets.airmot import AIRMOTDataset
+from datasets.space_tracker_mot import SpaceTrackerMOTDataset
 from datasets.satmtb import SATMTBDataset
 from datasets.viso import VISODataset
 from models.trackers import build_tracker
@@ -57,9 +58,29 @@ from models.trackers import build_tracker
 _FRCN_CLASS_MAP_AIRPLANE_SHIP_TRAIN = {"airplane": 1, "ship": 2, "train": 3}
 _FRCN_CLASS_MAP_VISO              = {"plane": 1, "ship": 2, "train": 3}
 _FRCN_CLASS_MAP_AIRMOT            = {"airplane": 1, "ship": 2}
+# The released benchmark's detector is 2-class: `train` has no val/test GT at
+# all, so it was dropped from the detector rather than scored as an empty class.
+_FRCN_CLASS_MAP_SPACETRACKER      = {"airplane": 1, "ship": 2}
 
 _DATASET_TABLE = {
     # name → (display, cls, root, build_kwargs, class_map)
+    "spacetracker_nocar": (
+        "Space-Tracker-MOT", SpaceTrackerMOTDataset,
+        "/data/ESA_DLSTEM_2025/release/space_tracker",
+        {"complete_only": True},
+        _FRCN_CLASS_MAP_SPACETRACKER,
+    ),
+    # The car half, detected by HiEUM. complete_only must be False: car ground
+    # truth annotates moving objects only and was never completed with static
+    # ones, so the completeness filter (right for airplane/ship) would leave 2
+    # of 48 sequences. Restricted to release category 'car' to match the
+    # training set HiEUM was retrained on.
+    "spacetracker_car": (
+        "Space-Tracker-MOT", SpaceTrackerMOTDataset,
+        "/data/ESA_DLSTEM_2025/release/space_tracker",
+        {"complete_only": False, "categories": ["car"]},
+        {"car": 1},
+    ),
     "satmtb_nocar": (
         "SAT-MTB", SATMTBDataset,
         "/data/ESA_DLSTEM_2025/data/trafic/SAT-MTB",
@@ -83,6 +104,8 @@ _DATASET_TABLE = {
 # Default split policy: only sequences FasterRCNN has *not* seen during
 # training. SAT-MTB → test; VISO/AIR-MOT → all (no_split).
 _DATASET_SPLIT = {
+    "spacetracker_nocar": "test",
+    "spacetracker_car":   "test",
     "satmtb_nocar": "test",
     "viso_nocar":   "no_split",
     "airmot":       "no_split",
@@ -96,20 +119,39 @@ def _safe_video_id(video_id: str) -> str:
 def _load_cache(cache_dir: Path, video_id: str) -> dict:
     path = cache_dir / f"{_safe_video_id(video_id)}.json"
     with open(path) as f:
-        return json.load(f)
+        cache = json.load(f)
+    if "labels" not in cache:
+        # Single-class detectors (HiEUM, which only detects cars) write no label
+        # array because there is nothing to distinguish. The driver is
+        # class-aware throughout, so synthesise the one foreground id rather
+        # than special-casing every downstream use.
+        cache["labels"] = [[1] * len(b) for b in cache["boxes"]]
+    return cache
 
 
 def _build_dataset(name: str, mode: str = "detection"):
     if name not in _DATASET_TABLE:
         raise ValueError(f"unknown dataset {name!r}")
     _, cls, root, extra, class_map = _DATASET_TABLE[name]
-    return cls(
+    ds = cls(
         root=root,
         split=_DATASET_SPLIT[name],
         mode=mode,
         class_map=dict(class_map),
         **extra,
     )
+    if name == "spacetracker_car":
+        # `categories=["car"]` filters by TRACK class, so it also admits mixed
+        # sequences that merely contain a car. The car benchmark is the 48
+        # sequences whose release category is 'car' -- the same set HiEUM was
+        # trained and scored on.
+        ann = json.loads((Path(root) / "mot" / "annotations"
+                          / "space_tracker_mot.json").read_text())
+        keep = {v["name"] for v in ann["videos"] if v["category"] == "car"}
+        ds.videos = [v for v in ds.videos if v.video_id in keep]
+        if not ds.videos:
+            raise RuntimeError("car category filter removed every sequence")
+    return ds
 
 
 def _gt_per_frame(dataset, video) -> dict[int, dict]:

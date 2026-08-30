@@ -35,6 +35,22 @@ from lightning_modules import (
 from transforms import build_eval_transform
 
 
+
+def _resolve(v):
+    """Expand ${CHECKPOINT_ROOT} / ${REPO_ROOT} in a config path.
+
+    The tracked configs carry anonymised placeholders rather than real paths, so
+    they are resolved at run time from the environment. Passing through None
+    untouched keeps the SAM-family configs (which auto-download) working.
+    """
+    if not isinstance(v, str):
+        return v
+    out = os.path.expandvars(v)
+    if "$" in out:
+        raise RuntimeError(f"unresolved variable in path: {out!r} "
+                           "(set CHECKPOINT_ROOT / REPO_ROOT)")
+    return out
+
 def load_config(path: str) -> dict:
     with open(path) as f:
         return yaml.safe_load(f)
@@ -72,7 +88,7 @@ def main():
         cfg=SAM2DataModuleConfig(
             datasets={dataset_name: cfg["dataset_root"]},
             class_map=class_map,
-            clip_len=cfg.get("clip_len", 32),
+            clip_len=int(os.environ.get("SOT_CLIP_LEN", cfg.get("clip_len", 32))),
             clip_stride=cfg.get("clip_stride", 1),
             batch_size=cfg.get("batch_size", 1),
             num_workers=cfg.get("num_workers", 0),
@@ -97,7 +113,7 @@ def main():
     # --- Logger ---
     logger = WandbLogger(
         project=cfg.get("wandb_project", "esa-dlstem"),
-        entity=cfg.get("wandb_entity", "anonymous"),
+        entity=os.environ.get("WANDB_ENTITY") or cfg.get("wandb_entity", "anonymous"),
         name=run_name,
         log_model=False,
     )
@@ -110,7 +126,7 @@ def main():
             output_dir=experiment_dir,
             iou_thresh=cfg.get("iou_thresh", 0.3),
             max_wandb_images=cfg.get("max_wandb_images", 50),
-            score_thresh=cfg.get("score_thresh", 0.5),
+            score_thresh=float(os.environ.get("SOT_SCORE_THRESH", cfg.get("score_thresh", 0.5))),
             sot_mode=sot_mode,
         ),
     ]
@@ -120,7 +136,7 @@ def main():
             SAM2SOTEvalCallback(
                 class_names=class_names,
                 output_dir=experiment_dir,
-                score_thresh=cfg.get("score_thresh", 0.5),
+                score_thresh=float(os.environ.get("SOT_SCORE_THRESH", cfg.get("score_thresh", 0.5))),
             )
         )
 

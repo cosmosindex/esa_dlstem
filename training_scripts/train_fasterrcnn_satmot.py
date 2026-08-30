@@ -32,6 +32,7 @@ from datetime import datetime
 import torch
 import yaml
 import lightning as L
+from torch.utils.data import ConcatDataset
 from lightning.pytorch.loggers import WandbLogger
 from lightning.pytorch.callbacks import ModelCheckpoint, EarlyStopping
 
@@ -51,6 +52,28 @@ from transforms import (
 def load_config(path: str) -> dict:
     with open(path) as f:
         return yaml.safe_load(f)
+
+
+class FrameEpochCallback(L.Callback):
+    """
+    Rotate each dataset's frame-subsampling phase at the start of every epoch.
+
+    Datasets that subsample frames (see SpaceTrackerMOTDataset.frame_stride)
+    keep only 1 frame in N per epoch, which is what makes an epoch cheap on
+    video data where consecutive frames are near-duplicates. Advancing the phase
+    each epoch is what stops that from becoming a permanent 1/N subset: over N
+    epochs the run still sees essentially every frame.
+    """
+
+    def on_train_epoch_start(self, trainer, pl_module):
+        ds = getattr(trainer, "train_dataloader", None)
+        ds = getattr(ds, "dataset", None)
+        if ds is None:
+            return
+        parts = ds.datasets if isinstance(ds, ConcatDataset) else [ds]
+        for part in parts:
+            if hasattr(part, "set_epoch"):
+                part.set_epoch(trainer.current_epoch)
 
 
 def main():
@@ -144,6 +167,7 @@ def main():
     class_names = {v: k for k, v in cfg["class_map"].items() if k != "plane"}
 
     callbacks = [
+        FrameEpochCallback(),
         ModelCheckpoint(
             dirpath=f"{experiment_dir}/checkpoints",
             monitor=cfg.get("monitor_metric", "val/mAP"),

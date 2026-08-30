@@ -200154,7 +200154,7 @@
       "tags": [
         "fast_motion"
       ],
-      "updated": "2026-08-20T09:55:44",
+      "updated": "2026-08-23T15:25:22",
       "watched": true
     },
     "satmtb/car/67": {
@@ -201904,12 +201904,15 @@
       "boxes": {},
       "deleted": [],
       "drawn": {},
-      "note": "",
+      "labels": {
+        "airplane:14": "ship"
+      },
+      "note": "Coarse class corrected to ship: the detection XML's <name> contradicts its own <subname> for this object (speed_boat / yacht are ships). Reviewed on video; every object in this sequence is a vessel.",
       "reviewer": "",
       "status": "accepted",
       "tags": [],
-      "updated": "2026-08-18T14:29:09",
-      "watched": true
+      "updated": "2026-08-23T15:41:05",
+      "watched": false
     },
     "satmtb/ship/52": {
       "boxes": {},
@@ -201981,12 +201984,15 @@
       "boxes": {},
       "deleted": [],
       "drawn": {},
-      "note": "",
+      "labels": {
+        "train:11": "ship"
+      },
+      "note": "Coarse class corrected to ship: the detection XML's <name> contradicts its own <subname> for this object (speed_boat / yacht are ships). Reviewed on video; every object in this sequence is a vessel.",
       "reviewer": "",
       "status": "accepted",
       "tags": [],
-      "updated": "2026-08-18T14:32:07",
-      "watched": true
+      "updated": "2026-08-23T15:41:05",
+      "watched": false
     },
     "satmtb/ship/59": {
       "boxes": {},

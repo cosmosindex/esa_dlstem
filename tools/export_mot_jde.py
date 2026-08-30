@@ -41,17 +41,36 @@ from datasets.sdmcar import SDMCarDataset          # noqa: E402
 from datasets.satmtb import SATMTBDataset          # noqa: E402
 from datasets.airmot import AIRMOTDataset          # noqa: E402
 from datasets.viso import VISODataset              # noqa: E402
+from datasets.space_tracker_mot import SpaceTrackerMOTDataset  # noqa: E402
 
 # Default car-only root kept for back-compat; the all-class export should be
 # run with JDE_ROOT=/data/ESA_DLSTEM_2025/data/fairmot_jde_all so it does NOT
 # clobber the car-only export that backs the completed FairMOT/TGraM models.
 JDE_ROOT = os.environ.get("JDE_ROOT", "/data/ESA_DLSTEM_2025/data/fairmot_jde")
-CFG_DIR = "/home/anon/code/esa_dlstem/FairMOT/src/lib/cfg"
+# Resolved from this file's location so the path is neither machine-specific
+# nor tied to the anonymised placeholder; override with FAIRMOT_CFG_DIR.
+CFG_DIR = os.environ.get(
+    "FAIRMOT_CFG_DIR",
+    os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+                 "FairMOT", "src", "lib", "cfg"),
+)
 
 # Canonical unified Space-tracker MOT class indices (manifest order).
 # Note VISO names planes "plane"; AIR-MOT/SAT-MTB use "airplane" — both map to 1.
 CANON = {"car": 0, "airplane": 1, "ship": 2, "train": 3}
 CLASS_NAMES = ["car", "airplane", "ship", "train"]
+
+# The non-car Space-Tracker model is trained as a 3-class model, so its class
+# ids must be contiguous from 0 -- FairMOT sizes the heatmap head by
+# num_classes and a gap would leave a dead channel. Selected with
+# `--classes nocar`.
+# TWO classes, matching the detector. `train` is excluded because it has 752
+# boxes in one training sequence and ZERO ground truth in val and test, so it
+# can never be scored -- but a model that still predicts it would emit pure
+# false positives under class-agnostic HOTA pooling, unfairly penalising the
+# JDT/query paradigms relative to the TBD trackers.
+NOCAR_CLASS_NAMES = ["airplane", "ship"]
+NOCAR_MAP = {"airplane": 0, "ship": 1}
 
 # name -> (builder, image-ext, fairmot data-cfg key)
 # class_map passed to each dataset maps its NATIVE category names -> CANON index;
@@ -85,6 +104,18 @@ DATASETS = {
             root="/data/ESA_DLSTEM_2025/data/trafic/AIR-MOT-100",
             split=split, class_map={"airplane": 1, "ship": 2}),
     ),
+    # Space-Tracker MOT release, non-car classes only. `complete_only=True`
+    # keeps just the sequences whose GT was completed with static objects --
+    # training a detector on movers-only labels teaches it that a parked
+    # aircraft is background. Car is excluded entirely: its GT is movers-only
+    # by design, which is a different task (see docs/static_annotation).
+    "spacetracker_nocar": dict(
+        ext=None, key="spacetracker_nocar",     # ext varies per sequence
+        build=lambda split: SpaceTrackerMOTDataset(
+            root="/data/ESA_DLSTEM_2025/release/space_tracker",
+            split=split, mode="detection", class_map=NOCAR_MAP,
+            complete_only=True),
+    ),
     "viso_no_car": dict(
         ext="jpg", key="viso_no_car",
         build=lambda split: VISODataset(
@@ -110,6 +141,10 @@ def source_image_path(name, ds, video, fid):
         suffix = getattr(video, "_img_suffix", "")
         fname = f"{fid:06d}_{suffix}.jpg" if suffix else f"{fid:06d}.jpg"
         return os.path.join(root, vid, "img", fname)
+    if name == "spacetracker_nocar":
+        # MOTChallenge layout inside the release; extension varies per sequence
+        seq_dir = ds._seq_dir[vid]
+        return os.path.join(str(seq_dir), "img1", f"{fid:06d}{ds._img_ext[vid]}")
     if name == "viso_no_car":
         # video_id == "<cat>/<seq>"; frames at mot/<cat>/<seq>/img/%06d.jpg
         cat, seq = vid.split("/")
@@ -169,7 +204,8 @@ def export_dataset(name, split, limit_videos=None, write_cfg=False):
     next_id = [0]          # mutable counter
     txt_lines = []
     n_frames = n_boxes = 0
-    cls_counts = {c: 0 for c in range(len(CLASS_NAMES))}  # per-class box counts
+    names = NOCAR_CLASS_NAMES if name == "spacetracker_nocar" else CLASS_NAMES
+    cls_counts = {c: 0 for c in range(len(names))}  # per-class box counts
 
     for vi, video in enumerate(videos, 1):
         vid = video.video_id
@@ -192,9 +228,13 @@ def export_dataset(name, split, limit_videos=None, write_cfg=False):
 
         # image size (constant within a video for all 3 datasets)
         W = H = None
+        # A spec with ext=None carries a per-sequence extension (the release
+        # mixes .jpg and .png). FairMOT's label-path rewrite strips both, so a
+        # mixed export is safe.
+        vid_ext = ext if ext is not None else ds._img_ext[vid].lstrip(".")
         for fid in fids:
             ann = ds._load_annotations(video, fid)
-            rel = os.path.join(name, "images", vid, f"{fid:06d}.{ext}")
+            rel = os.path.join(name, "images", vid, f"{fid:06d}.{vid_ext}")
             dst_img = os.path.join(JDE_ROOT, rel)
             os.makedirs(os.path.dirname(dst_img), exist_ok=True)
 
@@ -253,7 +293,7 @@ def export_dataset(name, split, limit_videos=None, write_cfg=False):
             json.dump(cfg, f, indent=2)
         print(f"  -> cfg:   {cfg_path}")
 
-    per_cls = {CLASS_NAMES[c]: n for c, n in sorted(cls_counts.items()) if n}
+    per_cls = {names[c]: n for c, n in sorted(cls_counts.items()) if n}
     print(f"  -> {n_frames} frames, {n_boxes} boxes, nID={nID}")
     print(f"  -> per-class boxes: {per_cls}")
     print(f"  -> list:  {txt_path}")

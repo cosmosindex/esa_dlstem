@@ -1,111 +1,101 @@
-# Space-tracker
+# Space-Tracker
 
-Unified satellite-video tracking benchmark. Two parallel surfaces:
+A tracking benchmark for **small objects in satellite video**, in two halves —
+single-object (SOT) and multi-object (MOT) — assembled from seven source
+datasets, re-annotated where the sources were incomplete, and rewritten into one
+annotation format per task.
 
-| Task | Manifest | Datasets | API |
-|---|---|---|---|
-| **SOT** | [`space_tracker/space_tracker.json`](space_tracker/space_tracker.json) — 463 seqs | SatSOT, SV248S, OOTB | `Benchmark` |
-| **MOT** | [`space_tracker/space_tracker_mot.json`](space_tracker/space_tracker_mot.json) — 491 seqs | AIRMOT, SAT-MTB, VISO (non-car), SDM-Car, RsCarData | `MOTBenchmark` |
+|     | sequences | frames  | tracks | boxes     | classes |
+|-----|----------:|--------:|-------:|----------:|---------|
+| SOT |       395 | 198,481 |    395 |   185,376 | car, car-large, airplane, ship, train |
+| MOT |       403 |  93,207 | 29,367 | 3,570,015 | car, airplane, ship, train |
 
-Both manifests are thin JSON pointers to per-sequence images + native ground-truth files. They do **not** redistribute raw imagery or GT — readers are expected to download each source dataset themselves under its original license, the same way LaSOT and GOT-10k handle it. See [`DATASETS.md`](DATASETS.md) for direct download links to every dataset used in the paper.
+Every target is small: **97.7 %** of MOT tracks and **all** SOT targets have a
+median `sqrt(area)` of at most 32 px, and **74.9 %** of all boxes in the
+benchmark are under `8×8` px. Splits are scene-disjoint and stratified,
+70 / 10 / 20 within each half.
 
-Detailed conventions, taxonomies, and quick-start examples are in [`space_tracker/README.md`](space_tracker/README.md).
+Unlike the earlier manifest-only release, the benchmark now ships as a **single
+self-contained package**: frames, ground truth in one format per task, and
+COCO-VID annotations. Nothing has to be assembled from the seven sources.
+
+**→ [`space_tracker/README.md`](space_tracker/README.md) — download, layout,
+annotation format, and the loading API.**
+
+## Getting started
+
+```bash
+export SPACE_TRACKER_ROOT=/path/to/space_tracker    # where you unpacked the download
+python -m space_tracker --verify                    # check the package is complete
+```
+
+```python
+from space_tracker import SpaceTracker
+
+st = SpaceTracker()                       # reads $SPACE_TRACKER_ROOT
+
+# SOT — one target, one row per frame, selectable by attribute and by size.
+for seq in st.sot.filter(split="test", attribute="OCC"):
+    box = seq.init_box                    # what a single-object tracker is initialised with
+    for f in seq.frames(visible_only=True):
+        f.image_path, f.box               # pathlib.Path, (x, y, w, h) in absolute pixels
+
+# MOT — every object in the field of view is annotated.
+for seq in st.mot.filter(split="test", contains="ship"):
+    for frame_id, objects in seq.frames():
+        for o in objects:
+            o.track_id, o.category, o.box
+    small = [t for t in seq.tracks.values() if t.is_small]
+```
+
+The loading code needs nothing beyond the standard library. Reading frames needs
+Pillow or OpenCV; `st.mot.load_coco()` needs `pycocotools`. **TrackEval** reads
+`mot/<class>/` as a MOTChallenge benchmark directory with no conversion.
+
+## What is in this repository
+
+| | |
+|---|---|
+| [`space_tracker/`](space_tracker/README.md) | the benchmark: download instructions, annotation format, loading API |
+| [`interactive_review/`](interactive_review/) | the annotation tool — SAM 3 in the loop, per-sequence audit trail — used to build the MOT half and offered for extending it |
+| [`evaluation/`](evaluation/), [`tools/`](tools/) | the evaluated trackers and the scripts that produce the paper's tables |
+| [`DATASETS.md`](DATASETS.md) | where each of the seven source datasets comes from |
 
 ## Attribute showcase
 
-Ground truth plus all 7 SOT trackers overlaid frame-by-frame, on four OOTB sequences that between them cover the hard cases: background clutter, illumination variation, similar distractor objects, motion blur, low texture, and occlusion.
+Ground truth plus all seven SOT trackers overlaid frame by frame, on three
+released sequences that between them cover background clutter, illumination
+variation, occlusion, similar distractor objects, low texture and motion blur.
+Each is named by its released id, with the source sequence it came from.
 
-**`ootb/plane_23`** — Background Clutter · Illumination Variation · Similar Object · Motion Blur
+**`car_ootb_0033`** (`ootb/car_39`) — Background Clutter · Illumination Variation · Occlusion · Similar Object · Less Texture · Isotropic Motion — median target scale 8.6 px
 
-![OOTB / plane_23 — BC · IV · SOB · MB](docs/figures/attributes_videos/plane_23_combined_trackers.gif)
+![car_ootb_0033 — BC · IV · OCC · SOB · LT · IM](docs/figures/attributes_videos/car_39_combined_trackers.gif)
 
-**`ootb/car_39`** — Background Clutter · Illumination Variation · Occlusion · Similar Object · Less Textures · Isotropic Motion — *tiny target*
+**`car_ootb_0040`** (`ootb/car_45`) — Background Clutter · Illumination Variation · Motion Blur — 11.2 px
 
-![OOTB / car_39 — BC · IV · OCC · SOB · LT · IM](docs/figures/attributes_videos/car_39_combined_trackers.gif)
+![car_ootb_0040 — BC · IV · MB](docs/figures/attributes_videos/car_45_combined_trackers.gif)
 
-**`ootb/car_45`** — Background Clutter · Illumination Variation · Motion Blur
+**`ship_ootb_0069`** (`ootb/ship_4`) — Background Clutter · Illumination Variation · Less Texture · Motion Blur — 17.0 px
 
-![OOTB / car_45 — BC · IV · MB](docs/figures/attributes_videos/car_45_combined_trackers.gif)
+![ship_ootb_0069 — BC · IV · LT · MB](docs/figures/attributes_videos/ship_4_combined_trackers.gif)
 
-**`ootb/ship_4`** — Background Clutter · Illumination Variation · Less Textures · Motion Blur
+## The SOT attribute taxonomy
 
-![OOTB / ship_4 — BC · IV · LT · MB](docs/figures/attributes_videos/ship_4_combined_trackers.gif)
-
-## SOT — quick start
-
-```python
-from space_tracker import Benchmark
-
-bench = Benchmark.load(
-    manifest="space_tracker/space_tracker.json",
-    dataset_roots={
-        "ootb":   "/data/OOTB",
-        "satsot": "/data/SatSOT",
-        "sv248s": "/data/SV248S",
-    },
-)
-
-# Sub-select sequences by unified attribute / tiny flag / native taxonomy attr.
-for seq in bench.filter(unified_attrs=["OCC"], tiny=True):
-    for frame in bench.frames(seq):
-        if not frame.visible:
-            continue
-        # frame.image_path  — pathlib.Path
-        # frame.gt_box_xyxy — np.ndarray (4,) xyxy
-        # frame.gt_obb_8pt  — np.ndarray (8,) corners (OOTB only)
-        ...
-
-def my_tracker(frames_iter, init_box):
-    """One prediction per visible-GT frame; yield None for misses."""
-    for frame in frames_iter:
-        yield init_box
-
-result = bench.evaluate(my_tracker, unified_attrs=["OCC", "SOB"])
-print(result.summary())   # SR / NPR / PR / P@5 per dataset, per attribute, overall
-```
-
-The 6-row unified attribute taxonomy (`BC`, `IV`, `ROT`, `OCC`, `SOB`, `DEF`) consolidates per-dataset native labels — e.g. `OCC = SatSOT{POC, FOC} ∪ SV248S{STO, LTO, CO} ∪ OOTB{PO, FO}`. A 23-row full paper taxonomy (`taxonomy_attrs`) lets you drill down into the sub-types. See [`space_tracker/README.md`](space_tracker/README.md#sot-attribute-taxonomy-two-layers) for the full mapping.
-
-## MOT — quick start
-
-```python
-from space_tracker import MOTBenchmark
-
-bench = MOTBenchmark.load(
-    manifest="space_tracker/space_tracker_mot.json",
-    dataset_roots={
-        "airmot":    "/data/AIR-MOT-100",
-        "satmtb":    "/data/SAT-MTB",
-        "viso":      "/data/VISO",
-        "sdmcar":    "/data/SDM-Car",
-        "rscardata": "/data/RsCarData",
-    },
-)
-
-# Filter sequences by dataset / unified category / split.
-for seq in bench.filter(categories=["car"], splits=["test"]):
-    for frame in bench.frames(seq):
-        # frame.frame_id    — int (native frame id; 0-indexed for SDM-Car, 1-indexed elsewhere)
-        # frame.image       — np.ndarray HxWxC uint8 RGB
-        # frame.objects     — list[MOTObject(track_id, category, bbox_xyxy)]
-        ...
-
-def my_tracker(frames_iter, image_size):
-    """Yield one list[(track_id, category, bbox_xyxy)] per frame, in order."""
-    for frame in frames_iter:
-        yield [(o.track_id, o.category, o.bbox_xyxy) for o in frame.objects]
-
-preds = bench.run(my_tracker, categories=["car"], splits=["test"])
-# preds[seq_id] = list of per-frame prediction lists.
-```
-
-`MOTBenchmark.run` only collects predictions — scoring (HOTA, MOTA, IDF1, DetA, AssA at IoU ≥ 0.5) is delegated to [TrackEval](https://github.com/JonathonLuiten/TrackEval) or `py-motmetrics`. The four unified categories are `car`, `airplane`, `ship`, `train`; VISO's `car` subset is excluded from the MOT manifest because it is re-annotated and shipped as RsCarData under the HiEUM protocol.
+18 attributes, consolidated from the 33 native labels of the three SOT sources:
+six **shared** rows annotated by at least two sources (`BC`, `IV`, `ROT`, `OCC`,
+`SOB`, `DEF` — e.g. `OCC` merges SatSOT's `POC`/`FOC`, SV248S's `STO`/`LTO`/`CO`
+and OOTB's `PO`/`FO`), two aspect-ratio attributes (`ARC`, `OON`), and ten
+dataset-unique ones. Each sequence carries its native labels, its six unified
+attributes and its full taxonomy list. The mapping is in
+[`space_tracker/README.md`](space_tracker/README.md#6-the-sot-attribute-taxonomy)
+and, machine-readable, in `st.sot.attribute_taxonomy`.
 
 ## Reproducing the paper numbers
 
 - **SOT** — `tools/reaggregate_sot_per_sequence.py` recomputes the headline SR/NPR/PR/P@5 numbers from existing `per_image_metrics.json` files. `tools/sot_unified_attribute_table.py` produces the unified-attribute breakdown CSVs.
-- **MOT** — `tools/compute_hota.py` computes HOTA / MOTA / IDF1 over predictions persisted to disk; the `MOT_<date>/<tracker>/` experiment layout is documented inside that script.
+- **MOT** — `compute_hota.py` computes HOTA / MOTA / IDF1 over predictions persisted to disk; the `MOT_<date>/<tracker>/` experiment layout is documented inside that script.
 
 ## Citation
 
-If you use Space-tracker, please cite the paper (BibTeX entry forthcoming with the camera-ready release).
+If you use Space-Tracker, please cite the paper (BibTeX entry forthcoming with the camera-ready release).

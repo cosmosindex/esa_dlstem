@@ -32,7 +32,8 @@ Integration quirks
 
 Usage mirrors OSTrackTracker:
     tracker = LoRATTracker(
-        lorat_root="/home/anon/code/esa_dlstem/LoRAT",
+        lorat_root=os.path.join(os.path.dirname(os.path.dirname(
+            os.path.abspath(__file__))), "LoRAT"),
         method_name="LoRAT",
         config_name="g-378",
         ckpt_path="/work/anon/checkpoints/lorat/lorat_g378.bin",

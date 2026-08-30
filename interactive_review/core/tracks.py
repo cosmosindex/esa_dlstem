@@ -49,6 +49,25 @@ class TrackKey:
         return cls(seq_id, source, category, track_ref)
 
 
+#: SAT-MTB's fine class -> the coarse class it belongs under. The dataset ships
+#: both on every detection object, and in two objects they disagree; this table
+#: is what lets the disagreement be detected instead of silently propagated.
+COARSE_OF_SUBNAME = {
+    "narrow_bodied_aircraft": "airplane",
+    "wide_bodied_aircraft": "airplane",
+    "four_engine_aircraft": "airplane",
+    "rear_engine_aircraft": "airplane",
+    "corporate_aircraft": "airplane",
+    "speed_boat": "ship",
+    "yacht": "ship",
+    "freighter": "ship",
+    "cruise": "ship",
+    "naval_vessels": "ship",
+    "other_ship": "ship",
+    "train": "train",
+}
+
+
 @dataclass
 class Track:
     """One track's boxes, ordered by frame."""
@@ -141,11 +160,21 @@ def load_det_tracks(seq_id: str, video_id: str) -> dict[tuple[str, str], Track]:
         # A track should carry one fine label; take the majority so a single
         # inconsistent frame does not decide it.
         votes = subnames[(category, oid)]
+        fine = votes.most_common(1)[0][0] if votes else ""
+        coarse = COARSE_OF_SUBNAME.get(fine, category)
+        if coarse != category:
+            # SAT-MTB's own coarse <name> contradicts its own <subname>. The
+            # fine label is the specific claim and the one a human wrote last,
+            # so it wins: a yacht is a ship however the coarse field reads.
+            # Two objects in the whole dataset are affected (ship/51 objectID
+            # 0011 speed_boat filed as airplane, ship/58 objectID 0008 yacht
+            # filed as train) and both were reaching the ground truth wrong.
+            category = coarse
         tracks[(category, oid)] = Track(
             key=TrackKey(seq_id, "det_xml", category, oid),
             frame_ids=[f for f, _ in obs],
             boxes=np.stack([b for _, b in obs]),
-            subname=votes.most_common(1)[0][0] if votes else "",
+            subname=fine,
             subname_agreement=(votes.most_common(1)[0][1] / sum(votes.values())
                                if votes else 0.0),
         )

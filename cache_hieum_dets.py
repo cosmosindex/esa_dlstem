@@ -68,6 +68,20 @@ _DATASET_TABLE = {
         "/data/ESA_DLSTEM_2025/data/trafic/SDM-Car",
         "datasets.sdmcar", "SDMCarDataset", {},
     ),
+    # The benchmark's own car split. The three entries above are the SOURCE
+    # datasets with their native partitions; this one follows Space-Tracker's
+    # scene-disjoint split, which is what every published car number must use.
+    # complete_only MUST be False here. It keeps only sequences whose annotation
+    # was completed with static objects, which is the right filter for
+    # airplane/ship (that is where the non-car set's 22 sequences come from) and
+    # the wrong one for car: car ground truth labels moving objects only, was
+    # never completed, and complete_only=True leaves just 2 of 48 sequences.
+    "spacetracker_car": (
+        "Space-Tracker-MOT",
+        "/data/ESA_DLSTEM_2025/release/space_tracker",
+        "datasets.space_tracker_mot", "SpaceTrackerMOTDataset",
+        {"categories": ["car"], "complete_only": False},
+    ),
 }
 
 
@@ -132,7 +146,9 @@ def main():
                         choices=sorted(_DATASET_TABLE.keys()))
     parser.add_argument("--split", default="test")
     parser.add_argument("--checkpoint",
-                        default="/work/anon/checkpoints/hieum/model_best.pth")
+                        default=os.environ.get(
+                            "HIEUM_CKPT",
+                            "/work/anon/checkpoints/hieum/model_best.pth"))
     parser.add_argument("--output-dir",
                         default="/data/ESA_DLSTEM_2025/experiments/Detection/hieum_dets_cache")
     parser.add_argument("--score-floor", type=float, default=0.05,
@@ -147,6 +163,7 @@ def main():
     torch.set_float32_matmul_precision("high")
 
     dataset_key, _, _, _, _ = _DATASET_TABLE[args.dataset]
+    _CAT_FILTER = {"spacetracker_car": "car"}
     out_dir = Path(args.output_dir) / args.dataset
     out_dir.mkdir(parents=True, exist_ok=True)
 
@@ -154,6 +171,17 @@ def main():
     print(f"Dataset: {dataset_key} | split: {args.split}")
 
     dataset = _load_dataset(args.dataset, split=args.split)
+    cat = _CAT_FILTER.get(args.dataset)
+    if cat is not None:
+        import json as _json
+        ann = _json.loads(Path(_DATASET_TABLE[args.dataset][1]).joinpath(
+            "mot", "annotations", "space_tracker_mot.json").read_text())
+        keep = {v["name"] for v in ann["videos"] if v["category"] == cat}
+        before = len(dataset.videos)
+        dataset.videos = [v for v in dataset.videos if v.video_id in keep]
+        print(f"category filter '{cat}': {before} -> {len(dataset.videos)} videos")
+        if not dataset.videos:
+            raise SystemExit("category filter removed every video")
     print(f"Videos: {len(dataset.videos)}")
 
     detector = HiEUMDetector(

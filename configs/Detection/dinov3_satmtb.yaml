@@ -14,7 +14,7 @@
 # the FCOS head is trained.
 #
 # Run with (pick a free GPU via CUDA_VISIBLE_DEVICES):
-#   EXPERIMENT_ROOT=/work/ziwen/experiments CUDA_VISIBLE_DEVICES=1 \
+#   EXPERIMENT_ROOT=/work/anon/experiments CUDA_VISIBLE_DEVICES=1 \
 #       python training_scripts/train_dinov3_satmtb.py \
 #       --config configs/Detection/dinov3_satmtb.yaml
 

@@ -54,6 +54,7 @@ import yaml
 from datasets.airmot import AIRMOTDataset
 from datasets.rscardata import RsCarDataset
 from datasets.satmtb import SATMTBDataset
+from datasets.space_tracker_mot import SpaceTrackerMOTDataset
 from datasets.sdmcar import SDMCarDataset
 from datasets.viso import VISODataset
 
@@ -99,6 +100,12 @@ _DATASET_TABLE = {
                      {"task": "mot", "categories": ["airplane", "ship", "train"]}),
     "viso_nocar":   (VISODataset, "/data/ESA_DLSTEM_2025/data/trafic/VISO",
                      {"categories": ["plane", "ship", "train"]}),
+    # The released benchmark's non-car test split -- the same 22 sequences the
+    # tracking-by-detection rows are scored on, so JDT and TbD are comparable.
+    "spacetracker_nocar": (SpaceTrackerMOTDataset,
+                     "/data/ESA_DLSTEM_2025/release/space_tracker",
+                     {"complete_only": True,
+                      "categories": ["airplane", "ship"]}),
 }
 
 # 4-class union model: per-dataset class maps (every category non-negative so
@@ -113,6 +120,7 @@ _ALLCLASS_MAPS = {
     "viso_no_car":  {"plane": 0, "ship": 1, "train": 2},
     "satmtb_nocar": {"airplane": 0, "ship": 1, "train": 2},
     "viso_nocar":   {"plane": 0, "ship": 1, "train": 2},
+    "spacetracker_nocar": {"airplane": 0, "ship": 1},
 }
 
 # Per-dataset eval input size (the native-res training bucket from train_union).
@@ -120,6 +128,7 @@ _ALLCLASS_INPUT = {
     "rscardata": (1024, 1024), "satmtb": (1024, 1024), "sdmcar": (1920, 1088),
     "airmot": (1920, 1088), "viso_no_car": (1472, 768),
     "satmtb_nocar": (1024, 1024), "viso_nocar": (1472, 768),
+    "spacetracker_nocar": (1024, 1024),
 }
 
 # Eval split per dataset. The non-car TbD rows score VISO / AIR-MOT on *all*
@@ -127,6 +136,7 @@ _ALLCLASS_INPUT = {
 # both (`union_all.json` train includes airmot + viso_no_car), so a JDT run must
 # stay on the test split or it would be scored on its own training sequences.
 _DATASET_SPLIT = {
+    "spacetracker_nocar": "test",
     "satmtb_nocar": "test",
     "viso_nocar":   "test",
     "airmot":       "test",
@@ -281,7 +291,7 @@ def main():
     gt_oracle   = args.gt_oracle
     per_class   = args.per_class
     all_class   = (args.all_class or per_class or gt_oracle
-                   or int(cfg.get("num_classes", 1)) == 4)
+                   or int(cfg.get("num_classes", 1)) > 1)
     dataset_key = args.dataset or cfg["dataset"]
     checkpoint  = args.checkpoint or cfg["checkpoint"]
     arch        = cfg.get("arch", "hrnet_18")
@@ -342,7 +352,7 @@ def main():
         # hm head must match the checkpoint (4 channels for the 4-class union
         # model); num_classes stays 1 so merge_outputs reads only the pooled
         # key-1 bucket the JDETrackerPooled.post_process produces below.
-        heads={"hm": 4 if all_class else 1, "wh": 4, "id": 128, "reg": 2},
+        heads={"hm": int(cfg.get("num_classes", 1)) if all_class else 1, "wh": 4, "id": 128, "reg": 2},
         head_conv=256,
         load_model=checkpoint,
         conf_thres=conf_thres,

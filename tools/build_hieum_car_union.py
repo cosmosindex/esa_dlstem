@@ -1,10 +1,27 @@
-"""Assemble the WHOLE space-tracker car-class MOT training set into HiEUM's
-COCO-MOT layout so HiEUM (Xiao et al., TPAMI 2024) can be retrained on it.
+"""Assemble the Space-Tracker car-class MOT splits into HiEUM's COCO-MOT layout
+so HiEUM (Xiao et al., TPAMI 2024) can be retrained on it.
 
-The author's checkpoint was trained on RsCarData alone. Our space-tracker
-benchmark adds two more car MOT datasets (SAT-MTB car, SDM-Car). This script
-materialises every car train/val frame across all three via each dataset's own
-loader (uniform `_load_frame` / `_load_annotations`, so AVI vs PNG vs JPG and
+**Split source (corrected 2026-08-26).** This script originally called each
+source loader as `cls(root, split=split)`, i.e. it used RsCarData's / SAT-MTB's /
+SDM-Car's OWN native train/val partitions. Those have nothing to do with the
+scene-disjoint Space-Tracker split, and the result was that **33 of the 48
+Space-Tracker car test sequences (68.8%) ended up in HiEUM's training set** --
+the same class of train/test overlap that forced the non-car JDT models to be
+retrained. Splits now come from `docs/space_tracker/splits.csv` via the release
+manifest, and a sequence's membership is decided by its Space-Tracker split
+alone.
+
+Sequences absent from the release manifest are dropped: the benchmark is defined
+by the release, so a source sequence the release does not ship is not part of any
+split (24 such sequences existed in the old build).
+
+The author's checkpoint was trained on RsCarData alone, and 14 of our car test
+sequences come from RsCarData's native train partition. Retraining from that
+checkpoint therefore cannot be made fully clean -- see
+`docs/space_tracker/hieum_leakage.md`. Evaluation reports both the full test set
+and the 34-sequence subset the author checkpoint never saw.
+
+This materialises every selected frame via each dataset's own loader (uniform `_load_frame` / `_load_annotations`, so AVI vs PNG vs JPG and
 the RsCarData XML-test override are all handled transparently) and writes:
 
     OUT/
@@ -19,7 +36,7 @@ blocks, which is what HiEUM's `get_im_ids` (im_ids = [img_id+i for i in range(T)
 requires. Videos shorter than `--seq-len` frames are dropped (cannot form a clip).
 
 Usage:
-    python tools/build_hieum_car_union.py --out /work/ziwen/data/hieum_car_union \
+    python tools/build_hieum_car_union.py --out /work/anon/data/hieum_car_union \
         --splits train val --seq-len 20 [--jpg-quality 95]
 """
 from __future__ import annotations
@@ -47,7 +64,33 @@ SPECS = [
 ]
 
 
-def build_split(out: Path, split: str, json_name: str, seq_len: int, jpg_q: int):
+def load_split_map(release: Path, splits_csv: Path) -> dict[tuple[str, str], str]:
+    """(source_dataset, source_sequence_id) -> space-tracker split.
+
+    Keyed on the SOURCE identity rather than the release name, because that is
+    what a source loader can produce: `video_id` "train/002" from the rscardata
+    loader corresponds to release `source_sequence_id` "rscardata/train/002".
+    """
+    import csv as _csv
+    ann = json.loads((release / "mot" / "annotations"
+                      / "space_tracker_mot.json").read_text())
+    split_of = {}
+    with open(splits_csv) as f:
+        for row in _csv.DictReader(f):
+            seq = row["sequence"]
+            split_of[seq.split("/", 1)[1] if "/" in seq else seq] = row["split"]
+    out = {}
+    for v in ann["videos"]:
+        if v["category"] != "car":
+            continue
+        sp = split_of.get(v["name"])
+        if sp:
+            out[(v["source_dataset"], v["source_sequence_id"])] = sp
+    return out
+
+
+def build_split(out: Path, split: str, json_name: str, seq_len: int, jpg_q: int,
+                split_map: dict[tuple[str, str], str]):
     img_root = out / "images"
     ann_dir = out / "annotations"
     img_root.mkdir(parents=True, exist_ok=True)
@@ -60,58 +103,77 @@ def build_split(out: Path, split: str, json_name: str, seq_len: int, jpg_q: int)
     n_skipped = 0
     n_box = 0
 
+    n_wrong_split = n_unreleased = 0
     for dskey, cls, root, extra in SPECS:
-        ds = cls(root=root, split=split, class_map={"car": 0}, **extra)
-        for v in ds.videos:
-            if v.num_frames < seq_len:
-                n_skipped += 1
+        # Every native partition is scanned; Space-Tracker's split decides
+        # membership, so a sequence in the source's "train" can land in our test.
+        seen: set[str] = set()
+        for native in ("train", "val", "test"):
+            try:
+                ds = cls(root=root, split=native, class_map={"car": 0}, **extra)
+            except Exception:
                 continue
-            video_id += 1
-            tag = f"{dskey}_{v.video_id.replace('/', '_')}"
-            seq_img_dir = img_root / tag / "img1"
-            seq_img_dir.mkdir(parents=True, exist_ok=True)
-            videos.append({"id": video_id, "file_name": tag})
+            for v in ds.videos:
+                if v.video_id in seen:
+                    continue
+                seen.add(v.video_id)
+                sp = split_map.get((dskey, f"{dskey}/{v.video_id}"))
+                if sp is None:
+                    n_unreleased += 1
+                    continue
+                if sp != split:
+                    n_wrong_split += 1
+                    continue
+                if v.num_frames < seq_len:
+                    n_skipped += 1
+                    continue
+                video_id += 1
+                tag = f"{dskey}_{v.video_id.replace('/', '_')}"
+                seq_img_dir = img_root / tag / "img1"
+                seq_img_dir.mkdir(parents=True, exist_ok=True)
+                videos.append({"id": video_id, "file_name": tag})
 
-            fids = list(v.frame_ids)
-            vlen = len(fids)
-            base_id = img_id
-            for pos, fid in enumerate(fids):          # pos: 0-based position in video
-                rgb = ds._load_frame(v, fid)
-                h, w = rgb.shape[:2]
-                fpath = seq_img_dir / f"{fid:06d}.jpg"
-                if not fpath.exists():
-                    cv2.imwrite(str(fpath), rgb[..., ::-1],
-                                [cv2.IMWRITE_JPEG_QUALITY, jpg_q])
-                img_id += 1
-                file_name = f"images/{tag}/img1/{fid:06d}.jpg"
-                images.append({
-                    "id": img_id, "file_name": file_name,
-                    "video_id": video_id,
-                    "video_frame_id": pos + 1,        # 1-indexed position (HiEUM get_im_ids)
-                    "video_len": vlen,
-                    "height": int(h), "width": int(w),
-                    "frame_id": pos + 1,
-                    "prev_image_id": img_id - 1 if pos > 0 else -1,
-                    "next_image_id": img_id + 1 if pos < vlen - 1 else -1,
-                })
-                ann = ds._load_annotations(v, fid)
-                boxes = np.asarray(ann["boxes"], np.float32).reshape(-1, 4)
-                tids = np.asarray(ann.get("track_ids", []), np.int64).reshape(-1)
-                for j, (x1, y1, x2, y2) in enumerate(boxes):
-                    bw, bh = float(x2 - x1), float(y2 - y1)
-                    if bw <= 0 or bh <= 0:
-                        continue
-                    ann_id += 1
-                    tid = int(tids[j]) if j < len(tids) else -1
-                    annotations.append({
-                        "id": ann_id, "image_id": img_id, "category_id": 1,
-                        "track_id": video_id * 100000 + (tid if tid >= 0 else 0),
-                        "bbox": [float(x1), float(y1), bw, bh],
-                        "conf": 1.0, "area": bw * bh, "iscrowd": 0,
+                fids = list(v.frame_ids)
+                vlen = len(fids)
+                base_id = img_id
+                for pos, fid in enumerate(fids):          # pos: 0-based position in video
+                    rgb = ds._load_frame(v, fid)
+                    h, w = rgb.shape[:2]
+                    fpath = seq_img_dir / f"{fid:06d}.jpg"
+                    if not fpath.exists():
+                        cv2.imwrite(str(fpath), rgb[..., ::-1],
+                                    [cv2.IMWRITE_JPEG_QUALITY, jpg_q])
+                    img_id += 1
+                    file_name = f"images/{tag}/img1/{fid:06d}.jpg"
+                    images.append({
+                        "id": img_id, "file_name": file_name,
+                        "video_id": video_id,
+                        "video_frame_id": pos + 1,        # 1-indexed position (HiEUM get_im_ids)
+                        "video_len": vlen,
+                        "height": int(h), "width": int(w),
+                        "frame_id": pos + 1,
+                        "prev_image_id": img_id - 1 if pos > 0 else -1,
+                        "next_image_id": img_id + 1 if pos < vlen - 1 else -1,
                     })
-                    n_box += 1
-            assert img_id - base_id == vlen
+                    ann = ds._load_annotations(v, fid)
+                    boxes = np.asarray(ann["boxes"], np.float32).reshape(-1, 4)
+                    tids = np.asarray(ann.get("track_ids", []), np.int64).reshape(-1)
+                    for j, (x1, y1, x2, y2) in enumerate(boxes):
+                        bw, bh = float(x2 - x1), float(y2 - y1)
+                        if bw <= 0 or bh <= 0:
+                            continue
+                        ann_id += 1
+                        tid = int(tids[j]) if j < len(tids) else -1
+                        annotations.append({
+                            "id": ann_id, "image_id": img_id, "category_id": 1,
+                            "track_id": video_id * 100000 + (tid if tid >= 0 else 0),
+                            "bbox": [float(x1), float(y1), bw, bh],
+                            "conf": 1.0, "area": bw * bh, "iscrowd": 0,
+                        })
+                        n_box += 1
+                assert img_id - base_id == vlen
         print(f"  [{split}] {dskey}: cumulative videos={video_id} images={img_id} boxes={n_box}", flush=True)
+        print(f"  [{split}] {dskey}: dropped {n_wrong_split} (other split), {n_unreleased} (not in release)", flush=True)
 
     coco = {"images": images, "annotations": annotations,
             "categories": [{"id": 1, "name": "car"}], "videos": videos}
@@ -124,17 +186,27 @@ def build_split(out: Path, split: str, json_name: str, seq_len: int, jpg_q: int)
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--out", default="/work/ziwen/data/hieum_car_union")
+    ap.add_argument("--out", default="/work/anon/data/hieum_car_union")
     ap.add_argument("--splits", nargs="+", default=["train", "val"])
     ap.add_argument("--seq-len", type=int, default=20)
     ap.add_argument("--jpg-quality", type=int, default=95)
+    ap.add_argument("--release", default="/data/ESA_DLSTEM_2025/release/space_tracker")
+    ap.add_argument("--splits-csv", default=str(REPO / "docs" / "space_tracker" / "splits.csv"))
     args = ap.parse_args()
+
+    split_map = load_split_map(Path(args.release), Path(args.splits_csv))
+    from collections import Counter
+    print(f"split map: {len(split_map)} car sequences  "
+          f"{dict(Counter(split_map.values()))}", flush=True)
+    if not split_map:
+        raise SystemExit("empty split map -- check --release / --splits-csv")
 
     out = Path(args.out)
     # train -> train_mot.json ; val -> test1024_mot.json (HiEUM's in-training val slot)
     name_map = {"train": "train_mot.json", "val": "test1024_mot.json", "test": "test_mot.json"}
     for split in args.splits:
-        build_split(out, split, name_map[split], args.seq_len, args.jpg_quality)
+        build_split(out, split, name_map[split], args.seq_len, args.jpg_quality,
+                    split_map)
     print("DONE", flush=True)
 
 

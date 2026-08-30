@@ -32,7 +32,7 @@ not agree. Predictions are kept down to score >= 0.05; downstream plots
 threshold at 0.5.
 
 Run (after all three trainings finish):
-    EXPERIMENT_ROOT=/work/ziwen/experiments CUDA_VISIBLE_DEVICES=0 \
+    EXPERIMENT_ROOT=/work/anon/experiments CUDA_VISIBLE_DEVICES=0 \
         micromamba run -n esa_dlstem python evaluation/eval_satmtb_detect_dump.py
 """
 from __future__ import annotations
@@ -61,7 +61,7 @@ SCORE_KEEP = 0.05  # keep everything above this; plots threshold at 0.5
 CANON = {"airplane": 0, "ship": 1, "train": 2}
 CANON_MAP = {v: k for k, v in CANON.items()}
 
-EXP_ROOT = os.environ.get("EXPERIMENT_ROOT", "/work/ziwen/experiments")
+EXP_ROOT = os.environ.get("EXPERIMENT_ROOT", "/work/anon/experiments")
 OUT = Path(EXP_ROOT) / "satmtb_detect_dump" / "satmtb_detect_predictions.json"
 
 CFG = {

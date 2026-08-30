@@ -198,7 +198,7 @@ def main():
     ap.add_argument("--max-frames", type=int, default=600, help="0 = all")
     ap.add_argument("--stride", type=int, default=1)
     ap.add_argument("--scale", type=float, default=1.0, help="upscale each panel")
-    ap.add_argument("--out-dir", default="/work/ziwen/experiments/car_mot_qualitative")
+    ap.add_argument("--out-dir", default="/work/anon/experiments/car_mot_qualitative")
     ap.add_argument("--gif", action="store_true")
     args = ap.parse_args()
 

@@ -1,0 +1,42 @@
+# SmallTrack (TGRS 2023) architecture config, siamban-native format.
+# Derived from SmallTrack/experiments/smalltrack_r50_l234/config-smalltrack.yaml,
+# with the LaTOT tracking hyper-parameters selected (the authors ship one
+# WINDOW_INFLUENCE/PENALTY_K/LR triple per evaluation benchmark; LaTOT is their
+# smallest-target benchmark and therefore the setting most favourable to
+# SmallTrack on spaceborne data). Pair with the SmallTrack-LaTOT.pth checkpoint.
+# Training-only fields are dropped; BACKBONE.PRETRAINED is unused at inference.
+
+META_ARC: "siamban_r50_l234_dwxcorr"
+
+BACKBONE:
+    TYPE: "resnet50"
+    KWARGS:
+        used_layers: [2, 3, 4]
+
+ADJUST:
+    ADJUST: True
+    TYPE: "AdjustAllLayer"
+    KWARGS:
+        in_channels: [512, 1024, 2048]
+        out_channels: [256, 256, 256]
+
+BAN:
+    BAN: True
+    TYPE: 'MultiBAN'
+    KWARGS:
+        in_channels: [256, 256, 256]
+        cls_out_channels: 2
+        weighted: True
+
+POINT:
+    STRIDE: 8
+
+TRACK:
+    TYPE: 'SiamBANTracker'
+    WINDOW_INFLUENCE: 0.10515019707656997  # LaTOT
+    PENALTY_K: 0.07320770453005614         # LaTOT
+    LR: 0.1606196741158742                 # LaTOT
+    EXEMPLAR_SIZE: 127
+    INSTANCE_SIZE: 255
+    BASE_SIZE: 8
+    CONTEXT_AMOUNT: 0.5

@@ -39,13 +39,13 @@ import torch
 from models import HiEUMDetector
 
 # ----------------------------------------------------------------------------
-DATA_ROOT = Path("/work/ziwen/data/hieum_car_union")
+DATA_ROOT = Path("/work/anon/data/hieum_car_union")
 VAL_JSON = DATA_ROOT / "annotations" / "test1024_mot.json"
 CKPT_DIR = Path(
-    "/work/ziwen/experiments/hieum_car_union/rs_car_multi/sp_centerDet_minus/"
+    "/work/anon/experiments/hieum_car_union/rs_car_multi/sp_centerDet_minus/"
     "spacetracker_car_supMode_0_seglen20_weights2026_06_29_17_52_37"
 )
-OUT_DIR = Path("/work/ziwen/experiments/hieum_car_union/val_curve")
+OUT_DIR = Path("/work/anon/experiments/hieum_car_union/val_curve")
 RESULTS_JSON = OUT_DIR / "val_curve_results.json"   # default (single-process)
 
 

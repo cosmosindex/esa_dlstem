@@ -1,0 +1,159 @@
+# Faster R-CNN trained on the **Space-Tracker MOT release**, non-car classes.
+#
+# This replaces fasterrcnn_satmtb_hbb.yaml as the detection front-end for the
+# MOT benchmark. Three things changed and each one moves the numbers:
+#
+#   1. Source of truth is the built release, not the raw SAT-MTB XML. Boxes
+#      have been re-geometried to one standard with SAM 3 (airplane areas drop
+#      to ~0.62x of the source labels), so the anchor pyramid below had to be
+#      re-derived -- the old one is systematically too large.
+#   2. Splits are the release's scene-disjoint train/val/test, so sequences
+#      from one parent scene cannot straddle the split.
+#   3. Only sequences whose GT was completed with static objects are used
+#      (SpaceTrackerMOTDataset(complete_only=True)): 87 train / 12 val / 22 test
+#      sequences, 21,425 / 2,237 / 4,615 frames, 225,014 / 16,392 / 28,742 boxes.
+#      Movers-only sequences are excluded because a parked aircraft there is an
+#      unlabelled positive, which teaches the detector that its own target is
+#      background.
+#
+# `car` is deliberately absent. Car GT is movers-only across the entire
+# benchmark by design, so a single-frame detector cannot be trained or fairly
+# scored on it -- the car half uses a moving-object detector (HiEUM) instead,
+# and the two halves are reported separately. See docs/static_annotation/README.md.
+#
+# Run with:
+#   CHECKPOINT_ROOT=... EXPERIMENT_ROOT=... \
+#   python training_scripts/train_fasterrcnn_satmot.py \
+#       --config configs/Detection/fasterrcnn_spacetracker_mot.yaml
+
+# ----- Dataset roots ------------------------------------------------------
+datasets:
+  Space-Tracker-MOT: /data/ESA_DLSTEM_2025/release/space_tracker
+
+per_dataset_kwargs:
+  Space-Tracker-MOT:
+    complete_only: true
+    # One frame in 8 per epoch (21,425 -> 2,637), with the phase rotating each
+    # epoch so the run still reaches ~98.5% of frames over 8 epochs. Consecutive
+    # satellite frames are near-duplicates -- a parked aircraft is the same
+    # pixels every frame -- so training on all of them buys almost no signal for
+    # 8x the epoch time, and makes memorising the 87 scenes easier than
+    # generalising. Val/test are NOT subsampled: they stay full for scoring.
+    frame_stride: 8
+
+# ----- Class map ----------------------------------------------------------
+# TWO classes, not three. `train` was dropped after the first two runs: it has
+# 752 boxes in exactly one training sequence and **zero** ground truth in both
+# val and test, so it can never be scored -- it only consumed a heatmap channel
+# and polluted mAP. Its boxes are dropped by _map_label returning -1.
+class_map:
+  airplane: 1
+  ship:     2
+
+num_classes: 3               # 2 foreground + 1 background
+
+# ----- Model --------------------------------------------------------------
+use_v2: false
+pretrained: true
+trainable_backbone_layers: 3
+score_thresh: 0.05
+nms_thresh: 0.5
+detections_per_img: 300      # GT density is mean 10.5 / max 39 per frame, so
+                             # this is slack on purpose: the MOT cache wants the
+                             # low-scoring tail for ByteTrack-style rescue.
+
+# Anchor pyramid, DATA-DRIVEN from the TRAIN split of this release
+# (225,014 boxes; side = max(w, h)):
+#   airplane n=149,276 : p1=12  p5=19  p25=29  p50=39   p75=52  p95=81  max=106
+#   ship     n= 74,986 : p1=4   p5=6   p25=10  p50=15   p75=34  p95=85  max=170
+#   train    n=    752 : p1=29  p5=75  p25=81  p50=114  p75=125 p95=420 max=422
+#   pooled            : p1=5    p50=35 p99=100 max=422
+# Re-derived for the 2-class pool: k-means(10) gives 7 12 17 23 29 34 38 45 55 79.
+# The smallest level is set BELOW that (5 instead of 7) on purpose: 7.4% of ship
+# boxes have a side under 7 px, and the first two runs recalled only 51-58% of
+# ships. Ship is the whole difficulty here -- airplane already reaches recall
+# 0.92 at precision 0.81, while ship tops out at 0.58 recall.
+#
+# Two sizes per FPN level:
+#   P2 stride 4  -> [5, 9]      ship p1-p25 (4-10 px), the hardest bucket
+#   P3 stride 8  -> [14, 20]    ship p50 (15) + smallest airplanes (p1-p5)
+#   P4 stride 16 -> [27, 34]    airplane p25-p50 (29-39), the modal object
+#   P5 stride 32 -> [42, 55]    airplane p75 (52) + ship p75-p90
+#   P6 stride 64 -> [79, 170]   airplane p95 (81), ship p95-max (85-170)
+anchor_sizes:
+  - [5, 9]
+  - [14, 20]
+  - [27, 34]
+  - [42, 55]
+  - [79, 170]
+
+# Aspect ratios (w/h) measured on the train split:
+#   airplane p5..p95 = 0.69 .. 1.47   (near-square)
+#   ship     p5..p95 = 0.52 .. 2.21   (elongated)
+# Five ratios cover both remaining classes. (The dropped `train` class ran to
+# p95 = 19, which no shared-conv RPNHead could have covered anyway.)
+anchor_aspect_ratios:
+  - [0.33, 0.5, 1.0, 2.0, 3.0]
+  - [0.33, 0.5, 1.0, 2.0, 3.0]
+  - [0.33, 0.5, 1.0, 2.0, 3.0]
+  - [0.33, 0.5, 1.0, 2.0, 3.0]
+  - [0.33, 0.5, 1.0, 2.0, 3.0]
+
+# Relaxed RPN/box thresholds for small-object recall (unchanged rationale:
+# at 4-15 px a one-pixel localisation error costs a large slice of IoU).
+rpn_fg_iou_thresh: 0.5
+rpn_bg_iou_thresh: 0.2
+box_fg_iou_thresh: 0.4
+box_bg_iou_thresh: 0.3
+rpn_pre_nms_top_n_train: 4000
+rpn_post_nms_top_n_train: 2000
+
+# Native resolutions in this release run from 502x512 up to 2160x1080. The old
+# max_size of 1333 would rescale a 2160-wide frame by 0.617x, turning a 4 px
+# ship into 2.5 px. 2304 keeps the widest frames essentially native (2160 ->
+# 2048 after the short side hits 1024), which is the whole point on this data.
+min_size: 1024
+max_size: 2304
+
+# ----- Training transform -------------------------------------------------
+train_crop_size: 1024
+
+# ----- Lightning training -------------------------------------------------
+batch_size: 4
+num_workers: 0
+max_epochs: 30
+# 6e-5, down from 5e-4 and then 2.5e-4. This is measured, not guessed:
+# reproducing the LinearLR->Cosine schedule shows warmup reaches lr 8.35e-5 at
+# epoch 1 and peaks at epoch 3, and ACROSS THREE RUNS the best checkpoint always
+# landed while the lr was still climbing (epoch 1-4), with val degrading once it
+# peaked -- ship precision fell 0.375 -> 0.139 while its predicted-box count
+# doubled. Low lr good, peak lr bad, consistently. 87 independent scenes is a
+# small fine-tuning set and AdamW at 2.5e-4 is still far too hot for it.
+# The schedule itself was verified correct: this is NOT the Lightning/Ultralytics
+# warmup bug from yolo_issues #16, which does not apply to the torchvision path.
+lr: 6.0e-5
+weight_decay: 1.0e-4
+warmup_epochs: 1        # was 3: spend the run near the lr that worked, not climbing past it
+lr_scheduler: cosine
+# bf16, NOT fp16. The first run of this config diverged to NaN after epoch 1:
+# raising max_size to 2304 enlarges activations enough to overflow fp16's
+# dynamic range, and the run then trained on garbage for 9 more epochs before
+# early stopping (best ckpt stuck at epoch 1, val mAP 0.733). bf16 carries
+# fp32's exponent range at the same memory cost, so it cannot overflow this
+# way. Data was ruled out first: minimum box side is 1.0 px, no degenerate
+# aspect ratios, no sub-pixel boxes.
+precision: bf16-mixed
+
+# ----- Run / logging ------------------------------------------------------
+run_name: fasterrcnn_spacetracker_mot
+experiment_root: /work/anon/experiments
+wandb_project: esa-dlstem
+wandb_entity: anonymous
+skip_visualization: true
+visualization_max_wandb_images: 50
+visualization_score_thresh: 0.5
+visualization_iou_thresh: 0.5
+
+monitor_metric: val/mAP
+monitor_mode: max
+patience: 8

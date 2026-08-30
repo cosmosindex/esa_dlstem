@@ -1,0 +1,24 @@
+# tracktrack on the Space-Tracker-MOT car test split, GT-BOX ORACLE.
+# Detections are ground truth at score 1.0, so every score-dependent threshold
+# below (track_high/low, new_track, appearance gating by score) is inert by
+# construction. They are left in place, not deleted, so this file diffs against
+# tracktrack_spacetracker_car.yaml in exactly one line: the cache.
+dataset: spacetracker_car
+tracker: tracktrack
+cache_dir: /data/ESA_DLSTEM_2025/experiments/Detection/gt_car_feats_cache
+score_floor: 0.0            # oracle: every box scores 1.0, so any floor is inert
+match_metric: centroid
+centroid_dist_thresh: 5.0
+iou_thresh: 0.5
+tracker_kwargs:
+  feat_dim: 2048
+  det_thr: 0.30
+  init_thr: 0.40
+  match_thr: 0.70
+  tai_thr: 0.45
+  penalty_p: 0.20
+  penalty_q: 0.40
+  reduce_step: 0.05
+  min_len: 3
+  min_box_area: 25.0
+  max_time_lost: 30

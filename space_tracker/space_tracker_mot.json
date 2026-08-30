@@ -68,7 +68,7 @@
   "datasets": {
     "airmot": {
       "name": "AIR-MOT-100",
-      "paper": "He et al., IEEE GRSL 2022",
+      "paper": "He et al., IEEE TGRS 2022 (TGraM)",
       "gt_format": "mot_csv_9col",
       "gt_format_description": "MOT CSV (comma-delimited, 9 cols): frame_id, track_id, x, y, w, h, conf, class, visibility. Coords are xywh top-left. class: 1=airplane, 2=ship. 1-indexed frames.",
       "image_format": "frames",
@@ -98,7 +98,7 @@
     },
     "sdmcar": {
       "name": "SDM-Car",
-      "paper": "Yin et al., 2023 (Luojia-3-01 satellite video)",
+      "paper": "Zhang et al., IEEE GRSL 2024 (Luojia 3-01 satellite video)",
       "gt_format": "mot_csv_10col_0idx",
       "gt_format_description": "Per-sequence headerless CSV (comma-delimited, 10 cols): frame_id, target_id, x, y, w, h, -1, -1, -1, -1. Coords are xywh top-left. Single class (car). Frame ids are 0-INDEXED \u2014 unlike every other dataset in this manifest.",
       "image_format": "video",

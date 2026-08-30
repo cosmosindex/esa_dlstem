@@ -30,6 +30,7 @@ import numpy as np
 import yaml
 
 from datasets.airmot import AIRMOTDataset
+from datasets.space_tracker_mot import SpaceTrackerMOTDataset
 from datasets.satmtb import SATMTBDataset
 from datasets.viso import VISODataset
 from models.trackers import build_tracker
@@ -43,6 +44,18 @@ _FRCN_VISO     = {"plane": 1,    "ship": 2, "train": 3}
 _FRCN_AIRMOT   = {"airplane": 1, "ship": 2}
 
 _DATASET_TABLE = {
+    # 2-class: `train` has no val/test GT, so the detector never learned it.
+    # Car half. complete_only=False: car GT labels moving objects only and was
+    # never completed with static ones, so the completeness filter would leave
+    # 2 of 48 sequences.
+    "spacetracker_car": (SpaceTrackerMOTDataset,
+                     "/data/ESA_DLSTEM_2025/release/space_tracker",
+                     {"complete_only": False, "categories": ["car"]},
+                     "test", {"car": 1}),
+    "spacetracker_nocar": (SpaceTrackerMOTDataset,
+                     "/data/ESA_DLSTEM_2025/release/space_tracker",
+                     {"complete_only": True},
+                     "test", {"airplane": 1, "ship": 2}),
     "satmtb_nocar": (SATMTBDataset, "/data/ESA_DLSTEM_2025/data/trafic/SAT-MTB",
                      {"task": "mot", "categories": ["airplane", "ship", "train"]},
                      "test", _FRCN_AIRPLANE),
@@ -65,8 +78,22 @@ def _build_dataset(name: str):
                    class_map=dict(cmap), **extra) \
             if "mode" in cls.__init__.__code__.co_varnames \
             else cls(root=root, split=split, class_map=dict(cmap), **extra)
-    return cls(root=root, split=split, mode="detection",
-               class_map=dict(cmap), **extra)
+    ds = cls(root=root, split=split, mode="detection",
+             class_map=dict(cmap), **extra)
+    if name == "spacetracker_car":
+        # `categories=["car"]` filters by TRACK class, so it also admits mixed
+        # sequences that merely contain a car. The car benchmark, the HiEUM
+        # detection cache and the ReID feature cache all cover exactly the 48
+        # sequences whose RELEASE category is 'car'; without this filter the
+        # driver walks 59 and dies on the first missing .npz.
+        import json as _json
+        ann = _json.loads((Path(root) / "mot" / "annotations"
+                           / "space_tracker_mot.json").read_text())
+        keep = {v["name"] for v in ann["videos"] if v["category"] == "car"}
+        ds.videos = [v for v in ds.videos if v.video_id in keep]
+        if not ds.videos:
+            raise RuntimeError("car category filter removed every sequence")
+    return ds
 
 
 def _load_feat_cache(cache_dir: Path, video_id: str) -> dict:

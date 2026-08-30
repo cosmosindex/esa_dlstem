@@ -21,6 +21,7 @@ from __future__ import annotations
 import argparse
 import csv
 import os
+import json
 import re
 import shutil
 import sys
@@ -32,10 +33,37 @@ import numpy as np
 from datasets.airmot import AIRMOTDataset
 from datasets.satmtb import SATMTBDataset
 from datasets.viso import VISODataset
+from datasets.space_tracker_mot import SpaceTrackerMOTDataset
 
 
 # Dataset (cls, root, build_kwargs, split, class_map name → id, class_id used in GT files)
 _DATASET_TABLE = {
+    # Released benchmark, non-car test split. 2-class: `train` has no val/test
+    # GT at all, so the detector was never trained on it.
+    "spacetracker_nocar": (
+        SpaceTrackerMOTDataset, "/data/ESA_DLSTEM_2025/release/space_tracker",
+        {"complete_only": True},
+        "test",
+        {"airplane": 1, "ship": 2},
+    ),
+    # Same benchmark half on the VALIDATION split. Exists so that checkpoint
+    # selection can be measured without touching the test split -- every run
+    # scored against this entry is a training decision, never a reported number.
+    "spacetracker_nocar_val": (
+        SpaceTrackerMOTDataset, "/data/ESA_DLSTEM_2025/release/space_tracker",
+        {"complete_only": True},
+        "val",
+        {"airplane": 1, "ship": 2},
+    ),
+    # Car half, detected by HiEUM. complete_only=False: car GT annotates moving
+    # objects only and was never completed with static ones, so the completeness
+    # filter (correct for airplane/ship) would leave 2 of 48 sequences.
+    "spacetracker_car": (
+        SpaceTrackerMOTDataset, "/data/ESA_DLSTEM_2025/release/space_tracker",
+        {"complete_only": False, "categories": ["car"]},
+        "test",
+        {"car": 1},
+    ),
     "satmtb_nocar": (
         SATMTBDataset, "/data/ESA_DLSTEM_2025/data/trafic/SAT-MTB",
         {"task": "mot", "categories": ["airplane", "ship", "train"]},
@@ -65,6 +93,21 @@ def _build_dataset(name: str):
     cls, root, extra, split, cmap = _DATASET_TABLE[name]
     if cls is VISODataset or cls is AIRMOTDataset:
         return cls(root=root, split=split, class_map=dict(cmap), **extra)
+    if cls is SpaceTrackerMOTDataset:
+        ds = cls(root=root, split=split, mode="detection",
+                 class_map=dict(cmap), **extra)
+        if name == "spacetracker_car":
+            # categories= filters by TRACK class, so it also admits mixed
+            # sequences containing a car. The car benchmark is the 48 sequences
+            # whose RELEASE category is 'car' -- what HiEUM was trained and
+            # scored on, and what the tracker driver evaluates.
+            ann = json.loads((Path(root) / "mot" / "annotations"
+                              / "space_tracker_mot.json").read_text())
+            keep = {v["name"] for v in ann["videos"] if v["category"] == "car"}
+            ds.videos = [v for v in ds.videos if v.video_id in keep]
+            if not ds.videos:
+                raise RuntimeError("car category filter removed every sequence")
+        return ds
     return cls(root=root, split=split, mode="detection",
                class_map=dict(cmap), **extra)
 
@@ -79,7 +122,10 @@ def _write_gt_for_class(
     """
     ds = _build_dataset(dataset_name)
     cmap = _DATASET_TABLE[dataset_name][4]
-    target_id = cmap[class_name]
+    # "all" is the class-agnostic pseudo-class: keep every annotated box, which
+    # is what the query-based methods (trained single-class, emitting no
+    # category) are actually scored against.
+    target_id = None if class_name == "all" else cmap[class_name]
 
     seq_names: list[str] = []
     seq_offsets: dict[str, int] = {}
@@ -95,7 +141,7 @@ def _write_gt_for_class(
             ann = ds._load_annotations(v, fid)
             boxes = ann["boxes"]; tids = ann["track_ids"]; labels = ann["labels"]
             for j in range(len(boxes)):
-                if int(labels[j]) != target_id:
+                if target_id is not None and int(labels[j]) != target_id:
                     continue
                 tid = int(tids[j])
                 if tid < 0:
@@ -141,30 +187,57 @@ def _populate_tracker(
     trackers_root: Path, seq_offsets: dict[str, int],
     seq_names: list[str],
 ) -> None:
-    src = run_dir / "mot_format" / class_name
-    if not src.is_dir():
-        raise FileNotFoundError(f"missing {src}")
+    """Stage one tracker's output into TrackEval layout.
+
+    For a named class this copies that class's directory. For the
+    class-agnostic pseudo-class "all" it pools every class directory -- or uses
+    a flat mot_format when the tracker emits no category at all (MOTRv2, MOTIP).
+
+    Pooling shifts track ids per source directory: `airplane` id 1 and `ship`
+    id 1 are different objects, and merging them unshifted would splice two
+    trajectories into one and silently inflate association scores.
+    """
+    if class_name == "all":
+        per_class = sorted(d for d in (run_dir / "mot_format").iterdir() if d.is_dir())
+        srcs = per_class if per_class else [run_dir / "mot_format"]
+    else:
+        srcs = [run_dir / "mot_format" / class_name]
+    for src in srcs:
+        if not src.is_dir():
+            raise FileNotFoundError(f"missing {src}")
+
     dst = trackers_root / tracker_name / "data"
     if dst.exists():
         shutil.rmtree(dst)
     dst.mkdir(parents=True, exist_ok=True)
+
     seq_set = set(seq_names)
-    for f in src.glob("*.txt"):
-        seq = f.stem
-        if seq not in seq_set:
-            continue
-        offset = seq_offsets.get(seq, 0)
-        if offset == 0:
-            shutil.copyfile(f, dst / f.name)
-        else:
-            out_lines = []
+    ID_STRIDE = 1_000_000
+    merged: dict[str, list[str]] = defaultdict(list)
+    for k, src in enumerate(srcs):
+        id_shift = k * ID_STRIDE
+        for f in src.glob("*.txt"):
+            seq = f.stem
+            if seq not in seq_set:
+                continue
+            frame_shift = seq_offsets.get(seq, 0)
             for line in f.read_text().splitlines():
-                if not line:
+                if not line.strip():
                     continue
                 parts = line.split(",")
-                parts[0] = str(int(parts[0]) + offset)
-                out_lines.append(",".join(parts))
-            (dst / f.name).write_text("\n".join(out_lines))
+                parts[0] = str(int(float(parts[0])) + frame_shift)
+                parts[1] = str(int(float(parts[1])) + id_shift)
+                merged[seq].append(",".join(parts))
+
+    # Write EVERY ground-truth sequence, including ones this tracker produced
+    # nothing for. TrackEval requires a file per sequence in the seqmap and
+    # raises "Tracker file not found" otherwise, which silently drops the whole
+    # tracker from the results -- exactly what happened to ByteTrack on car,
+    # where one sequence legitimately yielded zero tracks. An empty file means
+    # "predicted nothing here"; a missing file is an error.
+    for seq in seq_names:
+        lines = merged.get(seq, [])
+        (dst / f"{seq}.txt").write_text("\n".join(lines) + ("\n" if lines else ""))
 
 
 def _eval_dataset_class(
@@ -253,7 +326,11 @@ def _eval_dataset_class(
     return out
 
 
-_DATASET_SLOTS = ("satmtb_nocar", "viso_nocar", "airmot")
+# Derived from _DATASET_TABLE rather than repeated: keeping a second hand-written
+# list here means a newly registered dataset silently fails to match any run
+# directory, and the script exits with "no runs" instead of an error. Longest
+# first so a name that prefixes another cannot shadow it.
+_DATASET_SLOTS = tuple(sorted(_DATASET_TABLE, key=len, reverse=True))
 _RUN_RE = re.compile(
     r"^(?P<tracker>[a-zA-Z][a-zA-Z0-9_]*?)_"
     r"(?P<dataset>" + "|".join(_DATASET_SLOTS) + r")_"
@@ -284,6 +361,13 @@ def main():
     ap.add_argument("--tracker-output-root", required=True)
     ap.add_argument("--workspace", default="/tmp/hota_workspace_satmtb_hbb")
     ap.add_argument("--output", required=True)
+    ap.add_argument("--class-agnostic", action="store_true",
+                    help="Pool every class into one foreground class, for GT and "
+                         "predictions alike. Required to put query-based methods "
+                         "(MOTRv2, MOTIP) in the same table: they are trained "
+                         "single-class and emit no category, so a per-class "
+                         "breakdown does not exist for them. Apply to ALL methods "
+                         "or the columns are not comparable.")
     args = ap.parse_args()
 
     root = Path(args.tracker_output_root)
@@ -301,7 +385,8 @@ def main():
     rows: list[dict] = []
     for ds_name, runs_for_ds in runs.items():
         cmap = _DATASET_TABLE[ds_name][4]
-        for class_name in cmap.keys():
+        class_names = ["all"] if args.class_agnostic else list(cmap.keys())
+        for class_name in class_names:
             print(f"\n=== {ds_name} / {class_name} ===")
             metrics = _eval_dataset_class(ds_name, class_name, workspace, runs_for_ds)
             for tr_name, vals in metrics.items():

@@ -14,7 +14,7 @@ ObjectDetectionModule pipeline unchanged.
 
 The experiment root can be overridden at runtime with the EXPERIMENT_ROOT env
 var (keeps the tracked config path anonymised):
-    EXPERIMENT_ROOT=/work/ziwen/experiments CUDA_VISIBLE_DEVICES=1 \
+    EXPERIMENT_ROOT=/work/anon/experiments CUDA_VISIBLE_DEVICES=1 \
         python training_scripts/train_dinov3_satmtb.py \
         --config configs/Detection/dinov3_satmtb.yaml
 """

@@ -16,8 +16,8 @@ obb_eval_mode: ootb_aabb
 img_size: null
 
 variant: baseline_large
-yaml_path: /home/anon/code/esa_dlstem/ODTrack/experiments/odtrack/baseline_large.yaml
-ckpt_path: /work/anon/checkpoints/odtrack/baseline_large/ODTrack_ep0300.pth.tar
+yaml_path: ${REPO_ROOT}/ODTrack/experiments/odtrack/baseline_large.yaml
+ckpt_path: ${CHECKPOINT_ROOT}/odtrack/baseline_large/ODTrack_ep0300.pth.tar
 
 prompt_strategy: first_frame
 prompt_interval: 10

@@ -18,7 +18,7 @@ the size trend also reads as a small-vs-large-object story.
 Pure offline — no GPU (torchmetrics runs on CPU).
 
 Run (after evaluation/eval_satmtb_detect_dump.py):
-    EXPERIMENT_ROOT=/work/ziwen/experiments \
+    EXPERIMENT_ROOT=/work/anon/experiments \
         micromamba run -n esa_dlstem python tools/plot_satmtb_size_trend.py
 """
 from __future__ import annotations
@@ -37,7 +37,7 @@ import matplotlib.pyplot as plt
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from plot_style import apply_neurips_style  # noqa: E402
 
-EXP_ROOT = os.environ.get("EXPERIMENT_ROOT", "/work/ziwen/experiments")
+EXP_ROOT = os.environ.get("EXPERIMENT_ROOT", "/work/anon/experiments")
 DUMP = Path(EXP_ROOT) / "satmtb_detect_dump" / "satmtb_detect_predictions.json"
 FIG_DIR = Path("docs/use_case_results/figures")
 OUT_PNG = FIG_DIR / "satmtb_detection_size_trend.png"
