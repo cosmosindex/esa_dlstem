@@ -64,7 +64,6 @@ dependencies:
     - git+https://github.com/facebookresearch/sam2.git  # from source
 
 # Not installable from here: the benchmarked trackers are separate repositories,
-# cloned beside this one. Each runner under evaluation/ names its upstream URL,
-# the commit it was pinned to and every local modification, in its own
-# docstring. MOTRv2/ and MOTIP/ are the exception and ship with this repository,
-# because their entry points live inside the vendored tree.
+# cloned beside this one. Each has its own dependencies, and the tracked script
+# that drives it names the upstream URL, the commit it was pinned to and every
+# local modification, in its own docstring.

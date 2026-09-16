@@ -23,6 +23,40 @@ Usage:
         --ckpt  /path/to/best-epoch=NN-val_mAP=X.ckpt \
         --config configs/Detection/fasterrcnn_spacetracker_mot.yaml \
         --motr-root /path/to/motrv2_st_nocar
+
+Upstream
+--------
+MOTRv2 -- https://github.com/megvii-research/MOTRv2, commit ``1aac7c3``::
+
+    git clone https://github.com/megvii-research/MOTRv2 && \
+        git -C MOTRv2 checkout 1aac7c3
+
+Clone it beside this repository; it is not committed here. MOTRv2 is the one
+benchmarked method with no runner of its own under ``evaluation/``: it cannot be
+imported alongside this project (its ``datasets`` and ``models`` packages
+collide with ours), so it is run from inside its own tree. Its training entry
+point is the upstream ``main.py`` driven by ``tools/train.sh``; evaluation is
+``eval_motrv2.py``, which reads only the on-disk layout this script writes.
+
+Local changes to the clone, all of them required to run it here:
+
+* ``datasets/dance.py`` -- take the training split directory as an argument
+  (``--mot_train_name``) instead of the literal ``DanceTrack/train``; and build
+  ``targets['labels']`` with ``dtype=torch.long``. The second is load-bearing: a
+  satellite frame can hold zero ground-truth objects, and ``torch.as_tensor([])``
+  is float32, which promotes the concatenated per-frame labels to float and
+  breaks the matcher's ``cost[:, tgt_ids]`` indexing. DanceTrack never has an
+  empty frame, so upstream cannot hit it.
+* ``main.py``, ``submit_dance.py``, ``util/tool.py`` -- ``torch.load(...,
+  weights_only=False)``. The checkpoints carry an ``argparse.Namespace``, which
+  torch 2.6 refuses to unpickle by default.
+* ``models/ops/`` -- the CUDA sources of the deformable-attention kernel updated
+  for the current toolkit.
+* added: ``configs/motrv2_union.args``, ``configs/motrv2_st_nocar.args``,
+  ``eval_motrv2.py``, ``eval_motrv2_oracle_assoc.py``. The ``.args`` files are
+  read with ``args=$(cat configs/x.args)``, which does not expand shell
+  variables, so pass them through ``envsubst`` first; ``$DATA_ROOT`` and
+  ``$CHECKPOINT_ROOT`` are the only machine-specific values in them.
 """
 
 from __future__ import annotations

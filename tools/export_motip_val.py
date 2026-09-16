@@ -15,6 +15,34 @@ only tree holding validation frames.
 Usage:
     python tools/export_motip_val.py --out MOTIP/datasets/SpaceTracker/val \
         --workspace /tmp/hota_nocar_val_ws
+
+Upstream
+--------
+MOTIP -- https://github.com/MCG-NJU/MOTIP, commit ``ffc0e90``::
+
+    git clone https://github.com/MCG-NJU/MOTIP && \
+        git -C MOTIP checkout ffc0e90
+
+Clone it beside this repository; it is not committed here. Like MOTRv2, MOTIP is
+run from inside its own tree rather than through a runner under ``evaluation/``:
+training is the upstream ``train.py`` and evaluation ``submit_and_evaluate.py``,
+both reading the dataset layout this script writes.
+
+Local changes to the clone:
+
+* ``data/joint_dataset.py`` -- register the added ``SpaceTracker`` dataset.
+* ``data/transforms.py`` -- call torchvision v2's ``make_params`` / ``transform``
+  where they exist and the old ``_get_params`` / ``_transform`` otherwise. MOTIP
+  targets torchvision 0.19, which renamed both in 0.20; the shim runs on either
+  rather than pinning the whole environment for one method.
+* ``submit_and_evaluate.py`` -- take the MOTChallenge output branch for
+  ``SpaceTracker``, whose format is identical to DanceTrack's.
+* added: ``data/spacetracker.py`` (the release's non-car split in the DanceTrack
+  on-disk layout, 8-digit frame names, single foreground class) and
+  ``configs/motip_spacetracker_nocar.yaml``. That config carries the shortened
+  training schedule the paper declares -- 5 epochs rather than 10, milestones
+  moved to the same 60%/90% fractions -- which is a config change, not a code
+  change.
 """
 
 from __future__ import annotations
