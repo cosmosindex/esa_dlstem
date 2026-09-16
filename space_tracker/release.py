@@ -60,6 +60,11 @@ _BUNDLED_SPLITS = Path(__file__).resolve().parent / "splits.json"
 
 _BOX = Tuple[float, float, float, float]
 
+#: The tiny-object threshold, strict: a target is tiny when the median
+#: ``sqrt(area)`` over its own track is *below* this. Fixed from the benchmark's
+#: size distribution, not from any tracker's behaviour.
+TINY_PX = 8.0
+
 
 # --------------------------------------------------------------------------- #
 # records
@@ -674,6 +679,7 @@ class SOTHalf(_Half):
         unified_attribute: Optional[str] = None,
         max_size: Optional[float] = None,
         min_size: Optional[float] = None,
+        tiny: Optional[bool] = None,
         **rest,
     ):
         if attribute is not None:
@@ -694,6 +700,11 @@ class SOTHalf(_Half):
                     f"annotated by one source and is reached with "
                     f"attribute=... instead.")
             seqs = [s for s in seqs if want & set(s.unified_attrs)]
+        if tiny is not None:
+            # The paper's tiny regime, and strict: two sequences sit at exactly
+            # 8.0 px, so max_size=8 keeps 240 where this keeps 238.
+            seqs = [s for s in seqs
+                    if (s.median_sqrt_area_px < TINY_PX) is bool(tiny)]
         if max_size is not None:
             seqs = [s for s in seqs if s.median_sqrt_area_px <= max_size]
         if min_size is not None:

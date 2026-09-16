@@ -29,6 +29,7 @@ from torch.utils.data import ConcatDataset, DataLoader
 
 from datasets import video_collate_fn
 from datasets.ootb import OOTBDataset
+from datasets.space_tracker_sot import SpaceTrackerSOTDataset
 from datasets.lmod import LMODDataset
 from datasets.irsatvideo import IRSatVideoDataset
 from datasets.satsot import SatSOTDataset
@@ -52,6 +53,11 @@ except ImportError:  # loaders kept out of the released tree
 # ---------------------------------------------------------------------------
 
 _DATASET_REGISTRY: dict[str, type] = {
+    # The benchmark itself: all 395 SOT sequences as one dataset, read from the
+    # release. The three source entries below evaluate the same sequences
+    # through their original layouts, which is how the published numbers were
+    # produced -- see datasets/space_tracker_sot.py.
+    "Space-Tracker-SOT": SpaceTrackerSOTDataset,
     "OOTB": OOTBDataset,
     "LMOD": LMODDataset,
     "IRSatVideo-LEO": IRSatVideoDataset,

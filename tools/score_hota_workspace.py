@@ -22,7 +22,7 @@ numbers produced there. It never writes into gt/ or trackers/.
 Usage:
     python tools/score_hota_workspace.py \
         --workspace /path/to/hota_ws4 \
-        --benchmarks spacetracker_nocar_airplane spacetracker_nocar_ship \
+        --benchmarks space_tracker_nocar_airplane space_tracker_nocar_ship \
         --out docs/space_tracker/hota_nocar_perclass.csv
 """
 
@@ -110,7 +110,7 @@ def main():
                                  formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--workspace", required=True)
     ap.add_argument("--benchmarks", nargs="+", required=True)
-    ap.add_argument("--dataset", default="spacetracker_nocar")
+    ap.add_argument("--dataset", default="space_tracker_nocar")
     ap.add_argument("--out", required=True)
     args = ap.parse_args()
 

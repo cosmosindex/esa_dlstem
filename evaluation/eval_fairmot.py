@@ -116,7 +116,7 @@ _DATASET_TABLE = {
                      {"categories": ["plane", "ship", "train"]}),
     # The released benchmark's non-car test split -- the same 22 sequences the
     # tracking-by-detection rows are scored on, so JDT and TbD are comparable.
-    "spacetracker_nocar": (SpaceTrackerMOTDataset,
+    "space_tracker_nocar": (SpaceTrackerMOTDataset,
                      f"{DATA_ROOT}/release/space_tracker",
                      {"complete_only": True,
                       "categories": ["airplane", "ship"]}),
@@ -134,7 +134,7 @@ _ALLCLASS_MAPS = {
     "viso_no_car":  {"plane": 0, "ship": 1, "train": 2},
     "satmtb_nocar": {"airplane": 0, "ship": 1, "train": 2},
     "viso_nocar":   {"plane": 0, "ship": 1, "train": 2},
-    "spacetracker_nocar": {"airplane": 0, "ship": 1},
+    "space_tracker_nocar": {"airplane": 0, "ship": 1},
 }
 
 # Per-dataset eval input size (the native-res training bucket from train_union).
@@ -142,7 +142,7 @@ _ALLCLASS_INPUT = {
     "rscardata": (1024, 1024), "satmtb": (1024, 1024), "sdmcar": (1920, 1088),
     "airmot": (1920, 1088), "viso_no_car": (1472, 768),
     "satmtb_nocar": (1024, 1024), "viso_nocar": (1472, 768),
-    "spacetracker_nocar": (1024, 1024),
+    "space_tracker_nocar": (1024, 1024),
 }
 
 # Eval split per dataset. The non-car TbD rows score VISO / AIR-MOT on *all*
@@ -150,7 +150,7 @@ _ALLCLASS_INPUT = {
 # both (`union_all.json` train includes airmot + viso_no_car), so a JDT run must
 # stay on the test split or it would be scored on its own training sequences.
 _DATASET_SPLIT = {
-    "spacetracker_nocar": "test",
+    "space_tracker_nocar": "test",
     "satmtb_nocar": "test",
     "viso_nocar":   "test",
     "airmot":       "test",

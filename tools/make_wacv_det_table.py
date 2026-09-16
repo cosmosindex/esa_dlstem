@@ -25,7 +25,7 @@ make this table inconsistent with every MOT number downstream.
 
 Usage:
     python tools/make_wacv_det_table.py \
-        --frcnn /work/anon/experiments/fasterrcnn_spacetracker_mot_20260825_083522/pr_curve.json \
+        --frcnn /work/anon/experiments/fasterrcnn_space_tracker_mot_20260825_083522/pr_curve.json \
         --out   wacv-2027-author-kit-template/tables/mot_detection.tex
 """
 

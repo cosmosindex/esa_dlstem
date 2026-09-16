@@ -180,7 +180,9 @@ st.sot.filter(dataset="ootb")                     # the source dataset
 st.sot.filter(attribute=["OCC", "SOB"])           # any of the 18 taxonomy attributes
 st.sot.filter(attribute="STO")                    # or an occlusion sub-type
 st.sot.filter(unified_attribute="OCC")            # restricted to the 5 pooled rows (§7)
-st.sot.filter(max_size=8)                         # median sqrt(area) at most 8 px
+st.sot.filter(tiny=True)                          # the paper's tiny regime, s < 8 px (238)
+st.sot.filter(max_size=8)                         # median sqrt(area) at most 8 px — inclusive,
+                                                  #   so 240, not 238: two sequences sit at 8.0
 st.sot.filter(predicate=lambda s: s.n_frames > 500)
 
 st.mot.filter(split="test", contains="ship")      # what the boxes hold, not the folder name
@@ -516,7 +518,11 @@ MOTTrack   track_id category_id category n_boxes is_small median_sqrt_area_px
 ## 13. Also in this directory
 
 `release.py` is what the above documents, and it is all a reader of the
-benchmark needs. `data/sequence_constants.json` holds the per-sequence
+benchmark needs. To run a tracker over the package rather than read it, the
+repository ships `datasets/space_tracker_sot.py` and
+`datasets/space_tracker_mot.py`, which expose the same sequences through the
+evaluation code's dataset interface, plus one config per method in
+`../configs/`. `data/sequence_constants.json` holds the per-sequence
 acquisition constants of §5, so the release carries them without depending on
 anything upstream.
 

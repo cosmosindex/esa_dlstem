@@ -71,7 +71,7 @@ Local changes to the clone, all of them required to run it here:
   torch 2.6 refuses to unpickle by default.
 * ``models/ops/`` -- the CUDA sources of the deformable-attention kernel updated
   for the current toolkit.
-* added: ``configs/motrv2_union.args``, ``configs/motrv2_st_nocar.args``,
+* added: ``configs/motrv2_union.args``, ``configs/motrv2_space_tracker_nocar.args``,
   ``eval_motrv2.py``, ``eval_motrv2_oracle_assoc.py``. The ``.args`` files are
   read with ``args=$(cat configs/x.args)``, which does not expand shell
   variables, so pass them through ``envsubst`` first; ``$DATA_ROOT`` and

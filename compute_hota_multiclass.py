@@ -41,7 +41,7 @@ from project_paths import DATA_ROOT
 _DATASET_TABLE = {
     # Released benchmark, non-car test split. 2-class: `train` has no val/test
     # GT at all, so the detector was never trained on it.
-    "spacetracker_nocar": (
+    "space_tracker_nocar": (
         SpaceTrackerMOTDataset, f"{DATA_ROOT}/release/space_tracker",
         {"complete_only": True},
         "test",
@@ -50,7 +50,7 @@ _DATASET_TABLE = {
     # Same benchmark half on the VALIDATION split. Exists so that checkpoint
     # selection can be measured without touching the test split -- every run
     # scored against this entry is a training decision, never a reported number.
-    "spacetracker_nocar_val": (
+    "space_tracker_nocar_val": (
         SpaceTrackerMOTDataset, f"{DATA_ROOT}/release/space_tracker",
         {"complete_only": True},
         "val",
@@ -59,7 +59,7 @@ _DATASET_TABLE = {
     # Car half, detected by HiEUM. complete_only=False: car GT annotates moving
     # objects only and was never completed with static ones, so the completeness
     # filter (correct for airplane/ship) would leave 2 of 48 sequences.
-    "spacetracker_car": (
+    "space_tracker_car": (
         SpaceTrackerMOTDataset, f"{DATA_ROOT}/release/space_tracker",
         {"complete_only": False, "categories": ["car"]},
         "test",
@@ -97,7 +97,7 @@ def _build_dataset(name: str):
     if cls is SpaceTrackerMOTDataset:
         ds = cls(root=root, split=split, mode="detection",
                  class_map=dict(cmap), **extra)
-        if name == "spacetracker_car":
+        if name == "space_tracker_car":
             # categories= filters by TRACK class, so it also admits mixed
             # sequences containing a car. The car benchmark is the 48 sequences
             # whose RELEASE category is 'car' -- what HiEUM was trained and

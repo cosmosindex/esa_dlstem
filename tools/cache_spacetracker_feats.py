@@ -25,9 +25,9 @@ carries very little and matching largely falls back to IoU. That gap is part of
 what the benchmark measures -- it is reported as a caveat column, not hidden.
 
 Usage:
-    python tools/cache_spacetracker_feats.py \
-        --det-cache /path/to/spacetracker_nocar_dets_cache/spacetracker_nocar \
-        --out-dir   /path/to/spacetracker_nocar_feats_cache
+    python tools/cache_space_tracker_feats.py \
+        --det-cache /path/to/space_tracker_nocar_dets_cache/space_tracker_nocar \
+        --out-dir   /path/to/space_tracker_nocar_feats_cache
 """
 
 from __future__ import annotations

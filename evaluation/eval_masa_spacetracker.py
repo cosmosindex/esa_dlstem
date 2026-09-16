@@ -16,9 +16,9 @@ results in the same format the other trackers produce, so downstream HOTA /
 aggregation is unchanged.
 
 Usage (in the masa env):
-    python evaluation/eval_masa_spacetracker.py \
-        --det-cache /path/to/spacetracker_nocar_dets_cache/spacetracker_nocar \
-        --out-dir   /path/to/out/masa_spacetracker_nocar
+    python evaluation/eval_masa_space_tracker.py \
+        --det-cache /path/to/space_tracker_nocar_dets_cache/space_tracker_nocar \
+        --out-dir   /path/to/out/masa_space_tracker_nocar
 
 Upstream
 --------

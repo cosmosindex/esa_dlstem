@@ -2,8 +2,8 @@
 # Detections are ground truth at score 1.0, so every score-dependent threshold
 # below (track_high/low, new_track, appearance gating by score) is inert by
 # construction. They are left in place, not deleted, so this file diffs against
-# tracktrack_spacetracker_car.yaml in exactly one line: the cache.
-dataset: spacetracker_car
+# tracktrack_space_tracker_car.yaml in exactly one line: the cache.
+dataset: space_tracker_car
 tracker: tracktrack
 cache_dir: ${DATA_ROOT}/experiments/Detection/gt_car_feats_cache
 score_floor: 0.0            # oracle: every box scores 1.0, so any floor is inert

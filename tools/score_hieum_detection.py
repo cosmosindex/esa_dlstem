@@ -14,7 +14,7 @@ definition; both are emitted for schema compatibility.
 
 Usage:
     python tools/score_hieum_detection.py \
-        --det-cache /path/to/hieum_dets_cache_st/spacetracker_car \
+        --det-cache /path/to/hieum_dets_cache_st/space_tracker_car \
         --out /work/anon/experiments/hieum_car_st/pr_curve.json
 """
 

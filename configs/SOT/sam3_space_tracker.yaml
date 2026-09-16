@@ -1,0 +1,52 @@
+# SAM 3 on **Space-Tracker-SOT** — all 395 released sequences as one dataset.
+# Usage: python evaluation/eval_sam3.py --config configs/SOT/sam3_space_tracker.yaml
+#
+# This reads the released package ($SPACE_TRACKER_ROOT), so it is the entry
+# point for evaluating on the benchmark itself. The published numbers were
+# produced by the three per-source configs beside this one
+# (sam3_{ootb,satsot,sv248s}.yaml) and aggregated over the released
+# sequences by tools/make_wacv_sot_table.py; the two paths read identical
+# ground truth, which tools/check_sot_release_equivalence.py verifies box by
+# box (395/395 sequences, 185,376 boxes).
+#
+# OOTB's oriented ground truth is scored axis-aligned here, as in the paper's
+# main table, so every sequence poses one localisation task.
+
+dataset: Space-Tracker-SOT
+dataset_root: ${SPACE_TRACKER_ROOT}
+class_map:
+  car: 0
+  car-large: 1
+  airplane: 2
+  ship: 3
+  train: 4
+
+eval_mode: sot
+obb_eval_mode: ootb_aabb       # OOTB polygons scored as AABB, as in the paper
+
+# --- Image size ---
+# null → native resolution (variable per sequence, 225x213 ~ 1192x959)
+img_size: null
+
+# --- SAM3 model ---
+sam3_checkpoint_path: null          # null → auto-download facebook/sam3
+apply_temporal_disambiguation: true
+
+# --- Prompt strategy ---
+prompt_strategy: first_frame
+prompt_interval: 10
+
+# --- Clip parameters ---
+clip_len: 32
+clip_stride: 1
+batch_size: 1
+num_workers: 0
+
+# --- Visualization / metrics ---
+iou_thresh: 0.3
+score_thresh: 0.5
+max_wandb_images: 50
+
+# --- W&B ---
+wandb_project: esa-dlstem
+wandb_entity: anonymous

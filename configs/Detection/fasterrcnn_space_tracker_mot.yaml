@@ -24,7 +24,7 @@
 # Run with:
 #   CHECKPOINT_ROOT=... EXPERIMENT_ROOT=... \
 #   python training_scripts/train_fasterrcnn_satmot.py \
-#       --config configs/Detection/fasterrcnn_spacetracker_mot.yaml
+#       --config configs/Detection/fasterrcnn_space_tracker_mot.yaml
 
 # ----- Dataset roots ------------------------------------------------------
 datasets:
@@ -145,7 +145,7 @@ lr_scheduler: cosine
 precision: bf16-mixed
 
 # ----- Run / logging ------------------------------------------------------
-run_name: fasterrcnn_spacetracker_mot
+run_name: fasterrcnn_space_tracker_mot
 experiment_root: /work/anon/experiments
 wandb_project: esa-dlstem
 wandb_entity: anonymous

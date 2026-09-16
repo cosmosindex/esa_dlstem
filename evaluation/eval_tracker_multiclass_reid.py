@@ -60,11 +60,11 @@ _DATASET_TABLE = {
     # Car half. complete_only=False: car GT labels moving objects only and was
     # never completed with static ones, so the completeness filter would leave
     # 2 of 48 sequences.
-    "spacetracker_car": (SpaceTrackerMOTDataset,
+    "space_tracker_car": (SpaceTrackerMOTDataset,
                      f"{DATA_ROOT}/release/space_tracker",
                      {"complete_only": False, "categories": ["car"]},
                      "test", {"car": 1}),
-    "spacetracker_nocar": (SpaceTrackerMOTDataset,
+    "space_tracker_nocar": (SpaceTrackerMOTDataset,
                      f"{DATA_ROOT}/release/space_tracker",
                      {"complete_only": True},
                      "test", {"airplane": 1, "ship": 2}),
@@ -92,7 +92,7 @@ def _build_dataset(name: str):
             else cls(root=root, split=split, class_map=dict(cmap), **extra)
     ds = cls(root=root, split=split, mode="detection",
              class_map=dict(cmap), **extra)
-    if name == "spacetracker_car":
+    if name == "space_tracker_car":
         # `categories=["car"]` filters by TRACK class, so it also admits mixed
         # sequences that merely contain a car. The car benchmark, the HiEUM
         # detection cache and the ReID feature cache all cover exactly the 48

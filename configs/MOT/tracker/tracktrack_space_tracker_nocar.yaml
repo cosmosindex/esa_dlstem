@@ -1,8 +1,8 @@
-# tracktrack on spacetracker_nocar (Space-Tracker-MOT non-car). FasterRCNN cached dets + FastReID feats, multi-class.
+# tracktrack on space_tracker_nocar (Space-Tracker-MOT non-car). FasterRCNN cached dets + FastReID feats, multi-class.
 # Driver: eval_tracker_multiclass_reid.py (per-class tracker instance with appearance feats).
-dataset: spacetracker_nocar
+dataset: space_tracker_nocar
 tracker: tracktrack
-cache_dir: ${DATA_ROOT}/experiments/Detection/spacetracker_nocar_feats_cache
+cache_dir: ${DATA_ROOT}/experiments/Detection/space_tracker_nocar_feats_cache
 score_floor: 0.10
 match_metric: centroid
 centroid_dist_thresh: 5.0

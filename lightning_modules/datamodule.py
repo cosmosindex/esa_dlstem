@@ -28,6 +28,7 @@ from torch.utils.data import ConcatDataset, DataLoader
 from datasets import detection_collate_fn
 from datasets.ootb import OOTBDataset
 from datasets.space_tracker_mot import SpaceTrackerMOTDataset
+from datasets.space_tracker_sot import SpaceTrackerSOTDataset
 from datasets.lmod import LMODDataset
 from datasets.irsatvideo import IRSatVideoDataset
 from datasets.satsot import SatSOTDataset
@@ -53,6 +54,7 @@ except ImportError:  # loaders kept out of the released tree
 _DATASET_REGISTRY: dict[str, type] = {
     "OOTB": OOTBDataset,
     "Space-Tracker-MOT": SpaceTrackerMOTDataset,
+    "Space-Tracker-SOT": SpaceTrackerSOTDataset,
     "LMOD": LMODDataset,
     "IRSatVideo-LEO": IRSatVideoDataset,
     "SatSOT": SatSOTDataset,

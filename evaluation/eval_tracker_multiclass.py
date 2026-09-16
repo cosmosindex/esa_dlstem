@@ -76,7 +76,7 @@ _FRCN_CLASS_MAP_SPACETRACKER      = {"airplane": 1, "ship": 2}
 
 _DATASET_TABLE = {
     # name → (display, cls, root, build_kwargs, class_map)
-    "spacetracker_nocar": (
+    "space_tracker_nocar": (
         "Space-Tracker-MOT", SpaceTrackerMOTDataset,
         f"{DATA_ROOT}/release/space_tracker",
         {"complete_only": True},
@@ -87,7 +87,7 @@ _DATASET_TABLE = {
     # ones, so the completeness filter (right for airplane/ship) would leave 2
     # of 48 sequences. Restricted to release category 'car' to match the
     # training set HiEUM was retrained on.
-    "spacetracker_car": (
+    "space_tracker_car": (
         "Space-Tracker-MOT", SpaceTrackerMOTDataset,
         f"{DATA_ROOT}/release/space_tracker",
         {"complete_only": False, "categories": ["car"]},
@@ -116,8 +116,8 @@ _DATASET_TABLE = {
 # Default split policy: only sequences FasterRCNN has *not* seen during
 # training. SAT-MTB → test; VISO/AIR-MOT → all (no_split).
 _DATASET_SPLIT = {
-    "spacetracker_nocar": "test",
-    "spacetracker_car":   "test",
+    "space_tracker_nocar": "test",
+    "space_tracker_car":   "test",
     "satmtb_nocar": "test",
     "viso_nocar":   "no_split",
     "airmot":       "no_split",
@@ -152,7 +152,7 @@ def _build_dataset(name: str, mode: str = "detection"):
         class_map=dict(class_map),
         **extra,
     )
-    if name == "spacetracker_car":
+    if name == "space_tracker_car":
         # `categories=["car"]` filters by TRACK class, so it also admits mixed
         # sequences that merely contain a car. The car benchmark is the 48
         # sequences whose release category is 'car' -- the same set HiEUM was

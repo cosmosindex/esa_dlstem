@@ -24,6 +24,7 @@ try:
 except ImportError:  # loaders kept out of the released tree
     BIRDSAIDataset = BIRDSAIMOTDataset = FireRGBTDataset = None
 from .space_tracker_mot import SpaceTrackerMOTDataset
+from .space_tracker_sot import SpaceTrackerSOTDataset
 
 __all__ = [
     "BaseVideoDataset",
@@ -42,4 +43,5 @@ __all__ = [
     "SDMCarDataset",
     "RsCarDataset",
     "SpaceTrackerMOTDataset",
+    "SpaceTrackerSOTDataset",
 ]

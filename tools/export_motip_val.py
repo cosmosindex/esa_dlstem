@@ -37,9 +37,9 @@ Local changes to the clone:
   rather than pinning the whole environment for one method.
 * ``submit_and_evaluate.py`` -- take the MOTChallenge output branch for
   ``SpaceTracker``, whose format is identical to DanceTrack's.
-* added: ``data/spacetracker.py`` (the release's non-car split in the DanceTrack
+* added: ``data/space_tracker.py`` (the release's non-car split in the DanceTrack
   on-disk layout, 8-digit frame names, single foreground class) and
-  ``configs/motip_spacetracker_nocar.yaml``. That config carries the shortened
+  ``configs/motip_space_tracker_nocar.yaml``. That config carries the shortened
   training schedule the paper declares -- 5 epochs rather than 10, milestones
   moved to the same 60%/90% fractions -- which is a config change, not a code
   change.
@@ -59,8 +59,8 @@ from PIL import Image
 import compute_hota_multiclass as chm
 from project_paths import DATA_ROOT
 
-JDE_IMAGES = Path(f"{DATA_ROOT}/data/spacetracker_jde_nocar/"
-                  "spacetracker_nocar/images")
+JDE_IMAGES = Path(f"{DATA_ROOT}/data/space_tracker_jde_nocar/"
+                  "space_tracker_nocar/images")
 
 
 def main() -> None:
@@ -71,12 +71,12 @@ def main() -> None:
                     help="TrackEval workspace to leave the GT in, for scoring")
     args = ap.parse_args()
 
-    bench = "spacetracker_nocar_val_all"
+    bench = "space_tracker_nocar_val_all"
     gt_root = args.workspace / "gt" / f"{bench}-test"
     if gt_root.exists():
         shutil.rmtree(gt_root)
     gt_root.mkdir(parents=True)
-    seqs, _ = chm._write_gt_for_class("spacetracker_nocar_val", "all", gt_root)
+    seqs, _ = chm._write_gt_for_class("space_tracker_nocar_val", "all", gt_root)
     print(f"{len(seqs)} validation sequences with non-car GT")
 
     args.out.mkdir(parents=True, exist_ok=True)
@@ -91,7 +91,7 @@ def main() -> None:
         d = args.out / seq
         (d / "gt").mkdir(parents=True, exist_ok=True)
         shutil.copy(gt_root / seq / "gt" / "gt.txt", d / "gt" / "gt.txt")
-        # MOTIP addresses frames as %08d (data/spacetracker.py); the JDE export
+        # MOTIP addresses frames as %08d (data/space_tracker.py); the JDE export
         # names them %06d, so img1 is a directory of per-frame links rather than
         # one link to the source directory. Verified above that GT frame numbers
         # run 1..N contiguously, so the k-th sorted image is frame k.

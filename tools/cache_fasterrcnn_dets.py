@@ -63,7 +63,7 @@ def _safe_video_id(video_id: str) -> str:
 def _build_dataset(name: str):
     """Return (display_name, dataset_obj) — limited to sequences FasterRCNN
     has *not* seen at training time."""
-    if name == "spacetracker_nocar":
+    if name == "space_tracker_nocar":
         # The released benchmark, held-out test split only. complete_only keeps
         # the sequences whose GT includes static objects -- the same filter the
         # detector was trained under, so evaluation is like-for-like.

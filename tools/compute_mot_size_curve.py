@@ -33,7 +33,7 @@ the 19 alpha thresholds, as in the standard HOTA.
 
 Usage:
     python tools/compute_mot_size_curve.py \
-        --workspace /tmp/hota_car_ws2 --benchmark spacetracker_car_car \
+        --workspace /tmp/hota_car_ws2 --benchmark space_tracker_car_car \
         --half car --edges 0:16:1 \
         --out docs/space_tracker/mot_size_curve_car.csv \
         --check docs/space_tracker/hota_car.csv

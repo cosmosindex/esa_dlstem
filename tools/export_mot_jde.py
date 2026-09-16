@@ -110,8 +110,8 @@ DATASETS = {
     # training a detector on movers-only labels teaches it that a parked
     # aircraft is background. Car is excluded entirely: its GT is movers-only
     # by design, which is a different task (see docs/static_annotation).
-    "spacetracker_nocar": dict(
-        ext=None, key="spacetracker_nocar",     # ext varies per sequence
+    "space_tracker_nocar": dict(
+        ext=None, key="space_tracker_nocar",     # ext varies per sequence
         build=lambda split: SpaceTrackerMOTDataset(
             root=f"{DATA_ROOT}/release/space_tracker",
             split=split, mode="detection", class_map=NOCAR_MAP,
@@ -142,7 +142,7 @@ def source_image_path(name, ds, video, fid):
         suffix = getattr(video, "_img_suffix", "")
         fname = f"{fid:06d}_{suffix}.jpg" if suffix else f"{fid:06d}.jpg"
         return os.path.join(root, vid, "img", fname)
-    if name == "spacetracker_nocar":
+    if name == "space_tracker_nocar":
         # MOTChallenge layout inside the release; extension varies per sequence
         seq_dir = ds._seq_dir[vid]
         return os.path.join(str(seq_dir), "img1", f"{fid:06d}{ds._img_ext[vid]}")
@@ -205,7 +205,7 @@ def export_dataset(name, split, limit_videos=None, write_cfg=False):
     next_id = [0]          # mutable counter
     txt_lines = []
     n_frames = n_boxes = 0
-    names = NOCAR_CLASS_NAMES if name == "spacetracker_nocar" else CLASS_NAMES
+    names = NOCAR_CLASS_NAMES if name == "space_tracker_nocar" else CLASS_NAMES
     cls_counts = {c: 0 for c in range(len(names))}  # per-class box counts
 
     for vi, video in enumerate(videos, 1):

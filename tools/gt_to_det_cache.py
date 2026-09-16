@@ -4,7 +4,7 @@ Emit a detection cache whose "detections" are the ground-truth boxes.
 The GT-box oracle needs the appearance-aware trackers (BoT-SORT-ReID,
 TrackTrack, MASA) as well as the motion-only ones, and those consume a FastReID
 embedding per detection. The embedding cache is built by
-tools/cache_spacetracker_feats.py from a detection cache, so the shortest honest
+tools/cache_space_tracker_feats.py from a detection cache, so the shortest honest
 route to GT-box embeddings is to hand that script a detection cache that happens
 to contain ground truth at score 1.0 -- no second code path, and the crops are
 produced by exactly the same code as the detector-fed ones.
@@ -14,8 +14,8 @@ dataset, so the boxes are the same ones the published rows were scored against.
 
 Usage:
     python tools/gt_to_det_cache.py \
-        --workspace /tmp/hota_car_ws2 --benchmark spacetracker_car_car-test \
-        --out /data/.../Detection/gt_dets_cache_st_car/spacetracker_car
+        --workspace /tmp/hota_car_ws2 --benchmark space_tracker_car_car-test \
+        --out /data/.../Detection/gt_dets_cache_st_car/space_tracker_car
 """
 
 from __future__ import annotations

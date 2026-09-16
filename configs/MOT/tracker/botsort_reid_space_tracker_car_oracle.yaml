@@ -1,9 +1,12 @@
-# botsort_reid on spacetracker_nocar (Space-Tracker-MOT non-car). FasterRCNN cached dets + FastReID feats, multi-class.
-# Driver: eval_tracker_multiclass_reid.py (per-class tracker instance with appearance feats).
-dataset: spacetracker_car
+# botsort_reid on the Space-Tracker-MOT car test split, GT-BOX ORACLE.
+# Detections are ground truth at score 1.0, so every score-dependent threshold
+# below (track_high/low, new_track, appearance gating by score) is inert by
+# construction. They are left in place, not deleted, so this file diffs against
+# botsort_reid_space_tracker_car.yaml in exactly one line: the cache.
+dataset: space_tracker_car
 tracker: botsort_reid
-cache_dir: ${DATA_ROOT}/experiments/Detection/spacetracker_car_feats_cache
-score_floor: 0.26
+cache_dir: ${DATA_ROOT}/experiments/Detection/gt_car_feats_cache
+score_floor: 0.0            # oracle: every box scores 1.0, so any floor is inert
 match_metric: centroid
 centroid_dist_thresh: 5.0
 iou_thresh: 0.5

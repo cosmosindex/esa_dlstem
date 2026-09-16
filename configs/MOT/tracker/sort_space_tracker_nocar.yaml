@@ -1,8 +1,8 @@
-# SORT on spacetracker_nocar (Space-Tracker-MOT non-car). FasterRCNN cached dets, multi-class.
+# SORT on space_tracker_nocar (Space-Tracker-MOT non-car). FasterRCNN cached dets, multi-class.
 # Driver: eval_tracker_multiclass.py (per-class tracker instance).
-dataset: spacetracker_nocar
+dataset: space_tracker_nocar
 tracker: sort
-cache_dir: ${DATA_ROOT}/experiments/Detection/spacetracker_nocar_dets_cache/spacetracker_nocar
+cache_dir: ${DATA_ROOT}/experiments/Detection/space_tracker_nocar_dets_cache/space_tracker_nocar
 score_floor: 0.25
 match_metric: centroid
 centroid_dist_thresh: 5.0

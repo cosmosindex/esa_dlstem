@@ -4,8 +4,8 @@
 # so labels carry only class 0/1 and the v1 3-channel head had a dead channel.
 # Evaluating this checkpoint against num_classes: 3 silently leaves hm.2 randomly
 # initialised -- it does not error, it just returns noise.
-dataset: spacetracker_nocar
-checkpoint: /work/anon/checkpoints/fairmot_st_nocar_v2_best.pth
+dataset: space_tracker_nocar
+checkpoint: /work/anon/checkpoints/fairmot_space_tracker_nocar_v2_best.pth
 arch: hrnet_18
 num_classes: 2              # checkpoint hm head is 2-channel (airplane, ship)
 conf_thres: 0.4

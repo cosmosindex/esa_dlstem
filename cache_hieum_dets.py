@@ -77,7 +77,7 @@ _DATASET_TABLE = {
     # airplane/ship (that is where the non-car set's 22 sequences come from) and
     # the wrong one for car: car ground truth labels moving objects only, was
     # never completed, and complete_only=True leaves just 2 of 48 sequences.
-    "spacetracker_car": (
+    "space_tracker_car": (
         "Space-Tracker-MOT",
         f"{DATA_ROOT}/release/space_tracker",
         "datasets.space_tracker_mot", "SpaceTrackerMOTDataset",
@@ -164,7 +164,7 @@ def main():
     torch.set_float32_matmul_precision("high")
 
     dataset_key, _, _, _, _ = _DATASET_TABLE[args.dataset]
-    _CAT_FILTER = {"spacetracker_car": "car"}
+    _CAT_FILTER = {"space_tracker_car": "car"}
     out_dir = Path(args.output_dir) / args.dataset
     out_dir.mkdir(parents=True, exist_ok=True)
 

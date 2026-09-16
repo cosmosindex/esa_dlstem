@@ -1,10 +1,10 @@
-# ocsort on spacetracker_car (Space-Tracker-MOT car). HiEUM cached dets, single class.
+# ocsort on space_tracker_car (Space-Tracker-MOT car). HiEUM cached dets, single class.
 # score_floor 0.26 = HiEUM's F1-optimal operating point. NOT the 0.25 used for
 # non-car: HiEUM's scores top out at 0.66, so a threshold tuned for Faster R-CNN
 # would discard almost everything (0.5 leaves 0.5% of detections).
-dataset: spacetracker_car
+dataset: space_tracker_car
 tracker: ocsort
-cache_dir: ${DATA_ROOT}/experiments/Detection/hieum_dets_cache_st_best/spacetracker_car
+cache_dir: ${DATA_ROOT}/experiments/Detection/hieum_dets_cache_st_best/space_tracker_car
 score_floor: 0.26
 match_metric: centroid
 centroid_dist_thresh: 5.0

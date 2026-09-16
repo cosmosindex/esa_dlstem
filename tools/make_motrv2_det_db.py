@@ -21,8 +21,8 @@ The image tree written by `export_motrv2.py` is reused untouched -- only the
 Usage:
     python tools/make_motrv2_det_db.py \
         --ckpt  /path/to/best-epoch=NN-val_mAP=X.ckpt \
-        --config configs/Detection/fasterrcnn_spacetracker_mot.yaml \
-        --motr-root /path/to/motrv2_st_nocar
+        --config configs/Detection/fasterrcnn_space_tracker_mot.yaml \
+        --motr-root /path/to/motrv2_space_tracker_nocar
 
 Upstream
 --------
@@ -52,7 +52,7 @@ Local changes to the clone, all of them required to run it here:
   torch 2.6 refuses to unpickle by default.
 * ``models/ops/`` -- the CUDA sources of the deformable-attention kernel updated
   for the current toolkit.
-* added: ``configs/motrv2_union.args``, ``configs/motrv2_st_nocar.args``,
+* added: ``configs/motrv2_union.args``, ``configs/motrv2_space_tracker_nocar.args``,
   ``eval_motrv2.py``, ``eval_motrv2_oracle_assoc.py``. The ``.args`` files are
   read with ``args=$(cat configs/x.args)``, which does not expand shell
   variables, so pass them through ``envsubst`` first; ``$DATA_ROOT`` and
@@ -79,7 +79,7 @@ SPLIT_TO_MODE = {"train": "train", "test": "eval"}
 
 # Must match the `--datasets` name used with tools/export_motrv2.py, since that
 # is what the on-disk video directories are named after.
-DATASET_TAG = "spacetracker_nocar"
+DATASET_TAG = "space_tracker_nocar"
 
 
 def build_detector(cfg: dict, ckpt_path: Path, device: torch.device):

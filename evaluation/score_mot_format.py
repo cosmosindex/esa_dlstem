@@ -15,8 +15,8 @@ Expected input: one ``<video_id>.txt`` per sequence, rows of
 
 Usage:
     python evaluation/score_mot_format.py \
-        --tracks /path/to/masa_spacetracker_nocar/mot_format \
-        --dataset spacetracker_nocar --name MASA
+        --tracks /path/to/masa_space_tracker_nocar/mot_format \
+        --dataset space_tracker_nocar --name MASA
 """
 
 from __future__ import annotations
@@ -65,7 +65,7 @@ def main():
     ap = argparse.ArgumentParser(description=__doc__,
                                  formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--tracks", required=True, help="dir of <video>.txt files")
-    ap.add_argument("--dataset", default="spacetracker_nocar")
+    ap.add_argument("--dataset", default="space_tracker_nocar")
     ap.add_argument("--name", default="tracker")
     ap.add_argument("--match-metric", default="centroid", choices=["centroid", "iou"])
     ap.add_argument("--centroid-dist-thresh", type=float, default=5.0)
