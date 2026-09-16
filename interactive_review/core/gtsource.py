@@ -45,7 +45,7 @@ import numpy as np
 
 from space_tracker.data_mot import _parse_gt
 
-from .paths import MOT_ROOTS, sequence_by_id
+from .paths import sequence_by_id, sequence_root
 
 #: Experiment/scratch root. Real paths are machine-specific, so they are
 #: never written into the repository — set ``WORK_ROOT`` to point at yours.
@@ -172,7 +172,7 @@ def load_frames(seq_id: str) -> dict[int, list[Obj]]:
     matches on; :func:`set_label_overrides` drops this cache when they change.
     """
     seq = sequence_by_id(seq_id)
-    root = MERGED_ROOT if merged_available(seq_id) else MOT_ROOTS[seq.dataset]
+    root = MERGED_ROOT if merged_available(seq_id) else sequence_root(seq)
     prov = _provenance(seq_id) if root is MERGED_ROOT else {}
     filled = _filled_frames(seq_id) if root is MERGED_ROOT else set()
     labels = _LABELS.get(seq_id, {})
@@ -246,7 +246,7 @@ def raw_geometry(seq_id: str) -> dict[str, dict[int, list[float]]]:
 
     seq = sequence_by_id(seq_id)
     out: dict[str, dict[int, list[float]]] = {}
-    for fid, objs in _parse_gt(seq, MOT_ROOTS[seq.dataset]).items():
+    for fid, objs in _parse_gt(seq, sequence_root(seq)).items():
         for o in objs:
             out.setdefault(f"{o.category}:{o.track_id}", {})[fid] = \
                 [float(v) for v in o.bbox_xyxy]

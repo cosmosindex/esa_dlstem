@@ -7,6 +7,11 @@ directly from a local yaml + checkpoint (no HF download).
 
 Usage:
     python eval_odtrack.py --config configs/SOT/odtrack_satsot.yaml
+
+Upstream
+--------
+ODTrack -- https://github.com/GXNU-ZhongLab/ODTrack, commit ``88c0a8e``. Clone it beside
+this repository; it is not committed here.
 """
 
 # --- repo root on path so top-level modules (transforms, obb_utils, ...) import ---

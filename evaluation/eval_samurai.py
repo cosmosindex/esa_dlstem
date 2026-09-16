@@ -9,6 +9,11 @@ activates samurai's fork as the process-wide `sam2`.
 
 Usage:
     python eval_samurai.py --config configs/SOT/samurai_ootb.yaml
+
+Upstream
+--------
+SAMURAI -- https://github.com/yangchris11/samurai, commit ``76ba195``. Clone it beside
+this repository; it is not committed here.
 """
 
 # --- repo root on path so top-level modules (transforms, obb_utils, ...) import ---

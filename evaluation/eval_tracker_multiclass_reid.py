@@ -11,6 +11,18 @@ Dispatches between BoT-SORT-ReID and TrackTrack based on the
 ``tracker:`` field of the config; their ``update_with_feats`` signatures
 differ (see ``eval_botsort_reid.py`` and ``eval_tracktrack.py``), so we
 build the call frame for each separately here.
+
+Upstream
+--------
+Cloned beside this repository, not committed here:
+
+* ByteTrack -- https://github.com/ifzhang/ByteTrack, commit ``d1bf019``
+* OC-SORT   -- https://github.com/noahcao/OC_SORT, commit ``8462e7e``
+* BoT-SORT  -- https://github.com/NirAharon/BoT-SORT, commit ``2519854``
+
+In ByteTrack and BoT-SORT, ``np.float`` is replaced by ``np.float64``
+throughout their matching code: the alias was removed in NumPy 1.24 and both
+repos predate that. No behaviour changes.
 """
 from __future__ import annotations
 

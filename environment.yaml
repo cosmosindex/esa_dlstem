@@ -14,6 +14,7 @@ dependencies:
   - matplotlib>=3.8      # plotting
   - tqdm>=4.66           # progress bars
   - pillow>=10.0         # image I/O fallback
+  - pyyaml>=6.0          # every config is YAML; project_paths.load_config reads them
   - pip
 
   # ── pip packages ──────────────────────────────────────────────────────────
@@ -37,8 +38,33 @@ dependencies:
     # Data augmentation
     - albumentations>=1.4
 
+    # COCO annotations — space_tracker's load_coco(), and detector evaluation
+    - pycocotools>=2.0.7
+
+    # Tracking-by-detection: Kalman filtering and linear assignment for the
+    # SORT family, and the reference HOTA / MOTA / IDF1 implementation
+    - filterpy>=1.4.5
+    - lap>=0.4.0
+    - trackeval @ git+https://github.com/JonathonLuiten/TrackEval.git
+
+    # The annotation tool (interactive_review/) is a Gradio app; SAM 3 supplies
+    # its segmentation and is installed with the trackers, not from here
+    - gradio>=4.0
+
+    # Reading and writing the artifacts the tools produce
+    - imageio>=2.34
+    - imageio-ffmpeg>=0.4.9    # video writing in the visualization tools
+    - openpyxl>=3.1            # spreadsheet export in the aggregation tools
+    - safetensors>=0.4         # checkpoint format used by several trackers
+
     # Experiment tracking
     - wandb>=0.16
 
     # SAM2 (install from Facebook Research GitHub)
     - git+https://github.com/facebookresearch/sam2.git  # from source
+
+# Not installable from here: the benchmarked trackers are separate repositories,
+# cloned beside this one. Each runner under evaluation/ names its upstream URL,
+# the commit it was pinned to and every local modification, in its own
+# docstring. MOTRv2/ and MOTIP/ are the exception and ship with this repository,
+# because their entry points live inside the vendored tree.

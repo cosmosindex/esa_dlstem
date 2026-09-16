@@ -6,9 +6,9 @@ Columns 1-3  Space-Tracker-SOT.  Rows are attribute groups (similar object,
 Column 4     Space-Tracker-MOT.  Every target in the scene is annotated and the
              box colour encodes the class (car / ship / airplane).
 
-Paths default to anonymised placeholders and are overridden at run time by
-SPACE_TRACKER_DATA_ROOT (source SOT datasets) and SPACE_TRACKER_RELEASE
-(the released benchmark, used for the MOT panels).
+Paths resolve from the environment: ``$DATA_ROOT`` (or SPACE_TRACKER_DATA_ROOT)
+for the source SOT datasets, and ``$SPACE_TRACKER_ROOT`` for the released
+benchmark, which the MOT panels read.
 """
 from __future__ import annotations
 
@@ -22,10 +22,18 @@ import numpy as np
 from matplotlib.patches import Polygon, Rectangle
 
 sys.path.insert(0, str(Path(__file__).parent))
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from plot_style import apply_neurips_style  # noqa: E402
+from project_paths import DATA_ROOT as _DATA_ROOT  # noqa: E402
 
-DATA_ROOT = Path(os.environ.get("SPACE_TRACKER_DATA_ROOT", "/data/anon/data/trafic"))
-RELEASE = Path(os.environ.get("SPACE_TRACKER_RELEASE", "/data/anon/release/space_tracker"))
+#: The source SOT datasets, in their original layout.
+DATA_ROOT = Path(os.environ.get("SPACE_TRACKER_DATA_ROOT",
+                                f"{_DATA_ROOT}/data/trafic"))
+#: The released package. ``SPACE_TRACKER_ROOT`` is the name the README and the
+#: loading code use; ``SPACE_TRACKER_RELEASE`` is accepted as the older spelling.
+RELEASE = Path(os.environ.get("SPACE_TRACKER_ROOT")
+               or os.environ.get("SPACE_TRACKER_RELEASE")
+               or f"{_DATA_ROOT}/release/space_tracker")
 OUT_DIR = Path(__file__).resolve().parents[1] / "wacv-2027-author-kit-template" / "plots"
 
 GT_GREEN = "#21d04a"

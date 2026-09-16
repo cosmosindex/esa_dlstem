@@ -19,6 +19,16 @@ Usage (in the masa env):
     python evaluation/eval_masa_spacetracker.py \
         --det-cache /path/to/spacetracker_nocar_dets_cache/spacetracker_nocar \
         --out-dir   /path/to/out/masa_spacetracker_nocar
+
+Upstream
+--------
+MASA -- https://github.com/siyuanliii/masa, commit ``c5472b9``. Clone it beside
+this repository; it is not committed here.
+
+Local changes, each commented where it is made:
+
+* the detection floor is lowered from MASA's default, declared in the paper: at
+  the default, satellite targets score below it and the tracker sees nothing.
 """
 
 from __future__ import annotations

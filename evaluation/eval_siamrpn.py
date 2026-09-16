@@ -7,6 +7,11 @@ Uses pysot's stock `ModelBuilder` + `SiamRPNTracker` via our thin wrapper.
 
 Usage:
     python eval_siamrpn.py --config configs/SOT/siamrpn_satsot.yaml
+
+Upstream
+--------
+SiamRPN++ (PySOT) -- https://github.com/STVIR/pysot, commit ``d04028f``. Clone it beside
+this repository; it is not committed here.
 """
 
 # --- repo root on path so top-level modules (transforms, obb_utils, ...) import ---

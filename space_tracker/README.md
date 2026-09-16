@@ -459,9 +459,10 @@ redistribution licence was obtained, so any result computed on an earlier
 internal export that contained it is not comparable to this release.
 
 The benchmark is released under **CC BY-NC-SA 4.0** — the ShareAlike clause on
-VISO's imagery is what fixes it, being the strictest term among the seven. See
-[`../DATASETS.md`](../DATASETS.md) for each source's own licence, where it came
-from, and what redistributing it obliges.
+VISO's imagery is what fixes it, being the strictest term among the seven. The
+terms are in [`../LICENSE`](../LICENSE); see [`../DATASETS.md`](../DATASETS.md)
+for each source's own licence, where it came from, and what redistributing it
+obliges.
 
 ---
 

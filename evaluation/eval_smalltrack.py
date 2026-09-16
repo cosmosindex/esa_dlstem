@@ -14,6 +14,11 @@ CHECKPOINT_ROOT before running.
 
 Usage:
     CHECKPOINT_ROOT=... python eval_smalltrack.py --config configs/SOT/smalltrack_satsot.yaml
+
+Upstream
+--------
+SmallTrack -- https://github.com/xyl-507/SmallTrack, commit ``73870c3``. Clone it beside
+this repository; it is not committed here.
 """
 
 # --- repo root on path so top-level modules (transforms, obb_utils, ...) import ---

@@ -46,8 +46,16 @@ import json
 import os
 from pathlib import Path
 
-RELEASE = Path(os.environ.get("SPACE_TRACKER_RELEASE",
-                              "/data/anon/release/space_tracker"))
+import os as _bootstrap_os, sys as _bootstrap_sys
+_bootstrap_sys.path.insert(0, _bootstrap_os.path.dirname(
+    _bootstrap_os.path.dirname(_bootstrap_os.path.abspath(__file__))))
+from project_paths import DATA_ROOT
+
+#: The released package. ``SPACE_TRACKER_ROOT`` is the name the README and the
+#: loading code use; ``SPACE_TRACKER_RELEASE`` is accepted as the older spelling.
+RELEASE = Path(os.environ.get("SPACE_TRACKER_ROOT")
+               or os.environ.get("SPACE_TRACKER_RELEASE")
+               or f"{DATA_ROOT}/release/space_tracker")
 REVIEWED = Path(os.environ.get("SPACE_TRACKER_MOT_REVIEWED",
                                "/data/anon/mot_release/space_tracker_mot_reviewed.json"))
 PROVENANCE = Path(os.environ.get("SPACE_TRACKER_MOT_PROVENANCE",

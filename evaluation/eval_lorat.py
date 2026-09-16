@@ -8,6 +8,11 @@ framework's data pipeline.
 
 Usage:
     python eval_lorat.py --config configs/SOT/lorat_satsot.yaml
+
+Upstream
+--------
+LoRAT -- https://github.com/LitingLin/LoRAT, commit ``5260744``. Clone it beside
+this repository; it is not committed here.
 """
 
 # --- repo root on path so top-level modules (transforms, obb_utils, ...) import ---

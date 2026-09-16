@@ -6,6 +6,11 @@ but uses SAM3Tracker + VideoTrackerEvaluationModule.
 
 Usage:
     python eval_sam3.py --config configs/SOT/sam3_ootb.yaml
+
+Upstream
+--------
+SAM 3 -- https://github.com/facebookresearch/sam3, commit ``44ef224``. Clone it beside
+this repository; it is not committed here.
 """
 
 # --- repo root on path so top-level modules (transforms, obb_utils, ...) import ---

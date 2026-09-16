@@ -7,6 +7,11 @@ yaml + checkpoint (no HF download).
 
 Usage:
     python eval_ostrack.py --config configs/SOT/ostrack_satsot.yaml
+
+Upstream
+--------
+OSTrack -- https://github.com/botaoye/OSTrack, commit ``33b5e12``. Clone it beside
+this repository; it is not committed here.
 """
 
 # --- repo root on path so top-level modules (transforms, obb_utils, ...) import ---

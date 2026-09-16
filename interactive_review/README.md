@@ -1,31 +1,40 @@
 # Video-level ground-truth review
 
-One video at a time, in a fixed order: the 367 space-tracker MOT sequences
-that are in scope — licensed for redistribution, and in the small-object half.
+One video at a time, in a fixed order: all 403 sequences of
+Space-Tracker-MOT, read straight out of the released package.
 
 ```
+export SPACE_TRACKER_ROOT=/path/to/space_tracker   # the unpacked release
 CUDA_VISIBLE_DEVICES=0 python -m interactive_review.app
 CUDA_VISIBLE_DEVICES=0 python -m interactive_review.app --datasets satmtb --modes check
 ```
 
+Needs `gradio`, and SAM 3 for the drawing and refinement steps. Frames and
+ground truth come from `$SPACE_TRACKER_ROOT`; no source dataset is required
+except for SAT-MTB's per-frame detection XML, which is a second annotation of
+the same video rather than a different encoding of the released one, and which
+the `check` views read from `$SPACE_TRACKER_DATA/SAT-MTB` when it is there.
+
 Whether an object *belongs* in the ground truth is not asked here —
-`tools/merge_det_to_mot.py` already restored SAT-MTB's 842 missing static tracks,
-unattended. What is asked is whether the boxes are right, and the unit of sign-off
-is a whole video.
+`tools/merge_det_to_mot.py` already restored SAT-MTB's static tracks from its own
+detection XML, unattended. What is asked is whether the boxes are right, and the
+unit of sign-off is a whole video. Across the 403 released sequences that review
+pass added 511 tracks and 77,077 boxes by hand, on top of the 745 tracks and
+179,892 boxes the merge recovered, and removed 167 tracks as spurious.
 
 ## What is in scope
 
-Two rules cut the 491 MOT sequences down to 367. Both hide work; neither deletes
-any — every decision already recorded stays in `review.json` and is still
-exported.
+The whole release. Scope needed rules when the queue was built over the seven
+source datasets: AIR-MOT had to be held back for want of a redistribution
+licence, and only small-object sequences were worth annotating. The release is
+what those rules produced, so reading it leaves nothing to filter.
 
-| rule | drops | why |
-|---|---|---|
-| licensed for redistribution | AIR-MOT, 69 | no licence was granted, so nothing annotated on it can ship |
-| small-object half | SAT-MTB 50, VISO 5 | the results this feeds are about small objects; a sequence is small when its median `sqrt(w·h)` is ≤ 32 px, read from `space_tracker/data/size_split.json` so the queue and the size-split experiments cannot drift apart |
-
-`--all-sizes` puts the large half back, `--include-unlicensed` puts AIR-MOT back,
-and naming a held-out dataset in `--datasets` overrides its exclusion.
+Both rules survive in the code — `--include-unlicensed` and `--all-sizes` toggle
+them — for building a queue over an unfiltered source tree. Against the release
+they are no-ops, with one exception: `--small-only` applies a *sequence*-level
+median, while the release keeps a sequence when any one of its tracks is small,
+so turning it on hides 36 sequences the benchmark contains. It is off by
+default for that reason.
 
 ## What each video asks for
 
@@ -35,8 +44,8 @@ first, or a movers-only track list to fill.
 
 | mode | sequences | what to expect |
 |---|---|---|
-| `check` | 104 (SAT-MTB non-car) | `merge_det_to_mot.py` restored 842 static tracks from detection XML — scrutinise that geometry, then add what detection could not see |
-| `annotate` | 263 (259 all-car + 4 VISO non-car) | movers-only GT, nothing recovered — draw what is missing with SAM 3 |
+| `check` | 138 (SAT-MTB) | the merge restored this sequence's static tracks from detection XML — scrutinise that geometry, then add what detection could not see. The release records which sequences these are, as `review.merged_from_detection_xml` |
+| `annotate` | 265 (SAT-MTB 81, SDM-Car 99, RsCarData 77, VISO 8) | movers-only GT, nothing recovered — draw what is missing with SAM 3 |
 
 All-car sequences are annotatable. They used to be `view_only` — watched, signed
 off, never edited — because a parked car is 4.9–6.5 px and not separable from road
@@ -166,7 +175,8 @@ merged.
 ```
 app.py                 Gradio UI, queue navigation, hotkeys
 core/gtsource.py       the completed ground truth (raw / merged / reviewed), with provenance
-core/vqueue.py         the 367-sequence work list, its scope rules and three modes
+core/paths.py          the released package: sequences, frames, ground-truth paths
+core/vqueue.py         the 403-sequence work list, its scope rules and three modes
 core/vdecisions.py     per-sequence corrections and sign-off, one JSON
 core/vrender.py        grid / frame / fix views
 core/video.py          whole-sequence playback
@@ -180,8 +190,10 @@ core/tracks.py         track-level reads shared by the above
 export.py              11-column CSV per sequence + the reviewed manifest
 ```
 
-Decisions land in `docs/annotation_review/review.json`. Raw dataset files are never
-written.
+Decisions land in `review.json` — `$SPACE_TRACKER_REVIEW`, or
+`docs/annotation_review/review.json` by default. It is local state, not a
+release artifact. Neither the released package nor any source dataset is ever
+written to.
 
 ## Running it over days
 

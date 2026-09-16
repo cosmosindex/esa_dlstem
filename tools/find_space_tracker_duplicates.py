@@ -21,8 +21,8 @@ Only a pair that passes both is a duplicate.
 Usage
 -----
     python tools/find_space_tracker_duplicates.py \
-        --scene-groups docs/space_tracker/scene_groups.json \
-        --out docs/space_tracker/duplicates.json
+        --scene-groups space_tracker/data/scene_groups.json \
+        --out space_tracker/data/duplicates.json
 """
 
 from __future__ import annotations
@@ -36,8 +36,20 @@ from pathlib import Path
 import cv2
 import numpy as np
 
-RELEASE = Path(os.environ.get("SPACE_TRACKER_RELEASE",
-                              "/data/anon/release/space_tracker"))
+import os as _bootstrap_os, sys as _bootstrap_sys
+_bootstrap_sys.path.insert(0, _bootstrap_os.path.dirname(
+    _bootstrap_os.path.dirname(_bootstrap_os.path.abspath(__file__))))
+from project_paths import DATA_ROOT
+
+#: Tracked copies of the pipeline intermediates, shipped in the package so a
+#: clean checkout can re-run the build without a scratch directory.
+_PKG = Path(__file__).resolve().parents[1] / "space_tracker" / "data"
+
+#: The released package. ``SPACE_TRACKER_ROOT`` is the name the README and the
+#: loading code use; ``SPACE_TRACKER_RELEASE`` is accepted as the older spelling.
+RELEASE = Path(os.environ.get("SPACE_TRACKER_ROOT")
+               or os.environ.get("SPACE_TRACKER_RELEASE")
+               or f"{DATA_ROOT}/release/space_tracker")
 
 #: A candidate must be the same crop of the same scene: unit scale, no shift.
 MAX_SHIFT_PX = 3.0
@@ -132,9 +144,9 @@ def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__,
                                  formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--scene-groups", type=Path,
-                    default=Path("docs/space_tracker/scene_groups.json"))
+                    default=_PKG / "scene_groups.json")
     ap.add_argument("--out", type=Path,
-                    default=Path("docs/space_tracker/duplicates.json"))
+                    default=_PKG / "duplicates.json")
     args = ap.parse_args()
 
     idx = {}

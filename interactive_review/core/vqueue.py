@@ -1,29 +1,32 @@
-"""The work list: every in-scope space-tracker MOT sequence, once.
+"""The work list: every released MOT sequence, once.
 
-The unit is a video. 367 sequences across 4 datasets go past the reviewer in a
-fixed order, each carrying the one thing that determines what is asked of them.
+The unit is a video. All 403 sequences of Space-Tracker-MOT go past the
+reviewer in a fixed order, each carrying the one thing that determines what is
+asked of them.
 
-Two rules decide what is in scope, and both drop work rather than delete it:
-AIR-MOT is unlicensed for redistribution, and only the small-object half of the
-remaining sequences is queued — see :data:`UNLICENSED_DATASETS` and
-:func:`is_small`. That removes all 69 AIR-MOT sequences, 50 SAT-MTB (the
-airplane/ship/train sequences whose objects are tens of pixels across) and 5 of
-VISO's 9. Everything already decided on them stays in ``review.json``.
+Scope needs no rules here any more. The queue is built from the released
+package, and the release is already what the two rules produced: AIR-MOT is
+absent for want of a redistribution licence, and a sequence is in the package
+only if at least one of its tracks is small. :data:`UNLICENSED_DATASETS` and
+:func:`is_small` survive so a queue can still be built over a source tree that
+has not been filtered, and both are no-ops against the release.
 
 The mode is where the ground truth came from, not a permission: annotation is
 open everywhere, and both modes end in "add what is missing with SAM 3". What it
 changes is what to expect — whether there is completed geometry to scrutinise
 first, or a blank movers-only track list to fill.
 
-``check`` (104)
-    A second source already completed this ground truth — SAT-MTB non-car after
-    ``merge_det_to_mot.py``, which restored 842 static tracks from detection XML.
-    So the boxes come from a pipeline and are worth scrutinising, and the merge
-    recovered only what detection could see: what it missed still has to be drawn.
-``annotate`` (263)
+``check``
+    A second source already completed this ground truth: SAT-MTB non-car, whose
+    static tracks were restored from its own per-frame detection XML. So the
+    boxes come from a pipeline and are worth scrutinising, and the merge
+    recovered only what detection could see: what it missed still has to be
+    drawn. The release records this per sequence, as
+    ``review.merged_from_detection_xml``.
+``annotate``
     The ground truth is movers-only and no second source recovered anything:
-    VISO's 4 non-car sequences, and every all-car sequence. The merge recovered
-    no car track anywhere — detection XML does not resolve cars — so an all-car
+    VISO's non-car sequences, and every all-car sequence. The merge recovered no
+    car track anywhere — detection XML does not resolve cars — so an all-car
     sequence is never "check".
 ``view_only``
     Off by default, ``car_view_only=True`` to restore. All-car sequences used to
@@ -45,7 +48,7 @@ from dataclasses import dataclass
 from functools import lru_cache
 
 from .gtsource import merged_available
-from .paths import SIZE_SPLIT, manifest
+from .paths import MOT_MANIFEST, SIZE_SPLIT, manifest
 
 CHECK, ANNOTATE, VIEW_ONLY = "check", "annotate", "view_only"
 
@@ -71,14 +74,18 @@ ALL_OBJECT_DATASETS = ("airmot",)
 #: decisions stay in ``review.json`` untouched — this hides the sequences, it
 #: does not discard the 69 that were already signed off. Name it in
 #: ``datasets`` to get it back.
+#: Datasets that may not be redistributed. None of them reaches the release --
+#: this is what keeps a queue honest when it is built over an unfiltered source
+#: tree instead.
 UNLICENSED_DATASETS = ("airmot",)
 
-#: Sequence-level size bucket, read from ``space_tracker/data/size_split.json``: a
-#: sequence is small when the median ``sqrt(w * h)`` over its GT boxes is <= 32 px
-#: (COCO's small-object threshold). The results this annotation feeds are about
-#: small objects, so the queue is the small half by default. The boundary is read
-#: from the split file rather than recomputed, so the queue and the size-split
-#: experiments cannot drift apart.
+#: Sequence-level size bucket, read from ``space_tracker/data/size_split.json``:
+#: a sequence is small when the median ``sqrt(w * h)`` over its GT boxes is
+#: <= 32 px (COCO's small-object threshold). The release applies a *track*-level
+#: criterion instead -- it keeps a sequence when any one track is small, and then
+#: keeps every track in it -- so this file holds back 36 released sequences whose
+#: own median is large. That is why ``small_only`` is off by default: filtering
+#: the release by it would hide sequences the benchmark contains.
 SMALL = "small"
 
 
@@ -113,6 +120,19 @@ class Item:
         return f"{self.seq_id}  ({self.category}, {self.n_frames}f, {self.mode})"
 
 
+@lru_cache(maxsize=1)
+def _merged_from_det_xml() -> frozenset[str]:
+    """Sequences whose static tracks the release recovered from detection XML.
+
+    Recorded by the build, so the mode no longer depends on a scratch directory
+    of merge output being present on this machine.
+    """
+    doc = json.loads(MOT_MANIFEST.read_text())
+    return frozenset(
+        r.get("source_sequence_id", r["id"]) for r in doc["sequences"]
+        if (r.get("review") or {}).get("merged_from_detection_xml"))
+
+
 def mode_for(seq, *, car_view_only: bool = False) -> str:
     """Which of the three jobs this sequence asks for.
 
@@ -130,7 +150,9 @@ def mode_for(seq, *, car_view_only: bool = False) -> str:
         # detection XML does not resolve cars — so that test would answer CHECK,
         # "the ground truth is complete", over one that is still movers-only.
         return VIEW_ONLY if car_view_only else ANNOTATE
-    if seq.dataset in ALL_OBJECT_DATASETS or merged_available(seq.id):
+    if (seq.dataset in ALL_OBJECT_DATASETS
+            or seq.id in _merged_from_det_xml()
+            or merged_available(seq.id)):
         return CHECK
     return ANNOTATE
 
@@ -138,7 +160,7 @@ def mode_for(seq, *, car_view_only: bool = False) -> str:
 def build_queue(datasets: tuple[str, ...] | None = None,
                 modes: tuple[str, ...] | None = None,
                 *,
-                small_only: bool = True,
+                small_only: bool = False,
                 exclude_datasets: tuple[str, ...] = UNLICENSED_DATASETS,
                 car_view_only: bool = False,
                 sequences: tuple[str, ...] | None = None,
@@ -149,7 +171,9 @@ def build_queue(datasets: tuple[str, ...] | None = None,
     fixed order is itself state, and a queue that reordered itself as decisions
     accumulated would make "where did I get to" unanswerable.
 
-    ``small_only`` keeps the small-object half (:func:`is_small`).
+    ``small_only`` keeps the small-object half (:func:`is_small`). Off by
+    default: the release is already scoped, and this sequence-level median would
+    drop 36 sequences it contains.
     ``exclude_datasets`` is overridden for any dataset named in ``datasets``, so
     asking for a held-out dataset by name returns it rather than an empty queue.
 

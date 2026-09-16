@@ -28,6 +28,19 @@ Usage::
 
     python eval_tgram.py --config configs/MOT/tgram_rscardata.yaml
     python eval_tgram.py --config configs/MOT/tgram_satmtb.yaml --checkpoint <ckpt>
+
+Upstream
+--------
+TGraM -- https://github.com/zuzi2015/TGraM, commit ``6333c3a``. Clone it beside
+this repository; it is not committed here.
+
+Local changes, each commented where it is made:
+
+* the backbone initialisation is changed, declared in the paper: TGraM's DCNv2
+  is rebuilt on ``torchvision.ops.deform_conv2d`` so it compiles against the
+  current toolkit;
+* the same ``random_affine`` and id-loss masking changes as FairMOT, which it
+  shares a training codebase with.
 """
 from __future__ import annotations
 

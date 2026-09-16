@@ -184,9 +184,11 @@ def main() -> None:
     if args.queue_only:
         from .core.vqueue import UNLICENSED_DATASETS, build_queue
         in_queue = {it.seq_id for it in build_queue(
-            small_only=True, exclude_datasets=UNLICENSED_DATASETS)}
+            small_only=False, exclude_datasets=UNLICENSED_DATASETS)}
     for record in src["sequences"]:
-        seq_id = record["id"]
+        # The release names a sequence by its released id and keeps the
+        # source-side one, which is what decisions are recorded against.
+        seq_id = record.get("source_sequence_id", record["id"])
         if seq_id.split("/", 1)[0].lower() in excluded_ds:
             totals["excluded_by_licence"] += 1
             continue
@@ -262,7 +264,7 @@ def main() -> None:
         "detection XML, geometry from the SAM 3 batch pass, plus corrections "
         "made in the video review. Per-sequence provenance is in each record's "
         "'review' field.")
-    out_manifest["source_manifest"] = str(MOT_MANIFEST.name)
+    out_manifest["source_manifest"] = str(MOT_MANIFEST)
     out_manifest["merged_root"] = str(MERGED_ROOT)
     out_manifest["tags"] = dict(sorted(decisions.tag_counts().items()))
     (args.out / "space_tracker_mot_reviewed.json").write_text(

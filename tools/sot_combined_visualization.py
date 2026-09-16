@@ -316,8 +316,9 @@ replaced with ``_``).
   (schema includes ``pred_box`` / ``pred_poly`` / ``gt_box`` /
   ``gt_poly``, added by ``lightning_modules/visualization.py::_sot_draw``
   and ``_sot_draw_obb``).
-- 18 paper-taxonomy attrs + 5 OCC sub-types come from
-  ``space_tracker/space_tracker.json``::``attribute_taxonomy``.
+- 18 paper-taxonomy attrs + 5 OCC sub-types come from the released SOT
+  manifest, ``$SPACE_TRACKER_ROOT/sot/space_tracker_sot.json``::
+  ``attribute_taxonomy``.
 """
     (root / "README.md").write_text(body)
 
@@ -325,7 +326,10 @@ replaced with ``_``).
 def main() -> None:
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument("--manifest",
-                   default=f"{REPO_ROOT}/space_tracker/space_tracker.json")
+                   default=os.environ.get(
+                       "SPACE_TRACKER_ROOT",
+                       f"{DATA_ROOT}/release/space_tracker")
+                   + "/sot/space_tracker_sot.json")
     p.add_argument("--run-root", required=True,
                    help="e.g. /work/anon/experiments/NeurIPS/SOT_whole_dataset_20260518")
     p.add_argument("--output", required=True,

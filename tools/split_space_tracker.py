@@ -23,7 +23,7 @@ ways, and the achieved proportions cannot land exactly on the targets.
 Usage
 -----
     python tools/split_space_tracker.py --ratios 0.7 0.1 0.2 \
-        --out docs/space_tracker/splits.json
+        --out space_tracker/splits.json
 """
 
 from __future__ import annotations
@@ -33,6 +33,10 @@ import collections
 import json
 import math
 from pathlib import Path
+
+#: Tracked copies of the pipeline intermediates, shipped in the package so a
+#: clean checkout can re-run the build without a scratch directory.
+_PKG = Path(__file__).resolve().parents[1] / "space_tracker" / "data"
 
 SPLITS = ("train", "val", "test")
 
@@ -238,12 +242,13 @@ def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__,
                                  formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--metadata", type=Path,
-                    default=Path("docs/space_tracker/sequence_metadata.json"))
+                    default=_PKG / "sequence_metadata.json")
     ap.add_argument("--release", type=Path,
                     default=Path("/data/anon/release/space_tracker"))
     ap.add_argument("--ratios", type=float, nargs=3, default=(0.7, 0.1, 0.2),
                     metavar=("TRAIN", "VAL", "TEST"))
-    ap.add_argument("--out", type=Path, default=Path("docs/space_tracker/splits.json"))
+    ap.add_argument("--out", type=Path,
+                    default=Path(REPO_ROOT) / "space_tracker" / "splits.json")
     args = ap.parse_args()
 
     ratios = dict(zip(SPLITS, args.ratios))

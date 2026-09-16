@@ -26,6 +26,20 @@ Usage::
 
     python eval_fairmot.py --config configs/MOT/fairmot_rscardata.yaml
     python eval_fairmot.py --config configs/MOT/fairmot_union.yaml --dataset satmtb
+
+Upstream
+--------
+FairMOT -- https://github.com/ifzhang/FairMOT, commit ``4aa6297``. Clone it beside
+this repository; it is not committed here.
+
+Local changes, each commented where it is made:
+
+* HRNet-18 initialised from timm rather than from the ImageNet checkpoint the
+  repo's link no longer serves;
+* ``random_affine`` minimum scale raised so a tiny satellite car is not shrunk
+  below the 4 px reject filter;
+* the ReID id-loss masks targets outside the train identity space, which a
+  validation pass can otherwise index out of bounds.
 """
 from __future__ import annotations
 

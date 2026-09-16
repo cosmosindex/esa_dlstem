@@ -22,7 +22,7 @@ from typing import Callable
 import cv2
 
 from .gtsource import MERGED_ROOT, visible_objects
-from .paths import MOT_ROOTS, sequence_by_id
+from .paths import sequence_by_id, sequence_root
 from .render import _read_frame
 from .vrender import COLOR_BY_PROVENANCE, label_of
 
@@ -44,7 +44,7 @@ def _fingerprint(seq_id: str, decisions) -> str:
     """
     seq = sequence_by_id(seq_id)
     parts = [seq_id]
-    for root in (MERGED_ROOT, MOT_ROOTS[seq.dataset]):
+    for root in (MERGED_ROOT, sequence_root(seq)):
         p = root / seq.gt_path
         if p.is_file():
             st = p.stat()

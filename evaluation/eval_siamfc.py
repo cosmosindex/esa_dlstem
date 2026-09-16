@@ -11,6 +11,11 @@ CHECKPOINT_ROOT before running.
 
 Usage:
     CHECKPOINT_ROOT=... python eval_siamfc.py --config configs/SOT/siamfc_satsot.yaml
+
+Upstream
+--------
+SiamFC -- https://github.com/huanglianghua/siamfc-pytorch, commit ``3957205``. Clone it beside
+this repository; it is not committed here.
 """
 
 # --- repo root on path so top-level modules (transforms, obb_utils, ...) import ---

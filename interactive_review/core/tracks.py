@@ -26,7 +26,7 @@ import numpy as np
 
 from space_tracker.data_mot import MOTObject, _parse_gt
 
-from .paths import MOT_ROOTS, satmtb_det_dir
+from .paths import satmtb_det_dir, sequence_root
 
 
 @dataclass(frozen=True)
@@ -191,7 +191,7 @@ def load_mot_frames(seq_id: str) -> dict[int, list[MOTObject]]:
     from .paths import sequence_by_id
 
     seq = sequence_by_id(seq_id)
-    return _parse_gt(seq, MOT_ROOTS[seq.dataset])
+    return _parse_gt(seq, sequence_root(seq))
 
 
 @lru_cache(maxsize=4)

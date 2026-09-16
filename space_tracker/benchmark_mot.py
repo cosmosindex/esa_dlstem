@@ -1,4 +1,12 @@
-"""High-level MOT Benchmark API.
+"""INTERNAL LAYER -- indexes the *source* datasets, not the release.
+
+Readers of the benchmark want ``space_tracker.release.SpaceTracker``, which
+reads the published package and needs nothing else. This class exists for the
+build pipeline, which runs upstream of the release and therefore has to read
+the sources in their original formats. Its manifest is not shipped: rebuild it
+with ``tools/build_space_tracker_mot_manifest.py``.
+
+High-level MOT Benchmark API.
 
 External users typically interact with just this class::
 

@@ -57,8 +57,20 @@ from pathlib import Path
 
 import numpy as np
 
-RELEASE = Path(os.environ.get("SPACE_TRACKER_RELEASE",
-                              "/data/anon/release/space_tracker"))
+import os as _bootstrap_os, sys as _bootstrap_sys
+_bootstrap_sys.path.insert(0, _bootstrap_os.path.dirname(
+    _bootstrap_os.path.dirname(_bootstrap_os.path.abspath(__file__))))
+from project_paths import DATA_ROOT
+
+#: Tracked copies of the pipeline intermediates, shipped in the package so a
+#: clean checkout can re-run the build without a scratch directory.
+_PKG = Path(__file__).resolve().parents[1] / "space_tracker" / "data"
+
+#: The released package. ``SPACE_TRACKER_ROOT`` is the name the README and the
+#: loading code use; ``SPACE_TRACKER_RELEASE`` is accepted as the older spelling.
+RELEASE = Path(os.environ.get("SPACE_TRACKER_ROOT")
+               or os.environ.get("SPACE_TRACKER_RELEASE")
+               or f"{DATA_ROOT}/release/space_tracker")
 
 #: Chord length, in frames, used to measure speed. Per-frame differencing on a
 #: 6 px car is dominated by annotation rounding; over 10 frames it is not.
@@ -127,7 +139,7 @@ def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__,
                                  formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--metadata", type=Path,
-                    default=Path("docs/space_tracker/sequence_metadata.json"))
+                    default=_PKG / "sequence_metadata.json")
     ap.add_argument("--dry-run", action="store_true",
                     help="report the distribution without writing anything")
     args = ap.parse_args()

@@ -28,7 +28,7 @@ perspective change between two crops of the same frame.
 
 Usage
 -----
-    python tools/scene_group_space_tracker.py --out docs/space_tracker/scene_groups.json
+    python tools/scene_group_space_tracker.py --out space_tracker/data/scene_groups.json
 """
 
 from __future__ import annotations
@@ -44,8 +44,20 @@ from pathlib import Path
 import cv2
 import numpy as np
 
-RELEASE = Path(os.environ.get("SPACE_TRACKER_RELEASE",
-                              "/data/anon/release/space_tracker"))
+import os as _bootstrap_os, sys as _bootstrap_sys
+_bootstrap_sys.path.insert(0, _bootstrap_os.path.dirname(
+    _bootstrap_os.path.dirname(_bootstrap_os.path.abspath(__file__))))
+from project_paths import DATA_ROOT
+
+#: Tracked copies of the pipeline intermediates, shipped in the package so a
+#: clean checkout can re-run the build without a scratch directory.
+_PKG = Path(__file__).resolve().parents[1] / "space_tracker" / "data"
+
+#: The released package. ``SPACE_TRACKER_ROOT`` is the name the README and the
+#: loading code use; ``SPACE_TRACKER_RELEASE`` is accepted as the older spelling.
+RELEASE = Path(os.environ.get("SPACE_TRACKER_ROOT")
+               or os.environ.get("SPACE_TRACKER_RELEASE")
+               or f"{DATA_ROOT}/release/space_tracker")
 
 #: Frame 0 is downscaled so its longest side is at most this before ORB runs.
 #: Keeps the cost of a 4096-wide parent scene comparable to a 200-wide crop.
@@ -279,7 +291,7 @@ def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__,
                                  formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--out", type=Path,
-                    default=Path("docs/space_tracker/scene_groups.json"))
+                    default=_PKG / "scene_groups.json")
     ap.add_argument("--workers", type=int, default=min(32, os.cpu_count() or 8))
     ap.add_argument("--limit", type=int, default=0, help="debug: first N sequences")
     ap.add_argument("--reuse-edges", type=Path, default=None,

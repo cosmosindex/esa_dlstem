@@ -10,12 +10,11 @@ live in :mod:`.vrender`.
 
 from __future__ import annotations
 
-import threading
 
 import cv2
 import numpy as np
 
-from .paths import MOT_ROOTS, frame_path, sequence_by_id
+from .paths import frame_path, sequence_by_id
 
 # BGR-free: everything here works in RGB, which is what Gradio expects.
 COLOR_TARGET = (220, 40, 40)      # the object under the cursor
@@ -27,55 +26,16 @@ COLOR_CANDIDATE = (255, 120, 220)  # proposed by the exemplar sweep, not saved
 CATEGORY_SHORT = {"airplane": "A", "ship": "S", "train": "T", "car": "C"}
 
 
-#: Open capture per video-backed sequence, and the frames decoded from it.
-#: Seeking an AVI costs ~20 ms and re-opening it more, while a whole SDM-Car
-#: clip decodes in under a second — so a clip is decoded once, in order, and
-#: kept. One 100-frame 1920x1080 clip is ~600 MB, hence a cache of one.
-_video_frames: dict[str, dict[int, np.ndarray]] = {}
-#: Playback renders frames from a thread pool. Without this, several workers
-#: decode the same clip at once and clear each other's cache while doing it.
-_video_lock = threading.Lock()
-
-
-def _read_video_frame(seq, frame_id: int) -> np.ndarray | None:
-    """One frame of a video-backed sequence, decoded from its container."""
-    with _video_lock:
-        cached = _video_frames.get(seq.id)
-        if cached is None:
-            cached = _decode_clip(seq)
-            _video_frames.clear()       # one clip at a time; see above
-            _video_frames[seq.id] = cached
-    return cached.get(frame_id)
-
-
-def _decode_clip(seq) -> dict[int, np.ndarray]:
-    cap = cv2.VideoCapture(str(MOT_ROOTS[seq.dataset] / seq.video_path))
-    if not cap.isOpened():
-        return {}
-    out: dict[int, np.ndarray] = {}
-    fid = seq.frame_index_base
-    while True:
-        ok, img = cap.read()
-        if not ok:
-            break
-        out[fid] = img
-        fid += 1
-    cap.release()
-    return out
-
-
 def _read_frame(seq_id: str, frame_id: int) -> np.ndarray | None:
-    """One frame, whether the sequence ships as images or as a video file.
+    """One frame, read from the released package.
 
-    All 99 SDM-Car sequences are video-backed, and ``frame_path`` raises on
-    them. Uncaught, that took down the whole of ``refresh()`` — every panel in
-    the UI showed an error, on a fifth of the review queue.
+    Every sequence ships as images there, SDM-Car's 99 AVI-backed ones
+    included: the release decodes each source container once. That is why this
+    no longer has a video branch — an earlier version decoded clips on demand
+    and cached one at a time, because seeking an AVI per frame was unusable.
     """
     seq = sequence_by_id(seq_id)
-    if seq.image_path_pattern is None:
-        img = _read_video_frame(seq, frame_id)
-    else:
-        img = cv2.imread(str(frame_path(seq, frame_id)), cv2.IMREAD_COLOR)
+    img = cv2.imread(str(frame_path(seq, frame_id)), cv2.IMREAD_COLOR)
     return None if img is None else img[..., ::-1].copy()
 
 

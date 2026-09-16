@@ -21,6 +21,18 @@ Outputs to ``EXPERIMENT_DIR``::
 Usage::
 
     python eval_tracker.py --config configs/MOT/tracker/sort_rscardata.yaml
+
+Upstream
+--------
+Cloned beside this repository, not committed here:
+
+* ByteTrack -- https://github.com/ifzhang/ByteTrack, commit ``d1bf019``
+* OC-SORT   -- https://github.com/noahcao/OC_SORT, commit ``8462e7e``
+* BoT-SORT  -- https://github.com/NirAharon/BoT-SORT, commit ``2519854``
+
+In ByteTrack and BoT-SORT, ``np.float`` is replaced by ``np.float64``
+throughout their matching code: the alias was removed in NumPy 1.24 and both
+repos predate that. No behaviour changes.
 """
 
 from __future__ import annotations

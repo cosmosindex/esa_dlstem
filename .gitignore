@@ -34,15 +34,36 @@ run_all_sv248s_sot.sh
 .claude/skills/aggregate-sot-results/SKILL.md
 .claude/skills/dataset-resolution/
 
+# ------------------------------------------------ use-case-only tooling ---------
+# Written for the ESA use cases (thermal wildlife, wildfire, LMOD) or for
+# earlier single-dataset experiments, not for the Space-Tracker benchmark. They
+# read docs/use_case_results/ and dataset roots that are not part of this
+# release, so they only cross-reference each other.
+tools/analyze_lmod_bbox.py
+tools/plot_satmtb_size_trend.py
+tools/plot_exp1_detection_vs_size.py
+tools/dota_zeroshot_sdmcar.py
+tools/dota_zeroshot_sdmcar_tiled.py
+evaluation/_hieum_union_val_curve.py
+evaluation/compute_exp1_detection_recall.py
+
 # ------------------------------------------------ vendored third-party repos ----
-# Each carries its own .git; needed to run the evals, not committed here.
+# Each carries its own .git and is cloned, not committed: the runner that drives
+# it names the upstream URL, the pinned commit and every local modification in
+# its own docstring.
+#
+# MOTRv2/ and MOTIP/ are the exception and ARE committed. They are the only two
+# methods in the paper with no runner of their own under evaluation/ -- their
+# entry points live inside the vendored tree -- and MOTRv2 is the best row in
+# the main MOT table, so leaving them out meant the two results a reader is most
+# likely to ask about had no code behind them. Their upstream history is parked
+# at <repo>/.git-upstream so `git -C MOTRv2 --git-dir=.git-upstream diff` still
+# shows what we changed; weights, datasets and outputs stay out (below).
 BoT-SORT/
 ByteTrack/
 FairMOT/
 GroundingDINO/
 LoRAT/
-MOTIP/
-MOTRv2/
 OC_SORT/
 ODTrack/
 OOTB/
@@ -58,6 +79,17 @@ siamban/
 siamfc-pytorch/
 pysot/
 Moving-object-detection-DSFNet/
+
+# MOTRv2/ and MOTIP/ are tracked; what must never follow them in:
+*/.git-upstream/
+MOTIP/pretrains/
+MOTIP/datasets/
+MOTIP/outputs/
+# Upstream's demo notebook: unused here, and its comments are not in English,
+# which a double-blind repository has no reason to carry.
+MOTIP/demo/
+MOTRv2/exps/
+MOTRv2/outputs/
 Moving-object-detection-in-satellite-videos-HiEUM/
 
 # --------------------------------------------- paper / manuscript material ----

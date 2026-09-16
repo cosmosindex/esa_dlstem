@@ -16,4 +16,9 @@ tracker_kwargs:
                            # matching sort/ocsort. The MOT17 default 0.5 demands
                            # IoU>=0.5, unreachable between few-pixel car boxes.
   mot20: false
+  # ByteTrack/BoT-SORT scale track_buffer by this. Left at the upstream
+  # default rather than each sequence's true rate (10, 8 or 6 fps, now
+  # published per sequence in the release): every number in the paper was
+  # produced with it, and the buffer is long enough at 30 that lowering it
+  # would only shorten track memory.
   frame_rate: 30

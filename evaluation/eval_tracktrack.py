@@ -22,6 +22,11 @@ Outputs to ``EXPERIMENT_DIR``::
 Usage::
 
     python eval_tracktrack.py --config configs/MOT/tracker/tracktrack_rscardata.yaml
+
+Upstream
+--------
+TrackTrack -- https://github.com/kamkyu94/TrackTrack, commit ``ee7f1c5``. Clone it beside
+this repository; it is not committed here.
 """
 
 from __future__ import annotations

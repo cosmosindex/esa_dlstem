@@ -18,4 +18,9 @@ tracker_kwargs:
   appearance_thresh: 0.25
   cmc_method: none               # fixed-camera satellite frame, no GMC
   mot20: false
+  # ByteTrack/BoT-SORT scale track_buffer by this. Left at the upstream
+  # default rather than each sequence's true rate (10, 8 or 6 fps, now
+  # published per sequence in the release): every number in the paper was
+  # produced with it, and the buffer is long enough at 30 that lowering it
+  # would only shorten track memory.
   frame_rate: 30
