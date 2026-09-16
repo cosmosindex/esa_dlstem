@@ -47,7 +47,7 @@ dependencies:
     - lap>=0.4.0
     - trackeval @ git+https://github.com/JonathonLuiten/TrackEval.git
 
-    # The annotation tool (interactive_review/) is a Gradio app; SAM 3 supplies
+    # The annotation tool (annotation_tool/) is a Gradio app; SAM 3 supplies
     # its segmentation and is installed with the trackers, not from here
     - gradio>=4.0
 

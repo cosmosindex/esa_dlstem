@@ -35,8 +35,12 @@ part.
 - **An 18-attribute SOT taxonomy** aligning the 33 native labels of three source
   benchmarks, five of which more than one source annotates and can therefore be
   scored across datasets rather than within one.
-- **The annotation tool is released too**, so the benchmark can be extended under
-  the same schema.
+- **The annotation tool is released too.** Point it at a video nothing has ever
+  labelled and it returns tracking ground truth, from a handful of prompted
+  frames rather than a box on every frame: SAM 3 propagates one prompt into a
+  track, and one annotated object becomes a visual exemplar that sweeps the
+  sequence for every other instance of it. Nothing it proposes is written until
+  a human adopts it. See [`annotation_tool/`](annotation_tool/README.md).
 
 ## Where the benchmark sits
 
@@ -177,7 +181,7 @@ HOTA and its DetA / AssA decomposition are the informative columns.
 | | |
 |---|---|
 | [`space_tracker/`](space_tracker/README.md) | the benchmark: download, annotation format, loading API |
-| [`interactive_review/`](interactive_review/) | the annotation tool — SAM 3 in the loop, per-sequence audit trail — used to build the MOT part and released for extending it |
+| [`annotation_tool/`](annotation_tool/README.md) | **an open annotation tool for tracking** — one prompt becomes a track, one track becomes an exemplar that finds every other instance of it. Built this benchmark's MOT ground truth; released for annotating any video whose cost is the sheer number of similar objects |
 | [`evaluation/`](evaluation/) | one runner per benchmarked method. Each names its upstream repository, the commit it was pinned to and every local modification, in its own docstring — the trackers themselves are cloned beside this one, not vendored here |
 | [`configs/`](configs/) | the configuration each run was launched with |
 | [`tools/`](tools/) | release build, dataset analysis, and the scripts that produce the paper's tables and figures |

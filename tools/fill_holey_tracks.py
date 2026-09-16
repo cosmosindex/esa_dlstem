@@ -43,10 +43,10 @@ import numpy as np
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from interactive_review.core.paths import sequence_by_id
-from interactive_review.core.render import _read_frame
-from interactive_review.core.sam3refine import _accept, get_tracker
-from interactive_review.core.tracks import TrackKey, load_det_tracks
+from annotation_tool.core.paths import sequence_by_id
+from annotation_tool.core.render import _read_frame
+from annotation_tool.core.sam3refine import _accept, get_tracker
+from annotation_tool.core.tracks import TrackKey, load_det_tracks
 
 #: Experiment/scratch root. Real paths are machine-specific, so they are
 #: never written into the repository — set ``WORK_ROOT`` to point at yours.
@@ -88,7 +88,7 @@ def main() -> None:
                     help="report the seeds, never load SAM 3")
     args = ap.parse_args()
 
-    from interactive_review.core.batch_refined import load_refined
+    from annotation_tool.core.batch_refined import load_refined
 
     # Group by sequence so frames are decoded once and SAM 3 can prompt every
     # box a frame needs in a single call.

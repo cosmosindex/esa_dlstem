@@ -30,7 +30,7 @@ already been run with.
 
 Output is one JSON per sequence under ``--out``, holding
 ``{track key: {frame id: xyxy}}`` plus guard statistics, which
-``interactive_review.export`` and the review UI both consume.
+``annotation_tool.export`` and the review UI both consume.
 
 Usage::
 
@@ -52,10 +52,10 @@ import numpy as np
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from interactive_review.core.paths import manifest, sequence_by_id
-from interactive_review.core.render import _read_frame
-from interactive_review.core.sam3refine import GROW_MAX, IOU_MIN, SHRINK_MIN, get_tracker
-from interactive_review.core.tracks import (TrackKey, load_det_tracks,
+from annotation_tool.core.paths import manifest, sequence_by_id
+from annotation_tool.core.render import _read_frame
+from annotation_tool.core.sam3refine import GROW_MAX, IOU_MIN, SHRINK_MIN, get_tracker
+from annotation_tool.core.tracks import (TrackKey, load_det_tracks,
                                             load_mot_frames)
 
 NON_CAR = ("airplane", "ship", "train")

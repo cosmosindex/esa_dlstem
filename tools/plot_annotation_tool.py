@@ -1,6 +1,6 @@
 """Annotation-tool figure: the surfaces a reviewer actually looks at.
 
-Every panel is rendered by the tool's own code (``interactive_review.core``),
+Every panel is rendered by the tool's own code (``annotation_tool.core``),
 not redrawn for the paper, so the box colours, the tile zoom and the geometry
 are exactly what the reviewer sees:
 
@@ -27,12 +27,12 @@ from matplotlib.patches import Rectangle
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 sys.path.insert(0, str(Path(__file__).parent))
 
-from interactive_review.core import vrender  # noqa: E402
-from interactive_review.core.gtsource import visible_objects  # noqa: E402
-from interactive_review.core.paths import DEFAULT_OVERRIDES  # noqa: E402
-from interactive_review.core.render import _read_frame  # noqa: E402
-from interactive_review.core.vdecisions import SequenceDecisions  # noqa: E402
-from interactive_review.core.vrender import frame_view, grid_view  # noqa: E402
+from annotation_tool.core import vrender  # noqa: E402
+from annotation_tool.core.gtsource import visible_objects  # noqa: E402
+from annotation_tool.core.paths import DEFAULT_OVERRIDES  # noqa: E402
+from annotation_tool.core.render import _read_frame  # noqa: E402
+from annotation_tool.core.vdecisions import SequenceDecisions  # noqa: E402
+from annotation_tool.core.vrender import frame_view, grid_view  # noqa: E402
 from plot_style import apply_neurips_style  # noqa: E402
 
 OUT_DIR = Path(__file__).resolve().parents[1] / "wacv-2027-author-kit-template" / "plots"
@@ -112,7 +112,7 @@ def _tile(seq, frame, key, dec, side=260, context=2.5, raw=False):
 
 def _strip(seq, frames, key, dec, side=300, half=150, gap=6):
     """A fixed window over time: the background holds still, the target does not."""
-    from interactive_review.core.gtsource import load_frames
+    from annotation_tool.core.gtsource import load_frames
     loaded = load_frames(seq)
     centres = []
     for f in frames:

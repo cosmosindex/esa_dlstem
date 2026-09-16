@@ -20,8 +20,8 @@ different files and only one of them gets copied.
 
 Usage::
 
-    python -m interactive_review.export --out /work/<user>/space_tracker_mot_reviewed
-    python -m interactive_review.export --out ... --accepted-only
+    python -m annotation_tool.export --out /work/<user>/space_tracker_mot_reviewed
+    python -m annotation_tool.export --out ... --accepted-only
 """
 
 from __future__ import annotations
@@ -260,7 +260,7 @@ def main() -> None:
     out_manifest["description"] = (
         src.get("description", "") + " "
         "Ground truth normalised to 11-column MOT CSV by "
-        "interactive_review.export: SAT-MTB static objects restored from "
+        "annotation_tool.export: SAT-MTB static objects restored from "
         "detection XML, geometry from the SAM 3 batch pass, plus corrections "
         "made in the video review. Per-sequence provenance is in each record's "
         "'review' field.")

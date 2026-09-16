@@ -524,7 +524,7 @@ The remaining modules — `manifest.py`, `data.py`, `manifest_mot.py`,
 `data_mot.py`, `benchmark.py`, `benchmark_mot.py`, `metrics.py` — are the
 **internal layer**: they index the *source* datasets in their original, mutually
 incompatible on-disk formats, and they exist because the annotation tool
-(`../interactive_review/`) and the build scripts
+(`../annotation_tool/`, which is released as a tool in its own right) and the build scripts
 (`../tools/build_space_tracker_release.py` and friends) work upstream of the
 release. They are imported lazily, so they cost nothing here.
 

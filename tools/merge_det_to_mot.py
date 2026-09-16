@@ -52,9 +52,9 @@ import numpy as np
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from interactive_review.core.batch_refined import load_refined
-from interactive_review.core.paths import manifest, satmtb_det_dir
-from interactive_review.core.tracks import TrackKey, load_det_tracks, load_mot_frames
+from annotation_tool.core.batch_refined import load_refined
+from annotation_tool.core.paths import manifest, satmtb_det_dir
+from annotation_tool.core.tracks import TrackKey, load_det_tracks, load_mot_frames
 
 #: Experiment/scratch root. Real paths are machine-specific, so they are
 #: never written into the repository — set ``WORK_ROOT`` to point at yours.

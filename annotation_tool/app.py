@@ -17,8 +17,8 @@ Three surfaces, because one frame at browser scale cannot answer every question:
 
 Run::
 
-    CUDA_VISIBLE_DEVICES=0 python -m interactive_review.app
-    CUDA_VISIBLE_DEVICES=0 python -m interactive_review.app --datasets satmtb
+    CUDA_VISIBLE_DEVICES=0 python -m annotation_tool.app
+    CUDA_VISIBLE_DEVICES=0 python -m annotation_tool.app --datasets satmtb
 """
 
 from __future__ import annotations

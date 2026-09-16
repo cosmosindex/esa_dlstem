@@ -220,7 +220,7 @@ def visible_objects(seq_id: str, frame_id: int, decisions=None) -> list[Obj]:
     and a dataset track is not ours to erase — so "is this deleted" has to be
     asked at each draw site, and asking it separately in four of them is exactly
     how the annotation canvas came to keep painting tracks that had been deleted.
-    Only :mod:`interactive_review.export`, which has to count what it dropped,
+    Only :mod:`annotation_tool.export`, which has to count what it dropped,
     calls :func:`frame_objects` directly.
     """
     deleted = decisions.deleted(seq_id) if decisions else set()

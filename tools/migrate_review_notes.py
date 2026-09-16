@@ -29,8 +29,8 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from interactive_review.core.paths import DEFAULT_OVERRIDES
-from interactive_review.core.vdecisions import SequenceDecisions
+from annotation_tool.core.paths import DEFAULT_OVERRIDES
+from annotation_tool.core.vdecisions import SequenceDecisions
 
 PATTERNS = {
     "static":        r"static|not\s+moving|is\s+not\s+mov",
