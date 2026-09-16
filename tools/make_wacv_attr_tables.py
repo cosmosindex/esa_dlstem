@@ -62,16 +62,23 @@ TRACKERS = [
     ("sam3",       "SAM 3"),
 ]
 
-# Grouping mirrors tables/sot_attributes.tex so the two read together.
-GROUPS = [
-    ("Pooled --- annotated by more than one source",
-     ["SOB", "ROT", "OCC", "IV", "BC"]),
-    ("Single-source --- reported on the annotating source only",
-     ["BCH", "IBG", "SM", "LT", "MB", "AM", "ND", "LQ", "BJT", "IM", "OON",
-      "DEF", "ARC"]),
-    (r"Occlusion sub-types --- not interchangeable across sources",
-     ["STO", "POC", "CO", "FOC", "LTO"]),
+#: Heading for each taxonomy group, in the order the tables print them.
+#: The membership itself is read from the release manifest -- hardcoding it
+#: here once let the tables and the package disagree about which rows pool.
+GROUP_TITLES = [
+    ("pooled", "Pooled --- annotated by more than one source"),
+    ("single_source", "Single-source --- reported on the annotating source only"),
+    ("occlusion_subtypes",
+     r"Occlusion sub-types --- not interchangeable across sources"),
 ]
+
+
+def taxonomy_groups(release_root: Path):
+    """``[(heading, [attribute, ...]), ...]``, straight out of the manifest."""
+    manifest = json.loads(
+        (release_root / "sot" / "space_tracker_sot.json").read_text())
+    groups = manifest["attribute_taxonomy"]["groups"]
+    return [(title, list(groups[key]["members"])) for key, title in GROUP_TITLES]
 
 
 def sequence_attributes(release_root: Path):
@@ -119,9 +126,9 @@ def fmt_row(vals):
     return out
 
 
-def build(per_tracker, tiny_only: bool):
+def build(per_tracker, groups, tiny_only: bool):
     rows = []
-    for title, attrs in GROUPS:
+    for title, attrs in groups:
         block = []
         for a in attrs:
             n_seq = None
@@ -209,7 +216,10 @@ def main():
     args = ap.parse_args()
 
     attrs = sequence_attributes(Path(args.release))
+    groups = taxonomy_groups(Path(args.release))
     print(f"released sequences: {len(attrs)}")
+    print("  taxonomy: " + ", ".join(f"{len(a)} {t.split(' ---')[0].lower()}"
+                                     for t, a in groups))
 
     per_tracker = {}
     for key, name in TRACKERS:
@@ -218,7 +228,7 @@ def main():
 
     out_dir = Path(args.out_dir)
     for tiny in (False, True):
-        rows = build(per_tracker, tiny_only=tiny)
+        rows = build(per_tracker, groups, tiny_only=tiny)
         emit(rows, tiny, out_dir / f"sot_attr_{'tiny' if tiny else 'whole'}.tex",
              len(attrs))
 

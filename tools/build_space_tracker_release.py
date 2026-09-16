@@ -54,6 +54,7 @@ from __future__ import annotations
 import argparse
 import configparser
 import csv
+import functools
 import json
 import os
 import sys
@@ -106,24 +107,57 @@ def cat_id(names: list[str], name: str) -> int:
 # shared writers
 
 
+#: Per-sequence acquisition constants, keyed ``<half>/<sequence name>``.
+#: Ships with the loading code so the release carries the ground sample
+#: distance and frame rate every physical-units computation needs -- the
+#: motion-state classifier among them.
+ACQUISITION_CONSTANTS = Path(__file__).resolve().parents[1] / \
+    "space_tracker" / "data" / "sequence_constants.json"
+
+
+@functools.lru_cache(maxsize=1)
+def _acquisition_table() -> dict[str, dict]:
+    return json.loads(ACQUISITION_CONSTANTS.read_text())["sequences"]
+
+
+def acquisition(half: str, seq_name: str) -> dict:
+    """``platform`` / ``gsd_m`` / ``fps`` and their provenance, for one sequence.
+
+    Every field may be ``None``: OOTB and SatSOT mix imaging platforms and
+    publish no per-sequence table, so parts of the SOT half are genuinely
+    unknown and are recorded as such rather than guessed.
+    """
+    r = _acquisition_table().get(f"{half}/{seq_name}", {})
+    return {k: r.get(k) for k in
+            ("platform", "gsd_m", "gsd_source", "fps", "fps_source")}
+
+
 def write_seqinfo(path: Path, *, name: str, im_dir: str, seq_length: int,
                   im_width: int, im_height: int, im_ext: str,
+                  frame_rate: float | None = None, gsd_m: float | None = None,
+                  platform: str | None = None,
                   extra: dict[str, str] | None = None) -> None:
-    """MOTChallenge seqinfo.ini.
+    """MOTChallenge seqinfo.ini, plus the two constants MOTChallenge has no field for.
 
-    frameRate is -1 throughout: none of the seven source datasets publishes a
-    capture rate, and inventing 30 would be a number readers might trust.
+    ``frameRate`` carries the source dataset's acquisition rate where that
+    dataset publishes one, and ``-1`` -- the MOTChallenge convention for
+    absent -- where it does not; ``gsd`` is the ground sample distance in
+    metres, written only when known. Together they are what converts a
+    displacement in pixels into one in metres per second, which is how the
+    released motion states were computed.
     """
     cfg = configparser.ConfigParser()
     cfg.optionxform = str
     cfg["Sequence"] = {
         "name": name,
         "imDir": im_dir,
-        "frameRate": "-1",
+        "frameRate": f"{frame_rate:g}" if frame_rate else "-1",
         "seqLength": str(seq_length),
         "imWidth": str(im_width),
         "imHeight": str(im_height),
         "imExt": im_ext,
+        **({"gsd": f"{gsd_m:g}"} if gsd_m else {}),
+        **({"platform": platform} if platform else {}),
         **(extra or {}),
     }
     with open(path, "w") as f:
@@ -192,10 +226,12 @@ def _sot_taxonomy() -> dict:
         "unified_attributes": UNIFIED_ATTR_SPEC,
         "attribute_taxonomy": {
             "description":
-                "Sequence-attribute taxonomy. Four groups: shared (the "
-                "collapsed unified rows), aspect_ratio and dataset_unique_other "
-                "(annotated by one source only), and occlusion_subtypes, which "
-                "drills into the unified OCC row. A sequence's "
+                "Sequence-attribute taxonomy. Three groups: pooled (rows "
+                "more than one source annotates among the released "
+                "sequences, scored over all of them), single_source "
+                "(reported on the one annotating source, never pooled), and "
+                "occlusion_subtypes, which drills into the pooled OCC row "
+                "and is not counted among the 18. A sequence's "
                 "'taxonomy_attributes' is the flat list of names it carries, "
                 "derived from its native attributes via each attribute's "
                 "'datasets' mapping.",
@@ -415,9 +451,11 @@ def build_sot(out: Path, plan_dir: Path, limit: int | None,
             doc["annotations"].append(ann)
 
         (seq_dir / "groundtruth.txt").write_text("\n".join(rows) + "\n")
+        acq = acquisition("sot", seq_name)
         write_seqinfo(seq_dir / "seqinfo.ini", name=seq_name, im_dir="img",
                       seq_length=len(frames), im_width=width, im_height=height,
-                      im_ext=ext,
+                      im_ext=ext, frame_rate=acq["fps"], gsd_m=acq["gsd_m"],
+                      platform=acq["platform"],
                       extra={"category": category, "sourceDataset": seq.dataset})
 
         doc["videos"].append({
@@ -432,6 +470,7 @@ def build_sot(out: Path, plan_dir: Path, limit: int | None,
             "native_attributes": record["native_attrs"],
             "unified_attributes": record["unified_attrs"],
             "taxonomy_attributes": record["taxonomy_attrs"],
+            **acq,
         })
         doc["tracks"].append({
             "id": vid, "video_id": vid,
@@ -456,6 +495,7 @@ def build_sot(out: Path, plan_dir: Path, limit: int | None,
             "native_attrs": record["native_attrs"],
             "unified_attrs": record["unified_attrs"],
             "taxonomy_attrs": record["taxonomy_attrs"],
+            **acq,
         })
         totals["sequences"] += 1
         totals["frames"] += len(frames)
@@ -673,9 +713,11 @@ def build_mot(out: Path, plan_dir: Path, limit: int | None) -> dict:
         (seq_dir / "gt" / "gt.txt").write_text("".join(
             f"{f},{t},{x:.2f},{y:.2f},{w:.2f},{h:.2f},{c},{k},{v}\n"
             for f, t, x, y, w, h, c, k, v in gt_lines))
+        acq = acquisition("mot", seq_name)
         write_seqinfo(seq_dir / "seqinfo.ini", name=seq_name, im_dir="img1",
                       seq_length=n_frames, im_width=width, im_height=height,
-                      im_ext=ext,
+                      im_ext=ext, frame_rate=acq["fps"], gsd_m=acq["gsd_m"],
+                      platform=acq["platform"],
                       extra={"category": group,
                              "sourceDataset": record["dataset"]})
 
@@ -689,6 +731,7 @@ def build_mot(out: Path, plan_dir: Path, limit: int | None) -> dict:
             "n_small_tracks": sum(1 for s, _ in small_flags.values() if s),
             "width": width, "height": height,
             "tags": record.get("tags", []),
+            **acq,
         })
         group_of_video[vid] = group
 
@@ -709,6 +752,7 @@ def build_mot(out: Path, plan_dir: Path, limit: int | None) -> dict:
             "source_image_format": record["image_format"],
             "review": record.get("review", {}),
             "tags": record.get("tags", []),
+            **acq,
         })
         totals["sequences"] += 1
         totals["frames"] += n_frames

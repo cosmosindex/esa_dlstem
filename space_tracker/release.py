@@ -166,6 +166,40 @@ class _Sequence:
         """Class folder this sequence lives in (``mixed`` for multi-class MOT)."""
         return self._r["category"]
 
+    # -- acquisition -------------------------------------------------------- #
+    @property
+    def platform(self) -> Optional[str]:
+        """Imaging platform(s) the source dataset names, or ``None``."""
+        return self._r.get("platform")
+
+    @property
+    def gsd_m(self) -> Optional[float]:
+        """Ground sample distance in metres, or ``None`` where no source states one.
+
+        With :attr:`fps` this converts a displacement in pixels per frame into
+        one in metres per second, which is how ``motion_state`` was assigned.
+        Known for all 403 MOT sequences; unknown for the 149 SOT sequences whose
+        source mixes imaging platforms without saying which filmed what.
+        """
+        return self._r.get("gsd_m")
+
+    @property
+    def fps(self) -> Optional[float]:
+        """Acquisition frame rate, or ``None`` where no source states one."""
+        return self._r.get("fps")
+
+    @property
+    def acquisition(self) -> Dict[str, Any]:
+        """:attr:`platform`, :attr:`gsd_m` and :attr:`fps` with their provenance.
+
+        Each value is tagged ``paper`` (stated by the source publication),
+        ``derived`` (measured from the distributed files), ``inherited`` (taken
+        from a matched parent scene) or ``unverified`` (the value is ``None``).
+        Nothing here is guessed.
+        """
+        return {k: self._r.get(k) for k in
+                ("platform", "gsd_m", "gsd_source", "fps", "fps_source")}
+
     # -- geometry / extent -------------------------------------------------- #
     @property
     def n_frames(self) -> int:
@@ -256,12 +290,21 @@ class SOTSequence(_Sequence):
 
     @property
     def unified_attrs(self) -> List[str]:
-        """The six attributes annotated by at least two of the three sources."""
+        """This sequence's *pooled* attributes: the five more than one source
+        annotates, which may therefore be scored across the whole benchmark.
+
+        A subset of :attr:`taxonomy_attrs`, never a replacement for it. An
+        attribute missing here is still annotated and still evaluable -- it is
+        reported on its one annotating source instead of pooled.
+        """
         return list(self._r["unified_attrs"])
+
+    pooled_attrs = unified_attrs
 
     @property
     def taxonomy_attrs(self) -> List[str]:
-        """All 18 attributes of the unified taxonomy that apply here."""
+        """Every taxonomy attribute this sequence carries -- all 18 are reachable,
+        plus any occlusion sub-type that applies. This is the complete list."""
         return list(self._r["taxonomy_attrs"])
 
     def has_attribute(self, attr: str) -> bool:
@@ -580,19 +623,39 @@ class SOTHalf(_Half):
         source labels it was merged from. This is the single definition.
 
         It holds the 18 taxonomy attributes plus the five sub-types that drill
-        into the unified ``OCC`` row; use :attr:`attributes` for the 18 alone.
+        into the pooled ``OCC`` row; use :attr:`attributes` for the 18 alone.
+        Each entry carries ``pooled``: whether the row may be scored across
+        sources. Every entry is annotated and filterable either way.
         """
         attrs = self.manifest["attribute_taxonomy"]["attributes"]
         return attrs[0] if isinstance(attrs, list) else attrs
 
     @property
     def attributes(self) -> List[str]:
-        """The 18 attributes of the unified taxonomy, in taxonomy order."""
+        """All 18 attributes of the taxonomy, in taxonomy order.
+
+        Every one of them is annotated on the released sequences and every one
+        is filterable through ``filter(attribute=...)``. Five of them are
+        additionally *pooled* (see :attr:`pooled_attributes`); the rest are
+        reported on their single annotating source. That distinction is about
+        how a row is scored, not about what is attached to a sequence.
+        """
         return [
             k
             for k, v in self.attribute_taxonomy.items()
             if v.get("group") != "occlusion_subtypes"
         ]
+
+    @property
+    def pooled_attributes(self) -> List[str]:
+        """The five attributes more than one source annotates among the released
+        sequences, so that a score over them spans datasets rather than one.
+
+        ``DEF`` and ``ARC`` are defined by two source datasets each, but the
+        32 px size filter leaves DEF in OOTB alone and ARC in SatSOT alone, so
+        neither can be pooled here. Both remain in :attr:`attributes`.
+        """
+        return [k for k, v in self.attribute_taxonomy.items() if v.get("pooled")]
 
     @property
     def occlusion_subtypes(self) -> List[str]:
@@ -615,9 +678,21 @@ class SOTHalf(_Half):
     ):
         if attribute is not None:
             want = _as_set(attribute)
+            known = set(self.attributes) | set(self.occlusion_subtypes)
+            unknown = want - known
+            if unknown:
+                raise ValueError(f"unknown attribute(s): {sorted(unknown)}. "
+                                 f"Known: {sorted(known)}")
             seqs = [s for s in seqs if want & set(s.taxonomy_attrs)]
         if unified_attribute is not None:
             want = _as_set(unified_attribute)
+            unknown = want - set(self.pooled_attributes)
+            if unknown:
+                raise ValueError(
+                    f"not pooled: {sorted(unknown)}. Pooled attributes are "
+                    f"{self.pooled_attributes}; every other attribute is "
+                    f"annotated by one source and is reached with "
+                    f"attribute=... instead.")
             seqs = [s for s in seqs if want & set(s.unified_attrs)]
         if max_size is not None:
             seqs = [s for s in seqs if s.median_sqrt_area_px <= max_size]

@@ -27,10 +27,11 @@ class SequenceRecord:
     gt_path: str                     # relative to the dataset root
     gt_format: str                   # "obb_8pt" | "xywh_with_none" | "xywh_with_state"
     native_attrs: list[str]
-    unified_attrs: list[str]         # 6-row shared taxonomy (BC/IV/ROT/OCC/SOB/DEF)
-    taxonomy_attrs: list[str]        # full paper taxonomy — includes the 6
-                                     # unified rows + aspect-ratio + dataset-unique
-                                     # + occlusion sub-types (POC/FOC/STO/LTO/CO)
+    unified_attrs: list[str]         # the 5 pooled rows (SOB/ROT/OCC/IV/BC)
+    taxonomy_attrs: list[str]        # the complete list: all 18 taxonomy rows
+                                     # this sequence carries -- pooled and
+                                     # single-source alike -- plus any
+                                     # occlusion sub-type (POC/FOC/STO/LTO/CO)
     median_sqrt_area_px: float | None
     tiny: bool
 

@@ -7,9 +7,9 @@ sequence in SatSOT / SV248S / OOTB along with:
   - image folder + GT file (paths *relative* to the dataset's own root, so the
     manifest stays portable);
   - native sequence attributes from the source dataset;
-  - unified attributes (BC, IV, ROT, OCC, SOB, DEF) under our taxonomy;
+  - unified attributes (SOB, ROT, OCC, IV, BC) under our taxonomy;
   - the full Space-tracker-SOT attribute taxonomy from the paper's
-    ``split_attributes_table.tex`` (shared / aspect-ratio /
+    ``split_attributes_table.tex`` (pooled / single-source /
     dataset-unique-other / occlusion sub-types), so consumers can drill down
     from a unified row (e.g. OCC) to its sub-types (POC / FOC / STO / LTO /
     CO) without re-implementing the mapping;
@@ -92,15 +92,17 @@ UNIFIED_ATTR_SPEC = {
         "full_name":  "Background Clutter",
         "definition": "Background has similar appearance (texture/color) to the target.",
         "datasets":   {"satsot": ["BC"], "sv248s": [], "ootb": ["BC"]},
+        "note":       "SV248S does not annotate this factor; pooled BC is SatSOT plus OOTB.",
     },
     "IV": {
         "full_name":  "Illumination Variation",
         "definition": "Illumination around the target changes significantly.",
         "datasets":   {"satsot": ["IV"], "sv248s": ["IV"], "ootb": ["IV"]},
+        "note":       "SatSOT contributes a single released sequence, so pooled IV is in practice SV248S plus OOTB.",
     },
     "ROT": {
         "full_name":  "Rotation (in-plane)",
-        "definition": "Target rotates in the image plane (>= 30° for SV248S).",
+        "definition": "Target rotates in the image plane. Only SV248S publishes a numeric criterion (>= 30°); measured on the released sequences, OOTB's labels behave like a 15° threshold and SV248S's like 35°.",
         "datasets":   {"satsot": ["ROT"], "sv248s": ["IPR"], "ootb": ["IPR"]},
     },
     "OCC": {
@@ -113,25 +115,24 @@ UNIFIED_ATTR_SPEC = {
         "definition": "Nearby objects share shape / type / appearance with the target (≤ 2.5x object size for SV248S).",
         "datasets":   {"satsot": ["SOB"], "sv248s": ["DS"], "ootb": ["SA"]},
     },
-    "DEF": {
-        "full_name":  "Deformation",
-        "definition": "Non-rigid object deformation.",
-        "datasets":   {"satsot": ["DEF"], "sv248s": [], "ootb": ["DEF"]},
-    },
 }
 
 
 # ----------------------------------------------------------------------
 # Full Space-tracker-SOT attribute taxonomy (paper Tab.~split_attributes).
 #
-# The taxonomy is organised into four groups:
-#   - "shared":               annotated in >= 2 of the 3 source datasets,
-#                             collapsed into one unified row (same 6 keys
-#                             as ``UNIFIED_ATTR_SPEC``).
-#   - "aspect_ratio":         dataset-unique aspect-ratio attributes
-#                             (ARC = temporal change; OON = static extreme).
-#   - "dataset_unique_other": everything else that is annotated by a
-#                             single dataset.
+# The taxonomy is organised into three groups:
+#   - "pooled":               annotated by more than one source *among the
+#                             released sequences*, so the row can be scored
+#                             over the benchmark rather than over the one
+#                             dataset that defined it (same 5 keys as
+#                             ``UNIFIED_ATTR_SPEC``).
+#   - "single_source":        annotated by exactly one source among the
+#                             released sequences, and therefore reported on
+#                             that source alone, never pooled. DEF and ARC
+#                             sit here although two datasets define them:
+#                             the 32 px size filter leaves DEF in OOTB only
+#                             and ARC in SatSOT only.
 #   - "occlusion_subtypes":   sub-types of the unified OCC row, kept
 #                             separate because SatSOT/OOTB use a spatial
 #                             axis (partial vs. full) and SV248S uses a
@@ -140,7 +141,7 @@ UNIFIED_ATTR_SPEC = {
 #
 # Each entry's ``datasets`` field is the map from source-dataset name to
 # native attribute labels that should be merged under this taxonomy key
-# (the same mapping ``UNIFIED_ATTR_SPEC`` uses for shared rows).
+# (the same mapping ``UNIFIED_ATTR_SPEC`` uses for pooled rows).
 # ``parent`` links each occlusion sub-type back to its unified parent.
 #
 # Note on IBG: SV248S annotates this as ``BCL`` at the sequence level;
@@ -148,89 +149,95 @@ UNIFIED_ATTR_SPEC = {
 # table to avoid confusion with SV248S's frame-level INV flag.
 # ----------------------------------------------------------------------
 TAXONOMY_SPEC: dict[str, dict] = {
-    # --- shared (collapsed unified rows) --------------------------------
-    "BC":  {"group": "shared", **UNIFIED_ATTR_SPEC["BC"]},
-    "IV":  {"group": "shared", **UNIFIED_ATTR_SPEC["IV"]},
-    "ROT": {"group": "shared", **UNIFIED_ATTR_SPEC["ROT"]},
+    # --- pooled (collapsed unified rows) --------------------------------
+    "BC":  {"group": "pooled", **UNIFIED_ATTR_SPEC["BC"]},
+    "IV":  {"group": "pooled", **UNIFIED_ATTR_SPEC["IV"]},
+    "ROT": {"group": "pooled", **UNIFIED_ATTR_SPEC["ROT"]},
     "OCC": {
-        "group": "shared",
+        "group": "pooled",
         **UNIFIED_ATTR_SPEC["OCC"],
         "subtypes": ["POC", "FOC", "STO", "LTO", "CO"],
     },
-    "SOB": {"group": "shared", **UNIFIED_ATTR_SPEC["SOB"]},
-    "DEF": {"group": "shared", **UNIFIED_ATTR_SPEC["DEF"]},
+    "SOB": {"group": "pooled", **UNIFIED_ATTR_SPEC["SOB"]},
 
-    # --- aspect-ratio (dataset-unique) ----------------------------------
+    # --- single-source ---------------------------------------------------
+    "DEF": {
+        "group": "single_source",
+        "full_name":  "Deformation",
+        "definition": "Non-rigid object deformation.",
+        "datasets":   {"satsot": ["DEF"], "sv248s": [], "ootb": ["DEF"]},
+        "note":       "Defined by SatSOT and OOTB, but SatSOT's six DEF sequences are all larger than 32 px, so only OOTB's four survive into the release. Reported on OOTB alone.",
+    },
     "ARC": {
-        "group": "aspect_ratio",
+        "group": "single_source",
         "full_name":  "Aspect Ratio Change",
         "definition": "Ratio of the current-frame bbox aspect ratio to the first-frame bbox aspect ratio is outside [0.5, 2] (SatSOT spec).",
         "datasets":   {"satsot": ["ARC"], "sv248s": [], "ootb": []},
+        "note":       "OOTB defines an equivalent factor, but a single SatSOT sequence carrying it survives the 32 px size filter. Reported on SatSOT alone.",
     },
     "OON": {
-        "group": "aspect_ratio",
+        "group": "single_source",
         "full_name":  "Out-of-Normal",
         "definition": "The bounding-box aspect ratio itself is outside [0.3, 3] in the sequence.",
         "datasets":   {"satsot": [], "sv248s": [], "ootb": ["OON"]},
     },
 
-    # --- other dataset-unique -------------------------------------------
     "LQ": {
-        "group": "dataset_unique_other",
+        "group": "single_source",
         "full_name":  "Low Quality",
         "definition": "Image quality is low; target is hard to distinguish.",
         "datasets":   {"satsot": ["LQ"], "sv248s": [], "ootb": []},
     },
     "BJT": {
-        "group": "dataset_unique_other",
+        "group": "single_source",
         "full_name":  "Background Jitter",
         "definition": "Background jitter caused by satellite camera shaking.",
         "datasets":   {"satsot": ["BJT"], "sv248s": [], "ootb": []},
     },
     "BCH": {
-        "group": "dataset_unique_other",
+        "group": "single_source",
         "full_name":  "Background Change",
         "definition": "Background has noticeable changes in color or texture along the sequence.",
         "datasets":   {"satsot": [], "sv248s": ["BCH"], "ootb": []},
     },
     "ND": {
-        "group": "dataset_unique_other",
+        "group": "single_source",
         "full_name":  "Natural Disturbance",
         "definition": "Target appearance affected by smog, sand, or clouds.",
         "datasets":   {"satsot": [], "sv248s": ["ND"], "ootb": []},
     },
     "IBG": {
-        "group": "dataset_unique_other",
+        "group": "single_source",
         "full_name":  "Indistinguishable from Background",
         "definition": "Target disappears without occluder (too similar to surroundings) for >= 10 frames. Renamed from SV248S's BCL to avoid confusion with the frame-level INV flag of which BCL is the sequence-level aggregation.",
         "datasets":   {"satsot": [], "sv248s": ["BCL"], "ootb": []},
     },
     "SM": {
-        "group": "dataset_unique_other",
+        "group": "single_source",
         "full_name":  "Slow Motion",
         "definition": "Target moves slowly (< 2.2 pps in SV248S).",
         "datasets":   {"satsot": [], "sv248s": ["SM"], "ootb": []},
     },
     "LT": {
-        "group": "dataset_unique_other",
+        "group": "single_source",
         "full_name":  "Less Textures",
         "definition": "Target has poor texture information, causing discrimination difficulty.",
         "datasets":   {"satsot": [], "sv248s": [], "ootb": ["LT"]},
     },
     "MB": {
-        "group": "dataset_unique_other",
+        "group": "single_source",
         "full_name":  "Motion Blur",
         "definition": "Target region is blurred due to object or platform motion.",
         "datasets":   {"satsot": [], "sv248s": [], "ootb": ["MB"]},
     },
     "IM": {
-        "group": "dataset_unique_other",
+        "group": "single_source",
         "full_name":  "Isotropic Motion",
         "definition": "Nearby objects move with similar magnitude and direction.",
         "datasets":   {"satsot": [], "sv248s": [], "ootb": ["IM"]},
     },
     "AM": {
-        "group": "dataset_unique_other",
+        "group": "single_source",
         "full_name":  "Anisotropic Motion",
         "definition": "Nearby objects move with similar magnitude but opposite direction.",
         "datasets":   {"satsot": [], "sv248s": [], "ootb": ["AM"]},
@@ -280,25 +287,35 @@ TAXONOMY_SPEC: dict[str, dict] = {
 }
 
 
+# Every attribute carries an explicit ``pooled`` flag. It says whether the row
+# may be *scored* across sources; it never says whether the label is attached.
+# All 18 attributes (and the five occlusion sub-types under OCC) stay on every
+# sequence that carries them, in ``native_attrs`` and ``taxonomy_attrs``, and
+# every one of them is filterable -- a single-source row is evaluated on its
+# annotating dataset, not discarded.
+for _name, _spec in TAXONOMY_SPEC.items():
+    _spec["pooled"] = _spec["group"] == "pooled"
+del _name, _spec
+
+
 TAXONOMY_GROUPS = {
-    "shared": {
+    "pooled": {
         "description":
-            "Attributes annotated in >= 2 of the 3 source datasets, collapsed "
-            "into one unified row. Same 6 keys as ``unified_attributes``.",
-        "members": ["BC", "IV", "ROT", "OCC", "SOB", "DEF"],
+            "Attributes more than one source annotates among the released "
+            "sequences, collapsed into one row and scored over every source "
+            "that annotates them. Same 5 keys as ``unified_attributes``.",
+        "members": ["SOB", "ROT", "OCC", "IV", "BC"],
     },
-    "aspect_ratio": {
+    "single_source": {
         "description":
-            "Dataset-unique aspect-ratio attributes. ARC measures temporal "
-            "change of the aspect ratio (SatSOT); OON measures static "
-            "extremeness of the aspect ratio (OOTB).",
-        "members": ["ARC", "OON"],
-    },
-    "dataset_unique_other": {
-        "description":
-            "Other dataset-unique attributes (annotated by exactly one of "
-            "the three datasets).",
-        "members": ["LQ", "BJT", "BCH", "ND", "IBG", "SM", "LT", "MB", "IM", "AM"],
+            "Attributes exactly one source annotates among the released "
+            "sequences. Each is reported on its annotating source alone and "
+            "is never pooled, because no second source offers a definition "
+            "to merge with. DEF and ARC are defined by two datasets each, "
+            "but the 32 px size filter leaves DEF in OOTB only and ARC in "
+            "SatSOT only, so they belong here.",
+        "members": ["BCH", "IBG", "SM", "LT", "MB", "AM", "ND", "LQ", "BJT",
+                    "IM", "OON", "DEF", "ARC"],
     },
     "occlusion_subtypes": {
         "description":
@@ -306,7 +323,8 @@ TAXONOMY_GROUPS = {
             "spatially (partial vs. full); SV248S splits it temporally "
             "(short / long / continuous). The two axes are not comparable "
             "at the sequence-attribute level, so we report sub-types here "
-            "rather than collapsing them.",
+            "rather than collapsing them. They are a drill-down into the "
+            "pooled OCC row, not extra rows of the 18-attribute taxonomy.",
         "axes": {
             "spatial":  ["POC", "FOC"],
             "temporal": ["STO", "LTO", "CO"],
@@ -337,8 +355,8 @@ def _native_to_unified(dataset: str, native_attrs: list[str]) -> list[str]:
 def _native_to_taxonomy(dataset: str, native_attrs: list[str]) -> list[str]:
     """Project a sequence's native attribute list onto the full paper taxonomy.
 
-    Output is a flat list of taxonomy names (across all four groups:
-    shared / aspect_ratio / dataset_unique_other / occlusion_subtypes)
+    Output is a flat list of taxonomy names (across all three groups:
+    pooled / single_source / occlusion_subtypes)
     that this sequence carries. Members preserve ``TAXONOMY_SPEC``
     insertion order so the resulting lists are stable across runs.
     """
@@ -464,15 +482,16 @@ def main():
         "unified_attributes":  UNIFIED_ATTR_SPEC,
         "attribute_taxonomy": {
             "description":
-                "Full Space-tracker-SOT sequence-attribute taxonomy "
-                "(paper table: split_attributes_table.tex). Four groups: "
-                "shared (collapsed unified rows), aspect_ratio "
-                "(dataset-unique), dataset_unique_other, and "
-                "occlusion_subtypes (drill-down of the unified OCC row). "
-                "Each per-sequence ``taxonomy_attrs`` field is the flat "
-                "list of taxonomy names that sequence carries, derived "
-                "from ``native_attrs`` via each attribute's ``datasets`` "
-                "mapping.",
+                "Full Space-Tracker-SOT sequence-attribute taxonomy. Three "
+                "groups: pooled (rows "
+                "more than one source annotates among the released "
+                "sequences, scored over all of them), single_source "
+                "(reported on the one annotating source, never pooled), and "
+                "occlusion_subtypes, which drills into the pooled OCC row "
+                "and is not counted among the 18. A sequence's "
+                "'taxonomy_attributes' is the flat list of names it carries, "
+                "derived from its native attributes via each attribute's "
+                "'datasets' mapping.",
             "groups":     TAXONOMY_GROUPS,
             "attributes": TAXONOMY_SPEC,
         },

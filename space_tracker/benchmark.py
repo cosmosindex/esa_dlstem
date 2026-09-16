@@ -18,7 +18,7 @@ External users typically interact with just this class:
         # yield one np.ndarray (xyxy) per frame, or None for "no detection".
         ...
 
-    result = bench.evaluate(my_tracker, unified_attrs=["OCC", "TO"])
+    result = bench.evaluate(my_tracker, unified_attrs=["OCC", "SOB"])
     print(result.summary())   # SR / NPR / PR / P@5 by dataset and overall
 """
 
@@ -142,6 +142,13 @@ class Benchmark:
         per_unified: dict[str, dict] = {}
         if unified_attrs is not None:
             unified_attrs = list(unified_attrs)
+            unknown = set(unified_attrs) - set(self.manifest.unified_attributes)
+            if unknown:
+                raise ValueError(
+                    f"not pooled: {sorted(unknown)}. Only "
+                    f"{sorted(self.manifest.unified_attributes)} are annotated "
+                    f"by more than one source and can be averaged across them; "
+                    f"every other attribute is scored on its one source.")
         else:
             unified_attrs = list(self.manifest.unified_attributes.keys())
         for attr in unified_attrs:

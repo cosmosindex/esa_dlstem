@@ -1,0 +1,6171 @@
+{
+ "description": "Per-sequence acquisition constants for the Space-Tracker release, keyed '<half>/<sequence name>'. gsd_m is ground sample distance in metres, fps the acquisition frame rate. Each carries a provenance tag: 'paper' (stated by the source publication), 'derived' (measured from the distributed files, e.g. SDM-Car's rate read out of its AVI containers), 'inherited' (propagated from a matched parent scene whose dataset publishes the constant), or 'unverified' (not establishable; the value is null). OOTB and SatSOT mix imaging platforms and publish no per-sequence table, which is why parts of the SOT half are null.",
+ "fields": {
+  "platform": "imaging platform(s) named by the source dataset",
+  "gsd_m": "ground sample distance in metres, or null",
+  "gsd_source": "paper | derived | inherited | unverified",
+  "fps": "acquisition frame rate, or null",
+  "fps_source": "paper | derived | inherited | unverified",
+  "note": "caveat attached by the source dataset, where one applies"
+ },
+ "n_sequences": 798,
+ "sequences": {
+  "sot/car_ootb_0001": {
+   "platform": "Jilin-1 / SkySat / ISS",
+   "gsd_m": null,
+   "gsd_source": "unverified",
+   "fps": null,
+   "fps_source": "unverified",
+   "note": "multi-platform by design; no dataset-level constant"
+  },
+  "sot/car_ootb_0002": {
+   "platform": "Jilin-1 / SkySat / ISS",
+   "gsd_m": null,
+   "gsd_source": "unverified",
+   "fps": null,
+   "fps_source": "unverified",
+   "note": "multi-platform by design; no dataset-level constant"
+  },
+  "sot/car_ootb_0003": {
+   "platform": "Jilin-1 / SkySat / ISS",
+   "gsd_m": null,
+   "gsd_source": "unverified",
+   "fps": null,
+   "fps_source": "unverified",
+   "note": "multi-platform by design; no dataset-level constant"
+  },
+  "sot/car_ootb_0004": {
+   "platform": "Jilin-1 / SkySat / ISS",
+   "gsd_m": null,
+   "gsd_source": "unverified",
+   "fps": null,
+   "fps_source": "unverified",
+   "note": "multi-platform by design; no dataset-level constant"
+  },
+  "sot/car_ootb_0005": {
+   "platform": "Jilin-1 / SkySat / ISS",
+   "gsd_m": null,
+   "gsd_source": "unverified",
+   "fps": null,
+   "fps_source": "unverified",
+   "note": "multi-platform by design; no dataset-level constant"
+  },
+  "sot/car_ootb_0006": {
+   "platform": "Jilin-1 / SkySat / ISS",
+   "gsd_m": null,
+   "gsd_source": "unverified",
+   "fps": null,
+   "fps_source": "unverified",
+   "note": "multi-platform by design; no dataset-level constant"
+  },
+  "sot/car_ootb_0007": {
+   "platform": "Jilin-1 / SkySat / ISS",
+   "gsd_m": null,
+   "gsd_source": "unverified",
+   "fps": null,
+   "fps_source": "unverified",
+   "note": "multi-platform by design; no dataset-level constant"
+  },
+  "sot/car_ootb_0008": {
+   "platform": "Jilin-1 / SkySat / ISS",
+   "gsd_m": 0.919,
+   "gsd_source": "inherited",
+   "fps": null,
+   "fps_source": "unverified",
+   "note": "multi-platform by design; no dataset-level constant"
+  },
+  "sot/car_ootb_0009": {
+   "platform": "Jilin-1 / SkySat / ISS",
+   "gsd_m": null,
+   "gsd_source": "unverified",
+   "fps": null,
+   "fps_source": "unverified",
+   "note": "multi-platform by design; no dataset-level constant"
+  },
+  "sot/car_ootb_0010": {
+   "platform": "Jilin-1 / SkySat / ISS",
+   "gsd_m": null,
+   "gsd_source": "unverified",
+   "fps": null,
+   "fps_source": "unverified",
+   "note": "multi-platform by design; no dataset-level constant"
+  },
+  "sot/car_ootb_0011": {
+   "platform": "Jilin-1 / SkySat / ISS",
+   "gsd_m": null,
+   "gsd_source": "unverified",
+   "fps": null,
+   "fps_source": "unverified",
+   "note": "multi-platform by design; no dataset-level constant"
+  },
+  "sot/car_ootb_0012": {
+   "platform": "Jilin-1 / SkySat / ISS",
+   "gsd_m": 0.92,
+   "gsd_source": "inherited",
+   "fps": null,
+   "fps_source": "unverified",
+   "note": "multi-platform by design; no dataset-level constant"
+  },
+  "sot/car_ootb_0013": {
+   "platform": "Jilin-1 / SkySat / ISS",
+   "gsd_m": null,
+   "gsd_source": "unverified",
+   "fps": null,
+   "fps_source": "unverified",
+   "note": "multi-platform by design; no dataset-level constant"
+  },
+  "sot/car_ootb_0014": {
+   "platform": "Jilin-1 / SkySat / ISS",
+   "gsd_m": null,
+   "gsd_source": "unverified",
+   "fps": null,
+   "fps_source": "unverified",
+   "note": "multi-platform by design; no dataset-level constant"
+  },
+  "sot/car_ootb_0015": {
+   "platform": "Jilin-1 / SkySat / ISS",
+   "gsd_m": null,
+   "gsd_source": "unverified",
+   "fps": null,
+   "fps_source": "unverified",
+   "note": "multi-platform by design; no dataset-level constant"
+  },
+  "sot/car_ootb_0016": {
+   "platform": "Jilin-1 / SkySat / ISS",
+   "gsd_m": null,
+   "gsd_source": "unverified",
+   "fps": null,
+   "fps_source": "unverified",
+   "note": "multi-platform by design; no dataset-level constant"
+  },
+  "sot/car_ootb_0017": {
+   "platform": "Jilin-1 / SkySat / ISS",
+   "gsd_m": 0.92,
+   "gsd_source": "inherited",
+   "fps": null,
+   "fps_source": "unverified",
+   "note": "multi-platform by design; no dataset-level constant"
+  },
+  "sot/car_ootb_0018": {
+   "platform": "Jilin-1 / SkySat / ISS",
+   "gsd_m": null,
+   "gsd_source": "unverified",
+   "fps": null,
+   "fps_source": "unverified",
+   "note": "multi-platform by design; no dataset-level constant"
+  },
+  "sot/car_ootb_0019": {
+   "platform": "Jilin-1 / SkySat / ISS",
+   "gsd_m": 0.92,
+   "gsd_source": "inherited",
+   "fps": null,
+   "fps_source": "unverified",
+   "note": "multi-platform by design; no dataset-level constant"
+  },
+  "sot/car_ootb_0020": {
+   "platform": "Jilin-1 / SkySat / ISS",
+   "gsd_m": null,
+   "gsd_source": "unverified",
+   "fps": null,
+   "fps_source": "unverified",
+   "note": "multi-platform by design; no dataset-level constant"
+  },
+  "sot/car_ootb_0021": {
+   "platform": "Jilin-1 / SkySat / ISS",
+   "gsd_m": null,
+   "gsd_source": "unverified",
+   "fps": null,
+   "fps_source": "unverified",
+   "note": "multi-platform by design; no dataset-level constant"
+  },
+  "sot/car_ootb_0022": {
+   "platform": "Jilin-1 / SkySat / ISS",
+   "gsd_m": null,
+   "gsd_source": "unverified",
+   "fps": null,
+   "fps_source": "unverified",
+   "note": "multi-platform by design; no dataset-level constant"
+  },
+  "sot/car_ootb_0023": {
+   "platform": "Jilin-1 / SkySat / ISS",
+   "gsd_m": null,
+   "gsd_source": "unverified",
+   "fps": null,
+   "fps_source": "unverified",
+   "note": "multi-platform by design; no dataset-level constant"
+  },
+  "sot/car_ootb_0024": {
+   "platform": "Jilin-1 / SkySat / ISS",
+   "gsd_m": null,
+   "gsd_source": "unverified",
+   "fps": null,
+   "fps_source": "unverified",
+   "note": "multi-platform by design; no dataset-level constant"
+  },
+  "sot/car_ootb_0025": {
+   "platform": "Jilin-1 / SkySat / ISS",
+   "gsd_m": 0.921,
+   "gsd_source": "inherited",
+   "fps": null,
+   "fps_source": "unverified",
+   "note": "multi-platform by design; no dataset-level constant"
+  },
+  "sot/car_ootb_0026": {
+   "platform": "Jilin-1 / SkySat / ISS",
+   "gsd_m": null,
+   "gsd_source": "unverified",
+   "fps": null,
+   "fps_source": "unverified",
+   "note": "multi-platform by design; no dataset-level constant"
+  },
+  "sot/car_ootb_0027": {
+   "platform": "Jilin-1 / SkySat / ISS",
+   "gsd_m": null,
+   "gsd_source": "unverified",
+   "fps": null,
+   "fps_source": "unverified",
+   "note": "multi-platform by design; no dataset-level constant"
+  },
+  "sot/car_ootb_0028": {
+   "platform": "Jilin-1 / SkySat / ISS",
+   "gsd_m": null,
+   "gsd_source": "unverified",
+   "fps": null,
+   "fps_source": "unverified",
+   "note": "multi-platform by design; no dataset-level constant"
+  },
+  "sot/car_ootb_0029": {
+   "platform": "Jilin-1 / SkySat / ISS",
+   "gsd_m": null,
+   "gsd_source": "unverified",
+   "fps": null,
+   "fps_source": "unverified",
+   "note": "multi-platform by design; no dataset-level constant"
+  },
+  "sot/car_ootb_0030": {
+   "platform": "Jilin-1 / SkySat / ISS",
+   "gsd_m": null,
+   "gsd_source": "unverified",
+   "fps": null,
+   "fps_source": "unverified",
+   "note": "multi-platform by design; no dataset-level constant"
+  },
+  "sot/car_ootb_0031": {
+   "platform": "Jilin-1 / SkySat / ISS",
+   "gsd_m": null,
+   "gsd_source": "unverified",
+   "fps": null,
+   "fps_source": "unverified",
+   "note": "multi-platform by design; no dataset-level constant"
+  },
+  "sot/car_ootb_0032": {
+   "platform": "Jilin-1 / SkySat / ISS",
+   "gsd_m": null,
+   "gsd_source": "unverified",
+   "fps": null,
+   "fps_source": "unverified",
+   "note": "multi-platform by design; no dataset-level constant"
+  },
+  "sot/car_ootb_0033": {
+   "platform": "Jilin-1 / SkySat / ISS",
+   "gsd_m": null,
+   "gsd_source": "unverified",
+   "fps": null,
+   "fps_source": "unverified",
+   "note": "multi-platform by design; no dataset-level constant"
+  },
+  "sot/car_ootb_0034": {
+   "platform": "Jilin-1 / SkySat / ISS",
+   "gsd_m": null,
+   "gsd_source": "unverified",
+   "fps": null,
+   "fps_source": "unverified",
+   "note": "multi-platform by design; no dataset-level constant"
+  },
+  "sot/car_ootb_0035": {
+   "platform": "Jilin-1 / SkySat / ISS",
+   "gsd_m": null,
+   "gsd_source": "unverified",
+   "fps": null,
+   "fps_source": "unverified",
+   "note": "multi-platform by design; no dataset-level constant"
+  },
+  "sot/car_ootb_0036": {
+   "platform": "Jilin-1 / SkySat / ISS",
+   "gsd_m": null,
+   "gsd_source": "unverified",
+   "fps": null,
+   "fps_source": "unverified",
+   "note": "multi-platform by design; no dataset-level constant"
+  },
+  "sot/car_ootb_0037": {
+   "platform": "Jilin-1 / SkySat / ISS",
+   "gsd_m": null,
+   "gsd_source": "unverified",
+   "fps": null,
+   "fps_source": "unverified",
+   "note": "multi-platform by design; no dataset-level constant"
+  },
+  "sot/car_ootb_0038": {
+   "platform": "Jilin-1 / SkySat / ISS",
+   "gsd_m": null,
+   "gsd_source": "unverified",
+   "fps": null,
+   "fps_source": "unverified",
+   "note": "multi-platform by design; no dataset-level constant"
+  },
+  "sot/car_ootb_0039": {
+   "platform": "Jilin-1 / SkySat / ISS",
+   "gsd_m": 0.922,
+   "gsd_source": "inherited",
+   "fps": null,
+   "fps_source": "unverified",
+   "note": "multi-platform by design; no dataset-level constant"
+  },
+  "sot/car_ootb_0040": {
+   "platform": "Jilin-1 / SkySat / ISS",
+   "gsd_m": null,
+   "gsd_source": "unverified",
+   "fps": null,
+   "fps_source": "unverified",
+   "note": "multi-platform by design; no dataset-level constant"
+  },
+  "sot/car_ootb_0041": {
+   "platform": "Jilin-1 / SkySat / ISS",
+   "gsd_m": null,
+   "gsd_source": "unverified",
+   "fps": null,
+   "fps_source": "unverified",
+   "note": "multi-platform by design; no dataset-level constant"
+  },
+  "sot/car_ootb_0042": {
+   "platform": "Jilin-1 / SkySat / ISS",
+   "gsd_m": null,
+   "gsd_source": "unverified",
+   "fps": null,
+   "fps_source": "unverified",
+   "note": "multi-platform by design; no dataset-level constant"
+  },
+  "sot/car_ootb_0043": {
+   "platform": "Jilin-1 / SkySat / ISS",
+   "gsd_m": null,
+   "gsd_source": "unverified",
+   "fps": null,
+   "fps_source": "unverified",
+   "note": "multi-platform by design; no dataset-level constant"
+  },
+  "sot/car_ootb_0044": {
+   "platform": "Jilin-1 / SkySat / ISS",
+   "gsd_m": null,
+   "gsd_source": "unverified",
+   "fps": null,
+   "fps_source": "unverified",
+   "note": "multi-platform by design; no dataset-level constant"
+  },
+  "sot/car_ootb_0045": {
+   "platform": "Jilin-1 / SkySat / ISS",
+   "gsd_m": null,
+   "gsd_source": "unverified",
+   "fps": null,
+   "fps_source": "unverified",
+   "note": "multi-platform by design; no dataset-level constant"
+  },
+  "sot/airplane_ootb_0046": {
+   "platform": "Jilin-1 / SkySat / ISS",
+   "gsd_m": null,
+   "gsd_source": "unverified",
+   "fps": null,
+   "fps_source": "unverified",
+   "note": "multi-platform by design; no dataset-level constant"
+  },
+  "sot/ship_ootb_0047": {
+   "platform": "Jilin-1 / SkySat / ISS",
+   "gsd_m": null,
+   "gsd_source": "unverified",
+   "fps": null,
+   "fps_source": "unverified",
+   "note": "multi-platform by design; no dataset-level constant"
+  },
+  "sot/ship_ootb_0048": {
+   "platform": "Jilin-1 / SkySat / ISS",
+   "gsd_m": 0.919,
+   "gsd_source": "inherited",
+   "fps": null,
+   "fps_source": "unverified",
+   "note": "multi-platform by design; no dataset-level constant"
+  },
+  "sot/ship_ootb_0049": {
+   "platform": "Jilin-1 / SkySat / ISS",
+   "gsd_m": null,
+   "gsd_source": "unverified",
+   "fps": null,
+   "fps_source": "unverified",
+   "note": "multi-platform by design; no dataset-level constant"
+  },
+  "sot/ship_ootb_0050": {
+   "platform": "Jilin-1 / SkySat / ISS",
+   "gsd_m": null,
+   "gsd_source": "unverified",
+   "fps": null,
+   "fps_source": "unverified",
+   "note": "multi-platform by design; no dataset-level constant"
+  },
+  "sot/ship_ootb_0051": {
+   "platform": "Jilin-1 / SkySat / ISS",
+   "gsd_m": null,
+   "gsd_source": "unverified",
+   "fps": null,
+   "fps_source": "unverified",
+   "note": "multi-platform by design; no dataset-level constant"
+  },
+  "sot/ship_ootb_0052": {
+   "platform": "Jilin-1 / SkySat / ISS",
+   "gsd_m": null,
+   "gsd_source": "unverified",
+   "fps": null,
+   "fps_source": "unverified",
+   "note": "multi-platform by design; no dataset-level constant"
+  },
+  "sot/ship_ootb_0053": {
+   "platform": "Jilin-1 / SkySat / ISS",
+   "gsd_m": null,
+   "gsd_source": "unverified",
+   "fps": null,
+   "fps_source": "unverified",
+   "note": "multi-platform by design; no dataset-level constant"
+  },
+  "sot/ship_ootb_0054": {
+   "platform": "Jilin-1 / SkySat / ISS",
+   "gsd_m": null,
+   "gsd_source": "unverified",
+   "fps": null,
+   "fps_source": "unverified",
+   "note": "multi-platform by design; no dataset-level constant"
+  },
+  "sot/ship_ootb_0055": {
+   "platform": "Jilin-1 / SkySat / ISS",
+   "gsd_m": null,
+   "gsd_source": "unverified",
+   "fps": null,
+   "fps_source": "unverified",
+   "note": "multi-platform by design; no dataset-level constant"
+  },
+  "sot/ship_ootb_0056": {
+   "platform": "Jilin-1 / SkySat / ISS",
+   "gsd_m": null,
+   "gsd_source": "unverified",
+   "fps": null,
+   "fps_source": "unverified",
+   "note": "multi-platform by design; no dataset-level constant"
+  },
+  "sot/ship_ootb_0057": {
+   "platform": "Jilin-1 / SkySat / ISS",
+   "gsd_m": null,
+   "gsd_source": "unverified",
+   "fps": null,
+   "fps_source": "unverified",
+   "note": "multi-platform by design; no dataset-level constant"
+  },
+  "sot/ship_ootb_0058": {
+   "platform": "Jilin-1 / SkySat / ISS",
+   "gsd_m": null,
+   "gsd_source": "unverified",
+   "fps": null,
+   "fps_source": "unverified",
+   "note": "multi-platform by design; no dataset-level constant"
+  },
+  "sot/ship_ootb_0059": {
+   "platform": "Jilin-1 / SkySat / ISS",
+   "gsd_m": null,
+   "gsd_source": "unverified",
+   "fps": null,
+   "fps_source": "unverified",
+   "note": "multi-platform by design; no dataset-level constant"
+  },
+  "sot/ship_ootb_0060": {
+   "platform": "Jilin-1 / SkySat / ISS",
+   "gsd_m": null,
+   "gsd_source": "unverified",
+   "fps": null,
+   "fps_source": "unverified",
+   "note": "multi-platform by design; no dataset-level constant"
+  },
+  "sot/ship_ootb_0061": {
+   "platform": "Jilin-1 / SkySat / ISS",
+   "gsd_m": null,
+   "gsd_source": "unverified",
+   "fps": null,
+   "fps_source": "unverified",
+   "note": "multi-platform by design; no dataset-level constant"
+  },
+  "sot/ship_ootb_0062": {
+   "platform": "Jilin-1 / SkySat / ISS",
+   "gsd_m": null,
+   "gsd_source": "unverified",
+   "fps": null,
+   "fps_source": "unverified",
+   "note": "multi-platform by design; no dataset-level constant"
+  },
+  "sot/ship_ootb_0063": {
+   "platform": "Jilin-1 / SkySat / ISS",
+   "gsd_m": null,
+   "gsd_source": "unverified",
+   "fps": null,
+   "fps_source": "unverified",
+   "note": "multi-platform by design; no dataset-level constant"
+  },
+  "sot/ship_ootb_0064": {
+   "platform": "Jilin-1 / SkySat / ISS",
+   "gsd_m": null,
+   "gsd_source": "unverified",
+   "fps": null,
+   "fps_source": "unverified",
+   "note": "multi-platform by design; no dataset-level constant"
+  },
+  "sot/ship_ootb_0065": {
+   "platform": "Jilin-1 / SkySat / ISS",
+   "gsd_m": null,
+   "gsd_source": "unverified",
+   "fps": null,
+   "fps_source": "unverified",
+   "note": "multi-platform by design; no dataset-level constant"
+  },
+  "sot/ship_ootb_0066": {
+   "platform": "Jilin-1 / SkySat / ISS",
+   "gsd_m": null,
+   "gsd_source": "unverified",
+   "fps": null,
+   "fps_source": "unverified",
+   "note": "multi-platform by design; no dataset-level constant"
+  },
+  "sot/ship_ootb_0067": {
+   "platform": "Jilin-1 / SkySat / ISS",
+   "gsd_m": null,
+   "gsd_source": "unverified",
+   "fps": null,
+   "fps_source": "unverified",
+   "note": "multi-platform by design; no dataset-level constant"
+  },
+  "sot/ship_ootb_0068": {
+   "platform": "Jilin-1 / SkySat / ISS",
+   "gsd_m": null,
+   "gsd_source": "unverified",
+   "fps": null,
+   "fps_source": "unverified",
+   "note": "multi-platform by design; no dataset-level constant"
+  },
+  "sot/ship_ootb_0069": {
+   "platform": "Jilin-1 / SkySat / ISS",
+   "gsd_m": 0.92,
+   "gsd_source": "inherited",
+   "fps": null,
+   "fps_source": "unverified",
+   "note": "multi-platform by design; no dataset-level constant"
+  },
+  "sot/ship_ootb_0070": {
+   "platform": "Jilin-1 / SkySat / ISS",
+   "gsd_m": null,
+   "gsd_source": "unverified",
+   "fps": null,
+   "fps_source": "unverified",
+   "note": "multi-platform by design; no dataset-level constant"
+  },
+  "sot/ship_ootb_0071": {
+   "platform": "Jilin-1 / SkySat / ISS",
+   "gsd_m": 0.92,
+   "gsd_source": "inherited",
+   "fps": null,
+   "fps_source": "unverified",
+   "note": "multi-platform by design; no dataset-level constant"
+  },
+  "sot/ship_ootb_0072": {
+   "platform": "Jilin-1 / SkySat / ISS",
+   "gsd_m": 0.921,
+   "gsd_source": "inherited",
+   "fps": null,
+   "fps_source": "unverified",
+   "note": "multi-platform by design; no dataset-level constant"
+  },
+  "sot/ship_ootb_0073": {
+   "platform": "Jilin-1 / SkySat / ISS",
+   "gsd_m": 0.919,
+   "gsd_source": "inherited",
+   "fps": null,
+   "fps_source": "unverified",
+   "note": "multi-platform by design; no dataset-level constant"
+  },
+  "sot/ship_ootb_0074": {
+   "platform": "Jilin-1 / SkySat / ISS",
+   "gsd_m": null,
+   "gsd_source": "unverified",
+   "fps": null,
+   "fps_source": "unverified",
+   "note": "multi-platform by design; no dataset-level constant"
+  },
+  "sot/car_satsot_0001": {
+   "platform": "Jilin-1 / Skybox / Carbonite-2",
+   "gsd_m": 0.92,
+   "gsd_source": "inherited",
+   "fps": null,
+   "fps_source": "unverified",
+   "note": "paper gives 10 or 25 fps and no per-sequence platform"
+  },
+  "sot/car_satsot_0002": {
+   "platform": "Jilin-1 / Skybox / Carbonite-2",
+   "gsd_m": null,
+   "gsd_source": "unverified",
+   "fps": null,
+   "fps_source": "unverified",
+   "note": "paper gives 10 or 25 fps and no per-sequence platform"
+  },
+  "sot/car_satsot_0003": {
+   "platform": "Jilin-1 / Skybox / Carbonite-2",
+   "gsd_m": null,
+   "gsd_source": "unverified",
+   "fps": null,
+   "fps_source": "unverified",
+   "note": "paper gives 10 or 25 fps and no per-sequence platform"
+  },
+  "sot/car_satsot_0004": {
+   "platform": "Jilin-1 / Skybox / Carbonite-2",
+   "gsd_m": null,
+   "gsd_source": "unverified",
+   "fps": null,
+   "fps_source": "unverified",
+   "note": "paper gives 10 or 25 fps and no per-sequence platform"
+  },
+  "sot/car_satsot_0005": {
+   "platform": "Jilin-1 / Skybox / Carbonite-2",
+   "gsd_m": null,
+   "gsd_source": "unverified",
+   "fps": null,
+   "fps_source": "unverified",
+   "note": "paper gives 10 or 25 fps and no per-sequence platform"
+  },
+  "sot/car_satsot_0006": {
+   "platform": "Jilin-1 / Skybox / Carbonite-2",
+   "gsd_m": null,
+   "gsd_source": "unverified",
+   "fps": null,
+   "fps_source": "unverified",
+   "note": "paper gives 10 or 25 fps and no per-sequence platform"
+  },
+  "sot/car_satsot_0007": {
+   "platform": "Jilin-1 / Skybox / Carbonite-2",
+   "gsd_m": null,
+   "gsd_source": "unverified",
+   "fps": null,
+   "fps_source": "unverified",
+   "note": "paper gives 10 or 25 fps and no per-sequence platform"
+  },
+  "sot/car_satsot_0008": {
+   "platform": "Jilin-1 / Skybox / Carbonite-2",
+   "gsd_m": null,
+   "gsd_source": "unverified",
+   "fps": null,
+   "fps_source": "unverified",
+   "note": "paper gives 10 or 25 fps and no per-sequence platform"
+  },
+  "sot/car_satsot_0009": {
+   "platform": "Jilin-1 / Skybox / Carbonite-2",
+   "gsd_m": null,
+   "gsd_source": "unverified",
+   "fps": null,
+   "fps_source": "unverified",
+   "note": "paper gives 10 or 25 fps and no per-sequence platform"
+  },
+  "sot/car_satsot_0010": {
+   "platform": "Jilin-1 / Skybox / Carbonite-2",
+   "gsd_m": null,
+   "gsd_source": "unverified",
+   "fps": null,
+   "fps_source": "unverified",
+   "note": "paper gives 10 or 25 fps and no per-sequence platform"
+  },
+  "sot/car_satsot_0011": {
+   "platform": "Jilin-1 / Skybox / Carbonite-2",
+   "gsd_m": null,
+   "gsd_source": "unverified",
+   "fps": null,
+   "fps_source": "unverified",
+   "note": "paper gives 10 or 25 fps and no per-sequence platform"
+  },
+  "sot/car_satsot_0012": {
+   "platform": "Jilin-1 / Skybox / Carbonite-2",
+   "gsd_m": null,
+   "gsd_source": "unverified",
+   "fps": null,
+   "fps_source": "unverified",
+   "note": "paper gives 10 or 25 fps and no per-sequence platform"
+  },
+  "sot/car_satsot_0013": {
+   "platform": "Jilin-1 / Skybox / Carbonite-2",
+   "gsd_m": null,
+   "gsd_source": "unverified",
+   "fps": null,
+   "fps_source": "unverified",
+   "note": "paper gives 10 or 25 fps and no per-sequence platform"
+  },
+  "sot/car_satsot_0014": {
+   "platform": "Jilin-1 / Skybox / Carbonite-2",
+   "gsd_m": null,
+   "gsd_source": "unverified",
+   "fps": null,
+   "fps_source": "unverified",
+   "note": "paper gives 10 or 25 fps and no per-sequence platform"
+  },
+  "sot/car_satsot_0015": {
+   "platform": "Jilin-1 / Skybox / Carbonite-2",
+   "gsd_m": null,
+   "gsd_source": "unverified",
+   "fps": null,
+   "fps_source": "unverified",
+   "note": "paper gives 10 or 25 fps and no per-sequence platform"
+  },
+  "sot/car_satsot_0016": {
+   "platform": "Jilin-1 / Skybox / Carbonite-2",
+   "gsd_m": null,
+   "gsd_source": "unverified",
+   "fps": null,
+   "fps_source": "unverified",
+   "note": "paper gives 10 or 25 fps and no per-sequence platform"
+  },
+  "sot/car_satsot_0017": {
+   "platform": "Jilin-1 / Skybox / Carbonite-2",
+   "gsd_m": null,
+   "gsd_source": "unverified",
+   "fps": null,
+   "fps_source": "unverified",
+   "note": "paper gives 10 or 25 fps and no per-sequence platform"
+  },
+  "sot/car_satsot_0018": {
+   "platform": "Jilin-1 / Skybox / Carbonite-2",
+   "gsd_m": null,
+   "gsd_source": "unverified",
+   "fps": null,
+   "fps_source": "unverified",
+   "note": "paper gives 10 or 25 fps and no per-sequence platform"
+  },
+  "sot/car_satsot_0019": {
+   "platform": "Jilin-1 / Skybox / Carbonite-2",
+   "gsd_m": null,
+   "gsd_source": "unverified",
+   "fps": null,
+   "fps_source": "unverified",
+   "note": "paper gives 10 or 25 fps and no per-sequence platform"
+  },
+  "sot/car_satsot_0020": {
+   "platform": "Jilin-1 / Skybox / Carbonite-2",
+   "gsd_m": null,
+   "gsd_source": "unverified",
+   "fps": null,
+   "fps_source": "unverified",
+   "note": "paper gives 10 or 25 fps and no per-sequence platform"
+  },
+  "sot/car_satsot_0021": {
+   "platform": "Jilin-1 / Skybox / Carbonite-2",
+   "gsd_m": null,
+   "gsd_source": "unverified",
+   "fps": null,
+   "fps_source": "unverified",
+   "note": "paper gives 10 or 25 fps and no per-sequence platform"
+  },
+  "sot/car_satsot_0022": {
+   "platform": "Jilin-1 / Skybox / Carbonite-2",
+   "gsd_m": 0.921,
+   "gsd_source": "inherited",
+   "fps": null,
+   "fps_source": "unverified",
+   "note": "paper gives 10 or 25 fps and no per-sequence platform"
+  },
+  "sot/car_satsot_0023": {
+   "platform": "Jilin-1 / Skybox / Carbonite-2",
+   "gsd_m": null,
+   "gsd_source": "unverified",
+   "fps": null,
+   "fps_source": "unverified",
+   "note": "paper gives 10 or 25 fps and no per-sequence platform"
+  },
+  "sot/car_satsot_0024": {
+   "platform": "Jilin-1 / Skybox / Carbonite-2",
+   "gsd_m": null,
+   "gsd_source": "unverified",
+   "fps": null,
+   "fps_source": "unverified",
+   "note": "paper gives 10 or 25 fps and no per-sequence platform"
+  },
+  "sot/car_satsot_0025": {
+   "platform": "Jilin-1 / Skybox / Carbonite-2",
+   "gsd_m": 0.92,
+   "gsd_source": "inherited",
+   "fps": null,
+   "fps_source": "unverified",
+   "note": "paper gives 10 or 25 fps and no per-sequence platform"
+  },
+  "sot/car_satsot_0026": {
+   "platform": "Jilin-1 / Skybox / Carbonite-2",
+   "gsd_m": null,
+   "gsd_source": "unverified",
+   "fps": null,
+   "fps_source": "unverified",
+   "note": "paper gives 10 or 25 fps and no per-sequence platform"
+  },
+  "sot/car_satsot_0027": {
+   "platform": "Jilin-1 / Skybox / Carbonite-2",
+   "gsd_m": null,
+   "gsd_source": "unverified",
+   "fps": null,
+   "fps_source": "unverified",
+   "note": "paper gives 10 or 25 fps and no per-sequence platform"
+  },
+  "sot/car_satsot_0028": {
+   "platform": "Jilin-1 / Skybox / Carbonite-2",
+   "gsd_m": null,
+   "gsd_source": "unverified",
+   "fps": null,
+   "fps_source": "unverified",
+   "note": "paper gives 10 or 25 fps and no per-sequence platform"
+  },
+  "sot/car_satsot_0029": {
+   "platform": "Jilin-1 / Skybox / Carbonite-2",
+   "gsd_m": null,
+   "gsd_source": "unverified",
+   "fps": null,
+   "fps_source": "unverified",
+   "note": "paper gives 10 or 25 fps and no per-sequence platform"
+  },
+  "sot/car_satsot_0030": {
+   "platform": "Jilin-1 / Skybox / Carbonite-2",
+   "gsd_m": null,
+   "gsd_source": "unverified",
+   "fps": null,
+   "fps_source": "unverified",
+   "note": "paper gives 10 or 25 fps and no per-sequence platform"
+  },
+  "sot/car_satsot_0031": {
+   "platform": "Jilin-1 / Skybox / Carbonite-2",
+   "gsd_m": null,
+   "gsd_source": "unverified",
+   "fps": null,
+   "fps_source": "unverified",
+   "note": "paper gives 10 or 25 fps and no per-sequence platform"
+  },
+  "sot/car_satsot_0032": {
+   "platform": "Jilin-1 / Skybox / Carbonite-2",
+   "gsd_m": null,
+   "gsd_source": "unverified",
+   "fps": null,
+   "fps_source": "unverified",
+   "note": "paper gives 10 or 25 fps and no per-sequence platform"
+  },
+  "sot/car_satsot_0033": {
+   "platform": "Jilin-1 / Skybox / Carbonite-2",
+   "gsd_m": null,
+   "gsd_source": "unverified",
+   "fps": null,
+   "fps_source": "unverified",
+   "note": "paper gives 10 or 25 fps and no per-sequence platform"
+  },
+  "sot/car_satsot_0034": {
+   "platform": "Jilin-1 / Skybox / Carbonite-2",
+   "gsd_m": null,
+   "gsd_source": "unverified",
+   "fps": null,
+   "fps_source": "unverified",
+   "note": "paper gives 10 or 25 fps and no per-sequence platform"
+  },
+  "sot/car_satsot_0035": {
+   "platform": "Jilin-1 / Skybox / Carbonite-2",
+   "gsd_m": null,
+   "gsd_source": "unverified",
+   "fps": null,
+   "fps_source": "unverified",
+   "note": "paper gives 10 or 25 fps and no per-sequence platform"
+  },
+  "sot/car_satsot_0036": {
+   "platform": "Jilin-1 / Skybox / Carbonite-2",
+   "gsd_m": null,
+   "gsd_source": "unverified",
+   "fps": null,
+   "fps_source": "unverified",
+   "note": "paper gives 10 or 25 fps and no per-sequence platform"
+  },
+  "sot/car_satsot_0037": {
+   "platform": "Jilin-1 / Skybox / Carbonite-2",
+   "gsd_m": null,
+   "gsd_source": "unverified",
+   "fps": null,
+   "fps_source": "unverified",
+   "note": "paper gives 10 or 25 fps and no per-sequence platform"
+  },
+  "sot/car_satsot_0038": {
+   "platform": "Jilin-1 / Skybox / Carbonite-2",
+   "gsd_m": null,
+   "gsd_source": "unverified",
+   "fps": null,
+   "fps_source": "unverified",
+   "note": "paper gives 10 or 25 fps and no per-sequence platform"
+  },
+  "sot/car_satsot_0039": {
+   "platform": "Jilin-1 / Skybox / Carbonite-2",
+   "gsd_m": null,
+   "gsd_source": "unverified",
+   "fps": null,
+   "fps_source": "unverified",
+   "note": "paper gives 10 or 25 fps and no per-sequence platform"
+  },
+  "sot/car_satsot_0040": {
+   "platform": "Jilin-1 / Skybox / Carbonite-2",
+   "gsd_m": null,
+   "gsd_source": "unverified",
+   "fps": null,
+   "fps_source": "unverified",
+   "note": "paper gives 10 or 25 fps and no per-sequence platform"
+  },
+  "sot/car_satsot_0041": {
+   "platform": "Jilin-1 / Skybox / Carbonite-2",
+   "gsd_m": 0.92,
+   "gsd_source": "inherited",
+   "fps": null,
+   "fps_source": "unverified",
+   "note": "paper gives 10 or 25 fps and no per-sequence platform"
+  },
+  "sot/car_satsot_0042": {
+   "platform": "Jilin-1 / Skybox / Carbonite-2",
+   "gsd_m": null,
+   "gsd_source": "unverified",
+   "fps": null,
+   "fps_source": "unverified",
+   "note": "paper gives 10 or 25 fps and no per-sequence platform"
+  },
+  "sot/car_satsot_0043": {
+   "platform": "Jilin-1 / Skybox / Carbonite-2",
+   "gsd_m": null,
+   "gsd_source": "unverified",
+   "fps": null,
+   "fps_source": "unverified",
+   "note": "paper gives 10 or 25 fps and no per-sequence platform"
+  },
+  "sot/car_satsot_0044": {
+   "platform": "Jilin-1 / Skybox / Carbonite-2",
+   "gsd_m": null,
+   "gsd_source": "unverified",
+   "fps": null,
+   "fps_source": "unverified",
+   "note": "paper gives 10 or 25 fps and no per-sequence platform"
+  },
+  "sot/car_satsot_0045": {
+   "platform": "Jilin-1 / Skybox / Carbonite-2",
+   "gsd_m": null,
+   "gsd_source": "unverified",
+   "fps": null,
+   "fps_source": "unverified",
+   "note": "paper gives 10 or 25 fps and no per-sequence platform"
+  },
+  "sot/car_satsot_0046": {
+   "platform": "Jilin-1 / Skybox / Carbonite-2",
+   "gsd_m": null,
+   "gsd_source": "unverified",
+   "fps": null,
+   "fps_source": "unverified",
+   "note": "paper gives 10 or 25 fps and no per-sequence platform"
+  },
+  "sot/car_satsot_0047": {
+   "platform": "Jilin-1 / Skybox / Carbonite-2",
+   "gsd_m": null,
+   "gsd_source": "unverified",
+   "fps": null,
+   "fps_source": "unverified",
+   "note": "paper gives 10 or 25 fps and no per-sequence platform"
+  },
+  "sot/car_satsot_0048": {
+   "platform": "Jilin-1 / Skybox / Carbonite-2",
+   "gsd_m": 0.919,
+   "gsd_source": "inherited",
+   "fps": null,
+   "fps_source": "unverified",
+   "note": "paper gives 10 or 25 fps and no per-sequence platform"
+  },
+  "sot/car_satsot_0049": {
+   "platform": "Jilin-1 / Skybox / Carbonite-2",
+   "gsd_m": 0.92,
+   "gsd_source": "inherited",
+   "fps": null,
+   "fps_source": "unverified",
+   "note": "paper gives 10 or 25 fps and no per-sequence platform"
+  },
+  "sot/car_satsot_0050": {
+   "platform": "Jilin-1 / Skybox / Carbonite-2",
+   "gsd_m": null,
+   "gsd_source": "unverified",
+   "fps": null,
+   "fps_source": "unverified",
+   "note": "paper gives 10 or 25 fps and no per-sequence platform"
+  },
+  "sot/car_satsot_0051": {
+   "platform": "Jilin-1 / Skybox / Carbonite-2",
+   "gsd_m": null,
+   "gsd_source": "unverified",
+   "fps": null,
+   "fps_source": "unverified",
+   "note": "paper gives 10 or 25 fps and no per-sequence platform"
+  },
+  "sot/car_satsot_0052": {
+   "platform": "Jilin-1 / Skybox / Carbonite-2",
+   "gsd_m": null,
+   "gsd_source": "unverified",
+   "fps": null,
+   "fps_source": "unverified",
+   "note": "paper gives 10 or 25 fps and no per-sequence platform"
+  },
+  "sot/car_satsot_0053": {
+   "platform": "Jilin-1 / Skybox / Carbonite-2",
+   "gsd_m": null,
+   "gsd_source": "unverified",
+   "fps": null,
+   "fps_source": "unverified",
+   "note": "paper gives 10 or 25 fps and no per-sequence platform"
+  },
+  "sot/car_satsot_0054": {
+   "platform": "Jilin-1 / Skybox / Carbonite-2",
+   "gsd_m": null,
+   "gsd_source": "unverified",
+   "fps": null,
+   "fps_source": "unverified",
+   "note": "paper gives 10 or 25 fps and no per-sequence platform"
+  },
+  "sot/car_satsot_0055": {
+   "platform": "Jilin-1 / Skybox / Carbonite-2",
+   "gsd_m": null,
+   "gsd_source": "unverified",
+   "fps": null,
+   "fps_source": "unverified",
+   "note": "paper gives 10 or 25 fps and no per-sequence platform"
+  },
+  "sot/car_satsot_0056": {
+   "platform": "Jilin-1 / Skybox / Carbonite-2",
+   "gsd_m": null,
+   "gsd_source": "unverified",
+   "fps": null,
+   "fps_source": "unverified",
+   "note": "paper gives 10 or 25 fps and no per-sequence platform"
+  },
+  "sot/car_satsot_0057": {
+   "platform": "Jilin-1 / Skybox / Carbonite-2",
+   "gsd_m": null,
+   "gsd_source": "unverified",
+   "fps": null,
+   "fps_source": "unverified",
+   "note": "paper gives 10 or 25 fps and no per-sequence platform"
+  },
+  "sot/car_satsot_0058": {
+   "platform": "Jilin-1 / Skybox / Carbonite-2",
+   "gsd_m": 0.92,
+   "gsd_source": "inherited",
+   "fps": null,
+   "fps_source": "unverified",
+   "note": "paper gives 10 or 25 fps and no per-sequence platform"
+  },
+  "sot/car_satsot_0059": {
+   "platform": "Jilin-1 / Skybox / Carbonite-2",
+   "gsd_m": null,
+   "gsd_source": "unverified",
+   "fps": null,
+   "fps_source": "unverified",
+   "note": "paper gives 10 or 25 fps and no per-sequence platform"
+  },
+  "sot/car_satsot_0060": {
+   "platform": "Jilin-1 / Skybox / Carbonite-2",
+   "gsd_m": null,
+   "gsd_source": "unverified",
+   "fps": null,
+   "fps_source": "unverified",
+   "note": "paper gives 10 or 25 fps and no per-sequence platform"
+  },
+  "sot/car_satsot_0061": {
+   "platform": "Jilin-1 / Skybox / Carbonite-2",
+   "gsd_m": null,
+   "gsd_source": "unverified",
+   "fps": null,
+   "fps_source": "unverified",
+   "note": "paper gives 10 or 25 fps and no per-sequence platform"
+  },
+  "sot/car_satsot_0062": {
+   "platform": "Jilin-1 / Skybox / Carbonite-2",
+   "gsd_m": null,
+   "gsd_source": "unverified",
+   "fps": null,
+   "fps_source": "unverified",
+   "note": "paper gives 10 or 25 fps and no per-sequence platform"
+  },
+  "sot/car_satsot_0063": {
+   "platform": "Jilin-1 / Skybox / Carbonite-2",
+   "gsd_m": 0.919,
+   "gsd_source": "inherited",
+   "fps": null,
+   "fps_source": "unverified",
+   "note": "paper gives 10 or 25 fps and no per-sequence platform"
+  },
+  "sot/car_satsot_0064": {
+   "platform": "Jilin-1 / Skybox / Carbonite-2",
+   "gsd_m": 0.92,
+   "gsd_source": "inherited",
+   "fps": null,
+   "fps_source": "unverified",
+   "note": "paper gives 10 or 25 fps and no per-sequence platform"
+  },
+  "sot/car_satsot_0065": {
+   "platform": "Jilin-1 / Skybox / Carbonite-2",
+   "gsd_m": null,
+   "gsd_source": "unverified",
+   "fps": null,
+   "fps_source": "unverified",
+   "note": "paper gives 10 or 25 fps and no per-sequence platform"
+  },
+  "sot/airplane_satsot_0066": {
+   "platform": "Jilin-1 / Skybox / Carbonite-2",
+   "gsd_m": 0.92,
+   "gsd_source": "inherited",
+   "fps": null,
+   "fps_source": "unverified",
+   "note": "paper gives 10 or 25 fps and no per-sequence platform"
+  },
+  "sot/airplane_satsot_0067": {
+   "platform": "Jilin-1 / Skybox / Carbonite-2",
+   "gsd_m": 0.92,
+   "gsd_source": "inherited",
+   "fps": null,
+   "fps_source": "unverified",
+   "note": "paper gives 10 or 25 fps and no per-sequence platform"
+  },
+  "sot/airplane_satsot_0068": {
+   "platform": "Jilin-1 / Skybox / Carbonite-2",
+   "gsd_m": 0.92,
+   "gsd_source": "inherited",
+   "fps": null,
+   "fps_source": "unverified",
+   "note": "paper gives 10 or 25 fps and no per-sequence platform"
+  },
+  "sot/airplane_satsot_0069": {
+   "platform": "Jilin-1 / Skybox / Carbonite-2",
+   "gsd_m": 0.92,
+   "gsd_source": "inherited",
+   "fps": null,
+   "fps_source": "unverified",
+   "note": "paper gives 10 or 25 fps and no per-sequence platform"
+  },
+  "sot/ship_satsot_0070": {
+   "platform": "Jilin-1 / Skybox / Carbonite-2",
+   "gsd_m": null,
+   "gsd_source": "unverified",
+   "fps": null,
+   "fps_source": "unverified",
+   "note": "paper gives 10 or 25 fps and no per-sequence platform"
+  },
+  "sot/ship_satsot_0071": {
+   "platform": "Jilin-1 / Skybox / Carbonite-2",
+   "gsd_m": null,
+   "gsd_source": "unverified",
+   "fps": null,
+   "fps_source": "unverified",
+   "note": "paper gives 10 or 25 fps and no per-sequence platform"
+  },
+  "sot/ship_satsot_0072": {
+   "platform": "Jilin-1 / Skybox / Carbonite-2",
+   "gsd_m": 0.92,
+   "gsd_source": "inherited",
+   "fps": null,
+   "fps_source": "unverified",
+   "note": "paper gives 10 or 25 fps and no per-sequence platform"
+  },
+  "sot/ship_satsot_0073": {
+   "platform": "Jilin-1 / Skybox / Carbonite-2",
+   "gsd_m": null,
+   "gsd_source": "unverified",
+   "fps": null,
+   "fps_source": "unverified",
+   "note": "paper gives 10 or 25 fps and no per-sequence platform"
+  },
+  "sot/ship_satsot_0074": {
+   "platform": "Jilin-1 / Skybox / Carbonite-2",
+   "gsd_m": 0.92,
+   "gsd_source": "inherited",
+   "fps": null,
+   "fps_source": "unverified",
+   "note": "paper gives 10 or 25 fps and no per-sequence platform"
+  },
+  "sot/train_satsot_0075": {
+   "platform": "Jilin-1 / Skybox / Carbonite-2",
+   "gsd_m": 0.92,
+   "gsd_source": "inherited",
+   "fps": null,
+   "fps_source": "unverified",
+   "note": "paper gives 10 or 25 fps and no per-sequence platform"
+  },
+  "sot/carlarge_sv248s_0001": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/car_sv248s_0002": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/car_sv248s_0003": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/carlarge_sv248s_0004": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/car_sv248s_0005": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/car_sv248s_0006": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/car_sv248s_0007": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/car_sv248s_0008": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/car_sv248s_0009": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/car_sv248s_0010": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/car_sv248s_0011": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/car_sv248s_0012": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/carlarge_sv248s_0013": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/car_sv248s_0014": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/ship_sv248s_0015": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/car_sv248s_0016": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/car_sv248s_0017": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/carlarge_sv248s_0018": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/car_sv248s_0019": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/car_sv248s_0020": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/carlarge_sv248s_0021": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/car_sv248s_0022": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/car_sv248s_0023": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/car_sv248s_0024": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/car_sv248s_0025": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/ship_sv248s_0026": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/carlarge_sv248s_0027": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/car_sv248s_0028": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/car_sv248s_0029": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/ship_sv248s_0030": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/car_sv248s_0031": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/car_sv248s_0032": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/car_sv248s_0033": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/car_sv248s_0034": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/car_sv248s_0035": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/car_sv248s_0036": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/car_sv248s_0037": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/carlarge_sv248s_0038": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/carlarge_sv248s_0039": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/carlarge_sv248s_0040": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/car_sv248s_0041": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/car_sv248s_0042": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/car_sv248s_0043": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/car_sv248s_0044": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/car_sv248s_0045": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/car_sv248s_0046": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/car_sv248s_0047": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/car_sv248s_0048": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/car_sv248s_0049": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/car_sv248s_0050": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/car_sv248s_0051": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/car_sv248s_0052": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/car_sv248s_0053": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/car_sv248s_0054": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/car_sv248s_0055": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/car_sv248s_0056": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/car_sv248s_0057": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/car_sv248s_0058": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/car_sv248s_0059": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/car_sv248s_0060": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/car_sv248s_0061": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/car_sv248s_0062": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/carlarge_sv248s_0063": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/car_sv248s_0064": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/car_sv248s_0065": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/car_sv248s_0066": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/car_sv248s_0067": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/car_sv248s_0068": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/car_sv248s_0069": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/car_sv248s_0070": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/car_sv248s_0071": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/car_sv248s_0072": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/car_sv248s_0073": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/car_sv248s_0074": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/car_sv248s_0075": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/car_sv248s_0076": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/car_sv248s_0077": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/car_sv248s_0078": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/car_sv248s_0079": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/car_sv248s_0080": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/car_sv248s_0081": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/car_sv248s_0082": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/car_sv248s_0083": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/car_sv248s_0084": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/car_sv248s_0085": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/car_sv248s_0086": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/car_sv248s_0087": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/car_sv248s_0088": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/car_sv248s_0089": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/car_sv248s_0090": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/car_sv248s_0091": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/carlarge_sv248s_0092": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/carlarge_sv248s_0093": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/car_sv248s_0094": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/carlarge_sv248s_0095": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/carlarge_sv248s_0096": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/carlarge_sv248s_0097": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/car_sv248s_0098": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/carlarge_sv248s_0099": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/carlarge_sv248s_0100": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/carlarge_sv248s_0101": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/carlarge_sv248s_0102": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/carlarge_sv248s_0103": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/carlarge_sv248s_0104": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/carlarge_sv248s_0105": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/car_sv248s_0106": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/car_sv248s_0107": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/carlarge_sv248s_0108": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/carlarge_sv248s_0109": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/carlarge_sv248s_0110": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/carlarge_sv248s_0111": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/carlarge_sv248s_0112": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/carlarge_sv248s_0113": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/car_sv248s_0114": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/car_sv248s_0115": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/car_sv248s_0116": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/car_sv248s_0117": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/car_sv248s_0118": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/carlarge_sv248s_0119": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/carlarge_sv248s_0120": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/car_sv248s_0121": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/carlarge_sv248s_0122": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/carlarge_sv248s_0123": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/carlarge_sv248s_0124": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/carlarge_sv248s_0125": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/airplane_sv248s_0126": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/airplane_sv248s_0127": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/airplane_sv248s_0128": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/airplane_sv248s_0129": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/car_sv248s_0130": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/car_sv248s_0131": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/car_sv248s_0132": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/car_sv248s_0133": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/car_sv248s_0134": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/car_sv248s_0135": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/car_sv248s_0136": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/carlarge_sv248s_0137": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/car_sv248s_0138": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/car_sv248s_0139": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/car_sv248s_0140": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/car_sv248s_0141": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/car_sv248s_0142": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/car_sv248s_0143": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/car_sv248s_0144": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/car_sv248s_0145": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/car_sv248s_0146": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/car_sv248s_0147": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/car_sv248s_0148": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/car_sv248s_0149": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/car_sv248s_0150": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/car_sv248s_0151": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/car_sv248s_0152": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/car_sv248s_0153": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/car_sv248s_0154": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/car_sv248s_0155": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/car_sv248s_0156": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/car_sv248s_0157": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/car_sv248s_0158": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/car_sv248s_0159": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/car_sv248s_0160": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/car_sv248s_0161": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/car_sv248s_0162": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/car_sv248s_0163": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/car_sv248s_0164": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/car_sv248s_0165": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/car_sv248s_0166": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/car_sv248s_0167": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/car_sv248s_0168": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/carlarge_sv248s_0169": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/car_sv248s_0170": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/car_sv248s_0171": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/car_sv248s_0172": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/car_sv248s_0173": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/car_sv248s_0174": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/car_sv248s_0175": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/car_sv248s_0176": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/car_sv248s_0177": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/car_sv248s_0178": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/car_sv248s_0179": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/car_sv248s_0180": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/car_sv248s_0181": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/car_sv248s_0182": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/car_sv248s_0183": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/car_sv248s_0184": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/car_sv248s_0185": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/carlarge_sv248s_0186": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/car_sv248s_0187": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/car_sv248s_0188": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/car_sv248s_0189": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/car_sv248s_0190": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/car_sv248s_0191": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/car_sv248s_0192": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/car_sv248s_0193": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/car_sv248s_0194": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/car_sv248s_0195": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/car_sv248s_0196": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/car_sv248s_0197": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/car_sv248s_0198": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/car_sv248s_0199": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/car_sv248s_0200": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/car_sv248s_0201": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/car_sv248s_0202": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/car_sv248s_0203": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/car_sv248s_0204": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/car_sv248s_0205": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/car_sv248s_0206": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/car_sv248s_0207": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/car_sv248s_0208": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/car_sv248s_0209": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/car_sv248s_0210": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/car_sv248s_0211": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/car_sv248s_0212": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/car_sv248s_0213": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/car_sv248s_0214": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/car_sv248s_0215": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/car_sv248s_0216": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/car_sv248s_0217": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/car_sv248s_0218": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/car_sv248s_0219": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/car_sv248s_0220": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/car_sv248s_0221": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/car_sv248s_0222": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/car_sv248s_0223": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/car_sv248s_0224": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/car_sv248s_0225": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/car_sv248s_0226": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/car_sv248s_0227": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/car_sv248s_0228": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/car_sv248s_0229": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/car_sv248s_0230": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/car_sv248s_0231": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/car_sv248s_0232": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/car_sv248s_0233": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/car_sv248s_0234": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/car_sv248s_0235": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/car_sv248s_0236": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/car_sv248s_0237": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/car_sv248s_0238": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/car_sv248s_0239": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/car_sv248s_0240": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/car_sv248s_0241": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/car_sv248s_0242": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/car_sv248s_0243": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/car_sv248s_0244": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/car_sv248s_0245": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "sot/car_sv248s_0246": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 25.0,
+   "fps_source": "paper",
+   "note": "25 fps is VFI-upsampled from a native 10 fps"
+  },
+  "mot/mixed_satmtb_0001": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/airplane_satmtb_0002": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/airplane_satmtb_0003": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/mixed_satmtb_0004": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/airplane_satmtb_0005": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/airplane_satmtb_0006": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/mixed_satmtb_0007": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/airplane_satmtb_0008": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/mixed_satmtb_0009": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/mixed_satmtb_0010": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/airplane_satmtb_0011": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/airplane_satmtb_0012": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/airplane_satmtb_0013": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/mixed_satmtb_0014": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/airplane_satmtb_0015": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/mixed_satmtb_0016": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/mixed_satmtb_0017": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/mixed_satmtb_0018": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/airplane_satmtb_0019": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/mixed_satmtb_0020": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/airplane_satmtb_0021": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/mixed_satmtb_0022": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/mixed_satmtb_0023": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/mixed_satmtb_0024": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/mixed_satmtb_0025": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/mixed_satmtb_0026": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/mixed_satmtb_0027": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/airplane_satmtb_0028": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/airplane_satmtb_0029": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/mixed_satmtb_0030": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/airplane_satmtb_0031": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/mixed_satmtb_0032": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/airplane_satmtb_0033": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/airplane_satmtb_0034": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/airplane_satmtb_0035": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/mixed_satmtb_0036": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/mixed_satmtb_0037": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/airplane_satmtb_0038": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/mixed_satmtb_0039": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/airplane_satmtb_0040": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/airplane_satmtb_0041": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/airplane_satmtb_0042": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/airplane_satmtb_0043": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/airplane_satmtb_0044": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/airplane_satmtb_0045": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/airplane_satmtb_0046": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/airplane_satmtb_0047": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/airplane_satmtb_0048": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/mixed_satmtb_0049": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/airplane_satmtb_0050": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/airplane_satmtb_0051": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/mixed_satmtb_0052": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/car_satmtb_0053": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/mixed_satmtb_0054": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/car_satmtb_0055": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/mixed_satmtb_0056": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/car_satmtb_0057": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/car_satmtb_0058": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/car_satmtb_0059": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/car_satmtb_0060": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/car_satmtb_0061": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/car_satmtb_0062": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/car_satmtb_0063": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/car_satmtb_0064": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/car_satmtb_0065": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/car_satmtb_0066": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/mixed_satmtb_0067": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/car_satmtb_0068": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/mixed_satmtb_0069": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/car_satmtb_0070": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/mixed_satmtb_0071": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/car_satmtb_0072": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/car_satmtb_0073": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/mixed_satmtb_0074": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/mixed_satmtb_0075": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/mixed_satmtb_0076": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/car_satmtb_0077": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/car_satmtb_0078": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/car_satmtb_0079": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/mixed_satmtb_0080": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/car_satmtb_0081": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/car_satmtb_0082": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/car_satmtb_0083": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/car_satmtb_0084": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/car_satmtb_0085": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/car_satmtb_0086": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/car_satmtb_0087": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/car_satmtb_0088": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/car_satmtb_0089": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/car_satmtb_0090": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/car_satmtb_0091": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/car_satmtb_0092": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/car_satmtb_0093": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/car_satmtb_0094": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/car_satmtb_0095": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/car_satmtb_0096": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/car_satmtb_0097": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/car_satmtb_0098": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/car_satmtb_0099": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/car_satmtb_0100": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/car_satmtb_0101": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/car_satmtb_0102": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/car_satmtb_0103": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/car_satmtb_0104": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/car_satmtb_0105": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/car_satmtb_0106": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/car_satmtb_0107": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/car_satmtb_0108": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/car_satmtb_0109": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/car_satmtb_0110": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/car_satmtb_0111": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/car_satmtb_0112": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/car_satmtb_0113": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/mixed_satmtb_0114": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/car_satmtb_0115": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/car_satmtb_0116": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/car_satmtb_0117": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/car_satmtb_0118": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/car_satmtb_0119": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/car_satmtb_0120": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/car_satmtb_0121": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/car_satmtb_0122": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/car_satmtb_0123": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/car_satmtb_0124": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/car_satmtb_0125": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/car_satmtb_0126": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/car_satmtb_0127": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/car_satmtb_0128": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/car_satmtb_0129": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/car_satmtb_0130": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/car_satmtb_0131": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/car_satmtb_0132": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/car_satmtb_0133": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/car_satmtb_0134": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/car_satmtb_0135": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/car_satmtb_0136": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/car_satmtb_0137": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/car_satmtb_0138": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/car_satmtb_0139": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/car_satmtb_0140": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/car_satmtb_0141": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/car_satmtb_0142": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/car_satmtb_0143": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/ship_satmtb_0144": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/ship_satmtb_0145": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/ship_satmtb_0146": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/ship_satmtb_0147": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/ship_satmtb_0148": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/ship_satmtb_0149": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/ship_satmtb_0150": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/ship_satmtb_0151": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/ship_satmtb_0152": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/ship_satmtb_0153": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/ship_satmtb_0154": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/mixed_satmtb_0155": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/ship_satmtb_0156": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/ship_satmtb_0157": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/ship_satmtb_0158": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/ship_satmtb_0159": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/ship_satmtb_0160": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/ship_satmtb_0161": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/ship_satmtb_0162": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/ship_satmtb_0163": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/mixed_satmtb_0164": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/ship_satmtb_0165": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/ship_satmtb_0166": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/ship_satmtb_0167": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/ship_satmtb_0168": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/ship_satmtb_0169": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/ship_satmtb_0170": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/ship_satmtb_0171": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/ship_satmtb_0172": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/ship_satmtb_0173": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/ship_satmtb_0174": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/ship_satmtb_0175": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/mixed_satmtb_0176": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/ship_satmtb_0177": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/ship_satmtb_0178": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/mixed_satmtb_0179": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/ship_satmtb_0180": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/ship_satmtb_0181": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/mixed_satmtb_0182": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/ship_satmtb_0183": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/mixed_satmtb_0184": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/ship_satmtb_0185": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/ship_satmtb_0186": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/ship_satmtb_0187": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/ship_satmtb_0188": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/ship_satmtb_0189": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/mixed_satmtb_0190": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/ship_satmtb_0191": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/ship_satmtb_0192": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/ship_satmtb_0193": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/ship_satmtb_0194": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/ship_satmtb_0195": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/mixed_satmtb_0196": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/ship_satmtb_0197": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/ship_satmtb_0198": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/ship_satmtb_0199": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/ship_satmtb_0200": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/mixed_satmtb_0201": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/ship_satmtb_0202": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/ship_satmtb_0203": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/ship_satmtb_0204": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/ship_satmtb_0205": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/ship_satmtb_0206": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/ship_satmtb_0207": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/ship_satmtb_0208": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/mixed_satmtb_0209": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/ship_satmtb_0210": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/ship_satmtb_0211": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/ship_satmtb_0212": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/train_satmtb_0213": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/mixed_satmtb_0214": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/mixed_satmtb_0215": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/mixed_satmtb_0216": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/mixed_satmtb_0217": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/mixed_satmtb_0218": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/mixed_satmtb_0219": {
+   "platform": "Jilin-1 03",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/airplane_viso_0001": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/airplane_viso_0002": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/airplane_viso_0003": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/airplane_viso_0004": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/airplane_viso_0005": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/airplane_viso_0006": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/ship_viso_0007": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/ship_viso_0008": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper"
+  },
+  "mot/car_sdmcar_0021": {
+   "platform": "Luojia 3-01",
+   "gsd_m": 0.75,
+   "gsd_source": "paper",
+   "fps": 6.0,
+   "fps_source": "derived",
+   "note": "fps is per video, read from the AVI containers"
+  },
+  "mot/car_sdmcar_0022": {
+   "platform": "Luojia 3-01",
+   "gsd_m": 0.75,
+   "gsd_source": "paper",
+   "fps": 8.0,
+   "fps_source": "derived",
+   "note": "fps is per video, read from the AVI containers"
+  },
+  "mot/car_sdmcar_0023": {
+   "platform": "Luojia 3-01",
+   "gsd_m": 0.75,
+   "gsd_source": "paper",
+   "fps": 6.0,
+   "fps_source": "derived",
+   "note": "fps is per video, read from the AVI containers"
+  },
+  "mot/mixed_sdmcar_0024": {
+   "platform": "Luojia 3-01",
+   "gsd_m": 0.75,
+   "gsd_source": "paper",
+   "fps": 6.0,
+   "fps_source": "derived",
+   "note": "fps is per video, read from the AVI containers"
+  },
+  "mot/mixed_sdmcar_0025": {
+   "platform": "Luojia 3-01",
+   "gsd_m": 0.75,
+   "gsd_source": "paper",
+   "fps": 6.0,
+   "fps_source": "derived",
+   "note": "fps is per video, read from the AVI containers"
+  },
+  "mot/car_sdmcar_0026": {
+   "platform": "Luojia 3-01",
+   "gsd_m": 0.75,
+   "gsd_source": "paper",
+   "fps": 6.0,
+   "fps_source": "derived",
+   "note": "fps is per video, read from the AVI containers"
+  },
+  "mot/car_sdmcar_0027": {
+   "platform": "Luojia 3-01",
+   "gsd_m": 0.75,
+   "gsd_source": "paper",
+   "fps": 6.0,
+   "fps_source": "derived",
+   "note": "fps is per video, read from the AVI containers"
+  },
+  "mot/car_sdmcar_0028": {
+   "platform": "Luojia 3-01",
+   "gsd_m": 0.75,
+   "gsd_source": "paper",
+   "fps": 6.0,
+   "fps_source": "derived",
+   "note": "fps is per video, read from the AVI containers"
+  },
+  "mot/mixed_sdmcar_0029": {
+   "platform": "Luojia 3-01",
+   "gsd_m": 0.75,
+   "gsd_source": "paper",
+   "fps": 6.0,
+   "fps_source": "derived",
+   "note": "fps is per video, read from the AVI containers"
+  },
+  "mot/mixed_sdmcar_0030": {
+   "platform": "Luojia 3-01",
+   "gsd_m": 0.75,
+   "gsd_source": "paper",
+   "fps": 6.0,
+   "fps_source": "derived",
+   "note": "fps is per video, read from the AVI containers"
+  },
+  "mot/car_sdmcar_0031": {
+   "platform": "Luojia 3-01",
+   "gsd_m": 0.75,
+   "gsd_source": "paper",
+   "fps": 6.0,
+   "fps_source": "derived",
+   "note": "fps is per video, read from the AVI containers"
+  },
+  "mot/car_sdmcar_0032": {
+   "platform": "Luojia 3-01",
+   "gsd_m": 0.75,
+   "gsd_source": "paper",
+   "fps": 6.0,
+   "fps_source": "derived",
+   "note": "fps is per video, read from the AVI containers"
+  },
+  "mot/car_sdmcar_0033": {
+   "platform": "Luojia 3-01",
+   "gsd_m": 0.75,
+   "gsd_source": "paper",
+   "fps": 6.0,
+   "fps_source": "derived",
+   "note": "fps is per video, read from the AVI containers"
+  },
+  "mot/car_sdmcar_0034": {
+   "platform": "Luojia 3-01",
+   "gsd_m": 0.75,
+   "gsd_source": "paper",
+   "fps": 6.0,
+   "fps_source": "derived",
+   "note": "fps is per video, read from the AVI containers"
+  },
+  "mot/car_sdmcar_0035": {
+   "platform": "Luojia 3-01",
+   "gsd_m": 0.75,
+   "gsd_source": "paper",
+   "fps": 6.0,
+   "fps_source": "derived",
+   "note": "fps is per video, read from the AVI containers"
+  },
+  "mot/car_sdmcar_0036": {
+   "platform": "Luojia 3-01",
+   "gsd_m": 0.75,
+   "gsd_source": "paper",
+   "fps": 8.0,
+   "fps_source": "derived",
+   "note": "fps is per video, read from the AVI containers"
+  },
+  "mot/car_sdmcar_0037": {
+   "platform": "Luojia 3-01",
+   "gsd_m": 0.75,
+   "gsd_source": "paper",
+   "fps": 8.0,
+   "fps_source": "derived",
+   "note": "fps is per video, read from the AVI containers"
+  },
+  "mot/car_sdmcar_0038": {
+   "platform": "Luojia 3-01",
+   "gsd_m": 0.75,
+   "gsd_source": "paper",
+   "fps": 8.0,
+   "fps_source": "derived",
+   "note": "fps is per video, read from the AVI containers"
+  },
+  "mot/car_sdmcar_0039": {
+   "platform": "Luojia 3-01",
+   "gsd_m": 0.75,
+   "gsd_source": "paper",
+   "fps": 6.0,
+   "fps_source": "derived",
+   "note": "fps is per video, read from the AVI containers"
+  },
+  "mot/mixed_sdmcar_0040": {
+   "platform": "Luojia 3-01",
+   "gsd_m": 0.75,
+   "gsd_source": "paper",
+   "fps": 6.0,
+   "fps_source": "derived",
+   "note": "fps is per video, read from the AVI containers"
+  },
+  "mot/car_sdmcar_0041": {
+   "platform": "Luojia 3-01",
+   "gsd_m": 0.75,
+   "gsd_source": "paper",
+   "fps": 6.0,
+   "fps_source": "derived",
+   "note": "fps is per video, read from the AVI containers"
+  },
+  "mot/car_sdmcar_0042": {
+   "platform": "Luojia 3-01",
+   "gsd_m": 0.75,
+   "gsd_source": "paper",
+   "fps": 6.0,
+   "fps_source": "derived",
+   "note": "fps is per video, read from the AVI containers"
+  },
+  "mot/car_sdmcar_0043": {
+   "platform": "Luojia 3-01",
+   "gsd_m": 0.75,
+   "gsd_source": "paper",
+   "fps": 6.0,
+   "fps_source": "derived",
+   "note": "fps is per video, read from the AVI containers"
+  },
+  "mot/car_sdmcar_0044": {
+   "platform": "Luojia 3-01",
+   "gsd_m": 0.75,
+   "gsd_source": "paper",
+   "fps": 6.0,
+   "fps_source": "derived",
+   "note": "fps is per video, read from the AVI containers"
+  },
+  "mot/car_sdmcar_0045": {
+   "platform": "Luojia 3-01",
+   "gsd_m": 0.75,
+   "gsd_source": "paper",
+   "fps": 8.0,
+   "fps_source": "derived",
+   "note": "fps is per video, read from the AVI containers"
+  },
+  "mot/car_sdmcar_0046": {
+   "platform": "Luojia 3-01",
+   "gsd_m": 0.75,
+   "gsd_source": "paper",
+   "fps": 8.0,
+   "fps_source": "derived",
+   "note": "fps is per video, read from the AVI containers"
+  },
+  "mot/car_sdmcar_0047": {
+   "platform": "Luojia 3-01",
+   "gsd_m": 0.75,
+   "gsd_source": "paper",
+   "fps": 6.0,
+   "fps_source": "derived",
+   "note": "fps is per video, read from the AVI containers"
+  },
+  "mot/car_sdmcar_0048": {
+   "platform": "Luojia 3-01",
+   "gsd_m": 0.75,
+   "gsd_source": "paper",
+   "fps": 6.0,
+   "fps_source": "derived",
+   "note": "fps is per video, read from the AVI containers"
+  },
+  "mot/car_sdmcar_0049": {
+   "platform": "Luojia 3-01",
+   "gsd_m": 0.75,
+   "gsd_source": "paper",
+   "fps": 6.0,
+   "fps_source": "derived",
+   "note": "fps is per video, read from the AVI containers"
+  },
+  "mot/car_sdmcar_0050": {
+   "platform": "Luojia 3-01",
+   "gsd_m": 0.75,
+   "gsd_source": "paper",
+   "fps": 6.0,
+   "fps_source": "derived",
+   "note": "fps is per video, read from the AVI containers"
+  },
+  "mot/car_sdmcar_0051": {
+   "platform": "Luojia 3-01",
+   "gsd_m": 0.75,
+   "gsd_source": "paper",
+   "fps": 6.0,
+   "fps_source": "derived",
+   "note": "fps is per video, read from the AVI containers"
+  },
+  "mot/mixed_sdmcar_0052": {
+   "platform": "Luojia 3-01",
+   "gsd_m": 0.75,
+   "gsd_source": "paper",
+   "fps": 6.0,
+   "fps_source": "derived",
+   "note": "fps is per video, read from the AVI containers"
+  },
+  "mot/mixed_sdmcar_0053": {
+   "platform": "Luojia 3-01",
+   "gsd_m": 0.75,
+   "gsd_source": "paper",
+   "fps": 6.0,
+   "fps_source": "derived",
+   "note": "fps is per video, read from the AVI containers"
+  },
+  "mot/mixed_sdmcar_0054": {
+   "platform": "Luojia 3-01",
+   "gsd_m": 0.75,
+   "gsd_source": "paper",
+   "fps": 6.0,
+   "fps_source": "derived",
+   "note": "fps is per video, read from the AVI containers"
+  },
+  "mot/mixed_sdmcar_0055": {
+   "platform": "Luojia 3-01",
+   "gsd_m": 0.75,
+   "gsd_source": "paper",
+   "fps": 6.0,
+   "fps_source": "derived",
+   "note": "fps is per video, read from the AVI containers"
+  },
+  "mot/car_sdmcar_0056": {
+   "platform": "Luojia 3-01",
+   "gsd_m": 0.75,
+   "gsd_source": "paper",
+   "fps": 6.0,
+   "fps_source": "derived",
+   "note": "fps is per video, read from the AVI containers"
+  },
+  "mot/car_sdmcar_0057": {
+   "platform": "Luojia 3-01",
+   "gsd_m": 0.75,
+   "gsd_source": "paper",
+   "fps": 6.0,
+   "fps_source": "derived",
+   "note": "fps is per video, read from the AVI containers"
+  },
+  "mot/car_sdmcar_0058": {
+   "platform": "Luojia 3-01",
+   "gsd_m": 0.75,
+   "gsd_source": "paper",
+   "fps": 6.0,
+   "fps_source": "derived",
+   "note": "fps is per video, read from the AVI containers"
+  },
+  "mot/car_sdmcar_0059": {
+   "platform": "Luojia 3-01",
+   "gsd_m": 0.75,
+   "gsd_source": "paper",
+   "fps": 6.0,
+   "fps_source": "derived",
+   "note": "fps is per video, read from the AVI containers"
+  },
+  "mot/car_sdmcar_0060": {
+   "platform": "Luojia 3-01",
+   "gsd_m": 0.75,
+   "gsd_source": "paper",
+   "fps": 6.0,
+   "fps_source": "derived",
+   "note": "fps is per video, read from the AVI containers"
+  },
+  "mot/car_sdmcar_0061": {
+   "platform": "Luojia 3-01",
+   "gsd_m": 0.75,
+   "gsd_source": "paper",
+   "fps": 6.0,
+   "fps_source": "derived",
+   "note": "fps is per video, read from the AVI containers"
+  },
+  "mot/car_sdmcar_0062": {
+   "platform": "Luojia 3-01",
+   "gsd_m": 0.75,
+   "gsd_source": "paper",
+   "fps": 6.0,
+   "fps_source": "derived",
+   "note": "fps is per video, read from the AVI containers"
+  },
+  "mot/car_sdmcar_0063": {
+   "platform": "Luojia 3-01",
+   "gsd_m": 0.75,
+   "gsd_source": "paper",
+   "fps": 6.0,
+   "fps_source": "derived",
+   "note": "fps is per video, read from the AVI containers"
+  },
+  "mot/mixed_sdmcar_0064": {
+   "platform": "Luojia 3-01",
+   "gsd_m": 0.75,
+   "gsd_source": "paper",
+   "fps": 6.0,
+   "fps_source": "derived",
+   "note": "fps is per video, read from the AVI containers"
+  },
+  "mot/mixed_sdmcar_0065": {
+   "platform": "Luojia 3-01",
+   "gsd_m": 0.75,
+   "gsd_source": "paper",
+   "fps": 6.0,
+   "fps_source": "derived",
+   "note": "fps is per video, read from the AVI containers"
+  },
+  "mot/car_sdmcar_0066": {
+   "platform": "Luojia 3-01",
+   "gsd_m": 0.75,
+   "gsd_source": "paper",
+   "fps": 6.0,
+   "fps_source": "derived",
+   "note": "fps is per video, read from the AVI containers"
+  },
+  "mot/car_sdmcar_0067": {
+   "platform": "Luojia 3-01",
+   "gsd_m": 0.75,
+   "gsd_source": "paper",
+   "fps": 6.0,
+   "fps_source": "derived",
+   "note": "fps is per video, read from the AVI containers"
+  },
+  "mot/car_sdmcar_0068": {
+   "platform": "Luojia 3-01",
+   "gsd_m": 0.75,
+   "gsd_source": "paper",
+   "fps": 8.0,
+   "fps_source": "derived",
+   "note": "fps is per video, read from the AVI containers"
+  },
+  "mot/car_sdmcar_0069": {
+   "platform": "Luojia 3-01",
+   "gsd_m": 0.75,
+   "gsd_source": "paper",
+   "fps": 8.0,
+   "fps_source": "derived",
+   "note": "fps is per video, read from the AVI containers"
+  },
+  "mot/car_sdmcar_0070": {
+   "platform": "Luojia 3-01",
+   "gsd_m": 0.75,
+   "gsd_source": "paper",
+   "fps": 8.0,
+   "fps_source": "derived",
+   "note": "fps is per video, read from the AVI containers"
+  },
+  "mot/car_sdmcar_0071": {
+   "platform": "Luojia 3-01",
+   "gsd_m": 0.75,
+   "gsd_source": "paper",
+   "fps": 6.0,
+   "fps_source": "derived",
+   "note": "fps is per video, read from the AVI containers"
+  },
+  "mot/car_sdmcar_0072": {
+   "platform": "Luojia 3-01",
+   "gsd_m": 0.75,
+   "gsd_source": "paper",
+   "fps": 6.0,
+   "fps_source": "derived",
+   "note": "fps is per video, read from the AVI containers"
+  },
+  "mot/car_sdmcar_0073": {
+   "platform": "Luojia 3-01",
+   "gsd_m": 0.75,
+   "gsd_source": "paper",
+   "fps": 6.0,
+   "fps_source": "derived",
+   "note": "fps is per video, read from the AVI containers"
+  },
+  "mot/car_sdmcar_0074": {
+   "platform": "Luojia 3-01",
+   "gsd_m": 0.75,
+   "gsd_source": "paper",
+   "fps": 8.0,
+   "fps_source": "derived",
+   "note": "fps is per video, read from the AVI containers"
+  },
+  "mot/car_sdmcar_0075": {
+   "platform": "Luojia 3-01",
+   "gsd_m": 0.75,
+   "gsd_source": "paper",
+   "fps": 6.0,
+   "fps_source": "derived",
+   "note": "fps is per video, read from the AVI containers"
+  },
+  "mot/car_sdmcar_0076": {
+   "platform": "Luojia 3-01",
+   "gsd_m": 0.75,
+   "gsd_source": "paper",
+   "fps": 8.0,
+   "fps_source": "derived",
+   "note": "fps is per video, read from the AVI containers"
+  },
+  "mot/mixed_sdmcar_0077": {
+   "platform": "Luojia 3-01",
+   "gsd_m": 0.75,
+   "gsd_source": "paper",
+   "fps": 8.0,
+   "fps_source": "derived",
+   "note": "fps is per video, read from the AVI containers"
+  },
+  "mot/mixed_sdmcar_0078": {
+   "platform": "Luojia 3-01",
+   "gsd_m": 0.75,
+   "gsd_source": "paper",
+   "fps": 8.0,
+   "fps_source": "derived",
+   "note": "fps is per video, read from the AVI containers"
+  },
+  "mot/car_sdmcar_0079": {
+   "platform": "Luojia 3-01",
+   "gsd_m": 0.75,
+   "gsd_source": "paper",
+   "fps": 6.0,
+   "fps_source": "derived",
+   "note": "fps is per video, read from the AVI containers"
+  },
+  "mot/mixed_sdmcar_0080": {
+   "platform": "Luojia 3-01",
+   "gsd_m": 0.75,
+   "gsd_source": "paper",
+   "fps": 6.0,
+   "fps_source": "derived",
+   "note": "fps is per video, read from the AVI containers"
+  },
+  "mot/car_sdmcar_0081": {
+   "platform": "Luojia 3-01",
+   "gsd_m": 0.75,
+   "gsd_source": "paper",
+   "fps": 6.0,
+   "fps_source": "derived",
+   "note": "fps is per video, read from the AVI containers"
+  },
+  "mot/car_sdmcar_0082": {
+   "platform": "Luojia 3-01",
+   "gsd_m": 0.75,
+   "gsd_source": "paper",
+   "fps": 6.0,
+   "fps_source": "derived",
+   "note": "fps is per video, read from the AVI containers"
+  },
+  "mot/car_sdmcar_0083": {
+   "platform": "Luojia 3-01",
+   "gsd_m": 0.75,
+   "gsd_source": "paper",
+   "fps": 6.0,
+   "fps_source": "derived",
+   "note": "fps is per video, read from the AVI containers"
+  },
+  "mot/car_sdmcar_0084": {
+   "platform": "Luojia 3-01",
+   "gsd_m": 0.75,
+   "gsd_source": "paper",
+   "fps": 6.0,
+   "fps_source": "derived",
+   "note": "fps is per video, read from the AVI containers"
+  },
+  "mot/car_sdmcar_0085": {
+   "platform": "Luojia 3-01",
+   "gsd_m": 0.75,
+   "gsd_source": "paper",
+   "fps": 6.0,
+   "fps_source": "derived",
+   "note": "fps is per video, read from the AVI containers"
+  },
+  "mot/car_sdmcar_0086": {
+   "platform": "Luojia 3-01",
+   "gsd_m": 0.75,
+   "gsd_source": "paper",
+   "fps": 6.0,
+   "fps_source": "derived",
+   "note": "fps is per video, read from the AVI containers"
+  },
+  "mot/car_sdmcar_0087": {
+   "platform": "Luojia 3-01",
+   "gsd_m": 0.75,
+   "gsd_source": "paper",
+   "fps": 6.0,
+   "fps_source": "derived",
+   "note": "fps is per video, read from the AVI containers"
+  },
+  "mot/car_sdmcar_0088": {
+   "platform": "Luojia 3-01",
+   "gsd_m": 0.75,
+   "gsd_source": "paper",
+   "fps": 6.0,
+   "fps_source": "derived",
+   "note": "fps is per video, read from the AVI containers"
+  },
+  "mot/car_sdmcar_0089": {
+   "platform": "Luojia 3-01",
+   "gsd_m": 0.75,
+   "gsd_source": "paper",
+   "fps": 6.0,
+   "fps_source": "derived",
+   "note": "fps is per video, read from the AVI containers"
+  },
+  "mot/car_sdmcar_0090": {
+   "platform": "Luojia 3-01",
+   "gsd_m": 0.75,
+   "gsd_source": "paper",
+   "fps": 6.0,
+   "fps_source": "derived",
+   "note": "fps is per video, read from the AVI containers"
+  },
+  "mot/car_sdmcar_0091": {
+   "platform": "Luojia 3-01",
+   "gsd_m": 0.75,
+   "gsd_source": "paper",
+   "fps": 6.0,
+   "fps_source": "derived",
+   "note": "fps is per video, read from the AVI containers"
+  },
+  "mot/car_sdmcar_0092": {
+   "platform": "Luojia 3-01",
+   "gsd_m": 0.75,
+   "gsd_source": "paper",
+   "fps": 6.0,
+   "fps_source": "derived",
+   "note": "fps is per video, read from the AVI containers"
+  },
+  "mot/car_sdmcar_0093": {
+   "platform": "Luojia 3-01",
+   "gsd_m": 0.75,
+   "gsd_source": "paper",
+   "fps": 6.0,
+   "fps_source": "derived",
+   "note": "fps is per video, read from the AVI containers"
+  },
+  "mot/car_sdmcar_0094": {
+   "platform": "Luojia 3-01",
+   "gsd_m": 0.75,
+   "gsd_source": "paper",
+   "fps": 6.0,
+   "fps_source": "derived",
+   "note": "fps is per video, read from the AVI containers"
+  },
+  "mot/car_sdmcar_0095": {
+   "platform": "Luojia 3-01",
+   "gsd_m": 0.75,
+   "gsd_source": "paper",
+   "fps": 6.0,
+   "fps_source": "derived",
+   "note": "fps is per video, read from the AVI containers"
+  },
+  "mot/car_sdmcar_0096": {
+   "platform": "Luojia 3-01",
+   "gsd_m": 0.75,
+   "gsd_source": "paper",
+   "fps": 6.0,
+   "fps_source": "derived",
+   "note": "fps is per video, read from the AVI containers"
+  },
+  "mot/car_sdmcar_0097": {
+   "platform": "Luojia 3-01",
+   "gsd_m": 0.75,
+   "gsd_source": "paper",
+   "fps": 6.0,
+   "fps_source": "derived",
+   "note": "fps is per video, read from the AVI containers"
+  },
+  "mot/mixed_sdmcar_0098": {
+   "platform": "Luojia 3-01",
+   "gsd_m": 0.75,
+   "gsd_source": "paper",
+   "fps": 8.0,
+   "fps_source": "derived",
+   "note": "fps is per video, read from the AVI containers"
+  },
+  "mot/car_sdmcar_0099": {
+   "platform": "Luojia 3-01",
+   "gsd_m": 0.75,
+   "gsd_source": "paper",
+   "fps": 6.0,
+   "fps_source": "derived",
+   "note": "fps is per video, read from the AVI containers"
+  },
+  "mot/car_sdmcar_0001": {
+   "platform": "Luojia 3-01",
+   "gsd_m": 0.75,
+   "gsd_source": "paper",
+   "fps": 6.0,
+   "fps_source": "derived",
+   "note": "fps is per video, read from the AVI containers"
+  },
+  "mot/car_sdmcar_0002": {
+   "platform": "Luojia 3-01",
+   "gsd_m": 0.75,
+   "gsd_source": "paper",
+   "fps": 8.0,
+   "fps_source": "derived",
+   "note": "fps is per video, read from the AVI containers"
+  },
+  "mot/mixed_sdmcar_0003": {
+   "platform": "Luojia 3-01",
+   "gsd_m": 0.75,
+   "gsd_source": "paper",
+   "fps": 6.0,
+   "fps_source": "derived",
+   "note": "fps is per video, read from the AVI containers"
+  },
+  "mot/car_sdmcar_0004": {
+   "platform": "Luojia 3-01",
+   "gsd_m": 0.75,
+   "gsd_source": "paper",
+   "fps": 6.0,
+   "fps_source": "derived",
+   "note": "fps is per video, read from the AVI containers"
+  },
+  "mot/car_sdmcar_0005": {
+   "platform": "Luojia 3-01",
+   "gsd_m": 0.75,
+   "gsd_source": "paper",
+   "fps": 6.0,
+   "fps_source": "derived",
+   "note": "fps is per video, read from the AVI containers"
+  },
+  "mot/car_sdmcar_0006": {
+   "platform": "Luojia 3-01",
+   "gsd_m": 0.75,
+   "gsd_source": "paper",
+   "fps": 6.0,
+   "fps_source": "derived",
+   "note": "fps is per video, read from the AVI containers"
+  },
+  "mot/car_sdmcar_0007": {
+   "platform": "Luojia 3-01",
+   "gsd_m": 0.75,
+   "gsd_source": "paper",
+   "fps": 6.0,
+   "fps_source": "derived",
+   "note": "fps is per video, read from the AVI containers"
+  },
+  "mot/car_sdmcar_0008": {
+   "platform": "Luojia 3-01",
+   "gsd_m": 0.75,
+   "gsd_source": "paper",
+   "fps": 6.0,
+   "fps_source": "derived",
+   "note": "fps is per video, read from the AVI containers"
+  },
+  "mot/car_sdmcar_0009": {
+   "platform": "Luojia 3-01",
+   "gsd_m": 0.75,
+   "gsd_source": "paper",
+   "fps": 8.0,
+   "fps_source": "derived",
+   "note": "fps is per video, read from the AVI containers"
+  },
+  "mot/car_sdmcar_0010": {
+   "platform": "Luojia 3-01",
+   "gsd_m": 0.75,
+   "gsd_source": "paper",
+   "fps": 6.0,
+   "fps_source": "derived",
+   "note": "fps is per video, read from the AVI containers"
+  },
+  "mot/car_sdmcar_0011": {
+   "platform": "Luojia 3-01",
+   "gsd_m": 0.75,
+   "gsd_source": "paper",
+   "fps": 6.0,
+   "fps_source": "derived",
+   "note": "fps is per video, read from the AVI containers"
+  },
+  "mot/car_sdmcar_0012": {
+   "platform": "Luojia 3-01",
+   "gsd_m": 0.75,
+   "gsd_source": "paper",
+   "fps": 6.0,
+   "fps_source": "derived",
+   "note": "fps is per video, read from the AVI containers"
+  },
+  "mot/car_sdmcar_0013": {
+   "platform": "Luojia 3-01",
+   "gsd_m": 0.75,
+   "gsd_source": "paper",
+   "fps": 6.0,
+   "fps_source": "derived",
+   "note": "fps is per video, read from the AVI containers"
+  },
+  "mot/car_sdmcar_0014": {
+   "platform": "Luojia 3-01",
+   "gsd_m": 0.75,
+   "gsd_source": "paper",
+   "fps": 6.0,
+   "fps_source": "derived",
+   "note": "fps is per video, read from the AVI containers"
+  },
+  "mot/car_sdmcar_0015": {
+   "platform": "Luojia 3-01",
+   "gsd_m": 0.75,
+   "gsd_source": "paper",
+   "fps": 6.0,
+   "fps_source": "derived",
+   "note": "fps is per video, read from the AVI containers"
+  },
+  "mot/car_sdmcar_0016": {
+   "platform": "Luojia 3-01",
+   "gsd_m": 0.75,
+   "gsd_source": "paper",
+   "fps": 6.0,
+   "fps_source": "derived",
+   "note": "fps is per video, read from the AVI containers"
+  },
+  "mot/car_sdmcar_0017": {
+   "platform": "Luojia 3-01",
+   "gsd_m": 0.75,
+   "gsd_source": "paper",
+   "fps": 6.0,
+   "fps_source": "derived",
+   "note": "fps is per video, read from the AVI containers"
+  },
+  "mot/car_sdmcar_0018": {
+   "platform": "Luojia 3-01",
+   "gsd_m": 0.75,
+   "gsd_source": "paper",
+   "fps": 6.0,
+   "fps_source": "derived",
+   "note": "fps is per video, read from the AVI containers"
+  },
+  "mot/mixed_sdmcar_0019": {
+   "platform": "Luojia 3-01",
+   "gsd_m": 0.75,
+   "gsd_source": "paper",
+   "fps": 6.0,
+   "fps_source": "derived",
+   "note": "fps is per video, read from the AVI containers"
+  },
+  "mot/car_sdmcar_0020": {
+   "platform": "Luojia 3-01",
+   "gsd_m": 0.75,
+   "gsd_source": "paper",
+   "fps": 8.0,
+   "fps_source": "derived",
+   "note": "fps is per video, read from the AVI containers"
+  },
+  "mot/car_rscardata_0008": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper",
+   "note": "VISO car subset; constants are VISO's"
+  },
+  "mot/car_rscardata_0009": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper",
+   "note": "VISO car subset; constants are VISO's"
+  },
+  "mot/car_rscardata_0010": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper",
+   "note": "VISO car subset; constants are VISO's"
+  },
+  "mot/car_rscardata_0011": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper",
+   "note": "VISO car subset; constants are VISO's"
+  },
+  "mot/car_rscardata_0012": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper",
+   "note": "VISO car subset; constants are VISO's"
+  },
+  "mot/car_rscardata_0013": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper",
+   "note": "VISO car subset; constants are VISO's"
+  },
+  "mot/car_rscardata_0014": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper",
+   "note": "VISO car subset; constants are VISO's"
+  },
+  "mot/car_rscardata_0015": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper",
+   "note": "VISO car subset; constants are VISO's"
+  },
+  "mot/car_rscardata_0016": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper",
+   "note": "VISO car subset; constants are VISO's"
+  },
+  "mot/car_rscardata_0017": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper",
+   "note": "VISO car subset; constants are VISO's"
+  },
+  "mot/car_rscardata_0018": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper",
+   "note": "VISO car subset; constants are VISO's"
+  },
+  "mot/car_rscardata_0019": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper",
+   "note": "VISO car subset; constants are VISO's"
+  },
+  "mot/car_rscardata_0020": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper",
+   "note": "VISO car subset; constants are VISO's"
+  },
+  "mot/car_rscardata_0021": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper",
+   "note": "VISO car subset; constants are VISO's"
+  },
+  "mot/car_rscardata_0022": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper",
+   "note": "VISO car subset; constants are VISO's"
+  },
+  "mot/car_rscardata_0023": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper",
+   "note": "VISO car subset; constants are VISO's"
+  },
+  "mot/car_rscardata_0024": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper",
+   "note": "VISO car subset; constants are VISO's"
+  },
+  "mot/car_rscardata_0025": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper",
+   "note": "VISO car subset; constants are VISO's"
+  },
+  "mot/car_rscardata_0026": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper",
+   "note": "VISO car subset; constants are VISO's"
+  },
+  "mot/car_rscardata_0027": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper",
+   "note": "VISO car subset; constants are VISO's"
+  },
+  "mot/car_rscardata_0028": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper",
+   "note": "VISO car subset; constants are VISO's"
+  },
+  "mot/car_rscardata_0029": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper",
+   "note": "VISO car subset; constants are VISO's"
+  },
+  "mot/car_rscardata_0030": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper",
+   "note": "VISO car subset; constants are VISO's"
+  },
+  "mot/car_rscardata_0031": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper",
+   "note": "VISO car subset; constants are VISO's"
+  },
+  "mot/car_rscardata_0032": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper",
+   "note": "VISO car subset; constants are VISO's"
+  },
+  "mot/car_rscardata_0033": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper",
+   "note": "VISO car subset; constants are VISO's"
+  },
+  "mot/car_rscardata_0034": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper",
+   "note": "VISO car subset; constants are VISO's"
+  },
+  "mot/car_rscardata_0035": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper",
+   "note": "VISO car subset; constants are VISO's"
+  },
+  "mot/car_rscardata_0036": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper",
+   "note": "VISO car subset; constants are VISO's"
+  },
+  "mot/car_rscardata_0037": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper",
+   "note": "VISO car subset; constants are VISO's"
+  },
+  "mot/car_rscardata_0038": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper",
+   "note": "VISO car subset; constants are VISO's"
+  },
+  "mot/car_rscardata_0039": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper",
+   "note": "VISO car subset; constants are VISO's"
+  },
+  "mot/car_rscardata_0040": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper",
+   "note": "VISO car subset; constants are VISO's"
+  },
+  "mot/car_rscardata_0041": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper",
+   "note": "VISO car subset; constants are VISO's"
+  },
+  "mot/car_rscardata_0042": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper",
+   "note": "VISO car subset; constants are VISO's"
+  },
+  "mot/car_rscardata_0043": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper",
+   "note": "VISO car subset; constants are VISO's"
+  },
+  "mot/car_rscardata_0044": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper",
+   "note": "VISO car subset; constants are VISO's"
+  },
+  "mot/car_rscardata_0045": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper",
+   "note": "VISO car subset; constants are VISO's"
+  },
+  "mot/car_rscardata_0046": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper",
+   "note": "VISO car subset; constants are VISO's"
+  },
+  "mot/car_rscardata_0047": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper",
+   "note": "VISO car subset; constants are VISO's"
+  },
+  "mot/car_rscardata_0048": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper",
+   "note": "VISO car subset; constants are VISO's"
+  },
+  "mot/car_rscardata_0049": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper",
+   "note": "VISO car subset; constants are VISO's"
+  },
+  "mot/car_rscardata_0050": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper",
+   "note": "VISO car subset; constants are VISO's"
+  },
+  "mot/car_rscardata_0051": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper",
+   "note": "VISO car subset; constants are VISO's"
+  },
+  "mot/car_rscardata_0052": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper",
+   "note": "VISO car subset; constants are VISO's"
+  },
+  "mot/car_rscardata_0053": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper",
+   "note": "VISO car subset; constants are VISO's"
+  },
+  "mot/car_rscardata_0054": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper",
+   "note": "VISO car subset; constants are VISO's"
+  },
+  "mot/car_rscardata_0055": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper",
+   "note": "VISO car subset; constants are VISO's"
+  },
+  "mot/car_rscardata_0056": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper",
+   "note": "VISO car subset; constants are VISO's"
+  },
+  "mot/car_rscardata_0057": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper",
+   "note": "VISO car subset; constants are VISO's"
+  },
+  "mot/car_rscardata_0058": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper",
+   "note": "VISO car subset; constants are VISO's"
+  },
+  "mot/car_rscardata_0059": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper",
+   "note": "VISO car subset; constants are VISO's"
+  },
+  "mot/car_rscardata_0060": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper",
+   "note": "VISO car subset; constants are VISO's"
+  },
+  "mot/car_rscardata_0061": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper",
+   "note": "VISO car subset; constants are VISO's"
+  },
+  "mot/car_rscardata_0062": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper",
+   "note": "VISO car subset; constants are VISO's"
+  },
+  "mot/car_rscardata_0063": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper",
+   "note": "VISO car subset; constants are VISO's"
+  },
+  "mot/car_rscardata_0064": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper",
+   "note": "VISO car subset; constants are VISO's"
+  },
+  "mot/car_rscardata_0065": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper",
+   "note": "VISO car subset; constants are VISO's"
+  },
+  "mot/car_rscardata_0066": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper",
+   "note": "VISO car subset; constants are VISO's"
+  },
+  "mot/car_rscardata_0067": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper",
+   "note": "VISO car subset; constants are VISO's"
+  },
+  "mot/car_rscardata_0068": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper",
+   "note": "VISO car subset; constants are VISO's"
+  },
+  "mot/car_rscardata_0069": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper",
+   "note": "VISO car subset; constants are VISO's"
+  },
+  "mot/car_rscardata_0070": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper",
+   "note": "VISO car subset; constants are VISO's"
+  },
+  "mot/car_rscardata_0071": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper",
+   "note": "VISO car subset; constants are VISO's"
+  },
+  "mot/car_rscardata_0072": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper",
+   "note": "VISO car subset; constants are VISO's"
+  },
+  "mot/car_rscardata_0073": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper",
+   "note": "VISO car subset; constants are VISO's"
+  },
+  "mot/car_rscardata_0074": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper",
+   "note": "VISO car subset; constants are VISO's"
+  },
+  "mot/car_rscardata_0075": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper",
+   "note": "VISO car subset; constants are VISO's"
+  },
+  "mot/car_rscardata_0076": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper",
+   "note": "VISO car subset; constants are VISO's"
+  },
+  "mot/car_rscardata_0077": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper",
+   "note": "VISO car subset; constants are VISO's"
+  },
+  "mot/mixed_rscardata_0001": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper",
+   "note": "VISO car subset; constants are VISO's"
+  },
+  "mot/car_rscardata_0002": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper",
+   "note": "VISO car subset; constants are VISO's"
+  },
+  "mot/mixed_rscardata_0003": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper",
+   "note": "VISO car subset; constants are VISO's"
+  },
+  "mot/mixed_rscardata_0004": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper",
+   "note": "VISO car subset; constants are VISO's"
+  },
+  "mot/car_rscardata_0005": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper",
+   "note": "VISO car subset; constants are VISO's"
+  },
+  "mot/car_rscardata_0006": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper",
+   "note": "VISO car subset; constants are VISO's"
+  },
+  "mot/car_rscardata_0007": {
+   "platform": "Jilin-1",
+   "gsd_m": 0.92,
+   "gsd_source": "paper",
+   "fps": 10.0,
+   "fps_source": "paper",
+   "note": "VISO car subset; constants are VISO's"
+  }
+ }
+}
